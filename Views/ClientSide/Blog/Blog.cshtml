@@ -1,0 +1,177 @@
+@model List<Blog>
+@{
+    Layout="_UserLayout";
+    var categories=ViewBag.categories as List<Category>;
+}
+
+<div class="layout-blogs">
+	
+<div class="breadcrumb-shop">
+	<div class="container">
+	<div class="breadcrumb-list" style="margin-top: 15px;">
+		 <nav aria-label="breadcrumb" >
+                                <ol class="breadcrumb">
+                                  <li class="breadcrumb-item"  style="font-size: 16px;"><a href="@Url.Action("HomePage","HomePage")">Trang chủ</a></li>
+                                  <li class="breadcrumb-item active" aria-current="page"  style="font-size: 16px;">Tin tức</li>
+                                </ol>
+                              </nav>
+	</div>
+</div>
+</div>	<div class="wrapper-contentBlogs">
+		<div class="container pd-top">
+			<div class="row dFlex-row">
+				<div class="col-lg-9 col-md-12 col-12 boxBlog-left">
+					<div class="listBlogs-content">	
+						<div class="heading-page"><h1>Tin tức</h1></div>
+						<div class="list-article-content blog-posts row">
+						@foreach(var blog in Model)
+                        {
+							<article class="article-loop col-md-6 col-6">
+								<div class="article-inner">				
+									<div class="article-image">
+										<a href="@Url.Action("BlogDetail","Blog",new{id=blog.Id})" class="blog-post-thumbnail" title="@blog.Blogname" rel="nofollow">
+											<img class="lazyloaded" data-src="~/@blog.FeatureImage.Substring(blog.FeatureImage.IndexOf("wwwroot")+("wwwroot".Length+1))" src="~/@blog.FeatureImage.Substring(blog.FeatureImage.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="@blog.Blogname">
+										</a>
+									</div>
+									<div class="article-detail">	
+										<div class="article-title">
+											<h3 class="post-title">
+												<a href="@Url.Action("BlogDetail","Blog",new{id=blog.Id})" title="@blog.Blogname">@blog.Blogname</a>
+											</h3>
+										</div>		
+										
+										<p class="entry-content">@blog.GetFirstPContent()</p>
+										
+										<div class="article-post-meta">   
+											<span class="author">bởi:@blog.Author</span>
+											<span class="date">                
+												<time pubdate="" datetime="06 Tháng 02, 2023">@blog.Updateddate</time>
+											</span>
+												
+										</div>										
+									</div>
+								</div>						
+							</article>
+                            }
+						</div>
+						<div class="pagination-shop pagi text-center">				
+							<div id="pagination">
+</div>				
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-lg-3 col-md-12 col-12 boxBlog-right">				
+					<aside class="sidebar-blogs blogs-aside--sticky">
+	<!-- Bai viet moi nhat -->
+	<div class="group-sidebox">
+		<div class="sidebox-title ">
+			<h3 class="htitle"><strong>Bài viết mới nhất</strong></h3>
+		</div>
+		<div class="sidebox-content sidebox-content-togged active">
+			<div class="list-blogs-latest">	
+				
+			@foreach(var blog in Model)
+            {
+				<div class="item-article clearfix ">
+					<div class="post-image">
+						<a href="@Url.Action("BlogDetail","Blog",new{id=blog.Id})">
+							<img class="ls-is-cached lazyloaded" data-src="~/@blog.FeatureImage.Substring(blog.FeatureImage.IndexOf("wwwroot")+("wwwroot".Length+1))" src="~/@blog.FeatureImage.Substring(blog.FeatureImage.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="@blog.Blogname">
+                    </div>
+					<div class="post-content">
+						<h3><a href="@Url.Action("BlogDetail","Blog",new{id=blog.Id})">@blog.Blogname</a></h3>
+						<p class="post-meta">
+							<span class="cate">Tin tức</span>
+							<span class="author d-none"><a href="@Url.Action("BlogDetail","Blog",new{id=blog.Id})">@blog.Author</a></span>
+							<span class="date">-@(blog.Updateddate)</span>
+						</p>
+					</div>
+				</div>	
+                }			
+				
+								
+			</div>
+		</div>
+	</div>
+	
+	<!-- Menu bai viet -->
+
+	<div class="group-sidebox">
+		<div class="sidebox-title">
+			<h3 class="htitle"><strong>Danh mục bài viết</strong></h3>
+		</div>
+		<div class="sidebox-content sidebox-content-togged active">
+			<ul class="menuList-links">
+	           <li class=""><a href="@Url.Action("HomePage","HomePage")" title="HomePage"><span>Trang chủ</span></a></li>
+			    
+                <li class=""><a href="@Url.Action("StaticPage","StaticPage",new{page_name="about"})" title="About Us"><span>Về chúng tôi</span></a></li>
+			 @foreach(var cat in categories )
+             { if(cat.SubCategory.Count>0)
+             {
+				<li class="has-submenu level0">
+					<a href="@Url.Action("ProductsByCategory","Products",new{category_name=cat.CategoryName})" title="@cat.CategoryName">@cat.CategoryName<span class="icon-submenu toggle-icon">+</span></a>
+					<ul class="submenu-links">
+
+					 @foreach(var sub_cat in cat.SubCategory)
+                     {
+						<li><a href="@Url.Action("ProductBySubCategory","Products",new{sub_cat_id=sub_cat.Id})" title="@sub_cat.SubCategoryName">@sub_cat.SubCategoryName</a></li>
+                     }
+
+					</ul>
+				</li>
+                }
+            else{
+            <li>
+                <a href="@Url.Action("ProductsByCategory","Products",new{category_name=cat.CategoryName})" title="@cat.CategoryName"><span>@cat.CategoryName</span></a>
+            </li>
+            }
+                }
+				
+				
+				
+				@* <li class="has-submenu level0">
+					<a href="/collections/dong-ho-thong-minh" title="Đồng hồ">Đồng hồ <span class="icon-plus-submenu plus-nClick1"></span></a>
+					<ul class="submenu-links">
+						
+						
+						<li class="has-submenu level1">
+							<a href="/collections/garmin">Garmin<span class="icon-plus-submenu plus-nClick2"></span></a>
+							<ul class="submenu-links">
+														
+								<li class=""><a href="/collections/dong-ho-vong-garmin" title="Đồng hồ thể thao - Theo dõi sức khỏe">Đồng hồ thể thao - Theo dõi sức khỏe</a></li>
+														
+								<li class=""><a href="/collections/choi-golf" title="Đồng hồ chuyên Golf">Đồng hồ chuyên Golf</a></li>
+								
+							</ul>
+						</li>
+						
+						
+						
+						<li><a href="/collections/coros" title="Coros">Coros</a></li>
+						
+						
+						
+						<li><a href="/collections/samsung" title="Samsung">Samsung</a></li>
+						
+						
+						
+						<li><a href="/collections/apple" title="Apple">Apple</a></li>
+						
+						
+					</ul>
+				</li> *@
+				
+				
+				
+				
+			</ul>
+		</div>
+	</div>
+
+</aside>	
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</div>

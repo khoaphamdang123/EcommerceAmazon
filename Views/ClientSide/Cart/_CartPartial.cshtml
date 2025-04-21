@@ -1,0 +1,118 @@
+@model List<CartModel>
+
+@{
+    int total_amount=0;
+}
+        <section class="cart-area pt-120 pb-120">
+            <div class="container">
+               <div class="row">
+              @if(Model.Count>0)
+              {
+                  <div class="col-12">
+                        <form action="#">
+                           <div id="table-content-cart" class="table-content table-responsive">
+                              <table class="table">
+                                    <thead>
+                                       <tr>
+                                          <th style="font-weight: bolder;"  class="product-thumbnail">Hình ảnh</th>
+                                          <th style="font-weight: bolder;"  class="cart-product-name">Tên sản phẩm</th>
+                                          <th style="font-weight: bolder;"  class="product-price">Giá tiền</th>
+                                          <th style="font-weight: bolder;"  class="product-quantity">Số lượng</th>
+                                          <th style="font-weight: bolder;"  class="product-quantity">Kiểu dáng</th>
+                                          <th style="font-weight: bolder;"  class="product-subtotal">Tổng cộng</th>
+                                          <th style="font-weight: bolder;"  class="product-remove">Xóa</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach(var item in Model)
+                                        { int discount=string.IsNullOrEmpty(item.Product.Discount.ToString()) ? 0 : Convert.ToInt32(item.Product.Discount);
+
+                                          string variant_info="";
+                                          if(!string.IsNullOrEmpty(item.Size))
+                                          {
+                                             variant_info+="Kích thước: "+item.Size+"\n";
+                                          }                                          
+                                          if(!string.IsNullOrEmpty(item.Color))
+                                          {
+                                             variant_info+="Màu sắc: "+item.Color+"\n";
+                                          }
+                                          if(!string.IsNullOrEmpty(item.Version))
+                                          {
+                                             variant_info+="Phiên bản: "+item.Version+"\n";
+                                          }
+                                          if(!string.IsNullOrEmpty(item.Mirror))
+                                          {
+                                             variant_info+="Loại kính: "+item.Mirror+"\n";
+                                          }
+                                         string price_value=!string.IsNullOrEmpty(item.Price) ? item.Price : item.Product.Price;
+                                         int current_price=(Convert.ToInt32(price_value)-(Convert.ToInt32(price_value)*(discount)/100));
+                                         total_amount+=(Convert.ToInt32(price_value)-(Convert.ToInt32(price_value)*(discount)/100))*item.Quantity;
+                                       <tr>
+                                          <input id="product-id" type="hidden" value="@item.Product.Id">
+                                          <input id="discount" type="hidden" value="@discount">
+                                          <td class="product-thumbnail"><img src="~/@item.Product.Frontavatar.Substring(item.Product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="User Front Avatar"></td>
+                                          <td class="product-name"><a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=item.Product.ProductName})">@item.Product.ProductName</a></td>
+                                          <td class="product-price"><span id="product-price" class="amount">@current_price đ</span></td>
+                                          <td class="product-quantity">
+                                             <div class="cart-plus-minus">
+                                             <input class="quantity-value" type="text" value="@item.Quantity" data-price="@(Convert.ToInt32(price_value))"><div class="dec qtybutton">-</div><div class="inc qtybutton">+</div></div>
+                                          </td>
+                                          <td class="product-price">@variant_info</td>
+                                          <td class="product-subtotal"><span class="amount">@(current_price*item.Quantity) đ</span></td>
+                                          <td class="product-remove"><a href="javascript:void(0);" type="button" class="remove-btn" data-product-id="@item.Product.Id"><i class="fa fa-times"></i></a></td>
+                                       </tr>
+                                      
+                                       }
+                                    </tbody>
+                              </table>
+                           </div>
+                           <div class="row">
+                              <div class="col-12">
+                                    <div class="coupon-all">
+                                       <div class="coupon">
+                                          <input id="coupon_code" class="input-text" name="coupon_code" value="" placeholder="Coupon code" type="text">
+                                          <button class="tp-btn-h1" name="apply_coupon" type="submit">
+                                             Apply coupon                                             
+                                          </button>
+                                       </div>
+                                       <div class="coupon2">
+                                          <button class="tp-btn-h1" id="update-cart" name="update_cart" type="button">Cập nhật giỏ hàng</button>
+                                       </div>
+                                    </div>
+                              </div>
+                           </div>
+                           <div class="row justify-content-end">
+                              <div class="col-md-5">
+                                    <div class="cart-page-total">
+                                       <h2>Giỏ hàng</h2>
+                                       <ul class="mb-20">
+                                          <li>Tạm tính <span id="subtotal-amount">@total_amount VNĐ</span></li>
+                                          <li>Tổng tiền<span id="total-amount">@total_amount VNĐ</span></li>
+                                       </ul>
+                                       <a class="tp-btn-h1" href="@Url.Action("Checkout","Checkout")">Tiến hành đặt hàng</a>
+                                    </div>
+                              </div>
+                           </div>
+                        </form>                     
+                  </div>
+                  }
+                 else{
+                    <div class="text-center">
+                        <h1>Giỏ hàng của bạn đang trống</h1>                        
+                        <button type="button" id="redirect-btn" class="cart-btn mt-5" onclick="redirectToHomePage()">Tiếp tục mua sắm</button>
+                    </div>
+                 } 
+               </div>
+            </div>
+         </section>
+<script>
+   
+   var cart_data=@Html.Raw(Json.Serialize(Model));        
+   @* $(document).ready(()=>
+   {
+    var cart_amount=cart_data.length;
+    
+   $("#count-cart").text(cart_amount);
+
+   });   *@
+</script>

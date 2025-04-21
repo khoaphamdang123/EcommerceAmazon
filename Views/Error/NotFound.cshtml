@@ -1,0 +1,29 @@
+ @{
+  string url="";
+  string session_username= ViewBag.Username;
+  if(session_username!=null)
+  {
+    url="/admin/dashboard";
+  }
+  else
+  {
+  url="/admin/login";
+  }
+ }
+ <div class="container-xxl container-p-y">
+      <div class="misc-wrapper">
+        <h2 class="mb-2 mx-2">Không tìm thấy trang :(</h2>
+        <p class="mb-4 mx-2">Oops! 😖 Không tìm thấy trang này trên hệ thống.</p>
+        <a href="@url" class="btn btn-primary">Trở lại trang chủ</a>
+        <div class="mt-3">
+          <img
+            src="~/img/illustrations/page-misc-error-light.png"
+            alt="page-misc-error-light"
+            width="500"
+            class="img-fluid"
+            data-app-dark-img="illustrations/page-misc-error-dark.png"
+            data-app-light-img="illustrations/page-misc-error-light.png"
+          />
+        </div>
+      </div>
+    </div>

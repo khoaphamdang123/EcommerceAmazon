@@ -1,0 +1,229 @@
+@model Blog
+@{
+    Layout = "_UserLayout";
+    string img_url=Model.FeatureImage;
+	var blog_by_cat=ViewBag.blog_by_cat as List<Blog>;
+	var list_blog = ViewBag.list_blog as List<Blog>;
+    int next_index=ViewBag.nxt_index!=null?ViewBag.nxt_index:-1;
+	var categories=ViewBag.categories as List<Category>;
+    var blog_name=ViewBag.blog_name;
+	Console.WriteLine(""+next_index);
+
+  if(!img_url.Contains("wwwroot"))
+   {
+  img_url="https://cdn-icons-png.flaticon.com/128/16955/16955062.png";
+   }
+    else
+    {
+img_url=$"~/{img_url.Substring(img_url.IndexOf("wwwroot")+("wwwroot".Length+1)).Replace("\\","/")}";
+    }
+@* string created_date=Model.Createddate;
+   DateTime createdDate=DateTime.ParseExact(created_date,"MM/dd/yyyy",System.Globalization.CultureInfo.InvariantCulture);
+   string formatted_date = createdDate.ToString("dd 'Tháng' MM, yyyy", new System.Globalization.CultureInfo("vi-VN")); *@
+}
+<div class="layout-article" id="article">
+<div class="breadcrumb-shop">
+	<div class="container">
+	<div class="breadcrumb-list blog-breadcrumb" style="margin-top: 15px;">
+		<nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                  <li class="breadcrumb-item" style="font-size: 16px;"><a href="@Url.Action("HomePage","HomePage")">Trang chủ</a></li>
+                                  <li class="breadcrumb-item" style="font-size: 16px;"><a href="@Url.Action("Blog","Blog")">Tin tức</a></li>
+                                  <li class="breadcrumb-item active" aria-current="page" style="font-size: 16px;">@blog_name</li>
+                                </ol>
+                              </nav>
+	</div>
+</div>
+</div>
+	<div class="wrapper-contentArticle">
+		<div class="container pd-top">
+			<div class="row">
+				<div class="col-lg-9 col-md-12 col-12 boxAricle-left">
+					<div class="inforArticle-content">
+						<div class="boxArticle-detail">
+							<div class="heading-article">	
+								<h1>@Model.Blogname</h1>	
+								<div class="article-post-meta">   
+									<span class="author">bởi:@Model.Author</span>
+									<span class="date">                
+										<time pubdate="" datetime="06 Tháng 02, 2023">@Model.Updateddate</time>
+									</span>
+										
+								</div>		
+							</div>
+							<div class="article-content">
+								<div class="box-article-heading clearfix">		
+									<div class="background-img">
+										<img src="@Url.Content(img_url)" alt="@Model.Blogname">
+									</div>
+								</div>
+								
+                                    <div class="box-article-detail article-body article-table-contents typeList-style">
+                                        @Html.Raw(Model.Content)
+                                    </div>
+								<div class="box-article-tags">
+									<strong class="tags-title">Loại sản phẩm: @Model.Category.CategoryName</strong> 
+									
+								</div>
+
+								<div class="box-article-navigation post-navigation articleToolbar ">							
+									<div class="flex-row-articleToolbar">
+										<div class="articleToolbar-title col-lg-8 col-md-12 col-12">
+											<p>Đang xem:<span>@Model.Blogname</span></p>
+										</div>
+										<div class="articleToolbar-navigation col-lg-4 col-md-12 col-12 ">
+											<div class="articleToolbar--nav">							
+												<span>
+													<a href="@Url.Action("BlogDetail","Blog",new{id=next_index})" title="">Bài sau</a>
+													<svg class="arrow-right" role="presentation" viewBox="0 0 11 18">
+														<path d="M1.5 1.5l8 7.5-8 7.5" stroke-width="2" stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square"></path>
+													</svg>
+												</span>
+																			
+											</div>
+										</div>
+									</div>					
+								</div>	
+							</div>					
+						</div>
+							
+						
+						<div class="article-related">
+							<h3 class="title-blog-related">
+						<span>
+<strong>
+ Bài viết liên quan
+ </strong>								
+</span>
+							</h3>		
+							<div class="content-blogs-related">
+								<div class="list-blogs-related list-article-content owl-carousel owlCarousel-style owlCarousel-dfex owl-loaded">	
+							
+								<div class="owl-stage-outer"><div class="owl-stage">
+								@foreach(var blog in blog_by_cat)
+								{	
+									<div class="owl-item" style="width:400px; margin-right: 20px;">
+									<article class="article-loop">
+										<div class="article-inner">				
+											<div class="article-image">
+												<a href="@Url.Action("BlogDetail","Blog",new{id=blog.Id})" class="blog-post-thumbnail" title="@blog.Blogname" rel="nofollow">
+					<img class="ls-is-cached lazyloaded" data-src="~/@blog.FeatureImage.Substring(blog.FeatureImage.IndexOf("wwwroot")+("wwwroot".Length+1))" src="~/@blog.FeatureImage.Substring(blog.FeatureImage.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="@blog.Blogname">
+												</a>
+											</div>
+											<div class="article-detail">	
+												<div class="article-title">
+													<h3 class="post-title">
+														<a href="@Url.Action("BlogDetail","Blog",new{id=blog.Id})" title="@blog.Blogname">@blog.Blogname</a>
+													</h3>
+												</div>		
+												
+												<p class="entry-content">@blog.GetFirstPContent()</p>
+
+												<div class="article-post-meta">   
+													<span class="date">                
+														<time pubdate="" datetime="06 Tháng 02, 2023">@blog.Updateddate</time>
+													</span>
+												</div>										
+											</div>
+										</div>						
+									</article></div>
+									}
+									</div>
+									</div>
+									<div class="owl-nav">
+										<button type="button" role="presentation" class="owl-prev disabled">
+											<span aria-label="Previous">‹</span>
+										</button>
+										<button type="button" role="presentation" class="owl-next"><span aria-label="Next">›
+										</span>
+										</button>
+										</div>
+										<div class="owl-dots disabled">											
+									  </div>
+									</div>
+							</div>							
+						</div>
+					</div>
+					</div>
+<div class="col-lg-3 col-md-12 col-12 boxAricle-right">
+  
+  <aside class="sidebar-blogs blogs-aside--sticky">
+	<!-- Bai viet moi nhat -->
+	<div class="group-sidebox">
+		<div class="sidebox-title ">
+			<h3 class="htitle"><strong>Bài viết mới nhất</strong></h3>
+		</div>
+		<div class="sidebox-content sidebox-content-togged active">
+			<div class="list-blogs-latest">	
+				
+			@foreach(var blog in list_blog)
+            {
+				<div class="item-article clearfix">
+					<div class="post-image">
+						<a href="@Url.Action("BlogDetail","Blog",new{id=blog.Id})">
+						<img class="ls-is-cached lazyloaded" data-src="~/@blog.FeatureImage.Substring(blog.FeatureImage.IndexOf("wwwroot")+("wwwroot".Length+1))" src="~/@blog.FeatureImage.Substring(blog.FeatureImage.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="@blog.Blogname">
+                    </div>
+					<div class="post-content">
+						<h3><a href="@Url.Action("BlogDetail","Blog",new{id=blog.Id})">@blog.Blogname</a></h3>
+						<p class="post-meta">
+							<span class="cate">Tin tức</span>
+							<span class="author d-none"><a href="@Url.Action("BlogDetail","Blog",new{id=blog.Id})">@blog.Author</a></span>
+							<span class="date">-@(blog.Updateddate)</span>
+						</p>
+					</div>
+				</div>	
+                }								
+			</div>
+		</div>
+	</div>
+	
+	
+	<!-- Menu bai viet -->
+<div class="group-sidebox">
+		<div class="sidebox-title">
+			<h3 class="htitle"><strong>Danh mục bài viết</strong></h3>
+		</div>
+		<div class="sidebox-content sidebox-content-togged active">
+			<ul class="menuList-links">
+	           <li class=""><a href="@Url.Action("HomePage","HomePage")" title="HomePage"><span>Trang chủ</span></a></li>
+			    
+                <li class=""><a href="@Url.Action("StaticPage","StaticPage",new{page_name="about"})" title="About Us"><span>Về chúng tôi</span></a></li>
+			 @foreach(var cat in categories)
+             { 
+				if(cat.SubCategory.Count>0)
+             {
+				<li class="has-submenu level0">
+					<a href="@Url.Action("ProductsByCategory","Products",new{category_name=cat.CategoryName})" title="@cat.CategoryName">@cat.CategoryName<span class="icon-submenu toggle-icon">+</span></a>
+					<ul class="submenu-links">
+
+					 @foreach(var sub_cat in cat.SubCategory)
+                     {
+						<li><a href="@Url.Action("ProductBySubCategory","Products",new{sub_cat_id=sub_cat.Id})" title="@sub_cat.SubCategoryName">@sub_cat.SubCategoryName</a></li>
+					 }
+					</ul>
+				</li>
+             }
+            else
+			{
+            <li>
+				<a href="@Url.Action("ProductsByCategory","Products",new{category_name=cat.CategoryName})" title="@cat.CategoryName"><span>@cat.CategoryName</span></a>            
+			</li>
+            }
+         }
+			</ul>
+		</div>
+	</div>
+</aside>	
+				</div>
+			</div>
+		</div>
+	</div>
+<div class="table-content-button"><button class="btn-icolist"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 511.994 511.994"><path d="M35.537 292.17l-.225-.863 14.613-15.857c9.495-10.333 16.006-18.227 19.544-23.47s5.3-11.326 5.3-18.148c0-10.135-3.326-18.146-9.974-23.984-6.65-5.83-15.9-8.76-27.775-8.76-11.174 0-20.15 3.467-26.923 10.412S.06 226.807.3 236.795l.15.34 24.473.002c0-4.403 1.076-8.9 3.227-12.097s5.105-4.73 8.863-4.73c4.202 0 7.355 1.26 9.457 3.73s3.152 5.8 3.152 9.955c0 2.917-1.04 6.36-3.115 10.313s-5.72 8.458-10.122 13.5L1.28 294.304v15.478h74.847v-17.6h-40.6zM51.9 127.068V37.72L1.28 45.283v17.945h24.215v63.84H1.28v19.812h74.846v-19.812zm21.156 299.964c-3.265-4.33-7.8-7.542-13.574-9.668 5.092-2.325 9.16-5.55 12.2-9.677s4.56-8.643 4.56-13.534c0-9.84-3.5-17.442-10.53-22.806s-16.4-8.046-28.1-8.046c-10.087 0-18.665 2.67-25.736 8S1.418 384.007 1.716 392.6l.15.83h24.327c0-4.403 1.233-5.774 3.707-7.654s5.34-3 8.603-3c4.154 0 7.317 1.065 9.495 3.4s3.262 5.142 3.262 8.555c0 4.3-1.2 7.868-3.632 10.3s-5.884 3.837-10.384 3.837h-11.75v17.6h11.75c4.995 0 8.863 1.475 11.608 3.872s4.117 6.358 4.117 11.597c0 3.76-1.312 6.943-3.93 9.415s-6.133 3.74-10.534 3.74c-3.857 0-7.13-1.662-9.827-4s-4.042-4.803-4.042-9.206H.16l-.147.95c-.247 10.087 3.423 18.042 11.013 23.357s16.453 8.1 26.588 8.1c11.77 0 21.435-2.765 29-8.427S77.96 452.44 77.96 442.55c0-6.033-1.63-11.195-4.894-15.523zm75.7-64.426h363.227v72.645H148.767zm0-143.09h363.227v72.645H148.767zm0-147.483h363.227v72.645H148.767z"></path></svg></button> </div><div class="table-content-fixed"><div class="table-of-header"><span class="hTitle"> Các nội dung chính</span><span class="hClose"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.001 512.001"><path d="M284.286 256.002L506.143 34.144c7.81-7.81 7.81-20.475 0-28.285s-20.475-7.81-28.285 0L256 227.717 34.143 5.86c-7.81-7.81-20.475-7.81-28.285 0s-7.81 20.475 0 28.285L227.715 256 5.858 477.86c-7.81 7.81-7.81 20.475 0 28.285C9.763 510.05 14.882 512 20 512a19.94 19.94 0 0 0 14.143-5.857L256 284.287l221.857 221.857C481.762 510.05 486.88 512 492 512a19.94 19.94 0 0 0 14.143-5.857c7.81-7.81 7.81-20.475 0-28.285L284.286 256.002z"></path></svg></span></div><div id="clone-table" class="table-of-contents"><div class="table-title"><div class="htitle">Các nội dung chính<span class="toc_toggle">[<a class="icon-list" href="javascript:void(0)">Ẩn</a>]</span></div></div><ul><li><a href="#menuid0">1. Adventurer</a></li><li><a href="#menuid1">2. Athlete</a></li><li><a href="#menuid2">3. Aviator</a></li><li><a href="#menuid3">4. Captain</a></li><li><a href="#menuid4">5. Golfer</a></li><li><a href="#menuid5">6. Một vài thông số phần cứng chung giữa các phiên bản</a></li></ul></div></div>
+
+@* <script>
+	document.querySelectorAll(".sidebox-title").forEach((item,index)=>{item.addEventListener("click", function () {
+    const content = this.closest(".group-sidebox").querySelector(".sidebox-content");
+    content.classList.toggle("active");
+	});
+});
+</script> *@

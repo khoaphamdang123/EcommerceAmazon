@@ -1,0 +1,186 @@
+@{
+   var options=TempData["Cat_Options"] as IEnumerable<Category>;
+   var category_id=ViewBag.Category_Id;
+   int create_status=-2;
+   var updated_category=TempData["Update_Sub_Category"];
+   var update_status_ob=TempData["Status"];
+
+   var sub_cat_id=ViewBag.Sub_Cat_Id;
+
+   Console.WriteLine("sub cat id here is:"+sub_cat_id);
+
+   var sub_category_name=TempData["Subcat_Name"];
+   
+
+   if(update_status_ob!=null)
+   {
+    create_status=Convert.ToInt32(update_status_ob);
+   }
+}
+
+@if(create_status==0 || create_status==-1)
+    {
+      <div
+       class="bs-toast toast fade hide bg-danger toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+       data-bs-dismiss="toast"
+       style="cursor: pointer;"
+       data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Thêm loại sản phẩm phụ</div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                         @updated_category
+                        </div>
+                      </div>
+                        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+    }
+
+@if(create_status==1)
+{ 
+    <div
+       class="bs-toast toast fade hide bg-success toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Thêm loại sản phẩm phụ</div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                         @updated_category
+                        </div>
+                      </div>
+                <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+}
+    
+
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="../assets/"
+  data-template="vertical-menu-template-free"
+>
+
+          <div class="content-wrapper">
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Sub-Category/</span>Cập nhật Sub-Category</h4>
+              <div class="row">
+                <div class="col-md-12">
+                  <ul class="nav nav-pills flex-column flex-md-row mb-3">
+                    <li class="nav-item">
+                      <a class="nav-link active" href="javascript:void(0);"><i class="bx bx-grid me-1"></i>Cập nhật loại sản phẩm phụ</a>
+                    </li>     
+                  </ul>
+                  <div class="card mb-4">
+                    <h5 class="card-header">Thông tin loại sản phẩm phụ</h5>
+                    <div class="card-body">
+                      <form id="formAccountSettings" method="post" asp-controller="CategoryList" asp-action="SubCategoryInfo">
+                        <div class="row">
+                          <div class="mb-3 col-md-6">
+                            <label for="username" class="form-label">Tên loại sản phẩm phụ</label>
+                            <input
+                              class="form-control"
+                              type="text"
+                              id="SubCategoryName"
+                              name="sub_cat_name"
+                              autofocus
+                              placeholder="Nhập tên loại sản phẩm phụ"
+                              value="@sub_category_name"
+                            />
+                          <span id="sub-cat-error" class="text-danger"></span>
+                          <input type="hidden" value="@sub_cat_id" name="id">
+                          </div>
+                         <div class="mb-3 col-md-6">
+                            <label for="category" class="form-label">Loại sản phẩm</label>
+                             <select class="select2 form-select" name="category">
+                           @foreach(var option in options)
+                           {
+                            if(option.Id==category_id)
+                            {
+                             <option value="@option.Id" selected>@option.CategoryName</option>
+                            }
+                             else
+                             {
+                             <option value="@option.Id">@option.CategoryName</option>
+                             }
+                            }
+                             </select> 
+                          </div>
+                        </div>
+                        <div class="mt-2 d-flex flex-row justify-content-md-start justify-content-sm-between">
+                          <button type="submit" class="btn btn-primary me-4">Cập nhật</button>
+                          <button type="button" class="btn btn-primary" type="button" id="back-btn" data-cat-id="@category_id">Trở lại danh sách sản phẩm phụ</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+           
+            <!-- / Footer -->
+
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        <!-- / Layout page -->
+
+      <!-- Overlay -->
+      <div class="layout-overlay layout-menu-toggle"></div>
+<script type="text/javascript">
+ document.getElementById("formAccountSettings").addEventListener("submit",()=>{
+  var is_valid=true;
+  var sub_cat=document.getElementById("SubCategoryName").value.trim();
+
+  if(sub_cat==='')
+  {
+    is_valid=false;
+    document.getElementById("sub-cat-error").innerHTML='Không được để trống thông tin này';
+  }
+  if(!is_valid)
+  {
+    event.preventDefault();
+  }  
+ });
+
+
+
+  document.getElementById('back-btn').addEventListener("click",()=>
+  {
+   let cat_id=document.getElementById("back-btn").getAttribute("data-cat-id");
+   var url='@Url.Action("SubCategoryList","CategoryList",new{category="__category__"})';
+   url=url.replace("__category__",cat_id);
+   window.location.href=url;
+  });
+
+
+</script>

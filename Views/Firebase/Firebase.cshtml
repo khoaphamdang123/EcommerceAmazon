@@ -1,0 +1,292 @@
+@using Newtonsoft.Json;
+@{
+ var firebase_obj=ViewBag.setting;
+ int status_firebase=0;
+ string message_firebase="";
+ if(firebase_obj!=null)
+ {   Console.WriteLine(JsonConvert.SerializeObject(firebase_obj));
+     status_firebase=firebase_obj.Status;
+     
+     message_firebase=firebase_obj.Firebase_Mess;
+ }
+ var status=ViewBag.Status;
+ var message  = ViewBag.Message;
+}  
+
+@if(status==0)
+{
+     <div
+       class="bs-toast toast fade hide bg-danger toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Cập nhật thông báo Firebase</div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                            @message
+                        </div>
+                      </div>
+                <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+}
+
+@if(status==1){
+    <div
+       class="bs-toast toast fade hide bg-success toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Cập nhật thông báo firebase</div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                            @message
+                        </div>
+                      </div>
+                <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+}
+
+      
+<div class="content-wrapper">
+
+<div class="container-xxl flex-grow-1 container-p-y">
+            
+            
+<div class="row g-6">
+
+
+  <div class="pt-6 pt-lg-0">
+    <div class="tab-content p-0">
+      <div class="tab-pane fade show active" id="notifications" role="tabpanel">
+        <div class="card mb-3">
+        <form method="post" asp-controller="Firebase" asp-action="UpdateFirebaseSetting">
+          <div class="card-body">
+            <h5 class="card-title mb-3 ">Thông tin tin nhắn firebase</h5>
+           <div class="form-check form-switch mb-3">
+                  <input class="form-check-input" type="checkbox" id="contentToggle" name='status' value=@(status_firebase==1?1:0) @(status_firebase==1?"checked":"")>
+                  <label class="form-check-label" for="contentToggle">Hiển thị nội dung chi tiết</label>
+                </div>
+            <div id="contentSection" class="transition-wrapper">
+             <textarea class="form-control" id="FirebaseContent" name='firebase_mess' value="@message_firebase" placeholder="Nhập nội dung cần hiển thị...">@message_firebase</textarea>
+                </div>
+          </div>
+          </form>
+        </div>
+        <div class="d-flex justify-content-end gap-4">
+          <button type="button" class="btn btn-danger" id="unchecked-btn">Hủy bỏ</button>
+          <button type="button" id="save-changes" class="btn btn-primary">Lưu cài đặt</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+          </div>
+          <div class="content-backdrop fade"></div>
+        </div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@4.0.7/js/froala_editor.pkgd.min.js"></script>
+
+<script type="text/javascript">
+
+document.addEventListener("DOMContentLoaded",()=>
+{
+ new FroalaEditor('#FirebaseContent',{
+  heightMin: 300,
+   imageUploadToS3: false,
+    imageUploadURL: '/image/upload',
+    imageOutputSize: true,
+    videoUpload:true,
+    videoUploadURL:'/video/upload',
+    toolbarButtons:{  moreText: {
+      buttons: [
+        'bold', 'italic', 'underline', 'strikeThrough', 
+        'subscript', 'superscript', 'fontFamily', 'fontSize', 
+        'textColor', 'backgroundColor', 'inlineClass', 
+        'inlineStyle', 'clearFormatting'
+      ]
+    },
+    moreParagraph: {
+      buttons: [
+        'alignLeft', 'alignCenter', 'formatOLSimple', 
+        'alignRight', 'alignJustify', 'formatOL', 'formatUL', 
+        'paragraphFormat', 'paragraphStyle', 'lineHeight'
+      ]
+    },
+    moreRich: {
+      buttons: [
+        'insertLink', 'insertImage', 'insertVideo', 
+        'insertTable', 'emoticons', 'fontAwesome', 
+        'specialCharacters', 'embedly', 'insertFile', 'insertHR'
+      ]
+    },
+    moreMisc: {
+      buttons: [
+        'undo', 'redo', 'fullscreen', 'print', 'getPDF', 
+        'spellChecker', 'selectAll', 'html', 'help'
+      ]
+    }},
+      fontFamily: {
+      "Arial, Helvetica, sans-serif": "Arial",
+      "Verdana, Geneva, sans-serif": "Verdana",
+      "Times New Roman, Times, serif": "Times New Roman",
+      "Georgia, serif": "Georgia",
+      "Courier New, Courier, monospace": "Courier New",
+      "Trebuchet MS, sans-serif": "Trebuchet MS",
+      "Comic Sans MS, cursive, sans-serif": "Comic Sans MS",
+      "Impact, Charcoal, sans-serif": "Impact",
+      "Lucida Console, Monaco, monospace": "Lucida Console",
+      "Palatino Linotype, Book Antiqua, Palatino, serif": "Palatino Linotype",
+      "Tahoma, Geneva, sans-serif": "Tahoma",
+      "Arial Black, Gadget, sans-serif": "Arial Black",
+      "Garamond, serif": "Garamond",
+      "Bookman, serif": "Bookman",
+      "Brush Script MT, cursive": "Brush Script MT",
+      "Copperplate, Papyrus, fantasy": "Copperplate",
+      "Luminari, fantasy": "Luminari",
+      "Futura, sans-serif": "Futura",
+      "Franklin Gothic Medium, sans-serif": "Franklin Gothic Medium",
+      "Baskerville, serif": "Baskerville",
+      "Century Gothic, sans-serif": "Century Gothic",
+      "Rockwell, serif": "Rockwell",
+      "Didot, serif": "Didot",
+      "Gill Sans, sans-serif": "Gill Sans",
+      "Optima, sans-serif": "Optima",
+      "Cambria, Cochin, Georgia, Times, Times New Roman, serif": "Cambria",
+      "Segoe UI, Tahoma, Geneva, Verdana, sans-serif": "Segoe UI",
+      "Roboto, sans-serif": "Roboto",
+      "Montserrat, sans-serif": "Montserrat",
+      "Lora, serif": "Lora",
+      "Playfair Display, serif": "Playfair Display",
+      "Raleway, sans-serif": "Raleway",
+      "Open Sans, sans-serif": "Open Sans",
+      "Nunito, sans-serif": "Nunito",
+      "Merriweather, serif": "Merriweather",
+      "Dancing Script, cursive": "Dancing Script",
+      "Pacifico, cursive": "Pacifico",
+      "Cinzel, serif": "Cinzel",
+      "Bebas Neue, sans-serif": "Bebas Neue",
+      "Oswald, sans-serif": "Oswald",
+      "Quicksand, sans-serif": "Quicksand",
+      "Lobster, cursive": "Lobster",
+      "Josefin Sans, sans-serif": "Josefin Sans",
+      "Poppins, sans-serif": "Poppins",
+      "Ubuntu, sans-serif": "Ubuntu",
+      "Anton, sans-serif": "Anton",
+      "Abril Fatface, serif": "Abril Fatface",
+      "Vollkorn, serif": "Vollkorn",
+      "Permanent Marker, cursive": "Permanent Marker",
+      "Indie Flower, cursive": "Indie Flower"
+   },
+   fontFamilySelection: true,
+   fontSize: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', 
+              '24', '26', '28', '30', '32', '34', '36', '38', '40', '42', 
+              '44', '46', '48', '50', '52', '54', '56', '58', '60', '64', 
+              '68', '72', '76', '80', '84', '88', '92', '96', '100', '110', 
+              '120', '130', '140', '150', '160', '170', '180', '190', '200'],
+   fontSizeSelection: true,
+    pluginsEnabled: ['align', 'charCounter', 'codeBeautifier', 'codeView', 'colors', 'draggable', 'embedly', 'emoticons', 'entities', 'file', 'fontFamily', 'fontSize', 'fullscreen', 'image', 'imageManager', 'inlineStyle', 'lineBreaker', 'link', 'lists', 'paragraphFormat', 'paragraphStyle', 'quickInsert', 'quote', 'save', 'table', 'url', 'video', 'wordPaste'],
+    colorsBackground: ['#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFFF00'],
+    colorsText: ['#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00'] 
+  });
+
+  const contentToggle = document.getElementById('contentToggle');
+
+  const contentSection=document.getElementById('contentSection');
+
+  if(contentToggle.checked)
+  {
+    contentSection.classList.add('visible');
+    
+    contentSection.classList.remove('hidden');
+
+    contentToggle.value=1;        
+  } 
+  else
+  {
+    contentSection.classList.add('hidden');
+    
+    contentSection.classList.remove('visible');
+
+    contentToggle.value=0;    
+  } 
+
+  contentToggle.addEventListener('change',()=>
+  {
+    if(contentToggle.checked)
+    {
+        contentSection.classList.add('visible');
+        
+        contentSection.classList.remove('hidden');
+
+        contentToggle.value=1;
+    }
+    else
+    {
+        contentSection.classList.add('hidden');
+
+        contentSection.classList.remove('visible');
+
+        contentToggle.value=0;        
+    }
+  });
+
+      $(document).ready(function() 
+      {
+        $("#save-changes").click(function() {
+            $("form").each(function() 
+            {
+                this.submit();                
+            });
+        });
+
+        $("#unchecked-btn").click(function()
+        {
+            $("input[type=checkbox]").each(function()
+            {
+                $(this).prop("checked", false);
+                
+                contentSection.classList.remove('visible');
+                
+                contentSection.classList.add('hidden');
+            });
+        });
+    });
+    });
+</script>    
+    
+    
+    
+
+
+
+
+

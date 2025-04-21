@@ -1,0 +1,649 @@
+@model Order
+@{
+   var deleted_page=ViewBag.Delete_Message;
+   var delete_status=ViewBag.Status;
+   var delete_multiple_status=ViewBag.Delete_Multiple_Status;
+   var delete_multiple_message = ViewBag.Delete_Multiple_Message;
+   string curr_status_class="";
+   int sum_order=0;
+   var order_count=ViewBag.OrderCount;
+  Dictionary<string,string> order_status=new Dictionary<string, string>{
+    {"Processing","Đang xử lý"},
+    {"Finished","Đã hoàn thành"},
+    {"Cancelled","Đã hủy"},
+    {"Refund","Được hoàn tiền"}
+  };  
+  switch(Model?.Status)
+  {
+    case "Processing":
+    curr_status_class="bg-label-primary";
+    break;
+    case "Finished":
+    curr_status_class="bg-label-success";
+    break;
+    case "Cancelled":
+    curr_status_class="bg-label-danger";
+    break;
+    case "Refund":
+    curr_status_class="bg-label-warning";
+    break;
+  }
+}
+
+@if(delete_status==0)
+    {
+      <div
+       class="bs-toast toast fade hide bg-danger toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Xóa sản phẩm trong hóa đơn</div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                         @deleted_page
+                        </div>
+                      </div>
+                        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+    }
+
+@if(delete_status==1)
+{ 
+    <div
+       class="bs-toast toast fade hide bg-success toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Xóa sản phẩm trong hóa đơn</div>                          
+                        </div>
+                        <div class="toast-body">
+                         @deleted_page
+                        </div>
+                      </div>
+                <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();                
+            });
+        </script>
+}
+
+
+
+@if(delete_multiple_status==0)
+    {
+      <div
+       class="bs-toast toast fade hide bg-danger toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Xóa các sản phẩm trong hóa đơn</div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                         @delete_multiple_message
+                        </div>
+                      </div>
+                        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+    }
+
+@if(delete_multiple_status==1)
+{ 
+    <div
+       class="bs-toast toast fade hide bg-success toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Xóa các sản phẩm trong hóa đơn</div>
+                        </div>
+                        <div class="toast-body">
+                         @delete_multiple_message
+                        </div>
+                      </div>
+                <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();                
+            });
+        </script>
+}    
+          <div class="content-wrapper">
+
+            <div class="container-xxl flex-grow-1 container-p-y">            
+            
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 row-gap-4">
+  <div class="d-flex flex-column justify-content-center">
+    <div class="mb-1">
+      <span class="h5">Đơn hàng @Model?.OrderId </span><span class="badge @curr_status_class me-1 ms-2">@order_status[Model?.Status]</span>
+    </div>
+    <p class="mb-0">@Model?.Createddate</p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12 col-lg-8">
+    <div class="card mb-6">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title m-0">Chi tiết đơn hàng</h5>
+        <button type="button" id="delete-all-btn" class="m-0 btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalLong1" data-id="@Model?.Id">Xóa</button>
+      </div>
+      <div class="card-datatable table-responsive text-nowrap">
+        <table class="datatables-order-details table border-top">
+          <thead>
+            <tr>
+              <th>
+              </th>
+ <th rowspan="1" colspan="1" data-col="1" aria-label="">
+    <input type="checkbox" class="form-check-input" id="check-all">
+ </th>
+              <th class="w-50">Tên sản phẩm</th>
+              <th class="w-50">Kiểu dáng</th>
+              <th class="w-25">Giá</th>
+              <th class="w-25">Số lượng</th>
+              <th class="w-25">Tổng</th>
+              <th class="w-50">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach(var item in Model?.OrderDetails)
+            {  int sum=(Convert.ToInt32(item.Price)*item.Quantity);
+               sum_order+=sum;
+               string variant_info="";
+               if(!string.IsNullOrEmpty(item.Variant?.Size?.Sizename))
+               { if(string.IsNullOrEmpty(variant_info))
+               {
+                  variant_info+="Kích thước: "+item.Variant?.Size?.Sizename;
+                }
+                else
+                {
+                  variant_info+="/"+"Kích thước: "+item.Variant?.Size?.Sizename;
+                }
+               }
+               if(!string.IsNullOrEmpty(item.Variant?.Color?.Colorname))
+               {
+                if(string.IsNullOrEmpty(variant_info))
+               {
+                  variant_info+="Màu sắc: "+item.Variant?.Color?.Colorname;
+                }
+                else
+                {
+                  variant_info+="/"+"Màu sắc: "+item.Variant?.Color?.Colorname;
+                }
+               }
+               if(!string.IsNullOrEmpty(item.Variant?.Version?.Versionname))
+               {  
+                if(string.IsNullOrEmpty(variant_info))
+               {
+                  variant_info+="Phiên bản: "+item.Variant?.Version?.Versionname;
+                }
+                else
+                {
+                  variant_info+="/"+"Phiên bản: "+item.Variant?.Version?.Versionname+"\n";
+                } 
+               }
+               if(!string.IsNullOrEmpty(item.Variant?.Mirror?.Mirrorname))
+               {    if(string.IsNullOrEmpty(variant_info))
+               {
+                  variant_info+="Loại kính: "+item.Variant?.Mirror?.Mirrorname;
+                }
+                else
+                {
+                  variant_info+="/"+"Loại kính: "+item.Variant?.Mirror?.Mirrorname;
+                } 
+               }
+              <tr>
+                <td></td>
+                <td>
+          <input type="checkbox" class="form-check-input" value="@item.Id">
+                </td>
+                <td class="w-50">
+                 <div class="d-flex align-items-center">
+                 <div class="avatar-wrapper">   
+                 <div class="avatar avatar-sm me-2">
+              <img src="~/@item.Product.Frontavatar.Substring(item.Product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="Product Avatar">
+                </div>
+                 </div>
+                <strong>@item.Product.ProductName</strong>
+                </div>
+                </td>
+                <td class="w-50">
+                    @variant_info
+                </td>
+                <td class="w-25">
+                    @item.Price VNĐ
+                    </td>
+                <td class="w-25">@item.Quantity</td>
+                <td>@sum VNĐ</td>
+                <td>
+                <div class="d-flex align-items-center justify-content-center">
+             <a data-bs-toggle="modal" data-bs-target="#modalLong" class="btn btn-icon delete-record icon-style-delete mr-2" id="delete-record-btn" data-page="@item.Id" data-order="@Model?.Id">
+            <i class="bx bx-trash bx-md"></i>
+            </a>
+                <div class="modal fade" id="modalLong" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h4 class="modal-title" id="modalLongTitle"><strong>Xóa sản phẩm</strong></h4>
+                              <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                              ></button>
+                            </div>
+                            <div class="modal-body">
+                             <p class="modal-font">
+                               <strong>Bạn có chắc là muốn xóa sản phẩm này khỏi hóa đơn?</strong>
+                              </p>
+                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" id="remove-btn">Xóa</button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                Đóng
+                            </button>
+                        </div>
+                          </div>
+                        </div>
+                      </div>
+                         <div class="modal fade" id="modalLong1" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h4 class="modal-title" id="modalLongTitle"><strong>Xóa sản phẩm</strong></h4>
+                              <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                              >
+                              
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                             <p class="modal-font">
+                               <strong>Bạn có chắc là muốn xóa các sản phẩm này khỏi hóa đơn?</strong>
+                              </p>
+                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" id="remove-btn-all">Xóa</button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                Đóng
+                            </button>
+                        </div>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        <div class="d-flex justify-content-end align-items-center m-3 mt-3">
+            <div class="d-flex justify-content-start">
+              <h6 class="w-px-100 mb-0">Tổng:</h6>
+              <h6 class="mb-0">@sum_order VND</h6>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-4">
+    <div class="card mb-5">
+      <div class="card-header">
+        <h5 class="card-title m-0">Thông tin khách hàng</h5>
+      </div>
+      <div class="card-body">
+        <div class="d-flex justify-content-start align-items-center mb-3">
+          <div class="avatar me-3">
+            <img src="@Model?.User.Avatar" alt="Avatar" class="rounded-circle">
+          </div>
+          <div class="d-flex flex-column">
+            <a href="@Url.Action("GetUserByName","UserList",new{username=Model?.User.UserName})" class="text-body text-nowrap">
+              <h6 class="mb-2"><span>Tên khách hàng:</span>@Model?.User.UserName</h6>
+            </a>
+            <span>ID khách hàng:@Model?.User.Id</span>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-items-center mb-4">
+          <span class="avatar rounded-circle bg-label-success me-3 d-flex align-items-center justify-content-center"><i class='bx bx-cart bx-lg'></i></span>
+          <h6 class="text-nowrap mb-0">@order_count Orders</h6>
+        </div>
+        <div class="d-flex justify-content-between">
+          <h6 class="mb-1">Thông tin liên hệ</h6>
+          @* <h6 class="mb-1"><a href=" javascript:void(0)" data-bs-toggle="modal" data-bs-target="#editUser">Edit</a></h6> *@
+        </div>
+        <p class="mb-1">Email: @Model?.User.Email</p>
+        <p class="mb-0">Mobile: @Model?.User.PhoneNumber</p>
+      </div>
+    </div>
+
+    <div class="card mb-6">
+
+      <div class="card-header d-flex justify-content-between">
+        <h5 class="card-title m-0">Địa chỉ giao hàng</h5>
+        @* <h6 class="m-0"><a href=" javascript:void(0)" data-bs-toggle="modal" data-bs-target="#addNewAddress">Edit</a></h6> *@
+      </div>
+      <div class="card-body">
+        <p class="mb-0">@Model?.Shippingaddress</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUser" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-simple modal-edit-user">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="text-center mb-6">
+          <h4 class="mb-2">Edit User Information</h4>
+          <p>Updating user details will receive a privacy audit.</p>
+        </div>
+        <form class="row g-6" onsubmit="false">
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="modalEditUserFirstName">First Name</label>
+            <input type="text" id="modalEditUserFirstName" name="" class="form-control" placeholder="John" value="John" />
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="modalEditUserLastName">Last Name</label>
+            <input type="text" id="modalEditUserLastName" name="modalEditUserLastName" class="form-control" placeholder="Doe" value="Doe" />
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="modalEditUserName">Username</label>
+            <input type="text" id="modalEditUserName" name="modalEditUserName" class="form-control" placeholder="johndoe007" value="johndoe007" />
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="modalEditUserEmail">Email</label>
+            <input type="text" id="modalEditUserEmail" name="modalEditUserEmail" class="form-control" placeholder="example@domain.com" value="example@domain.com" />
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="modalEditUserStatus">Status</label>
+            <select id="modalEditUserStatus" name="modalEditUserStatus" class="select2 form-select" aria-label="Default select example">
+              <option selected>Status</option>
+              <option value="1">Active</option>
+              <option value="2">Inactive</option>
+              <option value="3">Suspended</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="modalEditTaxID">Tax ID</label>
+            <input type="text" id="modalEditTaxID" name="modalEditTaxID" class="form-control modal-edit-tax-id" placeholder="123 456 7890" value="123 456 7890" />
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="modalEditUserPhone">Phone Number</label>
+            <div class="input-group">
+              <span class="input-group-text">US (+1)</span>
+              <input type="text" id="modalEditUserPhone" name="modalEditUserPhone" class="form-control phone-number-mask" placeholder="202 555 0111" value="202 555 0111" />
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="modalEditUserLanguage">Language</label>
+            <select id="modalEditUserLanguage" name="modalEditUserLanguage" class="select2 form-select" multiple>
+              <option value="">Select</option>
+              <option value="english" selected>English</option>
+              <option value="spanish">Spanish</option>
+              <option value="french">French</option>
+              <option value="german">German</option>
+              <option value="dutch">Dutch</option>
+              <option value="hebrew">Hebrew</option>
+              <option value="sanskrit">Sanskrit</option>
+              <option value="hindi">Hindi</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="modalEditUserCountry">Country</label>
+            <select id="modalEditUserCountry" name="modalEditUserCountry" class="select2 form-select" data-allow-clear="true">
+              <option value="">Select</option>
+              <option value="Australia">Australia</option>
+              <option value="Bangladesh">Bangladesh</option>
+              <option value="Belarus">Belarus</option>
+              <option value="Brazil">Brazil</option>
+              <option value="Canada">Canada</option>
+              <option value="China">China</option>
+              <option value="France">France</option>
+              <option value="Germany">Germany</option>
+              <option value="India" selected>India</option>
+              <option value="Indonesia">Indonesia</option>
+              <option value="Israel">Israel</option>
+              <option value="Italy">Italy</option>
+              <option value="Japan">Japan</option>
+              <option value="Korea">Korea, Republic of</option>
+              <option value="Mexico">Mexico</option>
+              <option value="Philippines">Philippines</option>
+              <option value="Russia">Russian Federation</option>
+              <option value="South Africa">South Africa</option>
+              <option value="Thailand">Thailand</option>
+              <option value="Turkey">Turkey</option>
+              <option value="Ukraine">Ukraine</option>
+              <option value="United Arab Emirates">United Arab Emirates</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="United States">United States</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <div class="form-check form-switch my-2 ms-2">
+              <input type="checkbox" class="form-check-input" id="editBillingAddress" checked />
+              <label for="editBillingAddress" class="switch-label">Use as a billing address?</label>
+            </div>
+          </div>
+          <div class="col-12 text-center">
+            <button type="submit" class="btn btn-primary me-3">Submit</button>
+            <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!--/ Edit User Modal -->
+
+<!-- Add New Address Modal -->
+<div class="modal fade" id="addNewAddress" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="text-center mb-6">
+          <h4 class="address-title mb-2">Add New Address</h4>
+          <p class="address-subtitle">Add new address for express delivery</p>
+        </div>
+        <form id="addNewAddressForm" class="row g-6" onsubmit="return false">
+
+          <div class="col-12">
+            <div class="row">
+              <div class="col-md mb-md-0 mb-4">
+                <div class="form-check custom-option custom-option-icon">
+                  <label class="form-check-label custom-option-content" for="customRadioHome">
+                    <span class="custom-option-body">
+                      <i class="bx bx-home"></i>
+                      <span class="custom-option-title">Home</span>
+                      <small> Delivery time (9am – 9pm) </small>
+                    </span>
+                    <input name="customRadioIcon" class="form-check-input" type="radio" value="" id="customRadioHome" checked />
+                  </label>
+                </div>
+              </div>
+              <div class="col-md mb-md-0 mb-4">
+                <div class="form-check custom-option custom-option-icon">
+                  <label class="form-check-label custom-option-content" for="customRadioOffice">
+                    <span class="custom-option-body">
+                      <i class='bx bx-briefcase'></i>
+                      <span class="custom-option-title"> Office </span>
+                      <small> Delivery time (9am – 5pm) </small>
+                    </span>
+                    <input name="customRadioIcon" class="form-check-input" type="radio" value="" id="customRadioOffice" />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="modalAddressFirstName">First Name</label>
+            <input type="text" id="modalAddressFirstName" name="modalAddressFirstName" class="form-control" placeholder="John" />
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="modalAddressLastName">Last Name</label>
+            <input type="text" id="modalAddressLastName" name="modalAddressLastName" class="form-control" placeholder="Doe" />
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="modalAddressCountry">Country</label>
+            <select id="modalAddressCountry" name="modalAddressCountry" class="select2 form-select" data-allow-clear="true">
+              <option value="">Select</option>
+              <option value="Australia">Australia</option>
+              <option value="Bangladesh">Bangladesh</option>
+              <option value="Belarus">Belarus</option>
+              <option value="Brazil">Brazil</option>
+              <option value="Canada">Canada</option>
+              <option value="China">China</option>
+              <option value="France">France</option>
+              <option value="Germany">Germany</option>
+              <option value="India">India</option>
+              <option value="Indonesia">Indonesia</option>
+              <option value="Israel">Israel</option>
+              <option value="Italy">Italy</option>
+              <option value="Japan">Japan</option>
+              <option value="Korea">Korea, Republic of</option>
+              <option value="Mexico">Mexico</option>
+              <option value="Philippines">Philippines</option>
+              <option value="Russia">Russian Federation</option>
+              <option value="South Africa">South Africa</option>
+              <option value="Thailand">Thailand</option>
+              <option value="Turkey">Turkey</option>
+              <option value="Ukraine">Ukraine</option>
+              <option value="United Arab Emirates">United Arab Emirates</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="United States">United States</option>
+            </select>
+          </div>
+          <div class="col-12 ">
+            <label class="form-label" for="modalAddressAddress1">Address Line 1</label>
+            <input type="text" id="modalAddressAddress1" name="modalAddressAddress1" class="form-control" placeholder="12, Business Park" />
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="modalAddressAddress2">Address Line 2</label>
+            <input type="text" id="modalAddressAddress2" name="modalAddressAddress2" class="form-control" placeholder="Mall Road" />
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="modalAddressLandmark">Landmark</label>
+            <input type="text" id="modalAddressLandmark" name="modalAddressLandmark" class="form-control" placeholder="Nr. Hard Rock Cafe" />
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="modalAddressCity">City</label>
+            <input type="text" id="modalAddressCity" name="modalAddressCity" class="form-control" placeholder="Los Angeles" />
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="modalAddressLandmark">State</label>
+            <input type="text" id="modalAddressState" name="modalAddressState" class="form-control" placeholder="California" />
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="modalAddressZipCode">Zip Code</label>
+            <input type="text" id="modalAddressZipCode" name="modalAddressZipCode" class="form-control" placeholder="99950" />
+          </div>
+          <div class="col-12">
+            <div class="form-check form-switch my-2 ms-2">
+              <input type="checkbox" class="form-check-input" id="billingAddress" />
+              <label for="billingAddress" class="switch-label">Use as a billing address?</label>
+            </div>
+          </div>
+          <div class="col-12 text-center">
+            <button type="submit" class="btn btn-primary me-3">Submit</button>
+            <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!--/ Add New Address Modal -->
+</div>
+
+<script>
+  $("#check-all").click(function () {
+    $('input:checkbox').not(this).prop('checked', this.checked);
+  });
+    var all_delete_btn=document.querySelectorAll('#delete-record-btn');
+    var delete_page='';
+    var delete_id=-1;
+    all_delete_btn.forEach((btn)=>{
+    btn.addEventListener('click',()=>{
+    delete_page=btn.getAttribute('data-page');
+    delete_id=btn.getAttribute('data-order');
+     })
+    });
+ 
+ 
+ document.getElementById("remove-btn-all").addEventListener("click", function() {
+    var id=document.getElementById("delete-all-btn").getAttribute("data-id");
+    var checkedBoxes = document.querySelectorAll("td input[type='checkbox']:checked");
+    var idsToDelete = Array.from(checkedBoxes).map(function(checkbox) {
+        return `ids=${checkbox.value}`
+    }).join('&');
+  var url='@Url.Action("DeleteOrderDetailByProducts","OrderList",new{id="__id__"})'+"?"+idsToDelete;
+    url=url.replace("__id__",id);
+    window.location.href=url;
+});
+
+ document.getElementById("remove-btn").addEventListener('click',()=>{
+   
+   let delete_page_value=delete_page;
+
+    var url='';
+    
+    url='@Url.Action("DeleteOrderDetailByProduct","OrderList",new{id="__id__",detail_id="__detail_id__"})';
+
+    url=url.replace("__id__",delete_id).replace("__detail_id__",delete_page_value);
+    
+    window.location.href=url;
+    });
+ </script>
+</div>
+    
+              

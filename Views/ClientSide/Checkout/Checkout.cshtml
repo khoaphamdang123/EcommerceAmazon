@@ -1,0 +1,1073 @@
+ 
+ @model List<CartModel>
+ @{
+    Layout="_UserLayout";
+    var user=ViewBag.user as ApplicationUser;
+    var company_user=  ViewBag.company as ApplicationUser;
+    var payment_methods=ViewBag.payment_methods as List<Payment>;
+    Console.WriteLine(payment_methods.Count);
+    int total_value=0;
+    var siteKey=ViewBag.SiteKey;
+    var message_checkout=ViewBag.Message;
+    var status_checkout = ViewBag.Status;
+    var account= ViewBag.Account;
+    var saved_account= ViewBag.SavedAccount;
+    string paypal_client_id=Environment.GetEnvironmentVariable("PAYPAL_CLIENT_ID");
+     string username="";
+     string password="";
+ if(account!=null)
+  {  string[] account_part=account.Split('\n');
+     username=account_part[0];
+     password=account_part[1];
+  }
+    
+    string[] email_list=company_user.Email.Split('#');
+    
+    string email=email_list[0];
+    
+    string extra_info=email_list[1];
+    
+    string bank_name="";
+    
+    string account_num="";
+    
+    string account_name="";
+    
+    string bank_value="";
+
+    string qr_code=Environment.GetEnvironmentVariable("qr_code");    
+
+    if(!string.IsNullOrEmpty(extra_info))
+    {
+      string[] info_values=extra_info.Split('\n');
+
+      foreach(var info in info_values)
+      {
+        if(info.Contains("bank_name"))
+        {
+          bank_value=info.Split('~')[1].Trim();
+        }
+        else if(info.Contains("account_name"))
+        {
+          account_name=info.Split('~')[1].Trim();
+        }
+        else if(info.Contains("account_num"))
+        {
+       account_num=info.Split('~')[1].Trim();
+        }
+      }
+    }
+    if(!string.IsNullOrEmpty(bank_value))
+    {
+      var bank_detail=bank_value.Split('*');
+      bank_name=bank_detail[0];
+    }
+
+    Console.WriteLine("Sitekey here is:"+siteKey);
+ 
+ } 
+ @if(status_checkout==0)
+ {
+ <div
+       class="bs-toast toast fade hide bg-danger toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Đặt hàng</div>
+                        </div>
+                        <div class="toast-body">
+                         @(message_checkout)                         
+                        </div>
+                      </div>
+                        <script>
+            document.addEventListener('DOMContentLoaded', function() 
+            {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();                
+            });
+        </script>        
+        }
+
+@Html.AntiForgeryToken()        
+  
+  <div
+       class="bs-toast toast fade hide toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"       
+       data-bs-dismiss="toast"
+       style="cursor: pointer; position: fixed; top: 20px; right: 20px; z-index: 1050;"
+       data-delay="3000"
+       data-bs-autohide="true" 
+       data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold" id="toast-title"></div>
+                        </div>
+                        <div class="toast-body" id="toast-message">
+                        </div>
+                      </div>
+  
+  <div class="page-banner-area page-banner-height-2" data-background="@Url.Content("~/user_layout/img/banner/page-banner-4.jpg")">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="page-banner-content text-center">
+                            <h4 class="breadcrumb-title">Thanh toán</h4>
+                            <div class="breadcrumb-two">
+                                <nav>
+                                   <nav class="breadcrumb-trail breadcrumbs">
+                                      <ul class="breadcrumb-menu">
+                                         <li class="breadcrumb-trail">
+                                            <a href="@Url.Action("HomePage","HomePage")"><span>Trang chủ</span></a>
+                                         </li>
+                                         <li class="trail-item">
+                                            <span>Thanh toán</span>
+                                         </li>
+                                      </ul>
+                                   </nav> 
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="coupon-area pt-120 pb-30">
+            <div class="container">
+            <div class="row">
+            <div class="col-md-6">
+                <div class="coupon-accordion">
+                  @if(!(User.Identity.IsAuthenticated && User.IsInRole("User")))
+                  {
+                        <!-- ACCORDION START -->
+                        <h3>Bạn đã có tài khoản?<span id="showlogin">Nhấn vào đây để đăng nhập
+                        </span></h3>
+                        <div id="checkout-login" class="coupon-content">
+                        <div class="coupon-info">
+                            <form id="signinForm" method="POST" asp-action="MyAccount" asp-controller="MyAccount">
+                                    <p class="form-row-first">
+                                    <label>Tên đăng nhập<span class="required">*</span></label>
+                                    <input type="text" name="username" id="username" value="@(!string.IsNullOrEmpty(username)?username:"")">
+                                    <span class="text-danger" id="username-error"></span><br>
+                                    </p>
+                                    <p class="form-row-last">
+                                    <label>Mật khẩu<span class="required">*</span></label>
+                                    <input type="password" name="password" id="password" value="@(!string.IsNullOrEmpty(password)?password:"")" autocomplete>
+                                <span class="text-danger" id="password-error"></span><br>
+                                    </p>
+                                    <p class="form-row">
+                                    <button class="tp-btn-h1" type="submit">Đăng nhập</button>
+                                    <label>
+                                    @if(saved_account!=null && saved_account)
+                                    {
+                                     <input type="checkbox" name="rememberme" value="true" checked>
+                                     }
+                                     else
+                                     {
+                                    <input type="checkbox" name="rememberme" value="true">
+                                     }
+                                     Nhớ mật khẩu
+                                    </label>
+                                    </p>
+                                    <p class="lost-password">
+                                    <a href="@Url.Action("ForgotPassword","MyAccount")">Quên mật khẩu?</a>
+                                    </p>
+                                    <div class="g-recaptcha mt-3" data-sitekey="@siteKey"></div>
+                            </form>
+                        </div>
+                        </div>
+                        }
+                </div>
+            </div>
+            @* <div class="col-md-6">
+                <div class="coupon-accordion">
+                        <!-- ACCORDION START -->
+                        <h3>Have a coupon? <span id="showcoupon">Click here to enter your code</span></h3>
+                        <div id="checkout_coupon" class="coupon-checkout-content">
+                        <div class="coupon-info">
+                            <form action="#">
+                                    <p class="checkout-coupon">
+                                    <input type="text" placeholder="Coupon Code">
+                                    <button class="tp-btn-h1" type="submit">Apply Coupon</button>
+                                    </p>
+                            </form>
+                        </div>
+                        </div>
+                        <!-- ACCORDION END -->
+                </div>
+            </div> *@
+            </div>
+        </div>
+        </section>
+        <!-- coupon-area-end -->
+
+        <!-- checkout-area-start -->
+        <section class="checkout-area pb-85">
+            <div class="container">
+                <form id="checkout-form" method="POST" asp-action="CheckoutOrder" asp-controller="Checkout">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="checkbox-form">
+                                <h3>Chi tiết thông tin</h3>
+                                <div class="row">                                
+                                    <div class="col-md-12">
+                                        <div class="checkout-form-list">
+                                            <label>Tên<span class="required">*</span></label>
+                                            <input type="text" placeholder="Nhập tên" name="username" id="user-name" value="@(user!=null?user.UserName:"")" @(user!=null?"readonly":"")>
+                                        <span class="text-danger" id="name-error"></span>
+                                        <br>
+                                        </div>
+                                    </div>
+                                    @* <div class="col-md-12">
+                                        <div class="checkout-form-list">
+                                            <label>Company Name</label>
+                                            <input type="text" placeholder="">
+                                        </div>
+                                    </div> *@
+                                    <div class="col-md-12">
+                                        <div class="checkout-form-list">
+                                            <label>Địa chỉ<span class="required">*</span></label>                                            
+                                            <input type="text" placeholder="Nhập địa chỉ giao hàng" id="address" name="address1" value="@(user!=null?!string.IsNullOrEmpty(user.Address2)?user.Address2:user.Address1:"")">
+                                            <span class="text-danger" id="address-error"></span><br>                                            
+                                        </div>
+                                    </div>
+                                    @* <div class="col-md-12">
+                                        <div class="checkout-form-list">
+                                            <input type="text" placeholder="Apartment, suite, unit etc. (optional)">
+                                        </div>
+                                    </div> *@
+                                    @* <div class="col-md-12">
+                                        <div class="checkout-form-list">
+                                            <label>Town / City <span class="required">*</span></label>
+                                            <input type="text" placeholder="Town / City">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="checkout-form-list">
+                                            <label>State / County <span class="required">*</span></label>
+                                            <input type="text" placeholder="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="checkout-form-list">
+                                            <label>Postcode / Zip <span class="required">*</span></label>
+                                            <input type="text" placeholder="Postcode / Zip">
+                                        </div>
+                                    </div> *@
+                                    <div class="col-md-6">
+                                        <div class="checkout-form-list">
+                                            <label>Email<span class="required">*</span></label>
+                                            <input type="email" placeholder="Nhập Email của bạn" id="email" name="email" value="@(user!=null?user.Email:"")"  @(user!=null?"readonly":"")>      
+                                            <span class="text-danger" id="email-error"></span><br>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="basic-login">
+                                            <label>Số điện thoại<span class="required">*</span></label>
+                                            <input type="number" placeholder="Nhập số điện thoại của bạn" id="phone" name="phonenumber" value="@(user!=null?user.PhoneNumber:"")"  @(user!=null?"readonly":"")>
+                                        <span class="text-danger" id="phone-error"></span><br>
+                                        </div>
+                                    </div>
+                                    @* <div class="col-md-12">
+                                        <div class="checkout-form-list create-acc">
+                                            <input id="cbox" type="checkbox">
+                                            <label>Create an account?</label>
+                                        </div>
+                                        <div id="cbox_info" class="checkout-form-list create-account">
+                                            <p>Create an account by entering the information below. If you are a returning
+                                                customer please login at the top of the page.</p>
+                                            <label>Account password <span class="required">*</span></label>
+                                            <input type="password" placeholder="password">
+                                        </div>
+                                    </div> *@
+                                </div>
+
+                                <div class="different-address">
+                                    @* <div class="ship-different-title">
+                                        <h3>
+                                            <label>Ship to a different address?</label>
+                                            <input id="ship-box" type="checkbox">
+                                        </h3>
+                                    </div> *@
+                                    @* <div id="ship-box-info">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="country-select">
+                                                    <label>Country <span class="required">*</span></label>
+                                                    <select style="display: none;">
+                                                        <option value="volvo">bangladesh</option>
+                                                        <option value="saab">Algeria</option>
+                                                        <option value="mercedes">Afghanistan</option>
+                                                        <option value="audi">Ghana</option>
+                                                        <option value="audi2">Albania</option>
+                                                        <option value="audi3">Bahrain</option>
+                                                        <option value="audi4">Colombia</option>
+                                                        <option value="audi5">Dominican Republic</option>
+                                                    </select><div class="nice-select" tabindex="0"><span class="current">bangladesh</span><ul class="list"><li data-value="volvo" class="option selected">bangladesh</li><li data-value="saab" class="option">Algeria</li><li data-value="mercedes" class="option">Afghanistan</li><li data-value="audi" class="option">Ghana</li><li data-value="audi2" class="option">Albania</li><li data-value="audi3" class="option">Bahrain</li><li data-value="audi4" class="option">Colombia</li><li data-value="audi5" class="option">Dominican Republic</li></ul></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="checkout-form-list">
+                                                    <label>First Name <span class="required">*</span></label>
+                                                    <input type="text" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="checkout-form-list">
+                                                    <label>Last Name <span class="required">*</span></label>
+                                                    <input type="text" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="checkout-form-list">
+                                                    <label>Company Name</label>
+                                                    <input type="text" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="checkout-form-list">
+                                                    <label>Address <span class="required">*</span></label>
+                                                    <input type="text" placeholder="Street address">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="checkout-form-list">
+                                                    <input type="text" placeholder="Apartment, suite, unit etc. (optional)">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="checkout-form-list">
+                                                    <label>Town / City <span class="required">*</span></label>
+                                                    <input type="text" placeholder="Town / City">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="checkout-form-list">
+                                                    <label>State / County <span class="required">*</span></label>
+                                                    <input type="text" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="checkout-form-list">
+                                                    <label>Postcode / Zip <span class="required">*</span></label>
+                                                    <input type="text" placeholder="Postcode / Zip">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="checkout-form-list">
+                                                    <label>Email Address <span class="required">*</span></label>
+                                                    <input type="email" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="checkout-form-list">
+                                                    <label>Phone <span class="required">*</span></label>
+                                                    <input type="text" placeholder="Postcode / Zip">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> *@
+                                    <div class="order-notes">
+                                        <div class="checkout-form-list">
+                                            <label>Ghi chú đơn hàng</label>
+                                            <textarea id="checkout-mess" name="note" cols="30" rows="10" placeholder="Các yêu cầu ghi chú khi giao hàng."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="your-order mb-30 ">
+                                <h3>Đơn hàng của bạn</h3>
+                                <div class="your-order-table table-responsive">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th class="product-name">Sản phẩm</th>
+                                                <th class="product-total">Tổng cộng</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                          @foreach(var item in Model)
+                                          { 
+                                          int discount=string.IsNullOrEmpty(item.Product.Discount.ToString()) ? 100 : Convert.ToInt32(item.Product.Discount);
+                                          
+                                          string price_value=!string.IsNullOrEmpty(item.Price) ? item.Price : item.Product.Price;
+
+                                          total_value+=(Convert.ToInt32(price_value)-(Convert.ToInt32(price_value)*(discount)/100))*item.Quantity;
+                                           
+                                           string variant_info="";
+                                           
+                                           if(!string.IsNullOrEmpty(item.Size))
+                                           {
+                                            if(string.IsNullOrEmpty(variant_info))
+                                            {
+                                                variant_info+=item.Size;                                                                                                
+                                            }
+                                            else
+                                            {
+                                                variant_info+="/"+item.Size;
+                                            }
+                                           }
+                                            if(!string.IsNullOrEmpty(item.Color))
+                                           {
+                                            if(string.IsNullOrEmpty(variant_info))
+                                            {
+                                                variant_info+=item.Color;
+                                            }
+                                            else
+                                            {
+                                                variant_info+="/"+item.Color;
+                                            }
+                                           }
+                                        
+                                         if(!string.IsNullOrEmpty(item.Version))
+                                           {
+                                            if(string.IsNullOrEmpty(variant_info))
+                                            {
+                                                variant_info+=item.Version;
+                                            }
+                                            else
+                                            {
+                                                variant_info+="/"+item.Version;
+                                            }
+                                           }
+                                        
+                                         if(!string.IsNullOrEmpty(item.Mirror))
+                                           {
+                                            if(string.IsNullOrEmpty(variant_info))
+                                            {
+                                                variant_info+=item.Mirror;
+                                            }
+                                            else
+                                            {
+                                                variant_info+="/"+item.Mirror;
+                                            }
+                                           }
+                                        
+                                            <tr class="cart_item">
+                                                <td class="product-name">
+                                                 @(item.Product.ProductName) <strong class="product-quantity"> ×&nbsp;@(item.Quantity)</strong><br>
+                                                 <strong> @variant_info</strong>
+                                                </td>
+                                                <td class="product-total">
+                                                    <span class="amount">@((Convert.ToInt32(price_value)-(Convert.ToInt32(price_value)*(discount)/100))*item.Quantity)</span>
+                                                </td>
+                                            </tr>
+                                            @* <tr class="cart_item">
+                                                <td class="product-name">
+                                                    Vestibulum dictum magna <strong class="product-quantity"> × 1</strong>
+                                                </td>
+                                                <td class="product-total">
+                                                    <span class="amount">$50.00</span>
+                                                </td>
+                                            </tr> *@
+                                            }
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="cart-subtotal">
+                                                <th>Tạm tính</th>
+                                                <td><span class="amount">@total_value VNĐ</span></td>
+                                            </tr>
+                                            <tr class="shipping">
+                                                <th>Giao hàng</th>
+                                                <td>
+                                                    <ul>
+                                                        @* <li>
+                                                            <input type="radio" name="shipping">
+                                                            <label>
+                                                                Giá niêm yết: <span class="amount">10000 VNĐ</span>
+                                                            </label>
+                                                        </li> *@
+                                                        <li>
+                                                            <input type="radio" name="shipping" checked>
+                                                            <label>Miễn phí giao hàng:</label>
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                            <tr class="order-total">
+                                                <th>Tổng tiền đơn hàng</th>
+                                                <td><strong><span class="amount">@total_value VNĐ</span></strong>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </form>
+                                <div class="payment-method">
+                            <div class="accordion" id="checkoutAccordion">
+                                  
+                                  @foreach(var payment in payment_methods)
+                                 {    
+
+                                     if(payment.Paymentname=="Delivery" && payment.Status==1)
+                                    {
+                                            <div class="accordion-item">
+                                        <h2 class="accordion-header" id="delivery">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#deliver" aria-expanded="false" aria-controls="deliver">
+                                            Thanh toán khi nhận hàng
+                                            </button>
+                                        </h2>
+                                        <div id="deliver" class="accordion-collapse collapse" aria-labelledby="delivery" data-bs-parent="#checkoutAccordion">
+                                            <div class="accordion-body">
+                                                @* <label  class="checkbox-container">
+                                                 <input type="checkbox" id="payment-on-delivery" name="payment-method" value="delivery">
+                                                  <span class="checkmark"></span>
+                                                  Thanh toán khi nhận hàng
+                                                    </label> *@
+                                            <p><span style="color: red;">*</span>
+                                            Quý khách vui lòng kiểm tra kỹ thông tin đơn hàng trước khi nhận hàng.Đơn hàng của quý khách sẽ được giao đến địa chỉ đã đăng ký trong vòng 1-2 ngày làm việc kể từ khi đặt hàng.
+                                             </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }
+
+                                    if(payment.Paymentname=="Bank" && payment.Status==1)
+                                    {
+                                     <div class="accordion-item">
+                                        <h2 class="accordion-header" id="checkoutOne">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#bankOne" aria-expanded="true" aria-controls="bankOne">
+                                            Thanh toán qua ngân hàng
+                                            </button>
+                                        </h2>
+                                        <div id="bankOne" class="accordion-collapse collapse show" aria-labelledby="checkoutOne" data-bs-parent="#checkoutAccordion">
+                                            <div class="accordion-body">
+                                             <p><span style="color: red;">*</span>Quý khách thanh toán qua tài khoản sau.Đơn hàng của quý khách sẽ không được giải quyết cho đến khi việc xác nhận chuyển khoản được thực hiện thành công.Sau 3 ngày kể từ lúc đặt hàng,nếu hệ thống kiểm tra và xác nhận đơn hàng vẫn chưa được 
+                                                chuyển khoản thì hệ thống sẽ tự động hủy đơn hàng.
+                                             </p>
+                                            <div class="qr-payment">
+      <div class="qr-info">
+        <h3>Thông tin ngân hàng:</h3>
+        <ul>
+          <li><strong>Số tiền cần chuyển:</strong>&nbsp;@total_value VNĐ</li>
+          <li><strong>Tên ngân hàng:</strong>&nbsp;@bank_name</li>
+          <li><strong>Tên chủ thể:</strong>&nbsp;@account_name</li>
+          <li><strong>Số tài khoản:</strong>&nbsp;@account_num</li>
+          <li><strong>Nội dung:</strong>&nbsp;"#(Mã đơn hàng) chuyển khoản" Vd:#100101 chuyển khoản</li>
+        </ul>
+      </div>
+      <div class="qr-code">
+        <img class="qr-img" src="@qr_code" alt="QR Code">
+      </div>
+    </div>                                           
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }
+                                  
+                                    if(payment.Paymentname=="Paypal" && payment.Status==1)
+                                    {
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="paypalThree">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#paypal" aria-expanded="false" aria-controls="paypal">
+                                            Thanh toán qua Paypal
+                                            </button>
+                                        </h2>
+      <div id="paypal" class="accordion-collapse collapse" aria-labelledby="paypalThree" data-bs-parent="#checkoutAccordion">
+          <div class="accordion-body">
+      <div class="payment-method">
+        @* <div class="visa-logo">
+          <img src="@Url.Content("~/user_layout/img/banner/card.png")" alt="Visa Logo">
+        </div> *@
+          <h3>Thanh toán sử dụng Paypal</h3>
+        <div class="credit-card-form">
+            <div id="paypal-button-container" class="text-center"></div>
+          @* <div class="form-group">
+            <label for="card-holder"><strong>Tên chủ thể thẻ</strong></label>
+            <input type="text" id="card-holder" name="card-holder" placeholder="John Doe">
+          </div>
+          <div class="form-group">
+            <label for="card-number"><strong>Số tài khoản</strong></label>
+            <input type="text" id="card-number" name="card-number" placeholder="1234 5678 9012 3456">
+          </div>
+          <div class="form-group-grouped">
+            <div class="form-group">
+              <label for="expiry-date"><strong>Ngày hết hạn</strong></label>
+              <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YY">
+            </div>
+            <div class="form-group">
+              <label for="cvv"><strong>CVV</strong></label>
+              <input type="text" id="cvv" name="cvv" placeholder="123">
+            </div>
+          </div> *@
+        </div>
+      </div>
+      @* <button type="button" class="pay-button">Thanh toán</button> *@
+                                            </div>
+                                        </div>
+                                    </div>
+        }
+                     if(payment.Paymentname=="Master Card" && payment.Status==1)
+                                    {
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="paypalThree">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#visa" aria-expanded="false" aria-controls="visa">
+                                            Thanh toán qua Visa Card                                            
+                                            </button>
+                                        </h2>
+                                        <div id="visa" class="accordion-collapse collapse" aria-labelledby="paypalThree" data-bs-parent="#checkoutAccordion">
+          <div class="accordion-body">
+      <div class="payment-method">
+        <div class="visa-logo">
+          <img src="@Url.Content("~/user_layout/img/banner/card.png")" alt="Visa Logo"> 
+        </div>
+          <h3>Thanh toán sử dụng Visa Card</h3>          
+        <div class="credit-card-form">
+          <div class="form-group">
+            <label for="card-holder"><strong>Tên chủ thể thẻ</strong></label>
+            <input type="text" id="card-holder" name="card-holder" placeholder="John Doe">
+          </div>
+          <div class="form-group">
+            <label for="card-number"><strong>Số tài khoản</strong></label>
+            <input type="text" id="card-number" name="card-number" placeholder="1234 5678 9012 3456">
+          </div>
+          <div class="form-group-grouped">
+            <div class="form-group">
+              <label for="expiry-date"><strong>Ngày hết hạn</strong></label>
+              <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YY">
+            </div>
+            <div class="form-group">
+              <label for="cvv"><strong>CVV</strong></label>
+              <input type="text" id="cvv" name="cvv" placeholder="123">
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="pay-button">Thanh toán</button>
+                                            </div>
+                                        </div>
+                                    </div>
+        }
+
+                                  
+                                    @* <div class="accordion-item">
+                                        
+                                        
+                                        <h2 class="accordion-header" id="checkoutOne">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#bankOne" aria-expanded="true" aria-controls="bankOne">
+                                            Direct Bank Transfer
+                                            </button>
+                                        </h2>
+                                        <div id="bankOne" class="accordion-collapse collapse show" aria-labelledby="checkoutOne" data-bs-parent="#checkoutAccordion">
+                                            <div class="accordion-body">
+                                             <p>Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won’t be shipped until the funds have cleared in our account.</p>
+                                            </div>
+                                        </div>
+                                    </div> *@
+                                    @* <div class="accordion-item">
+                                        <h2 class="accordion-header" id="paymentTwo">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment" aria-expanded="false" aria-controls="payment">
+                                            Cheque Payment
+                                            </button>
+                                        </h2>
+                                        <div id="payment" class="accordion-collapse collapse" aria-labelledby="paymentTwo" data-bs-parent="#checkoutAccordion">
+                                            <div class="accordion-body">
+                                            <p>Please send your cheque to Store Name, Store Street, Store Town, Store State / County, Store Postcode.</p>
+                                            </div>
+                                        </div>
+                                    </div> *@
+                                    @* <div class="accordion-item">
+                                        <h2 class="accordion-header" id="paypalThree">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#paypal" aria-expanded="false" aria-controls="paypal">
+                                            PayPal
+                                            </button>
+                                        </h2>
+                                        <div id="paypal" class="accordion-collapse collapse" aria-labelledby="paypalThree" data-bs-parent="#checkoutAccordion">
+                                            <div class="accordion-body">
+                                                <p>Pay via PayPal; you can pay with your credit card if you don’t have a
+                                                PayPal account.</p>
+                                            </div>
+                                        </div>
+                                    </div> *@
+                                    }
+                                    </div>
+                                    <div class="order-button-payment mt-20">
+                                    <button type="button" id="checkout-order-btn" class="tp-btn-h1">Tiến hành đặt hàng</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </section>
+
+
+<script src="https://www.paypal.com/sdk/js?client-id=@paypal_client_id" data-namespace="paypal_sdk"></script>
+
+
+
+<script>
+  
+    var payment_method='';
+
+    const getAccordionItem=()=>
+    {
+     const openItem=document.querySelector('.accordion-collapse.show');
+
+     if(openItem)
+     {
+  payment_method=openItem.id;
+     }
+    };
+     
+    const convertPaymentMethod=(payment_method)=>
+    {
+        switch(payment_method)
+        {
+            case "deliver":
+            return "Delivery";
+            case "bankOne":
+            return "Bank";
+            case "paypal":
+            return "Paypal";
+            case "visa":
+            return "Master Card";
+            default:
+            return "";
+        }
+    };
+    
+    document.addEventListener("DOMContentLoaded",()=>
+    {
+    
+    var is_paypal_enable=document.getElementById("paypal-button-container");
+
+    function getToken()
+    {   alert( document.querySelector('input[name="__RequestVerificationToken"]').value);
+        return document.querySelector('input[name="__RequestVerificationToken"]').value;
+    }
+
+  if(is_paypal_enable!=null)
+  {
+    const total_price = '@total_value';
+     
+    paypal_sdk.Buttons({
+           style:
+           {
+            layout:'vertical',
+            color:'gold',
+            tagline:'false',
+            size:'responsive',
+            shape:'rect'
+           },
+            createOrder: function(data, actions) 
+            { 
+    const user_name=document.getElementById("user-name");
+    const address=document.getElementById("address");
+    const phone=document.getElementById("phone");
+    const email=document.getElementById("email");
+    var is_valid=false;        
+     if(user_name.value=="")
+    {    is_valid=true;
+         
+         document.getElementById("name-error").innerHTML="*Tên không được để trống";
+    }
+    if(address.value=="")
+    { 
+      is_valid=true;
+      
+      document.getElementById("address-error").innerHTML="*Địa chỉ không được để trống";
+    }
+    if(phone.value=="")
+    { 
+        is_valid=true;
+        
+        document.getElementById("phone-error").innerHTML="*Số điện thoại không được để trống";
+        
+    }
+
+    if(email.value=="")
+    { is_valid=true;
+        document.getElementById("email-error").innerHTML="*Email không được để trống";
+    }
+
+    if(is_valid)
+    {
+        return;
+    }  
+
+    payment_method=convertPaymentMethod(payment_method);
+          
+    const checkout_obj=
+    {
+    username:user_name.value,
+    address1:address.value,
+    phonenumber:phone.value,
+    email:email.value,
+    paymentmethod:payment_method
+    };
+
+              return fetch('/checkout/createOrder',{
+                method:'POST',
+                headers: 
+                {
+                 'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({total_price:total_price,checkout:checkout_obj})
+              })
+            .then(function(res)
+            {   
+                return res.json();
+            }).then(function(data)
+            {    
+                  return data.orderId;                  
+            })
+            },
+          onApprove: function(data, actions) 
+          {
+            return fetch('/checkout/capture?token='+data.orderID)
+            .then(function(res) 
+            {   
+                return res.json();                
+            })
+            .then(function(details) 
+            {  
+                if(details.status===1) 
+                {  
+                   var checkout=details.checkout;
+                   
+                   var note=document.getElementById("checkout-mess");
+                    
+                   if(note!=null)
+                    {
+                        note.value="Đã thanh toán thành công qua Paypal";
+                    }
+    
+    var checkout_form=document.getElementById("checkout-form");
+    var payment_input=document.createElement("input");
+    payment_input.type="text";
+    payment_input.name="paymentmethod";
+    payment_input.value=payment_method;
+    payment_input.style.display="none";
+    checkout_form.appendChild(payment_input);
+    checkout_form.submit();
+                    @* return fetch('/checkout/submit',{
+                        method:'POST',
+                        headers: 
+                        {
+                            'Content-Type': 'application/json',
+                             'RequestVerificationToken': getToken()
+                        },
+                        body: JSON.stringify(checkout)
+                    }); *@
+                
+                } 
+                else 
+                {
+                    alert('Payment failed: ' + details.message);
+                }
+            });
+        },
+            // Handle errors
+            onError: function(err) {
+                console.error('An error occurred during the transaction', err);                
+                @* alert('An error occurred. Please try again.'); *@
+            }
+        }).render('#paypal-button-container');        
+    }
+    getAccordionItem();        
+    var form=document.getElementById("signinForm");        
+    var checkout_form=document.getElementById("checkout-form");
+    var checkout_order_btn=document.getElementById("checkout-order-btn"); 
+    var username=document.getElementById("username");
+    var password= document.getElementById("password");    
+    checkout_order_btn.addEventListener("click",()=>{
+    var is_valid=true;
+    const user_name=document.getElementById("user-name");
+    const address=document.getElementById("address");
+    const phone=document.getElementById("phone");
+    const email=document.getElementById("email");
+
+    if(user_name.value=="")
+    {
+        is_valid=false;
+        document.getElementById("name-error").innerHTML="*Tên không được để trống";
+    }
+
+    if(address.value=="")
+    {
+        is_valid=false;
+
+        document.getElementById("address-error").innerHTML="*Địa chỉ không được để trống";
+    }
+
+    if(phone.value=="")
+    {
+        is_valid=false;
+
+        document.getElementById("phone-error").innerHTML="*Số điện thoại không được để trống";
+    }
+    if(email.value=="")
+    {
+        is_valid=false;
+
+        document.getElementById("email-error").innerHTML="*Email không được để trống";
+    }
+    if(!is_valid)
+    {  
+        event.preventDefault();
+        
+        return;
+    }
+
+    payment_method=convertPaymentMethod(payment_method);
+
+    var payment_input=document.createElement("input");
+    
+    payment_input.type="text";
+    
+    payment_input.name="paymentmethod";
+    
+    payment_input.value=payment_method;
+    
+    payment_input.style.display="none";
+    
+    checkout_form.appendChild(payment_input);
+    
+    checkout_form.submit();    
+    });
+
+      const accordion = document.getElementById('checkoutAccordion');
+
+      accordion.addEventListener('show.bs.collapse', (event) => 
+        {
+            payment_method=event.target.id;
+        });
+
+    form.addEventListener("submit",()=>
+    {
+      event.preventDefault();
+      var is_valid=true;
+     var username_val=username.value;
+     var password_val=password.value;
+        if(username_val=="")
+        {
+        is_valid=false;
+        
+        document.getElementById("username-error").innerHTML="Tên đăng nhập không được để trống";
+        
+        }
+        if(password_val=="")
+        {
+        
+        is_valid=false;
+
+        document.getElementById("password-error").innerHTML="Mật khẩu không được để trống";           
+        }
+        if(is_valid==false)
+        {
+            return;
+        }
+
+      let formDataVal=new FormData(form);
+    
+      var url='@Url.Action("LoginHandle","MyAccount")';
+      
+      $.ajax({  
+                url: url,
+                type: 'POST',
+                data: formDataVal,
+                contentType: false,
+                processData: false, 
+                success:function(response)
+                { 
+                  var status=response.status;
+                  
+                  var message=response.message;
+                  
+                  var title=response.title;
+                  
+                  var sitekey=response.siteKey;
+         
+                    if(sitekey!=null && siteKey!=undefined)
+                    { 
+                       var siteKey= document.getElementById("sitekey");
+                        
+                        siteKey.setAttribute("data-sitekey",sitekey);
+                        
+                        grecaptcha.reset();
+                    }
+                 document.getElementById("toast-title").innerHTML=title;
+
+                 document.getElementById("toast-message").innerHTML=message;
+     
+                 var toastEl = document.querySelector('.toast');
+
+                  if(status==-1 || status==0)
+                { 
+                   toastEl.classList.add('bg-danger');
+                }
+                else
+                { 
+                   toastEl.classList.add('bg-success');
+
+                   var coupon_hide=document.querySelector(".coupon-accordion");
+
+                   coupon_hide.style.display="none";
+                  
+                  var user_response=response.user;
+
+                  //alert(JSON.stringify(user_response));
+                 if(user_response!=null)
+                 {
+                   var order_username=document.getElementById("user-name");
+
+                   var email=document.getElementById("email");
+
+                   var phone=document.getElementById("phone");
+
+                   var address=document.getElementById("address");
+
+                    order_username.value=user_response.userName;
+
+                    email.value=user_response.email;
+
+                    phone.value=user_response.phoneNumber;
+
+                    address.value=user_response.address1;
+                    
+                   var section_url="@Url.Action("UserLoginPartialView","Checkout")";
+                   $.ajax({
+                    url:section_url,
+                    type:"POST",
+                    success: function(partialHtml) 
+                    {
+                        $('#user_avatar').html(partialHtml);
+                    }
+                });  
+
+                    }
+                }
+                
+                var toast = new bootstrap.Toast(toastEl);
+                
+                toast.show();
+
+                },
+                error: function (xhr, status, error) 
+                {
+                document.getElementById("toast-title-error").innerHTML="Lỗi xử lý";
+                document.getElementById("toast-message-error").innerHTML=error;
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();                            
+              }
+            });
+    });
+    });
+</script>
+      

@@ -1,0 +1,208 @@
+
+<!-- =========================================================
+* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
+==============================================================
+
+* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
+* Created by: ThemeSelection
+* License: You must have a valid license purchased in order to legally use the theme for your project.
+* Copyright ThemeSelection (https://themeselection.com)
+
+=========================================================
+ -->
+<!-- beautify ignore:start -->
+@{
+   var created_category=ViewBag.Created_Category;
+   var create_status=ViewBag.Status;
+}
+
+
+@if(create_status==0 || create_status==-1)
+    {
+      <div
+       class="bs-toast toast fade hide bg-danger toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+       data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Thêm Category</div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                         @created_category
+                        </div>
+                      </div>
+                        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+    }
+
+@if(create_status==1)
+{ 
+    <div
+       class="bs-toast toast fade hide bg-success toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Thêm Category</div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                         @created_category
+                        </div>
+                      </div>
+                <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+}
+    
+          <div class="content-wrapper">
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Category /</span>Thêm Category</h4>
+              <div class="row">
+                <div class="col-md-12">
+                  <ul class="nav nav-pills flex-column flex-md-row mb-3">
+                    <li class="nav-item">
+                      <a class="nav-link active" href="javascript:void(0);"><i class="bx bx-grid me-1"></i>Tài khoản</a>
+                    </li>       
+                  </ul>
+                  <div class="card mb-4">
+                    <h5 class="card-header">Thông tin Category</h5>
+                    <!-- Account -->
+                <form id="formAccountSettings" enctype="multipart/form-data" method="post" asp-controller="CategoryList" asp-action="AddCategory">
+
+                    <div class="card-body">
+                  
+                      <div class="d-flex align-items-start align-items-sm-center gap-4">
+                        <img
+                          src="https://cdn-icons-png.flaticon.com/128/16955/16955062.png"
+                          alt="user-avatar"
+                          class="d-block rounded"
+                          height="100"
+                          width="100"
+                          id="uploadedAvatar"
+                        />
+                        <div class="button-wrapper">
+                          <label for="upload" class="btn btn-primary me-2 mb-4" tabindex="0">
+                            <span class="d-none d-sm-block" id="upload-btn">Tải ảnh</span>
+                            <i class="bx bx-upload d-block d-sm-none"></i>
+                            <input
+                              type="file"
+                              id="upload"
+                              class="account-file-input"
+                              hidden
+                              name="avatar"
+                              accept="image/png,image/jpeg"/>
+                          </label>
+                          <button type="button" class="btn btn-outline-secondary account-image-reset mb-4" id="delete-avatar">
+                            <i class="bx bx-reset d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Xoá ảnh</span>
+                          </button>
+                          <p class="text-muted mb-0">Cho phép upload ảnh có định dạng JPG,PNG</p>
+                        </div>
+                      </div>
+                    </div>
+                    <hr class="my-0" />
+                    <div class="card-body">
+                        <div class="row">
+                          <div class="mb-3 col-md-6">
+                            <label for="categoryname" class="form-label">Category</label>
+                            <input
+                              class="form-control"
+                              type="text"
+                              id="category"
+                              name="categoryname"
+                              autofocus
+                              placeholder="Nhập tên loại sản phẩm"
+                            />
+                          <span id="category-error" class="text-danger"></span>
+                          </div>
+                        </div>
+                        <div class="mt-2">
+                          <button type="submit" class="btn btn-primary me-2">Thêm loại sản phẩm</button>
+                        </div>
+                    </div>
+                      </form>
+                    </div>
+                    <!-- /Account -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- / Content -->
+
+            <!-- Footer -->
+            
+            <!-- / Footer -->
+
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        <!-- / Layout page -->
+
+      <!-- Overlay -->
+      <div class="layout-overlay layout-menu-toggle"></div>
+<script>
+ document.getElementById("formAccountSettings").addEventListener("submit",()=>{
+  var is_valid=true;
+  var category=document.getElementById("category").value.trim();
+  if(category==='')
+  {
+    is_valid=false;
+    document.getElementById("category-error").innerHTML='Không được để trống thông tin này';
+  }
+
+  if(!is_valid)
+  {
+    event.preventDefault();
+  }  
+ });
+
+  document.getElementById("upload").addEventListener("change",()=>
+  {
+    var image_input=document.getElementById("upload");
+    var image_hoder=document.getElementById("uploadedAvatar");
+    const file=image_input.files[0];
+    if(file)
+    {
+     const reader = new FileReader();
+     reader.onload=(e)=>{
+        image_hoder.src=e.target.result;
+     }
+     reader.readAsDataURL(file);
+    }
+  });
+
+  document.getElementById("delete-avatar").addEventListener("click",()=>
+  {
+   var image_holder = document.getElementById("uploadedAvatar");
+   var img_file='https://cdn-icons-png.flaticon.com/128/16955/16955062.png';
+   image_holder.src=img_file;
+   @* var curr_folder=process.cwd();
+   alert(curr_folder); *@
+  });
+
+</script>

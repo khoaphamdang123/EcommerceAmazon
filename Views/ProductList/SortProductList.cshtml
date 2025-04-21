@@ -1,0 +1,288 @@
+@model List<Product>
+@{
+  @* int count_id= 0;
+  var selected_size=ViewBag.select_size;
+  var filtered_product=ViewBag.filter_obj as FilterProduct;
+  int status_delete=-1;
+  int change_pass_status=-1;
+  var current_total_item=(Model?.currentPage*Model?.pageSize)-Model?.pageSize;  
+  string curr_status_class="";
+  int sub_cat=-1;
+
+  if(ViewBag.SubCat!=null)
+  {
+    sub_cat=Convert.ToInt32(ViewBag.SubCat);
+  }
+  var cat_list=ViewBag.CatList as IEnumerable<Category>;
+  var brand_list=ViewBag.BrandList as IEnumerable<Brand>;
+  Console.WriteLine(cat_list);
+  Console.WriteLine(brand_list); *@
+  string curr_status_class="";
+
+  var current_total_item=0;
+    
+  string delete_email_value="";
+  
+}
+
+
+   <div
+       class="bs-toast toast fade hide toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Sắp xếp sản phẩm</div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                         
+                        </div>
+                      </div>
+}
+
+  
+          <div class="content-wrapper">
+            <div class="container-xxl flex-grow-1 container-p-y">
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Sản phẩm/</span>Sắp xếp sản phẩm</h4>
+                <div class="card">
+                
+                <div class="card-datatable border-bottom">
+                    <div class="row">
+                        <div class="col-md-11 d-flex justify-content-end align-items-center mt-3">
+                            @* <div class="data-length">
+                                <label>
+                                    <select class="form-select" id="page-size">
+                                    
+                                        @foreach(var option in ViewBag.options)
+                                        { if(option==selected_size)
+                                        {
+                                          <option value="@option" selected>@option</option>
+                                        }
+                                        else{
+                                           <option value="@option">@option</option>
+                                        }
+                                        }
+                                    </select>
+                                </label>
+                            </div> *@
+        
+           <button class="btn btn-primary" id="sort-btn">Cập nhật thứ tự</button>
+                        </div>
+                            @* <div class="col-md-10">
+                            <div class="dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-end flex-md-row flex-column mb-6 mb-md-0 mt-n6 mt-md-0 gap-md-4">
+                            <div class="data-filter">
+                            <div class="dt-buttons btn-group flex-wrap">
+                                <label>
+                                    <select class="form-select" id="page-size">
+                                     
+                                        @foreach(var option in ViewBag.options)
+                                      { 
+                                        if(option==selected_size)
+                                        {
+                                          <option value="@option" selected>@option</option>
+                                        }
+                                        else
+                                        {
+                                           <option value="@option">@option</option>
+                                        }
+                                      }
+                                    </select>
+                                </label>
+                                
+                                <div class="btn-group">
+                                    <button class="btn buttons-collection dropdown-toggle btn-label-secondary me-4" tabindex="0" id="exportDropdown" type="button" aria-haspopup="dialog" data-bs-toggle="dropdown" aria-expanded="false"><span><i class="bx bx-export me-2 bx-sm"></i>Xuất File</span></button> 
+                                    <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                       <li><a class="dropdown-item" href="@Url.Action("ExportToExcel","ProductList")">Định dạng Excel</a></li>
+                                    </ul>    
+                                </div>
+                                <button class="btn btn-secondary add-new btn-primary" id="add-category-btn" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><span><i class="bx bx-plus bx-sm me-0 me-sm-2"></i><span class="d-none d-sm-inline-block">Thêm sản phẩm mới</span></span></button>
+                            </div>
+                            </div>
+                            </div>
+                        </div> *@
+                    </div>
+                </div>
+                <h5 class="card-header">Danh sách sản phẩm</h5>
+                <div class="table-responsive text-nowrap border-bottom">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">STT</th>
+                            <th class="text-center">No</th>
+                            <th class="text-center">Tên sản phẩm</th>
+                            <th class="text-center">Loại sản phẩm</th>
+                            <th class="text-center">Nhãn hàng</th>
+                            <th class="text-center">Giá sản phẩm</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-center">Ngày tạo</th>
+                            <th class="text-center">Ngày cập nhật</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0"  id="tableBody">
+                       @foreach(var product in Model)
+                       { 
+                         current_total_item+=1;
+
+                         switch(product.Status)
+                        {
+                           
+                            case "Còn hàng":
+                            {
+                                curr_status_class="bg-label-success";
+                                break;
+                            }
+                            case "Hết hàng":
+                            {
+                                curr_status_class="bg-label-danger";
+                                break;
+                            }
+                        }
+                         <tr>
+                            <td class="text-center">@current_total_item</td>
+                            <td class="text-center">@product.Id</td>
+                            <td class="text-center">
+                             <div class="d-flex">
+                             @if(!string.IsNullOrEmpty(product.Frontavatar))
+                           {
+                              <div class="avatar-wrapper">
+                                <div class="avatar avatar-sm me-2 rounded-2">
+                                 <img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="User Front Avatar">
+                                </div>
+                              </div>
+                              }  
+                              @if(!string.IsNullOrEmpty(product.Backavatar))
+                              {
+                                  <div class="avatar-wrapper">
+                                <div class="avatar avatar-sm me-2 rounded-2">
+                                  <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="User Back Avatar">
+                                </div>
+                              </div>
+                              }
+                              <strong>@product.ProductName</strong>
+                             </div>
+                              </td>
+                            <td class="text-center">
+                             @if(product?.Category!=null)
+                             {
+                              @product.Category.CategoryName
+                              }
+                              </td>
+                            <td class="text-center">
+                             @if(product?.Brand!=null)
+                             {
+                              @product.Brand.BrandName
+                             }
+                              </td>
+                            <td class="text-center">@product.Price</td>
+                            <td class="text-center"><span class="badge px-2 @curr_status_class">@product.Status</span></td>                            
+                            <td class="text-center">@product.CreatedDate</td>
+                            <td class="text-center">@product.UpdatedDate</td>
+                         </tr>
+                    }
+                    </tbody>
+                </table>
+                </div>
+ </div>
+  
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+
+      <div class="layout-overlay layout-menu-toggle"></div>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.3/dragula.min.js"></script>
+
+  <script>
+     let delete_category='';
+
+    @* var all_delete_btn=document.querySelectorAll('#delete-record-btn');
+
+    all_delete_btn.forEach((btn)=>{
+    btn.addEventListener('click',()=>{
+    delete_category=btn.getAttribute('data-category');
+     })
+    }); *@
+
+     @* document.getElementById("page-size").addEventListener("change",()=>
+     {
+     var selected_value=document.getElementById("page-size").value;
+
+     if(selected_value)
+     {
+      selected_value=parseInt(selected_value);
+      //window.location.href=`${Url.Action("handleNumberItem",new{page_size=selected_value})}`;
+      window.location.href= '@Url.Action("ProductListPaging", "ProductList")' + "?page_size=" + selected_value;
+     }
+     }); *@
+     @* document.getElementById("add-category-btn").addEventListener('click',()=>
+     {
+      window.location.href='@Url.Action("AddProductList","ProductList")';
+     }); *@
+    
+    @* document.getElementById("remove-btn").addEventListener('click',()=>
+    {
+
+    delete_category_value=delete_category;
+
+     window.location.href='@Url.Action("DeleteProduct","ProductList")'+"?id="+delete_category_value; 
+    
+    }); *@
+
+  var sort_btn=document.getElementById("sort-btn");
+
+  sort_btn.addEventListener('click',()=>{
+    $.ajax({
+      url:'@Url.Action("SortProduct","ProductList")',
+      type:'POST',
+      data:{
+        product_list:$("#tableBody").children().map((index,el)=>el.children[1].innerText).get()
+      },
+      success:(data)=>
+      {
+        var status=data.status;
+        var message =data.message;
+        var toast=document.querySelector('.bs-toast');
+        var toast_body=toast.querySelector('.toast-body');
+        toast_body.innerHTML=message;
+        if(status==1)
+        {
+        toast.classList.add('bg-success');
+        }
+        else
+        {
+          toast.classList.add('bg-danger');
+        }
+        var toast_bs = new bootstrap.Toast(toast);
+        toast_bs.show();
+      },
+        error:(xhr,status,error)=>{
+           alert(xhr.responseText);
+        }
+    });
+  });
+    
+    var drake = dragula([document.getElementById("tableBody")]);
+
+    drake.on("drag",(el)=>{
+      el.className+='el-drag-ex-1';      
+    });
+
+    drake.on("drop",(el)=>
+    {
+  el.className = el.className.replace('el-drag-ex-1', '');
+    });
+
+    drake.on('cancel',(el)=>{
+      el.className = el.className.replace('el-drag-ex-1', '');
+    });
+  </script>

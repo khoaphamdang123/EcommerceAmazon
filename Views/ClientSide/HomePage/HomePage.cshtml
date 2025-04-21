@@ -1,0 +1,2861 @@
+@using Newtonsoft.Json;
+@using System.Text.RegularExpressions;
+@{ 
+    Layout = "_UserLayout";
+    
+    var banners=ViewBag.banners;
+
+    var banners2=ViewBag.banners2;
+    
+    var products = ViewBag.products as List<Product>; 
+
+    var prominent_products = ViewBag.prominent_products as List<Product>;
+    
+    var categories = ViewBag.categories as List<Category>;
+    
+    var brands=ViewBag.brands as List<Brand>;
+  
+    var blogs = ViewBag.blogs as List<Blog>;
+    
+    var count_reviews=ViewBag.count_reviews as Dictionary<string,int>;
+    
+    var slider_content=ViewBag.slider_content as string;
+    
+    string value="~/"+@products[0].Frontavatar.Substring(products[0].Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1));
+    
+    string user_id=this.ViewContext.HttpContext.Session.GetString("UserName");
+    
+    string product_chosen="";
+
+    //List<string> details_img=new List<string>();
+    int count_trending=0;
+}        <!-- slider-area-start -->
+ <div
+       class="bs-toast toast fade hide toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+       data-bs-dismiss="toast"
+       style="cursor: pointer; position: fixed; top: 20px; right: 20px; z-index: 5000;"
+       data-delay="3000"
+       data-bs-autohide="true" 
+       data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold" id="toast-title"></div>
+                        </div>
+                        <div class="toast-body" id="toast-message">
+                        </div>
+        </div>
+
+        
+        <div class="slider-area light-bg-s pt-60">
+            <div class="container custom-conatiner">
+                <div class="row"> 
+                    <div class="col-xl-7">
+                        <div class="swiper-container slider__active pb-30">
+                            <div class="slider-wrapper swiper-wrapper">
+                            @foreach(var banner in banners)
+                            {
+                                <div class="single-slider swiper-slide b-radius-2 slider-height-2 d-flex align-items-center" data-background="@banner?.Image.Substring(banner.Image.IndexOf("wwwroot")+("wwwroot".Length+1)).Replace("\\","/")">
+                                    @* <div class="slider-content slider-content-2">
+                                        <h2 data-animation="fadeInLeft" data-delay="1.7s" class="pt-15 slider-title pb-5">Gaming Headset<br> Brilliant Lighting Effect</h2>
+                                        <p class="pr-20 slider_text" data-animation="fadeInLeft" data-delay="1.9s">Discount 40% On Products & Free Shipping</p>
+                                        <div class="slider-bottom-btn mt-65">
+                                            <a data-animation="fadeInUp" data-delay="1.15s" href="shop.html" class="st-btn-border b-radius-2">Discover now</a>
+                                        </div>
+                                    </div> *@
+                                </div><!-- /single-slider -->
+                                }
+                                <!-- /single-slider -->
+                                <div class="main-slider-paginations"></div>
+                            </div>
+                        </div>
+                          
+                          <div class="swiper-container pb-30 second-swiper">
+                            <div class="slider-wrapper swiper-wrapper">
+                            @foreach(var banner in banners2)
+                            {
+                                <div class="single-slider swiper-slide b-radius-2 slider-height-2 d-flex align-items-center" data-background="@banner?.Image.Substring(banner?.Image.IndexOf("wwwroot")+("wwwroot".Length+1)).Replace("\\","/")">
+                                    @* <div class="slider-content slider-content-2">
+                                        <h2 data-animation="fadeInLeft" data-delay="1.7s" class="pt-15 slider-title pb-5">Gaming Headset<br> Brilliant Lighting Effect</h2>
+                                        <p class="pr-20 slider_text" data-animation="fadeInLeft" data-delay="1.9s">Discount 40% On Products & Free Shipping</p>
+                                        <div class="slider-bottom-btn mt-65">
+                                            <a data-animation="fadeInUp" data-delay="1.15s" href="shop.html" class="st-btn-border b-radius-2">Discover now</a>
+                                        </div>
+                                    </div> *@
+                                </div><!-- /single-slider -->
+                                }
+                              
+                                <div class="main-slider-paginations"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-5">
+                  <div class="row">
+                     @for(int i=0;i<4;i++)
+                     {  
+                        var product=prominent_products[i];
+
+                        string regex_product=Regex.Replace(product.ProductName,@"[^\w\d+,]", "-");
+                        
+                         <div class="col-6 col-xl-6 col-lg-6 col-md-6">
+                                <div class="banner__item p-relative w-img mb-30">
+                                    <div class="banner__img b-radius-2">
+                                        <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})"><img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt=""></a>
+                                    </div>
+                                    <div class="banner__content banner__content-2">
+                                        <h6 style="color: #fcbe00; font-weight: bold;"><a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">@product.ProductName</a></h6>
+                                        @* <p style="color: #fcbe00; font-weight: bold;">@products[i].Category.CategoryName</p> *@
+                                    </div>
+                                </div>
+                            </div>
+                      } 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- slider-area-end -->
+
+        <!-- trending-product-area-start -->
+        <section class="trending-product-area light-bg-s pt-25 pb-15">
+            <div class="container custom-conatiner">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="section__head d-flex justify-content-between mb-30">
+                            <div class="section__title section__title-2">
+                                <h5 class="st-titile">Sản phẩm nổi bật</h5>
+                            </div>
+                            <div class="button-wrap button-wrap-2">
+                                <a href="@Url.Action("ProminentProducts","Products")">Xem toàn bộ sản phẩm<i class="fal fa-chevron-right"></i></a>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-none d-md-flex row flex-nowrap overflow-auto">
+
+                @foreach(var product in prominent_products)
+                { 
+                string regex_product=Regex.Replace(product.ProductName, @"[^\w\d+,]", "-");
+
+                count_trending++;                
+                
+                if(count_trending<=6)
+                { 
+                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl-2">
+                        <div class="product__item product__item-2 b-radius-2 mb-20">
+                            <div class="product__thumb fix">
+                                <div class="product-image w-img">
+                                    <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
+                                        <img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="product">
+                                        @* <img src="~/UploadImages/0a73f765-1942-4a78-98d9-0853d41024f8.webp" alt="product"> *@
+                                    </a>
+                                </div>
+                                <div class="product__offer">
+                                   @if(!string.IsNullOrEmpty(product?.Discount.ToString()) && product?.Discount!=0)
+                                   {
+                                   <span class="discount">-@product?.Discount%</span>
+                                   }  
+                                </div>
+                                
+                                @* <div class="product__offer">
+                                <span class="discount">-15%</span>
+                                </div> *@
+                                <div class="product-action product-action-2">
+                                    <a href="javascript:void(0);" type="button" class="icon-box icon-box-1" data-bs-toggle="modal" data-product-name="@product.ProductName" data-product-price="@product.Price" data-product-discount="@product.Discount" data-main-avatar="@product.Frontavatar" 
+                                               
+                                                    data-product-category="@product?.Category.CategoryName"
+                                                    data-product-quantity="@product.Quantity" 
+                                                    data-product-id="@product.Id"
+                                                    data-count-review="@count_reviews[product.ProductName]"
+                                                    data-discount="@product.Discount"
+                                                    data-img-0="@product.Frontavatar"
+                                                    @for(int i=0;i<product.ProductImages.ToList().Count;i++)
+                                                    {
+                                                    string val=$"data-img-{i+1}=\"{product.ProductImages.ToList()[i].Avatar}\"";
+
+                                                    @Html.Raw(val);
+
+                                                    }
+                                                    data-bs-target="#productModalId"
+                                                    title="Xem nhanh">
+                                        <i class="fal fa-eye"></i>
+                                        <i class="fal fa-eye"></i>
+                                    </a>
+                                    <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})"  class="icon-box icon-box-1" title="Chi tiết sản phẩm">
+                                        <i class="fal fa-layer-group"></i>
+                                        <i class="fal fa-layer-group"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="product__content product__content-2">
+                                <h6><a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">@product.ProductName</a></h6>
+                                <div class="rating mb-5 mt-10">
+                                    <ul>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                    </ul>
+                                    <span>(01 review)</span>                                    
+                                </div>
+                              @if(Convert.ToInt32(product.Price.Replace(",",""))>0)
+                              {
+                                <div class="price">
+                                    @if(!string.IsNullOrEmpty(product?.Discount.ToString()) && product?.Discount!=0)
+                                   {
+                                    <span class="original-price">@product.Price đ</span>
+                                    
+                                    <span class="discounted-price">@String.Format("{0:N0} đ", Convert.ToInt32(product.Price.Replace(",","")) * (double)(1 - product.Discount / 100.0))</span>
+                                    }
+                                    else
+                                    {
+                                    <span class="discounted-price">@product.Price đ</span>   
+                                    }
+                                </div>
+                                }
+                            </div>
+                            <div class="product__add-cart text-center">
+                            
+                                <button type="button" id="add-cart" data-product-name="@product.ProductName" data-product-id="@product.Id" data-product-price="@(!string.IsNullOrEmpty(product?.Discount.ToString()) && product?.Discount!=0?String.Format("{0:N0} đ", Convert.ToInt32(product.Price.Replace(",","")) * (1 - product.Discount / 100)):product.Price)" class="cart-btn-3 product-modal-sidebar-open-btn d-flex align-items-center justify-content-center w-100">
+                                    Thêm vào giỏ hàng                                    
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    }
+                </div>
+
+         <div class="d-md-none swiper mySwiper">
+        <div class="swiper-wrapper">
+            @for (int i = 0; i < products.Take(6).Count(); i += 2)
+            {
+                <div class="swiper-slide">
+                    <div class="row">
+                        @for (int j = i; j < i + 2 && j < products.Count(); j++)
+                        {
+                            var product = products[j];
+
+                            string regex_product = Regex.Replace(product.ProductName, @"[^\w\d+,]", "-");
+                             
+                            <div class="col-6">
+                                <div class="product__item product__item-2 b-radius-2 mb-20">
+                                    <div class="product__thumb fix">
+                                <div class="product-image w-img">
+                                    <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
+                                        <img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="product">
+                                    </a>
+                                </div>
+                                <div class="product__offer">
+                                   @if(!string.IsNullOrEmpty(product?.Discount.ToString()) && product?.Discount!=0)
+                                   {
+                                   <span class="discount">-@product?.Discount%</span>
+                                   }  
+                                </div>
+                         
+                                <div class="product-action product-action-2">
+                                    <a href="javascript:void(0);" type="button" class="icon-box icon-box-1" data-bs-toggle="modal" data-product-name="@product.ProductName" data-product-price="@product.Price" data-product-discount="@product.Discount" data-main-avatar="@product.Frontavatar" 
+                                               
+                                                    data-product-category="@product?.Category.CategoryName"
+                                                    data-product-quantity="@product.Quantity" 
+                                                    data-product-id="@product.Id"
+                                                    data-count-review="@count_reviews[product.ProductName]"
+                                                    data-discount="@product.Discount"
+                                                    data-img-0="@product.Frontavatar"
+                                                    @for(int z=0;z<product.ProductImages.ToList().Count;z++)
+                                                    {
+                                                    string val=$"data-img-{z+1}=\"{product.ProductImages.ToList()[z].Avatar}\"";
+                                                    @Html.Raw(val);
+                                                    }
+                                                    data-bs-target="#productModalId"
+                                                    title="Xem nhanh">
+                                        <i class="fal fa-eye"></i>
+
+                                        <i class="fal fa-eye"></i>
+                                    </a>
+                                    <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})"  class="icon-box icon-box-1" title="Chi tiết sản phẩm">
+                                        <i class="fal fa-layer-group"></i>
+                                        <i class="fal fa-layer-group"></i>
+                                    </a>
+                                </div>
+                            </div>
+                                <div class="product__content product__content-2">
+                                <h6><a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">@product.ProductName</a></h6>
+                                <div class="rating mb-5 mt-10">
+                                    <ul>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                    </ul>
+                                    <span>(01 review)</span>
+                                </div>
+                              @if(Convert.ToInt32(product.Price.Replace(",",""))>0)
+                              {
+                                <div class="price">
+                                    @if(!string.IsNullOrEmpty(product?.Discount.ToString()) && product?.Discount!=0)
+                                   {
+                                    <span class="original-price">@product.Price đ</span>
+                                    
+                                    <span class="discounted-price">@String.Format("{0:N0} đ", Convert.ToInt32(product.Price.Replace(",","")) * (double)(1 - product.Discount / 100.0))</span>
+                                    }
+                                    else
+                                    {
+                                    <span class="discounted-price">@product.Price đ</span>   
+                                    }
+                                </div>
+                                }
+                            </div>
+                            <div class="product__add-cart text-center">
+                            
+                                <button type="button" id="add-cart" data-product-name="@product.ProductName" data-product-id="@product.Id" data-product-price="@(!string.IsNullOrEmpty(product?.Discount.ToString()) && product?.Discount!=0?String.Format("{0:N0} đ", Convert.ToInt32(product.Price.Replace(",","")) * (1 - product.Discount / 100)):product.Price)" class="cart-btn-3 product-modal-sidebar-open-btn d-flex align-items-center justify-content-center w-100">
+                                    Thêm vào giỏ hàng                                                                        
+                                </button>
+                            </div>
+                            </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+               
+            </div>
+        </section>
+
+        @* <section class="categories__area light-bg-s pt-20 pb-10">
+            <div class="container custom-conatiner">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="section__head d-flex justify-content-between mb-30">
+                            <div class="section__title section__title-2">
+                                <h5 class="st-titile">Loại sản phẩm nổi bật</h5>
+                            </div>
+                     
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                @foreach(var cat in categories)
+                {  
+                 var avatarUrl = string.IsNullOrEmpty(cat.Avatar) 
+        ? "https://cdn-icons-png.flaticon.com/128/16955/16955062.png" 
+        : Url.Content("~/" +cat.Avatar.Substring(cat.Avatar.IndexOf("wwwroot") + ("wwwroot".Length + 1)));
+    <div class="col-xl-2 col-lg-3 col-md-4 col-6">
+    
+     <div class="categories__item p-relative w-img mb-30 text-center">
+        <!-- Image -->
+        <div class="categories__img b-radius-2">
+            <a href="@Url.Action("ProductsByCategory", "Products", new { category_name = cat.CategoryName })">
+                <img src="@avatarUrl" alt="category">                
+            </a>
+        </div>
+        <!-- Content -->
+        <div class="categories__content mt-2">
+            <h6 style="color:#fcbe00; font-weight: bold; font-size: 20px;">
+                <a href="@Url.Action("ProductsByCategory", "Products", new { category_name = cat.CategoryName })">
+                    @cat.CategoryName
+                </a>
+            </h6>
+            <p style="color:#fcbe00; font-weight: bold; font-size: 17px;">
+                @(products.Count(p => p.Category.CategoryName == cat.CategoryName)) sản phẩm
+            </p>
+        </div>
+    </div>
+</div>
+                    }
+                </div>
+            </div>
+        </section> *@
+
+        <section class="moveing-text-area">
+            <div class="container">
+                <div class="ovic-running">
+                    <div class="wrap">
+                        <div class="inner">
+                            <p class="item">@slider_content</p>
+                            @* <p class="item">Design Week / 15% Off the website / Code: AYOSALE-2020</p>
+                            <p class="item">Always iconic. Now organic. Introducing the $20 Organic Tee.</p> *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        @foreach(var cat in categories)
+        {    
+        var products_cat=products.Where(p=>p.Category.CategoryName==cat.CategoryName).ToList();
+        
+        if(products_cat.Count<1)
+        {
+            continue;            
+        }
+        <section class="recomand-product-area light-bg-s pt-50 pb-15">
+            <div class="container custom-conatiner">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="section__head d-flex justify-content-between mb-30">
+                            <div class="section__title section__title-2">
+                                <h5 class="st-titile">@cat.CategoryName</h5>
+                            </div>
+                            <div class="button-wrap button-wrap-2">
+                                <a href="@Url.Action("ProductsByCategory","Products",new{category_name=cat.CategoryName})">Xem toàn bộ sản phẩm <i class="fal fa-chevron-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-none d-md-flex row">
+                @for(int j=0;j<products_cat.Count;j++)
+                {  
+                  var product=products_cat[j];
+              
+                 string regex_product=Regex.Replace(product.ProductName, @"[^\w\d+,]", "-");
+  
+                   if(j==12)
+                   {
+                    break;                    
+                   }
+                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl-2">
+                        <div class="product__item product__item-2 b-radius-2 mb-20">
+                            <div class="product__thumb fix">
+                                <div class="product-image w-img">
+                                    <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
+                                        <img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="product">
+                                    </a>
+                                </div>
+                                <div class="product__offer">
+                                   @if(!string.IsNullOrEmpty(product?.Discount.ToString()) && product?.Discount!=0)
+                                   {
+                                   <span class="discount">-@product?.Discount%</span>
+                                   }  
+                                </div>
+                                <div class="product-action 
+                                product-action-2">
+                                   
+                                    <a href="#" class="icon-box icon-box-1" data-bs-toggle="modal" data-product-name="@product.ProductName" data-product-price="@product.Price" data-main-avatar="@product.Frontavatar" 
+                                                    data-product-category="@product?.Category.CategoryName"
+                                                    data-product-quantity="@product.Quantity"  
+                                                    data-product-id="@product.Id"
+                                                    data-count-review="@count_reviews[product.ProductName]"
+                                                    data-discount="@product.Discount"
+                                                    data-img-0="@product.Frontavatar"
+                                                   @for(int i=0;i<product.ProductImages.ToList().Count;i++)
+                                                    {
+                                                    string val=$"data-img-{i+1}=\"{product.ProductImages.ToList()[i].Avatar}\"";
+                                                    @Html.Raw(val);
+                                                    }
+                                                    data-bs-target="#productModalId" title="Xem nhanh">
+
+                                        <i class="fal fa-eye"></i>
+                                        
+                                        <i class="fal fa-eye"></i>
+                                    </a>
+
+                                    <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})"  class="icon-box icon-box-1" title="Chi tiết sản phẩm">
+                                        <i class="fal fa-layer-group"></i>
+                                        <i class="fal fa-layer-group"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="product__content product__content-2">
+                                <h6><a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">@product.ProductName</a></h6>
+                                <div class="rating mb-5 mt-10">
+                                    <ul>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                    </ul>
+                                </div>
+                            @if(Convert.ToInt32(product.Price.Replace(",",""))>0)
+                            {
+                    <div class="price">
+                       
+                       @if(!string.IsNullOrEmpty(product?.Discount.ToString()) && product?.Discount!=0)
+                                   {
+                                    <span class="original-price">@product.Price đ</span>
+                                    
+                                    <span class="discounted-price">@String.Format("{0:N0} đ", Convert.ToInt32(product.Price.Replace(",","")) * (double)(1 - product.Discount / 100.0))</span>
+                                    }
+                                    else
+                                    {
+                                    <span class="discounted-price">@product.Price đ</span>   
+                                    }                               
+                                </div>
+                            }
+                            </div>
+                            <div class="product__add-cart text-center">
+                                <button type="button" id="add-cart" data-product-name="@product.ProductName" data-product-id="@product.Id"  data-product-price="@(!string.IsNullOrEmpty(product?.Discount.ToString()) && product?.Discount!=0?String.Format("{0:N0} đ", Convert.ToInt32(product.Price.Replace(",","")) * (1 - product.Discount / 100)):product.Price)" class="cart-btn-3 product-modal-sidebar-open-btn d-flex align-items-center justify-content-center w-100">
+                               Thêm vào giỏ hàng
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+
+
+        <div class="d-md-none swiper mySwiper">
+        <div class="swiper-wrapper">
+            @for (int i = 0; i < products.Count(); i += 2)
+            {
+                <div class="swiper-slide">
+
+                    <div class="row">
+                       
+                        @for (int j = i; j < i + 2 && j < products.Count(); j++)
+                        {
+                            var product = products[j];
+
+                            string regex_product = Regex.Replace(product.ProductName, @"[^\w\d+,]", "-");
+
+                            <div class="col-6">
+                                <div class="product__item product__item-2 b-radius-2 mb-20">
+                                    <div class="product__thumb fix">
+                                <div class="product-image w-img">
+                                    <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
+                                        <img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="product">
+                                    </a>
+                                </div>
+                                <div class="product__offer">
+                                   @if(!string.IsNullOrEmpty(product?.Discount.ToString()) && product?.Discount!=0)
+                                   {
+                                   <span class="discount">-@product?.Discount%</span>
+                                   }  
+                                </div>
+                                <div class="product-action product-action-2">
+                                    <a href="javascript:void(0);" type="button" class="icon-box icon-box-1" data-bs-toggle="modal" data-product-name="@product.ProductName" data-product-price="@product.Price" data-product-discount="@product.Discount" data-main-avatar="@product.Frontavatar" 
+                                               
+                                                    data-product-category="@product?.Category.CategoryName"
+                                                    data-product-quantity="@product.Quantity" 
+                                                    data-product-id="@product.Id"
+                                                    data-count-review="@count_reviews[product.ProductName]"
+                                                    data-discount="@product.Discount"
+                                                    data-img-0="@product.Frontavatar"
+                                                    @for(int z=0;z<product.ProductImages.ToList().Count;z++)
+                                                    {
+                                                    string val=$"data-img-{z+1}=\"{product.ProductImages.ToList()[z].Avatar}\"";
+                                                    
+                                                    @Html.Raw(val);                                                    
+                                                    }
+                                                    data-bs-target="#productModalId"
+                                                    title="Xem nhanh">
+                                        <i class="fal fa-eye"></i>
+                                        <i class="fal fa-eye"></i>
+                                        
+                                    </a>
+                                    <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})"  class="icon-box icon-box-1" title="Chi tiết sản phẩm">
+                                        <i class="fal fa-layer-group"></i>
+                                        <i class="fal fa-layer-group"></i>
+                                    </a>
+                                </div>
+                            </div>
+                                <div class="product__content product__content-2">
+                                <h6><a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">@product.ProductName</a></h6>
+                                <div class="rating mb-5 mt-10">
+                                    <ul>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                    </ul>
+                                    <span>(01 review)</span>
+                                </div>
+                              @if(Convert.ToInt32(product.Price.Replace(",",""))>0)
+                              {
+                                <div class="price">
+                                    @if(!string.IsNullOrEmpty(product?.Discount.ToString()) && product?.Discount!=0)
+                                   {
+                                    <span class="original-price">@product.Price đ</span>
+                                    
+                                    <span class="discounted-price">@String.Format("{0:N0} đ", Convert.ToInt32(product.Price.Replace(",","")) * (double)(1 - product.Discount / 100.0))</span>
+                                    }
+                                    else
+                                    {
+                                    <span class="discounted-price">@product.Price đ</span>   
+                                    }
+                                </div>
+                                }
+                            </div>
+                            <div class="product__add-cart text-center">
+                                <button type="button" id="add-cart" data-product-name="@product.ProductName" data-product-id="@product.Id" data-product-price="@(!string.IsNullOrEmpty(product?.Discount.ToString()) && product?.Discount!=0?String.Format("{0:N0} đ", Convert.ToInt32(product.Price.Replace(",","")) * (1 - product.Discount / 100)):product.Price)" class="cart-btn-3 product-modal-sidebar-open-btn d-flex align-items-center justify-content-center w-100">
+                                    Thêm vào giỏ hàng
+                                </button>
+                            </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+            </div>
+        </section>
+        }
+
+        @* <section class="recomand-product-area light-bg-s pt-50 pb-15">
+            <div class="container custom-conatiner">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="section__head d-flex justify-content-between mb-30">
+                            <div class="section__title section__title-2">
+                                <h5 class="st-titile">Sản phẩm cho bạn</h5>
+                            </div>
+                            <div class="button-wrap button-wrap-2">
+                                <a href="@Url.Action("Products","Products")">Xem toàn bộ sản phẩm <i class="fal fa-chevron-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-none d-md-flex row">
+                @for(int j=0;j<products.Count;j++)
+                {  
+                  var product=products[j];
+              
+                 string regex_product=Regex.Replace(product.ProductName, @"[^\w\d]", "-");
+  
+                   if(j==12)
+                   {
+                    break;                    
+                   }
+                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl-2">
+                        <div class="product__item product__item-2 b-radius-2 mb-20">
+                            <div class="product__thumb fix">
+                                <div class="product-image w-img">
+                                    <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
+                                        <img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="product">
+                                    </a>
+                                </div>
+                                <div class="product__offer">
+                                   @if(!string.IsNullOrEmpty(product?.Discount.ToString()) && product?.Discount!=0)
+                                   {
+                                   <span class="discount">-@product?.Discount%</span>
+                                   }  
+                                </div>
+                                <div class="product-action 
+                                product-action-2">
+                                   
+                                    <a href="#" class="icon-box icon-box-1" data-bs-toggle="modal" data-product-name="@product.ProductName" data-product-price="@product.Price" data-main-avatar="@product.Frontavatar" 
+                                                    data-product-category="@product?.Category.CategoryName"
+                                                    data-product-quantity="@product.Quantity"  
+                                                    data-product-id="@product.Id"
+                                                    data-count-review="@count_reviews[product.ProductName]"
+                                                    data-discount="@product.Discount"
+                                                    data-img-0="@product.Frontavatar"
+                                                   @for(int i=0;i<product.ProductImages.ToList().Count;i++)
+                                                    {
+                                                    string val=$"data-img-{i+1}=\"{product.ProductImages.ToList()[i].Avatar}\"";
+                                                    @Html.Raw(val);
+                                                    }
+                                                    data-bs-target="#productModalId" title="Xem nhanh">
+
+                                        <i class="fal fa-eye"></i>
+                                        
+                                        <i class="fal fa-eye"></i>
+                                    </a>
+                        
+                                    <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})"  class="icon-box icon-box-1" title="Chi tiết sản phẩm">
+                                        <i class="fal fa-layer-group"></i>
+                                        <i class="fal fa-layer-group"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="product__content product__content-2">
+                                <h6><a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">@product.ProductName</a></h6>
+                                <div class="rating mb-5 mt-10">
+                                    <ul>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                    </ul>
+                                </div>
+                            @if(Convert.ToInt32(product.Price.Replace(",",""))>0)
+                            {
+                                <div class="price">
+                        
+                       @if(!string.IsNullOrEmpty(product?.Discount.ToString()) && product?.Discount!=0)
+                                   {
+                                    <span class="original-price">@product.Price đ</span>
+                                    
+                                    <span class="discounted-price">@String.Format("{0:N0} đ", Convert.ToInt32(product.Price.Replace(",","")) * (double)(1 - product.Discount / 100.0))</span>
+                                    }
+                                    else
+                                    {
+                                    <span class="discounted-price">@product.Price đ</span>   
+                                    }                               
+                                </div>
+                            }
+                            </div>
+                            <div class="product__add-cart text-center">
+                                <button type="button" id="add-cart" data-product-name="@product.ProductName" data-product-id="@product.Id"  data-product-price="@(!string.IsNullOrEmpty(product?.Discount.ToString()) && product?.Discount!=0?String.Format("{0:N0} đ", Convert.ToInt32(product.Price.Replace(",","")) * (1 - product.Discount / 100)):product.Price)" class="cart-btn-3 product-modal-sidebar-open-btn d-flex align-items-center justify-content-center w-100">
+                               Thêm vào giỏ hàng
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+
+
+        <div class="d-md-none swiper mySwiper">
+        <div class="swiper-wrapper">
+            @for (int i = 0; i < products.Count(); i += 2)
+            {
+                <div class="swiper-slide">
+                    <div class="row">
+                        @for (int j = i; j < i + 2 && j < products.Count(); j++)
+                        {
+                            var product = products[j];
+
+                            string regex_product = Regex.Replace(product.ProductName, @"[^\w\d]", "-");
+                            
+                            <div class="col-6">
+                                <div class="product__item product__item-2 b-radius-2 mb-20">
+                                    <div class="product__thumb fix">
+                                <div class="product-image w-img">
+                                    <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
+                                        <img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="product">
+                                    </a>
+                                </div>
+                                <div class="product__offer">
+                                   @if(!string.IsNullOrEmpty(product?.Discount.ToString()) && product?.Discount!=0)
+                                   {
+                                   <span class="discount">-@product?.Discount%</span>
+                                   }  
+                                </div>
+                              
+                                <div class="product-action product-action-2">
+                                    <a href="javascript:void(0);" type="button" class="icon-box icon-box-1" data-bs-toggle="modal" data-product-name="@product.ProductName" data-product-price="@product.Price" data-product-discount="@product.Discount" data-main-avatar="@product.Frontavatar" 
+                                               
+                                                    data-product-category="@product?.Category.CategoryName"
+                                                    data-product-quantity="@product.Quantity" 
+                                                    data-product-id="@product.Id"
+                                                    data-count-review="@count_reviews[product.ProductName]"
+                                                    data-discount="@product.Discount"
+                                                    data-img-0="@product.Frontavatar"
+                                                    @for(int z=0;z<product.ProductImages.ToList().Count;z++)
+                                                    {
+                                                    string val=$"data-img-{z+1}=\"{product.ProductImages.ToList()[z].Avatar}\"";
+
+                                                    @Html.Raw(val);
+
+                                                    }
+                                                    data-bs-target="#productModalId"
+                                                    title="Xem nhanh">
+                                        <i class="fal fa-eye"></i>
+                                        <i class="fal fa-eye"></i>
+                                        
+                                    </a>
+                                    <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})"  class="icon-box icon-box-1" title="Chi tiết sản phẩm">
+                                        <i class="fal fa-layer-group"></i>
+                                        <i class="fal fa-layer-group"></i>
+                                    </a>
+                                </div>
+                            </div>
+                                <div class="product__content product__content-2">
+                                <h6><a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">@product.ProductName</a></h6>
+                                <div class="rating mb-5 mt-10">
+                                    <ul>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                    </ul>
+                                    <span>(01 review)</span>
+                                </div>
+                              @if(Convert.ToInt32(product.Price.Replace(",",""))>0)
+                              {
+                                <div class="price">
+                                    @if(!string.IsNullOrEmpty(product?.Discount.ToString()) && product?.Discount!=0)
+                                   {
+                                    <span class="original-price">@product.Price đ</span>
+                                    
+                                    <span class="discounted-price">@String.Format("{0:N0} đ", Convert.ToInt32(product.Price.Replace(",","")) * (double)(1 - product.Discount / 100.0))</span>
+                                    }
+                                    else
+                                    {
+                                    <span class="discounted-price">@product.Price đ</span>   
+                                    }
+                                </div>
+                                }
+                            </div>
+                            <div class="product__add-cart text-center">
+                            
+                                <button type="button" id="add-cart" data-product-name="@product.ProductName" data-product-id="@product.Id" data-product-price="@(!string.IsNullOrEmpty(product?.Discount.ToString()) && product?.Discount!=0?String.Format("{0:N0} đ", Convert.ToInt32(product.Price.Replace(",","")) * (1 - product.Discount / 100)):product.Price)" class="cart-btn-3 product-modal-sidebar-open-btn d-flex align-items-center justify-content-center w-100">
+                                    Thêm vào giỏ hàng
+                                </button>
+                            </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+            </div>
+        </section> *@
+        
+    <div class="blog-area light-bg-s pt-20 pb-30">
+            <div class="container custom-conatiner">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="section__head d-flex justify-content-between mb-30">
+                            <div class="section__title section__title-2">
+                                <h5 class="st-titile">Tin tức đề xuất</h5>
+                            </div>
+                            <div class="button-wrap button-wrap-2">
+                                <a href="@Url.Action("Blog","Blog")">Xem toàn bộ blog<i class="fal fa-chevron-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-none d-md-flex row flex-nowrap overflow-auto">
+                  @for(int i=0;i<blogs.Count;i++)
+                  {  
+                var blog=blogs[i];
+                  
+                  if(i>6)
+                  {
+                    break;                
+                  }
+
+                    <div class="col-xxl-2 col-xl-3 col-lg-4 col-md-4">
+                        <div class="single-smblog mb-30">
+                            <div class="smblog-thum">
+                                <div class="blog-image w-img">
+                                   <a href="@Url.Action("BlogDetail","Blog",new{id=blog.Id})"><img class="ls-is-cached lazyloaded" data-src="~/@blog.FeatureImage.Substring(blog.FeatureImage.IndexOf("wwwroot")+("wwwroot".Length+1))" src="~/@blog.FeatureImage.Substring(blog.FeatureImage.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="@blog.Blogname"></a>
+                                </div>
+                                <div class="blog-tag">
+                                    <a href="javascript:void(0);">@blog.Category.CategoryName</a>                                    
+                                </div>
+                            </div>
+                            <div class="smblog-content">
+                                <h6><a href="@Url.Action("BlogDetail","Blog",new{id=blog.Id})">@blog.Blogname</a></h6>
+
+                                <span class="author mb-10">posted by <a href="javascript:void(0);"> @blog.Author</a></span>
+                                
+                                <p>@blog.GetFirstPContent()</p>
+                                
+                                <div class="smblog-foot pt-15">
+                                    <div class="post-readmore">                                        
+                                       <a href="@Url.Action("BlogDetail","Blog",new{id=blog.Id})"> Read More <span class="icon"></span></a>
+                                    </div>
+                                    <div class="post-date">
+                                        <a href="javascript:void(0);">-@(blog.Updateddate)</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    }
+              
+                </div>
+
+
+     <div class="d-md-none swiper mySwiper">
+     
+     <div class="swiper-wrapper">
+     
+                  @for(int i=0;i<blogs.Count;i++)
+                  {  
+                <div class="swiper-slide">
+                    <div class="row">
+              @for(int j=i;j<i+2 && j<blogs.Count;j++)
+              {
+                var blog=blogs[j];
+                  
+                  if(i>6)
+                  {
+                    break;                
+                  }
+
+                    <div class="col-xxl-2 col-xl-3 col-lg-4 col-md-4">
+                        <div class="single-smblog mb-30">
+                            <div class="smblog-thum">
+                                <div class="blog-image w-img">
+                                   <a href="@Url.Action("BlogDetail","Blog",new{id=blog.Id})"><img class="ls-is-cached lazyloaded" data-src="~/@blog.FeatureImage.Substring(blog.FeatureImage.IndexOf("wwwroot")+("wwwroot".Length+1))" src="~/@blog.FeatureImage.Substring(blog.FeatureImage.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="@blog.Blogname"></a>
+                                </div>
+                                <div class="blog-tag">
+                                    <a href="javascript:void(0);">@blog.Category.CategoryName</a>                                    
+                                </div>
+                            </div>
+                            <div class="smblog-content">
+                                <h6><a href="@Url.Action("BlogDetail","Blog",new{id=blog.Id})">@blog.Blogname</a></h6>
+
+                                <span class="author mb-10">posted by <a href="javascript:void(0);"> @blog.Author</a></span>
+                                
+                                <p>@blog.GetFirstPContent()</p>
+                                
+                                <div class="smblog-foot pt-15">
+                                    <div class="post-readmore">                                        
+                                       <a href="@Url.Action("BlogDetail","Blog",new{id=blog.Id})"> Read More <span class="icon"></span></a>
+                                    </div>
+                                    <div class="post-date">
+                                        <a href="javascript:void(0);">-@(blog.Updateddate)</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+                </div>
+                
+                    }
+              
+                </div>
+     </div>
+
+            </div>
+        </div>
+
+        @* <section class="brand-area light-bg-s pb-60">
+            <div class="container custom-conatiner">
+                <div class="brand-slider brand-slider-2 swiper-container pt-35 pb-30">
+                    <div class="swiper-wrapper">
+       @foreach (var brand in brands)
+{
+    var avatarUrl = string.IsNullOrEmpty(brand?.Avatar) 
+        ? "https://cdn-icons-png.flaticon.com/128/16955/16955062.png" 
+        : Url.Content("~/" + brand.Avatar.Substring(brand.Avatar.IndexOf("wwwroot") + ("wwwroot".Length + 1)));
+
+    <div class="brand-item w-img swiper-slide">
+        <a href="@Url.Action("ProductByBrand", "Products", new { brand_name = brand?.BrandName })">
+            <img src="@avatarUrl" alt="brand">
+        </a>
+    </div>
+}
+                    </div>
+                </div>
+            </div>
+        </section> *@
+        <!-- brand-area-end -->
+
+        <!-- features-2__area-start -->
+        <section class="features-2__area d-ddark-bg">
+            <div class="container custom-conatiner">
+                <div class="features-2__lists pt-25 pb-25">
+                    <div class="row row-cols-xxl-5 row-cols-xl-3 row-cols-lg-3 row-cols-md-2 row-cols-sm-2 row-cols-1 gx-0">
+                        <div class="col">
+                            <div class="features-2__item">
+                                <div class="features-2__icon mr-20">
+                                    <i class="fal fa-truck"></i>
+                                </div>
+                                <div class="features-2__content">
+                                    <h6>FREE DELIVERY</h6>
+                                    <p>For all orders over $120</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="features-2__item">
+                                <div class="features-2__icon mr-20">
+                                    <i class="fal fa-money-check"></i>
+                                </div>
+                                <div class="features-2__content">
+                                    <h6>SAFE PAYMENT</h6>
+                                    <p>100% secure payment</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="features-2__item">
+                                <div class="features-2__icon mr-20">
+                                    <i class="fal fa-comments-alt"></i>
+                                </div>
+                                <div class="features-2__content">
+                                    <h6>24/7 HELP CENTER</h6>
+                                    <p>Delicated 24/7 support</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="features-2__item">
+                                <div class="features-2__icon mr-20">
+                                    <i class="fal fa-hand-holding-usd"></i>
+                                </div>
+                                <div class="features-2__content">
+                                    <h6>SHOP WITH CONFIDENCE</h6>
+                                    <p>If goods have problems</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="features-2__item">
+                                <div class="features-2__icon mr-20">
+                                    <i class="fad fa-user-headset"></i>
+                                </div>
+                                <div class="features-2__content">
+                                    <h6>FRIENDLY SERVICES</h6>
+                                    <p>30 day satisfaction guarantee</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- features-2__area-end -->
+        
+
+    <!-- shop modal start -->
+
+    <div class="modal fade" id="adModal" tabindex="-1" aria-labelledby="adModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" id="ad-close" aria-label="Close"></button>
+            <div class="modal-body" id="ad-content">
+            </div>
+        </div>
+    </div>
+</div>
+  
+        <div class="modal fade" id="productModalId" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered product__modal" role="document">
+                <div class="modal-content">
+                    <div class="product__modal-wrapper p-relative">
+                        <div class="product__modal-close p-absolute">
+                            <button data-bs-dismiss="modal"><i class="fal fa-times"></i></button>
+                        </div>
+                        <div class="product__modal-inner">
+                            <div class="row">
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                <div class="product__modal-box">
+                                    <div class="tab-content" id="modalTabContent">
+                                      <div class="tab-pane fade show active" id="nav0" role="tabpanel" aria-labelledby="nav0-tab">
+                                            <div class="product__modal-img w-img">
+                                                <div id="sub-img-0"></div>
+                                                @* <img src="assets/img/quick-view/quick-view-1.jpg" alt=""> *@
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="nav1" role="tabpanel" aria-labelledby="nav1-tab">
+                                            <div class="product__modal-img w-img">
+                                                <div id="sub-img-1"></div>
+                                                @* <img src="assets/img/quick-view/quick-view-1.jpg" alt=""> *@
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="nav2" role="tabpanel" aria-labelledby="nav2-tab">
+                                            <div class="product__modal-img w-img">
+                                             <div id="sub-img-2">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="nav3" role="tabpanel" aria-labelledby="nav3-tab">
+                                            <div class="product__modal-img w-img">
+                                                   <div id="sub-img-3">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="nav4" role="tabpanel" aria-labelledby="nav4-tab">
+                                            <div class="product__modal-img w-img">
+                                                   <div id="sub-img-4">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                        </div>
+                                    <ul class="nav nav-tabs" id="modalTab" role="tablist">
+                                        
+                                       <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="nav0-tab" data-bs-toggle="tab" data-bs-target="#nav0" type="button" role="tab" aria-controls="nav0" aria-selected="true">
+                                               <div id="sub-img-0">
+                                                </div>
+                                            </button>
+                                        </li>  
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="nav1-tab" data-bs-toggle="tab" data-bs-target="#nav1" type="button" role="tab" aria-controls="nav1" aria-selected="false">
+                                               <div id="sub-img-1">
+                                                </div>
+                                            </button>
+                                        </li>
+
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="nav2-tab" data-bs-toggle="tab" data-bs-target="#nav2" type="button" role="tab" aria-controls="nav2" aria-selected="false">
+                                       <div id="sub-img-2">                                       
+                                       </div>                                            
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="nav3-tab" data-bs-toggle="tab" data-bs-target="#nav3" type="button" role="tab" aria-controls="nav3" aria-selected="false">
+                                            <div id="sub-img-3">
+                                            </div>                                           
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="nav4-tab" data-bs-toggle="tab" data-bs-target="#nav4" type="button" role="tab" aria-controls="nav4" aria-selected="false">
+                                        <div id="sub-img-4">
+                                        </div>
+                                            </button>
+                                        </li>
+                                        </ul>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                <div class="product__modal-content">
+                                    <h4><a href="product-details.html" id="name-link"><span id="product-name"></span></a></h4>
+                                    <input type="hidden" id="product-id"/>                                  
+                                    <div class="product__review d-sm-flex">
+                                        <div class="rating rating__shop mb-10 mr-30">
+                                         <ul id="quick-view-list">
+                                             <li class="star" id="star" data-product-id="" data-star="5" data-user="@user_id"><a href="javascript:void(0);"><i class="fal fa-star"></i></a></li>
+                                             <li class="star" id="star" data-product-id="" data-star="4" data-user="@user_id"><a href="javascript:void(0);"><i class="fal fa-star"></i></a></li>
+                                             <li class="star" id="star" data-product-id="" data-star="3" data-user="@user_id"><a href="javascript:void(0);"><i class="fal fa-star"></i></a></li>
+                                             <li class="star" id="star" data-product-id=""  data-star="2" data-user="@user_id"><a href="javascript:void(0);"><i class="fal fa-star"></i></a></li>
+                                             <li class="star" id="star" data-product-id=""  data-star="1" data-user="@user_id"><a href="javascript:void(0);"><i class="fal fa-star"></i></a></li>
+                                        </ul>
+                                        </div>
+                                        <div class="product__add-review mb-15">
+                                        <span id="review-value"></span>
+                                        </div>
+                                    </div>
+                                    <div class="product__price" id="product_price_block">
+                                        <span id="origin-price" class="original-price"></span>
+                                        
+                                        <span id="product-price" class="discounted-price"></span>
+                                    </div>
+                                    <div class="product__modal-des mt-20 mb-15">
+                                        <div class="product-options">
+                                        </div>
+                                        
+                                        @* <ul>
+                                            <li><a href="#"><i class="fas fa-circle"></i> Bass and Stereo Sound.</a></li>
+                                            <li><a href="#"><i class="fas fa-circle"></i> Display with 3088 x 1440 pixels resolution.</a></li>
+                                            <li><a href="#"><i class="fas fa-circle"></i> Memory, Storage & SIM: 12GB RAM, 256GB.</a></li>
+                                            <li><a href="#"><i class="fas fa-circle"></i> Androi v10.0 Operating system.</a></li>
+                                        </ul> *@
+                                    </div>
+                                    <div class="product__stock mb-20">
+                                        <span class="mr-10">Còn:</span>
+                                        <span id="product-quantity-value"></span>
+                                    </div>
+                                    <div class="product__modal-form">
+                                        <form action="#">
+                                        <div class="pro-quan-area d-lg-flex align-items-center">
+                                            <div class="product-quantity mr-20 mb-25">
+                                                <div class="cart-plus-minus p-relative"><input type="text" id="quantity-value" value="1" /></div>
+                                            </div>
+                                            <div class="pro-cart-btn mb-25">
+                                                <button class="cart-btn" id="add-cart-detail" type="button">Thêm vào giỏ hàng</button>
+                                            </div>
+                                        </div>
+                                        </form>
+                                    </div>
+                                    <div class="product__stock mb-30">
+                                        <ul>
+                                            <li><a href="#" id="link-category">
+                                                <span class="cat mr-10">Loại sản phẩm:</span>
+                                                <span id="product-category"></span></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+
+import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging.js';
+ 
+let notify_data='';
+
+const firebaseConfig = 
+{
+  apiKey: "AIzaSyDZOrJVLQc24tlu6e_TXCkJB_GnaRTPV6c",
+  authDomain: "ecommerce-product-92f11.firebaseapp.com",
+  projectId: "ecommerce-product-92f11",
+  storageBucket: "ecommerce-product-92f11.firebasestorage.app",
+  messagingSenderId: "249111678935",
+  appId: "1:249111678935:web:811cdd36ea4e372b7dc592"
+};
+
+const firebase = initializeApp(firebaseConfig);
+
+Notification.requestPermission();
+
+const firebase_message = getMessaging(firebase);
+
+getToken(firebase_message,{vapidKey:"BAtgAjb0P9Pf6_wh_lVaYAlK7UxAvl7pz3tOmEcfJbwgoHeKRTRpPtNK8fHyB2aXv5ZKr32eeIumlLxMpYIbe20"}).then((token)=>
+{
+    var formData = new FormData();
+
+    formData.append("token",token);    
+
+    $.ajax({
+        url:'@Url.Action("FirebaseToken","HomePage")',
+        type:'POST',
+        data:formData,
+        contentType:false,
+        processData:false,
+        success:function(data)
+        {
+            if(data.status==1)
+            {
+                var ad_content=document.getElementById('ad-content');
+            
+            setTimeout(()=>
+            {
+               if(notify_data!='')
+               {
+                ad_content.innerHTML=notify_data.replace("Froala Editor","").replace("Powered by","");
+                $('#adModal').modal('show');
+               }
+            },500);
+            }
+        },
+        error:function(xhr,err,status)
+        {
+            alert('Error:'+xhr.responseText);
+        }
+    });
+})
+
+onMessage(firebase_message,(payload)=>
+{ 
+    notify_data=payload.notification.body;
+  @* alert(payload.notification.body); *@
+});
+</script>
+
+    <script>
+    @* function initSwiper() {
+    if (window.innerWidth <= 768) {
+        alert("here");
+        if (!document.querySelector(".swiper").swiper) {
+            alert("hllo");
+            new Swiper(".product-slider", {
+                slidesPerView: 2,
+                spaceBetween: 10,
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                }
+            });
+        }
+    }
+}
+
+window.addEventListener("load", initSwiper);
+
+window.addEventListener("resize", initSwiper); *@
+
+  function initClickButton(sizes,colors,versions,mirrors,prices,product_discount='0')
+   { 
+   var all_id=['color-buttons','size-buttons','version-buttons','mirror-buttons'];
+ 
+   var container=null;
+   
+   var buttonId=null;
+     for(let id of all_id)
+     {
+        container=document.getElementById(id);
+        
+        if(container!=null)
+        {  
+            buttonId=id;
+           
+            break;
+        }
+     }
+    if(container==null)
+    {
+        return;
+    }
+    container.querySelectorAll('.size-btn').forEach((button,index)=>
+    {
+        if(index==0)
+        {
+    button.classList.add('active');
+    
+    var all_container_index=getAllIndex(buttonId,button.textContent,sizes,colors,versions,mirrors);
+
+    var first_index=all_container_index[0];
+
+    var price='';
+
+    var origin_price='';
+
+    var price=document.querySelector('#product-price');
+
+    origin_price=document.querySelector(`#origin-price`);
+    
+    var price_value=prices[first_index];
+
+    if(product_discount!='0')
+    {  
+        price_value=parseInt(price_value)*(1-parseInt(product_discount)/100);
+    }
+    if(price_value!=null)
+    {
+    price.innerHTML='<strong>'+price_value+' đ'+'</strong>';
+    if(product_discount!='0')
+    {
+    origin_price.innerHTML='<strong>'+prices[first_index]+' đ'+'</strong>';    
+    }
+    else
+    {
+        origin_price.innerHTML='';        
+    }
+    }
+
+  var product_price_block=document.getElementById('product_price_block');
+   
+  if(parseInt(price_value)<=0)
+  {  
+        product_price_block.style.display='none';
+  }
+  else
+  { 
+        product_price_block.style.display='block';
+  }
+
+   var container_size=null;
+   
+   var container_color=null;
+
+   var container_version=null;
+   
+   var container_mirror = null;
+
+   for(let id of all_id)
+   {
+   if(id==buttonId)
+   {
+    continue;    
+   }
+   if(id=='color-buttons')
+   {
+     container_color=document.getElementById(id);
+   }   
+  else if(id=='size-buttons')
+  {
+    container_size=document.getElementById(id);
+  }
+  else if(id=='version-buttons')
+  {
+    container_version=document.getElementById(id);
+  }
+  else if(id=='mirror-buttons')
+  {
+    container_mirror=document.getElementById(id);
+  }
+  }
+  if(container_color!=null && container_color!=container)
+  {
+    container_color.querySelectorAll('.size-btn').forEach((btn,index)=>
+    { btn.classList.remove('active');
+     if(colors[first_index]==btn.textContent)
+     {
+      btn.classList.add('active');
+     }
+    });
+  }
+    if(container_mirror!=null && container_mirror!=container)
+  {
+    container_mirror.querySelectorAll('.size-btn').forEach((btn,index)=>
+    { 
+     btn.classList.remove('active');
+     
+     if(mirrors[first_index]==btn.textContent)
+     {
+      btn.classList.add('active');
+     }
+    });
+  }
+    if(container_size!=null && container_size!=container)
+  {
+    container_size.querySelectorAll('.size-btn').forEach((btn,index)=>
+    { 
+     btn.classList.remove('active');
+     
+     if(sizes[first_index]==btn.textContent)
+     {
+      btn.classList.add('active');
+     }
+    }); 
+  }
+    if(container_version!=null && container_version!=container)
+  {
+    container_version.querySelectorAll('.size-btn').forEach((btn,index)=>
+    { btn.classList.remove('active');
+     if(versions[first_index]==btn.textContent)
+     {
+      btn.classList.add('active');
+     }
+    });
+  }
+  }
+    });
+   }
+
+function getAllIndex(buttonId,value,sizes,colors,versions,mirrors)
+    { 
+     switch(buttonId)
+     {
+        case "color-buttons":
+        {
+         return colors.map((color,index)=>color==value?index:-1).filter((val)=>val!==-1);
+        }
+        case "size-buttons":
+        {
+         return sizes.map((size,index)=>size==value?index:-1).filter((val)=>val!==-1);
+        }
+        case "version-buttons":
+        {
+         return versions.map((version,index)=>version==value?index:-1).filter((val)=>val!==-1);
+        }
+        case "mirror-buttons":
+        {
+         return mirrors.map((mirror,index)=>mirror==value?index:-1).filter((val)=>val!==-1);
+        }
+     }
+    }
+
+    function handleClickButton(buttonId,sizes,colors,versions,mirrors,prices,product_discount='0')
+ { 
+   const container=document.getElementById(buttonId);
+   
+   var all_id=['color-buttons','size-buttons','version-buttons','mirror-buttons'];
+
+   var container_size=null;
+   
+   var container_color=null;
+
+   var container_version=null;
+   
+   var container_mirror = null;
+
+   for(let id of all_id)
+   {
+   if(id==buttonId)
+   {
+    continue;
+   }
+   if(id=='color-buttons')
+   {
+     container_color=document.getElementById(id);
+   }   
+  else if(id=='size-buttons')
+  {
+    container_size=document.getElementById(id);
+  }
+  else if(id=='version-buttons')
+  {
+    container_version=document.getElementById(id);
+  }
+  else if(id=='mirror-buttons')
+  {
+    container_mirror=document.getElementById(id);    
+  }
+  }
+
+  if(container==null)
+  {
+    return;    
+  }
+   container.querySelectorAll('.size-btn').forEach((button,index)=>
+   {
+    
+ button.addEventListener('click',()=>
+ { 
+  container.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
+ 
+ button.classList.add('active');
+
+ var button_context=button.textContent;
+ 
+ var color_value=null;
+
+ var size_value=null;
+
+ var version_value=null;
+
+ var mirror_value=null;
+
+ var len_container=0;
+
+
+
+ var all_container_index=getAllIndex(buttonId,button_context,sizes,colors,versions,mirrors);
+
+ if(container_color!=null)
+ { len_container++;
+   container_color.querySelectorAll('.size-btn').forEach((btn)=>
+   {
+    if(btn.classList.contains('active'))
+    {
+         color_value=btn.textContent; 
+    }
+   });
+ }
+
+
+ if(container_size!=null)
+ { len_container++;
+   container_size.querySelectorAll('.size-btn').forEach((btn) =>{
+    if(btn.classList.contains('active'))
+    {
+         size_value=btn.textContent;
+    }
+   });
+ }
+  if(container_version!=null)
+ { len_container++;
+   container_version.querySelectorAll('.size-btn').forEach((btn) =>
+ {
+    if(btn.classList.contains('active'))
+    {
+         version_value=btn.textContent;
+    }
+   });
+ }
+  if(container_mirror!=null)
+ { len_container++;
+   container_mirror.querySelectorAll('.size-btn').forEach((btn) =>{
+    if(btn.classList.contains('active'))
+    {
+         mirror_value=btn.textContent;
+    }
+   });
+ }
+  let is_changed=false;
+  let current_item=-1;
+  for(let item of all_container_index)
+  { 
+    let count_value=0;
+
+    current_item=item; 
+
+    if(color_value!=null && container_color!=container)
+    {
+        if(colors[item]==color_value)
+        { 
+            count_value++;
+        }
+    }
+    if(size_value!=null && container_size!=container)
+    {   
+        if(sizes[item]==size_value)
+        { 
+            count_value++;
+        }
+    }
+    if(version_value!=null && container_version!=container)
+    {
+        if(versions[item]==version_value)
+        {
+            count_value++;
+        }
+    }
+    if(mirror_value!=null && container_mirror!=container)
+    {
+        if(mirrors[item]==mirror_value)
+        {
+          count_value++;
+        }
+    }
+    if(count_value==(len_container))
+    {  is_changed=true;
+        break;
+    }
+  }
+  if(!is_changed)
+  { 
+    let container_index=all_container_index[0];
+    if(container_color!=null && container_color!=container)
+    { 
+      container_color.querySelectorAll('.size-btn').forEach((btn,index)=>
+      {btn.classList.remove('active');
+       if(btn.textContent==colors[container_index])
+       {
+        btn.classList.add('active');
+       }
+      });
+    }
+        if(container_size!=null && container_size!=container)
+    { 
+      container_size.querySelectorAll('.size-btn').forEach((btn,index)=>
+      {
+        btn.classList.remove('active');
+       if(btn.textContent==sizes[container_index])
+       {
+        btn.classList.add('active');
+       }
+      });
+    }
+        if(container_version!=null && container_version!=container)
+    { 
+      container_version.querySelectorAll('.size-btn').forEach((btn,index)=>
+      {btn.classList.remove('active');
+       if(btn.textContent==versions[container_index])
+       {
+        btn.classList.add('active');
+       }
+      });
+    }
+        if(container_mirror!=null && container_mirror!=container)
+    { 
+      container_mirror.querySelectorAll('.size-btn').forEach((btn,index)=>
+      {
+        btn.classList.remove('active');
+       if(btn.textContent==mirrors[container_index])
+       {
+        btn.classList.add('active');
+       }
+      });
+    }
+  var price_value=prices[all_container_index[0]];
+  if(price_value!=null)
+  {
+   document.getElementById('product-price').innerHTML=prices[all_container_index[0]]+' <u>đ</u>';
+   }
+  }
+   else
+  {
+  var price_value=prices[all_container_index[0]];
+    
+ if(price_value!=null)
+{
+  var price_name='#product-price';
+  
+  var original_price='#origin-price';
+
+  var price_change='';
+
+  if(product_discount!='0')
+  {
+    price_change=parseInt(prices[current_item])*(1-parseInt(product_discount)/100);
+  }
+  else
+  {
+    price_change=prices[current_item];
+  }
+
+ 
+   document.querySelector(price_name).innerHTML='<strong>'+price_change+' đ'+'</strong>';
+
+   if(product_discount!='0')
+   {
+    document.querySelector(original_price).innerHTML='<strong>'+prices[current_item]+' đ'+'</strong>';
+   }
+   
+   var product_price_block=document.getElementById('product_price_block');
+
+   if(parseInt(prices[current_item])<=0)
+   {
+    product_price_block.style.display='none';
+   }
+   else
+   {
+    product_price_block.style.display='block';
+   }
+   }
+   }
+    });
+   });        
+    }    
+    
+     document.addEventListener("DOMContentLoaded",()=>{
+            var swiper = new Swiper(".mySwiper", {
+            slidesPerView: 1,
+            spaceBetween: 10,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+        });   
+
+     var swiper_2 = new Swiper('.second-swiper', {
+            loop: true,
+            speed: 1000, // Transition speed in milliseconds (1 second)
+            effect: 'fade', // Smooth fade effect
+            fadeEffect: {
+                crossFade: true // Ensures smooth crossfade between slides
+            }, // Enables infinite looping
+            pagination: {
+                el: '.main-slider-paginations', // Pagination element
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            autoplay: {
+                delay: 3000, // Slide delay in milliseconds
+                disableOnInteraction: false,
+            },
+        });
+     
+     let modalTriggered=false;
+     
+var modalElement = document.getElementById('productModalId');
+
+   modalElement.addEventListener('hidden.bs.modal', function () {
+        modalTriggered = false;
+    });
+
+ modalElement.addEventListener('show.bs.modal',function(event){
+     if(modalTriggered)
+     { event.preventDefault();
+     return;
+     }
+     if(event.target.id==="productModalId")
+     {     modalTriggered=true;
+
+        const button = event.relatedTarget;
+
+        const productId=button.getAttribute('data-product-id');
+        
+        var url="@Url.Action("VariantProduct","HomePage",new{id="__id__"})";
+        
+        url=url.replace("__id__",productId);
+       
+       $.ajax({
+            url:url,
+            type:"GET",
+            contentType: false,
+            processData: false, 
+            success:function(response)
+            {
+            var value=JSON.parse(response);
+            
+            var productOptionsContainer = document.querySelector(".product-options");
+        
+            productOptionsContainer.innerHTML = "";
+            var colors=[];
+            var sizes=[];
+            var versions=[];
+            var mirrors=[];
+            var sizes_json=[];
+            var colors_json=[];
+            var versions_json=[];
+            var mirrors_json=[];
+            var prices_json=[];
+               for(let i=0;i<value.length;i++)
+               {
+                const variant=value[i];
+                var color="";
+                var size="";
+                var version="";
+                var mirror="";
+              
+                if(variant.Color!=null)
+                { 
+                    color=variant.Color.Colorname;
+                   if(productOptionsContainer.querySelector(".color-selector")===null)
+                   {
+                    const selector=document.createElement("div");
+                    selector.classList.add("color-selector");
+                     selector.innerHTML = `
+        <h3>Màu sắc:</h3>
+        <div class="size-buttons" id="color-buttons">
+  
+    <button class="size-btn">${color}</button>
+    
+    </div>
+    `; 
+              productOptionsContainer.appendChild(selector);
+              colors.push(color);
+        }
+        else{
+            if(!colors.includes(color))
+            {
+            colors.push(color);
+    
+            const selecter=productOptionsContainer.querySelector(".color-selector");
+            const button_container=selecter.querySelector("#color-buttons");
+            const new_btn=document.createElement("button");
+            new_btn.classList.add("size-btn");
+            new_btn.textContent=color;
+            button_container.appendChild(new_btn);
+            }
+        }
+                }
+                if(variant.Size!=null)
+                {
+                    size=variant.Size.Sizename;
+                     if(productOptionsContainer.querySelector(".size-selector")===null)
+                   {
+                    const selector=document.createElement("div");
+                    selector.classList.add("size-selector");
+                     selector.innerHTML = `
+        <h3>Kích thước:</h3>
+        <div class="size-buttons" id="size-buttons">
+  
+    <button class="size-btn">${size}</button>
+    
+    </div>
+    `; 
+              productOptionsContainer.appendChild(selector);
+              sizes.push(size);
+        }
+        else{
+            if(!sizes.includes(size))
+            {
+            sizes.push(size);
+            const selecter=productOptionsContainer.querySelector(".size-selector");
+            const button_container=selecter.querySelector("#size-buttons");
+            const new_btn=document.createElement("button");
+            new_btn.classList.add("size-btn");
+            new_btn.textContent=size;
+            button_container.appendChild(new_btn);
+            }
+        }
+                }
+                if(variant.Version!=null)
+                {
+                    version=variant.Version.Versionname;
+                     if(productOptionsContainer.querySelector(".version-selector")===null)
+                   {
+                    const selector=document.createElement("div");
+                    selector.classList.add("version-selector");
+                     selector.innerHTML = `
+        <h3>Phiên bản:</h3>
+        <div class="size-buttons" id="version-buttons">
+  
+    <button class="size-btn">${version}</button>
+    
+    </div>
+    `; 
+              productOptionsContainer.appendChild(selector);
+              versions.push(version);
+        }
+        else{
+            if(!versions.includes(version))
+            {
+            versions.push(version);
+            const selecter=productOptionsContainer.querySelector(".version-selector");
+            const button_container=selecter.querySelector("#version-buttons");
+            const new_btn=document.createElement("button");
+            new_btn.classList.add("size-btn");
+            new_btn.textContent=version;
+            button_container.appendChild(new_btn);
+            }
+        }
+                }
+                if(variant.Mirror!=null)
+                {
+                    mirror=variant.Mirror.Mirrorname;
+                     if(productOptionsContainer.querySelector(".mirror-selector")===null)
+                   {
+                    const selector=document.createElement("div");
+                    
+                    selector.classList.add("mirror-selector");
+                     selector.innerHTML = `
+        <h3>Loại kính:</h3>
+        <div class="size-buttons" id="mirror-buttons">
+  
+    <button class="size-btn">${mirror}</button>
+    
+    </div>
+    `; 
+              productOptionsContainer.appendChild(selector);
+              mirrors.push(mirror);
+        }
+        else{
+             if(!mirrors.includes(mirror))
+            {
+            mirrors.push(mirror);
+            const selecter=productOptionsContainer.querySelector(".mirror-selector");
+            const button_container=selecter.querySelector("#mirror-buttons");
+            const new_btn=document.createElement("button");
+            new_btn.classList.add("size-btn");
+            new_btn.textContent=mirror;
+            button_container.appendChild(new_btn);
+            }
+        }
+                }
+                sizes_json.push(size);
+                colors_json.push(color);
+                versions_json.push(version);
+                mirrors_json.push(mirror);
+                prices_json.push(variant.Price);
+               }
+
+        const discount=button.getAttribute('data-discount');
+        
+        var origin_price = document.getElementById('origin-price');
+
+        origin_price.innerHTML = '';
+        
+        if(value.length>0)
+        {
+          initClickButton(sizes_json,colors_json,versions_json,mirrors_json,prices_json,discount);
+          
+          handleClickButton('color-buttons',sizes_json,colors_json,versions_json,mirrors_json,prices_json,discount);
+
+          handleClickButton('size-buttons',sizes_json,colors_json,versions_json,mirrors_json,prices_json,discount);
+    
+          handleClickButton('version-buttons',sizes_json,colors_json,versions_json,mirrors_json,prices_json,discount);
+
+          handleClickButton('mirror-buttons',sizes_json,colors_json,versions_json,mirrors_json,prices_json,discount);
+        }
+            },
+         error:function(xhr, status, error)
+            {
+               document.getElementById("toast-title").innerHTML="Thông báo";
+                document.getElementById("toast-message").innerHTML=xhr.responseText;
+                var toastEl = document.querySelector('.toast');
+                toastEl.classList.add('bg-danger');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();                 }
+       });
+
+                
+        const productName = button.getAttribute('data-product-name');
+        
+        const productPrice = button.getAttribute('data-product-price');
+        
+        const front_image = button.getAttribute('data-main-avatar');
+
+        const category   = button.getAttribute('data-product-category');
+
+        const quantity = button.getAttribute('data-product-quantity');
+
+        
+        for(let i=0;i<=4;i++)
+        {   //var sub_img=document.getElementById(`sub-img-${i}`);
+            const sub_img = document.querySelectorAll(`#sub-img-${i}`);
+            if(button.hasAttribute(`data-img-${i}`))
+            {
+            var data_img=button.getAttribute(`data-img-${i}`);
+            
+         const wwwrootIndex = data_img.indexOf("wwwroot");
+
+
+let relativePath = data_img;
+
+if (wwwrootIndex !== -1) {
+
+    relativePath = data_img.substring(wwwrootIndex + "wwwroot".length + 1);
+}    
+       var wwwrootPath='@Url.Content("~/")';
+       
+      relativePath=wwwrootPath+relativePath.replace(/\\/g, "/");
+       
+       sub_img.forEach((img,index)=>{
+        if(index==0)
+       {
+        img.innerHTML = `<img src="${relativePath}" alt="sub_avatar"">`;
+       }
+       else
+       {
+        img.innerHTML = `<img src="${relativePath}" alt="sub_avatar" style="width:85px;height:85px">`;
+       }
+       });
+            }
+            else
+            {
+       sub_img.forEach(img=>{img.innerHTML = ``;});
+            }
+        }
+
+       const count_review_value=button.getAttribute('data-count-review');
+        
+        const main_image = document.getElementById('sub-img-0');
+
+        const cat_link=document.getElementById('link-category');
+
+        const review_value= document.getElementById("review-value");
+
+        url='@Url.Action("ProductsByCategory","Products",new{category_name="__id__"})';
+
+        var modify_category=category.replace(/\s+/g, '-');
+
+        url=url.replace("__id__",modify_category);
+
+        cat_link.href=url;
+
+        document.querySelectorAll("#quick-view-list .star").forEach((star,index)=>{
+       
+       star.setAttribute("data-product-id",button.getAttribute("data-product-id"));
+   });
+
+        review_value.textContent=`(${count_review_value} đánh giá)`; 
+        
+        document.getElementById('product-id').value=productId;
+
+        document.getElementById('product-name').textContent = productName;
+
+     if(parseInt(productPrice)>0)
+     {
+        document.getElementById('product-price').textContent = productPrice;
+     }
+
+        document.getElementById('product-category').textContent = category;
+
+        document.getElementById('product-quantity-value').textContent = quantity+ " sản phẩm";
+
+        var name_url='@Url.Action("ProductDetail","ProductDetail",new{product_name="__id__"})';
+        
+        var modify_product_name=productName.replace(/[^\w\d]+/g, '-');
+
+        name_url=name_url.replace("__id__",modify_product_name);        
+       @* const add_cart_btn=document.getElementById('add-cart-detail');
+       add_cart_btn.addEventListener("click",()=>{ 
+         var quantity_value=document.getElementById('quantity-value').value;
+         let formData = new FormData();
+    var size_container = document.getElementById('size-buttons');
+       var color_container = document.getElementById('color-buttons');
+       var version_container = document.getElementById('version-buttons');
+       var mirror_container = document.getElementById('mirror-buttons');
+       var price=document.getElementById('product-price').textContent.replaceAll("đ","").replaceAll(",","").trim().replaceAll(/\s/g, '');
+       var size_value=null;
+       var color_value=null;
+       var version_value=null;
+       var mirror_value=null;
+       if(size_container!=null)
+       {
+        size_value=size_container.querySelector('.size-btn.active').textContent;
+
+        formData.append("size",size_value);
+       }
+       if(color_container!=null)
+       {
+        color_value=color_container.querySelector('.size-btn.active').textContent;
+        
+        formData.append("color",color_value);
+       }
+       if(version_container!=null)
+       {
+        version_value=version_container.querySelector('.size-btn.active').textContent;
+        
+        formData.append("version",version_value);
+       }
+       if(mirror_container!=null)
+       {
+        mirror_value=mirror_container.querySelector('.size-btn.active').textContent;
+        formData.append("mirror",mirror_value);
+       }
+
+         formData.append("quantity",quantity_value);
+        
+        formData.append("product_id",productId);
+         formData.append("quantity",quantity_value);
+         formData.append("product_name",productName);
+         formData.append("price",price);
+         $.ajax({
+            url:"@Url.Action("addItemToCart","Cart")",
+            type:"POST",
+            data:formData,
+            contentType: false,
+            processData: false,
+            success:function(response)
+            {   
+                const status=response.status;
+                const message = response.message;
+                const data=response.data;
+                 if(data!="")
+             {
+                $("#count-cart").text(data.length);
+               
+                var section_url="@Url.Action("SubCartPartialView","Cart")";
+                   $.ajax({
+                    url:section_url,
+                    type:"POST",
+                    success: function(partialHtml) {
+                        $('#sub-cart-section').html(partialHtml); 
+                    }
+                });
+            }
+            
+                document.getElementById("toast-title").innerHTML="Thông báo";
+
+                document.getElementById("toast-message").innerHTML=message;
+
+                var toastEl = document.querySelector('.toast');
+
+                if(status==1)
+                {
+                 toastEl.classList.add('bg-success');
+                }
+            else
+            {
+                toastEl.classList.add('bg-danger');
+            }
+                var toast = new bootstrap.Toast(toastEl);
+                
+                 toast.show();
+            },
+            error:function(xhr, status, error)
+            { 
+                document.getElementById("toast-title").innerHTML="Thông báo";
+                document.getElementById("toast-message").innerHTML=xhr.responseText;
+                var toastEl = document.querySelector('.toast');
+                toastEl.classList.add('bg-danger');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+
+                 }
+        });
+        });  *@
+
+
+        document.getElementById('name-link').href = name_url;
+        }
+ }); 
+
+    const add_cart_btn=document.getElementById('add-cart-detail');
+       
+       
+       add_cart_btn.addEventListener("click",()=>{ 
+       
+       var quantity_value=document.getElementById('quantity-value').value;
+       
+       let formData = new FormData();
+       
+       var size_container = document.getElementById('size-buttons');
+       
+       var color_container = document.getElementById('color-buttons');
+       
+       var version_container = document.getElementById('version-buttons');
+       
+       var mirror_container = document.getElementById('mirror-buttons');
+       
+       var price=document.getElementById('product-price').textContent.replaceAll("đ","").replaceAll(",","").trim().replaceAll(/\s/g, '');
+       
+       var size_value=null;
+       
+       var color_value=null;
+       
+       var version_value=null;
+       
+       var mirror_value=null;
+       
+       var productId=document.getElementById('product-id').value;
+
+       var productName = document.getElementById('product-name').textContent;
+       
+       if(size_container!=null)
+       {
+        size_value=size_container.querySelector('.size-btn.active').textContent;
+
+        formData.append("size",size_value);
+       }
+       if(color_container!=null)
+       {
+        color_value=color_container.querySelector('.size-btn.active').textContent;
+
+        formData.append("color",color_value);
+       }
+       if(version_container!=null)
+       {
+        version_value=version_container.querySelector('.size-btn.active').textContent;
+        
+        formData.append("version",version_value);
+       }
+       if(mirror_container!=null)
+       {
+        mirror_value=mirror_container.querySelector('.size-btn.active').textContent;
+        formData.append("mirror",mirror_value);
+       }         
+
+        formData.append("quantity",quantity_value);
+        
+        formData.append("product_id",productId);
+        
+        formData.append("quantity",quantity_value);
+        
+        formData.append("product_name",productName);
+        
+        formData.append("price",price);
+
+
+         $.ajax({
+            url:"@Url.Action("addItemToCart","Cart")",
+            type:"POST",
+            data:formData,
+            contentType: false,
+            processData: false,
+            success:function(response)
+            {   
+                const status=response.status;
+                const message = response.message;
+                const data=response.data;
+                 if(data!="")
+             {
+                $("#count-cart").text(data.length);
+               
+                var section_url="@Url.Action("SubCartPartialView","Cart")";
+                   $.ajax({
+                    url:section_url,
+                    type:"POST",
+                    success: function(partialHtml) {
+                        $('#sub-cart-section').html(partialHtml); 
+                    }
+                });
+            }
+            
+                document.getElementById("toast-title").innerHTML="Thông báo";
+
+                document.getElementById("toast-message").innerHTML=message;
+
+                var toastEl = document.querySelector('.toast');
+
+                if(status==1)
+                {
+                 toastEl.classList.add('bg-success');
+                }
+            else
+            {
+                toastEl.classList.add('bg-danger');
+            }
+                var toast = new bootstrap.Toast(toastEl);
+                
+                 toast.show();
+            },
+            error:function(xhr, status, error)
+            { 
+                document.getElementById("toast-title").innerHTML="Thông báo";
+                document.getElementById("toast-message").innerHTML=xhr.responseText;
+                var toastEl = document.querySelector('.toast');
+                toastEl.classList.add('bg-danger');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+
+                 }
+        });
+        }); 
+     //addModal();
+     
+     var add_cart=document.querySelectorAll("#add-cart");
+      
+     add_cart.forEach((cart,index)=>{
+
+     cart.addEventListener("click",()=>{
+       var product_name=cart.getAttribute("data-product-name");
+       var product_id=cart.getAttribute("data-product-id");
+       var price_value = cart.getAttribute("data-product-price");
+       var quantity=1;
+       let formData = new FormData();
+       formData.append("product_id",product_id);
+
+       formData.append("quantity",quantity);
+
+       formData.append("product_name",product_name);
+
+   
+      
+        var url="@Url.Action("VariantProduct","HomePage",new{id="__id__"})";
+        
+        url=url.replace("__id__",product_id);
+        
+        $.ajax({
+            url:url,
+            type:"GET",
+            contentType:false,
+            processData:false,
+            success:function(response)
+            {
+             
+                if(response!="" && response!=null && response!='[]')
+                {
+                var value = JSON.parse(response);
+                var first_object=value[0];
+                var color_ob=first_object.Color;
+                var size_ob=first_object.Size;
+                var version_ob=first_object.Version;
+                var mirror_ob=first_object.Mirror;
+                var price=first_object.Price;
+                var value='';
+                if(color_ob!=null)
+                {  
+                    formData.append("color",color_ob.Colorname);
+                    value+=color_ob.Colorname;
+                }
+                if(size_ob!=null)
+                {
+                    formData.append("size",size_ob.Sizename);
+                    value+=size_ob.Sizename;
+                }
+                if(version_ob!=null)
+                {
+                    formData.append("version",version_ob.Versionname);
+                    value+=version_ob.Versionname;
+                }
+                if(mirror_ob!=null)
+                {
+                    formData.append("mirror",mirror_ob.Mirrorname);
+                    value+=mirror_ob.Mirrorname;
+                }
+
+                if(price!=null)
+                {   
+                    price=price.replaceAll('đ','').replaceAll(',','').trim();
+                    formData.append("price",price);
+                    value+=price;
+                }
+               else
+               {
+                formData.append("price",price_value);
+               }
+
+             $.ajax({
+            url:"@Url.Action("addItemToCart","Cart")",
+            type:"POST",
+            data:formData,
+            contentType: false,
+            processData: false, 
+            success:function(response)
+            {
+                const status=response.status;
+                const message = response.message;
+                const data=response.data;
+             if(data!="")
+             {
+                $("#count-cart").text(data.length);
+               
+                var section_url="@Url.Action("SubCartPartialView","Cart")";
+                   $.ajax({
+                    url:section_url,
+                    type:"POST",
+                    success: function(partialHtml) {
+                        $('#sub-cart-section').html(partialHtml);
+                    }
+                });
+            }
+                
+                document.getElementById("toast-title").innerHTML="Thông báo";
+                
+                document.getElementById("toast-message").innerHTML=message;
+                
+                var toastEl = document.querySelector('.toast');
+
+                if(status==1)
+                {
+              
+                 toastEl.classList.add('bg-success');
+      
+                }
+               else
+               {
+                toastEl.classList.add('bg-danger');
+               }
+                var toast = new bootstrap.Toast(toastEl);
+                
+                 toast.show();
+            },
+            error:function(xhr, status, error)
+            {  
+                document.getElementById("toast-title").innerHTML="Thông báo";
+                
+                document.getElementById("toast-message").innerHTML=error;
+                
+                var toastEl = document.querySelector('.toast');
+                
+                toastEl.classList.add('bg-danger');
+                
+                var toast = new bootstrap.Toast(toastEl);
+                
+                toast.show();           
+                 }
+        });
+                
+            }
+        else
+        {
+             $.ajax({
+            url:"@Url.Action("addItemToCart","Cart")",
+            type:"POST",
+            data:formData,
+            contentType: false,
+            processData: false, 
+            success:function(response)
+            {
+                const status=response.status;
+                const message = response.message;
+                const data=response.data;
+             if(data!="")
+             {
+                $("#count-cart").text(data.length);
+               
+                var section_url="@Url.Action("SubCartPartialView","Cart")";
+                   $.ajax({
+                    url:section_url,
+                    type:"POST",
+                    success: function(partialHtml) 
+                    {
+                        $('#sub-cart-section').html(partialHtml);
+                    }
+                });
+            }
+                document.getElementById("toast-title").innerHTML="Thông báo";
+                
+                document.getElementById("toast-message").innerHTML=message;
+                
+                var toastEl = document.querySelector('.toast');
+
+                if(status==1)
+                {
+              
+                 toastEl.classList.add('bg-success');
+      
+                }
+               else
+               {
+                toastEl.classList.add('bg-danger');
+               }
+                var toast = new bootstrap.Toast(toastEl);
+                
+                 toast.show();
+            },
+            error:function(xhr, status, error)
+            {
+                  document.getElementById("toast-title").innerHTML="Thông báo";
+                 document.getElementById("toast-message").innerHTML=error;
+                var toastEl = document.querySelector('.toast');
+                toastEl.classList.add('bg-danger');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();           
+                 }
+        });
+        }
+            },
+            error:function(xhr,status,error)
+            {
+                document.getElementById("toast-title").innerHTML="Thông báo";
+                document.getElementById("toast-message").innerHTML=xhr.responseText;
+                var toastEl = document.querySelector('.toast');
+                toastEl.classList.add('bg-danger');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            }
+        });
+
+     });
+     });
+
+
+
+@* var modalElement = document.getElementById('productModalId');
+
+ modalElement.removeEventListener('show.bs.modal',fuckyou); 
+
+ modalElement.addEventListener('show.bs.modal',fuckyou,{once:true});  *@
+ @* function(event) 
+{     *@
+     @* if(event.target.id==="productModalId")
+     { 
+        const button = event.relatedTarget;
+
+        const productId=button.getAttribute('data-product-id');
+        
+        var url="@Url.Action("VariantProduct","HomePage",new{id="__id__"})";
+        
+        url=url.replace("__id__",productId);
+       
+       $.ajax({
+            url:url,
+            type:"GET",
+            contentType: false,
+            processData: false, 
+            success:function(response)
+            {
+            var value=JSON.parse(response);
+            
+            var productOptionsContainer = document.querySelector(".product-options");
+        
+            productOptionsContainer.innerHTML = "";
+            var colors=[];
+            var sizes=[];
+            var versions=[];
+            var mirrors=[];
+            var sizes_json=[];
+            var colors_json=[];
+            var versions_json=[];
+            var mirrors_json=[];
+            var prices_json=[];
+               for(let i=0;i<value.length;i++)
+               {
+                const variant=value[i];
+                var color="";
+                var size="";
+                var version="";
+                var mirror="";
+              
+                if(variant.Color!=null)
+                { 
+                    color=variant.Color.Colorname;
+                   if(productOptionsContainer.querySelector(".color-selector")===null)
+                   {
+                    const selector=document.createElement("div");
+                    selector.classList.add("color-selector");
+                     selector.innerHTML = `
+        <h3>Màu sắc:</h3>
+        <div class="size-buttons" id="color-buttons">
+  
+    <button class="size-btn">${color}</button>
+    
+    </div>
+    `; 
+              productOptionsContainer.appendChild(selector);
+              colors.push(color);
+        }
+        else{
+            if(!colors.includes(color))
+            {
+            colors.push(color);
+
+        
+            
+            const selecter=productOptionsContainer.querySelector(".color-selector");
+            const button_container=selecter.querySelector("#color-buttons");
+            const new_btn=document.createElement("button");
+            new_btn.classList.add("size-btn");
+            new_btn.textContent=color;
+            button_container.appendChild(new_btn);
+            }
+        }
+                }
+                if(variant.Size!=null)
+                {
+                    size=variant.Size.Sizename;
+                     if(productOptionsContainer.querySelector(".size-selector")===null)
+                   {
+                    const selector=document.createElement("div");
+                    selector.classList.add("size-selector");
+                     selector.innerHTML = `
+        <h3>Kích thước:</h3>
+        <div class="size-buttons" id="size-buttons">
+  
+    <button class="size-btn">${size}</button>
+    
+    </div>
+    `; 
+              productOptionsContainer.appendChild(selector);
+              sizes.push(size);
+        }
+        else{
+            if(!sizes.includes(size))
+            {
+            sizes.push(size);
+            const selecter=productOptionsContainer.querySelector(".size-selector");
+            const button_container=selecter.querySelector("#size-buttons");
+            const new_btn=document.createElement("button");
+            new_btn.classList.add("size-btn");
+            new_btn.textContent=size;
+            button_container.appendChild(new_btn);
+            }
+        }
+                }
+                if(variant.Version!=null)
+                {
+                    version=variant.Version.Versionname;
+                     if(productOptionsContainer.querySelector(".version-selector")===null)
+                   {
+                    const selector=document.createElement("div");
+                    selector.classList.add("version-selector");
+                     selector.innerHTML = `
+        <h3>Phiên bản:</h3>
+        <div class="size-buttons" id="version-buttons">
+  
+    <button class="size-btn">${version}</button>
+    
+    </div>
+    `; 
+              productOptionsContainer.appendChild(selector);
+              versions.push(version);
+        }
+        else{
+            if(!versions.includes(version))
+            {
+            versions.push(version);
+            const selecter=productOptionsContainer.querySelector(".version-selector");
+            const button_container=selecter.querySelector("#version-buttons");
+            const new_btn=document.createElement("button");
+            new_btn.classList.add("size-btn");
+            new_btn.textContent=version;
+            button_container.appendChild(new_btn);
+            }
+        }
+                }
+                if(variant.Mirror!=null)
+                {
+                    mirror=variant.Mirror.Mirrorname;
+                     if(productOptionsContainer.querySelector(".mirror-selector")===null)
+                   {
+                    const selector=document.createElement("div");
+                    
+                    selector.classList.add("mirror-selector");
+                     selector.innerHTML = `
+        <h3>Loại kính:</h3>
+        <div class="size-buttons" id="mirror-buttons">
+  
+    <button class="size-btn">${mirror}</button>
+    
+    </div>
+    `; 
+              productOptionsContainer.appendChild(selector);
+              mirrors.push(mirror);
+        }
+        else{
+             if(!mirrors.includes(mirror))
+            {
+            mirrors.push(mirror);
+            const selecter=productOptionsContainer.querySelector(".mirror-selector");
+            const button_container=selecter.querySelector("#mirror-buttons");
+            const new_btn=document.createElement("button");
+            new_btn.classList.add("size-btn");
+            new_btn.textContent=mirror;
+            button_container.appendChild(new_btn);
+            }
+        }
+                }
+                sizes_json.push(size);
+                colors_json.push(color);
+                versions_json.push(version);
+                mirrors_json.push(mirror);
+                prices_json.push(variant.Price);
+               }
+        if(value.length>0)
+        {
+            initClickButton(sizes_json,colors_json,versions_json,mirrors_json,prices_json);
+          handleClickButton('color-buttons',sizes_json,colors_json,versions_json,mirrors_json,prices_json);
+
+          handleClickButton('size-buttons',sizes_json,colors_json,versions_json,mirrors_json,prices_json);
+    
+          handleClickButton('version-buttons',sizes_json,colors_json,versions_json,mirrors_json,prices_json);
+
+          handleClickButton('mirror-buttons',sizes_json,colors_json,versions_json,mirrors_json,prices_json);
+        }
+            },
+         error:function(xhr, status, error)
+            {
+               document.getElementById("toast-title").innerHTML="Thông báo";
+                document.getElementById("toast-message").innerHTML=xhr.responseText;
+                var toastEl = document.querySelector('.toast');
+                toastEl.classList.add('bg-danger');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();                 }
+       });
+
+                
+        const productName = button.getAttribute('data-product-name');
+        
+        const productPrice = button.getAttribute('data-product-price');
+        
+        const front_image = button.getAttribute('data-main-avatar');
+
+        const category   = button.getAttribute('data-product-category');
+
+        const quantity = button.getAttribute('data-product-quantity');
+
+        
+        for(let i=0;i<=4;i++)
+        {   //var sub_img=document.getElementById(`sub-img-${i}`);
+            const sub_img = document.querySelectorAll(`#sub-img-${i}`);
+            if(button.hasAttribute(`data-img-${i}`))
+            {
+            var data_img=button.getAttribute(`data-img-${i}`);
+            
+         const wwwrootIndex = data_img.indexOf("wwwroot");
+
+
+let relativePath = data_img;
+
+if (wwwrootIndex !== -1) {
+
+    relativePath = data_img.substring(wwwrootIndex + "wwwroot".length + 1);
+}    
+       var wwwrootPath='@Url.Content("~/")';
+       
+      relativePath=wwwrootPath+relativePath.replace(/\\/g, "/");
+       
+       sub_img.forEach((img,index)=>{
+        if(index==0)
+       {
+        img.innerHTML = `<img src="${relativePath}" alt="sub_avatar"">`;
+       }
+       else
+       {
+        img.innerHTML = `<img src="${relativePath}" alt="sub_avatar" style="width:85px;height:85px">`;
+       }
+       });
+            }
+            else{
+       sub_img.forEach(img=>{img.innerHTML = ``;});
+
+            }
+        }
+
+       const count_review_value=button.getAttribute('data-count-review');
+        
+        const main_image = document.getElementById('sub-img-0');
+
+        const cat_link=document.getElementById('link-category');
+
+        const review_value= document.getElementById("review-value");
+
+
+        url='@Url.Action("ProductsByCategory","Products",new{category_name="__id__"})';
+    
+        url=url.replace("__id__",category);
+
+        cat_link.href=url;
+
+
+         document.querySelectorAll("#quick-view-list .star").forEach((star,index)=>{
+       star.setAttribute("data-product-id",button.getAttribute("data-product-id"));
+   });
+
+        review_value.textContent=`(${count_review_value} đánh giá)`; 
+
+
+        document.getElementById('product-name').textContent = productName;
+        
+        document.getElementById('product-price').textContent = productPrice;
+
+        document.getElementById('product-category').textContent = category;
+
+        document.getElementById('product-quantity-value').textContent = quantity+ " sản phẩm";
+
+        var name_url='@Url.Action("ProductDetail","ProductDetail",new{product_name="__id__"})';
+
+        name_url=name_url.replace("__id__",productName);
+
+       const add_cart_btn=document.getElementById('add-cart-detail');
+       add_cart_btn.addEventListener("click",()=>{ 
+         var quantity_value=document.getElementById('quantity-value').value;
+         let formData = new FormData();
+    var size_container = document.getElementById('size-buttons');
+       var color_container = document.getElementById('color-buttons');
+       var version_container = document.getElementById('version-buttons');
+       var mirror_container = document.getElementById('mirror-buttons');
+       var price=document.getElementById('product-price').textContent.replaceAll("đ","").replaceAll(",","").trim().replaceAll(/\s/g, '');
+       var size_value=null;
+       var color_value=null;
+       var version_value=null;
+       var mirror_value=null;
+       if(size_container!=null)
+       {
+        size_value=size_container.querySelector('.size-btn.active').textContent;
+
+        formData.append("size",size_value);
+       }
+       if(color_container!=null)
+       {
+        color_value=color_container.querySelector('.size-btn.active').textContent;
+        
+        formData.append("color",color_value);
+       }
+       if(version_container!=null)
+       {
+        version_value=version_container.querySelector('.size-btn.active').textContent;
+        
+        formData.append("version",version_value);
+       }
+       if(mirror_container!=null)
+       {
+        mirror_value=mirror_container.querySelector('.size-btn.active').textContent;
+        formData.append("mirror",mirror_value);
+       }
+
+         formData.append("quantity",quantity_value);
+        
+        formData.append("product_id",productId);
+         formData.append("quantity",quantity_value);
+         formData.append("product_name",productName);
+         formData.append("price",price);
+         $.ajax({
+            url:"@Url.Action("addItemToCart","Cart")",
+            type:"POST",
+            data:formData,
+            contentType: false,
+            processData: false,
+            success:function(response)
+            {   
+                const status=response.status;
+                const message = response.message;
+                const data=response.data;
+                 if(data!="")
+             {
+                $("#count-cart").text(data.length);
+               
+                var section_url="@Url.Action("SubCartPartialView","Cart")";
+                   $.ajax({
+                    url:section_url,
+                    type:"POST",
+                    success: function(partialHtml) {
+                        $('#sub-cart-section').html(partialHtml); 
+                    }
+                });
+            }
+            
+                document.getElementById("toast-title").innerHTML="Thông báo";
+
+                document.getElementById("toast-message").innerHTML=message;
+
+                var toastEl = document.querySelector('.toast');
+
+                if(status==1)
+                {
+                 toastEl.classList.add('bg-success');
+                }
+            else
+            {
+                toastEl.classList.add('bg-danger');
+            }
+                var toast = new bootstrap.Toast(toastEl);
+                
+                 toast.show();
+            },
+            error:function(xhr, status, error)
+            { 
+                document.getElementById("toast-title").innerHTML="Thông báo";
+                document.getElementById("toast-message").innerHTML=xhr.responseText;
+                var toastEl = document.querySelector('.toast');
+                toastEl.classList.add('bg-danger');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+
+                 }
+        });
+        }); 
+       
+        document.getElementById('name-link').href = name_url;
+        } *@
+        @* },{once:true}); *@
+
+});
+    </script>
+
+   

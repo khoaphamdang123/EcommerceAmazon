@@ -1,0 +1,537 @@
+<!-- =========================================================
+* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
+==============================================================
+
+* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
+* Created by: ThemeSelection
+* License: You must have a valid license purchased in order to legally use the theme for your project.
+* Copyright ThemeSelection (https://themeselection.com)
+
+=========================================================
+ -->
+<!-- beautify ignore:start -->
+@model PageList<Order>
+@{
+  int count_id= 0;
+  var selected_size=ViewBag.select_size;
+  var filtered_order=ViewBag.filter_obj;
+  var status_delete=ViewBag.Delete_Status;
+  var category_id=ViewBag.Category_Id;
+  var current_total_item=(Model?.currentPage*Model?.pageSize)-Model?.pageSize;
+  var processing_count=ViewBag.processing_count; 
+   var completed_count= ViewBag.completed_count;
+   var cancelled_count = ViewBag.cancelled_count;
+   var refund_count=ViewBag.refund_count;
+  string curr_status_class="";
+  Dictionary<string,string> order_status=new Dictionary<string, string>{
+    {"Processing","Đang xử lý"},
+    {"Finished","Đã hoàn thành"},
+    {"Cancelled","Đã hủy"},
+    {"Refund","Được hoàn tiền"}
+  };  
+ 
+  var message_delete =ViewBag.Delete_Message;
+}
+
+@if(status_delete==1)
+{
+   <div
+       class="bs-toast toast fade hide bg-success toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+       data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Xóa đơn hàng</div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                            @message_delete
+                        </div>
+                      </div>
+                <script>
+            document.addEventListener('DOMContentLoaded', function() 
+            {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();                
+            });
+        </script>
+}
+
+
+@if(status_delete==0)
+{
+   <div
+       class="bs-toast toast fade hide bg-danger toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+        data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Xóa đơn hàng</div>
+                        </div>
+                        <div class="toast-body">
+                         @(message_delete)
+                        </div>
+                      </div>
+                        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+}
+
+    <!-- Layout wrapper -->
+          <div class="content-wrapper">
+            <div class="container-xxl flex-grow-1 container-p-y">
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Hóa đơn/</span>Danh sách hóa đơn</h4>
+                
+               <div class="card mb-5">
+                <div class="card-widget-separator-wrapper">
+                    <div  class="card-body card-widget-separator">
+                        <div class="row gy-4 gy-sm-1">
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="d-flex justify-content-between align-items-start card-widget-1 border-end pb-4 pb-sm-0">
+                               <div>
+                                <h4 class="mb-0">
+                                 @processing_count
+                                </h4>
+                                <p class="mb-0">
+                                    Đơn đang xử lý
+                                </p>
+                               </div>
+                               <span class="avatar w-px-40 h-px-40 me-sm-6">
+                                <span class="avatar-initial bg-label-secondary rounded">
+                                    <i class="bx bx-calendar bx-lg text-heading bg-label-primary">
+                                    </i>
+                                </span>
+                               </span>
+                            </div>
+                        </div>
+                        <hr class="d-none d-sm-block d-lg-none me-6">
+                    <div class="col-sm-6 col-lg-3">
+                            <div class="d-flex justify-content-between align-items-start card-widget-1 border-end pb-4 pb-sm-0">
+                               <div>
+                                <h4 class="mb-0">
+                                 @completed_count
+                                </h4>
+                                <p class="mb-0">
+                                    Đơn đã hoàn thành
+                                </p>
+                               </div>
+                               <span class="avatar w-px-40 h-px-40 me-sm-6">
+                                <span class="avatar-initial bg-label-secondary rounded">
+                                    <i class="bx bx-check-double bx-lg text-heading bg-label-success">
+                                    </i>
+                                </span>
+                               </span>
+                            </div>
+                        </div>
+                        <hr class="d-none d-sm-block d-lg-none me-6">
+                    <div class="col-sm-6 col-lg-3">
+                            <div class="d-flex justify-content-between align-items-start card-widget-1 border-end pb-4 pb-sm-0">
+                               <div>
+                                <h4 class="mb-0">
+                                 @refund_count
+                                </h4>
+                                <p class="mb-0">
+                                    Đơn được hoàn tiền
+                                </p>
+                               </div>
+                               <span class="avatar w-px-40 h-px-40 me-sm-6">
+                                <span class="avatar-initial bg-label-secondary rounded">
+                                    <i class="bx bx-wallet bx-lg text-heading bg-label-warning">
+                                    </i>
+                                </span>
+                               </span>
+                            </div>
+                        </div>
+                        <hr class="d-none d-sm-block d-lg-none me-6">
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="d-flex justify-content-between align-items-start card-widget-1 border-end pb-4 pb-sm-0">
+                               <div>
+                                <h4 class="mb-0">
+                                 @cancelled_count
+                                </h4>
+                                <p class="mb-0">
+                                    Đơn đã hủy
+                                </p>
+                               </div>
+                               <span class="avatar w-px-40 h-px-40 me-sm-6">
+                                <span class="avatar-initial bg-label-secondary rounded">
+                                    <i class="bx bx-error-alt bx-lg text-heading bg-label-danger">
+                                    </i>
+                                </span>
+                               </span>
+                            </div>
+                        </div>
+                        <hr class="d-none d-sm-block d-lg-none me-6">
+                        </div>
+                    </div>
+                </div>
+               </div> 
+                <div class="card">
+                <div class="card-datatable border-bottom">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="ms-2">   
+                            <div class="data-length">
+                                <label>
+                             <select name="status" id="status" class="form-select form-select-status select-2">
+                              @if(string.IsNullOrEmpty(filtered_order))
+                              {
+                                <option value="" selected disabled>Chọn trạng thái đơn hàng</option>
+                              }
+                              else
+                              {
+                          <option value="" disabled>Chọn trạng thái đơn hàng</option>
+                              }
+                                @foreach(var status in order_status)
+                                {
+                                if(!string.IsNullOrEmpty(filtered_order))
+                                {
+                                    if(status.Key==filtered_order)
+                                    {
+                                        <option value="@status.Key" selected>@status.Value</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@status.Key">@status.Value</option>
+                                    }
+                                }
+                                else
+                                {
+                                    <option value="@status.Key">@status.Value</option>
+                                }
+                                }
+
+                             </select>
+                         </label>
+                            </div>
+                            </div>
+                        </div>
+                            <div class="col-md-10">
+                            <div class="dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-end flex-md-row flex-column mb-6 mb-md-0 mt-n6 mt-md-0 gap-md-4">
+                            <div class="data-filter">
+                            <div class="dt-buttons btn-group flex-wrap">
+                             <label>
+                                    <select class="form-select" id="page-size">
+                                        @foreach(var option in ViewBag.options)
+                                      { 
+                                        if(option==selected_size)
+                                        {
+                                          <option value="@option" selected>@option</option>
+                                        }
+                                        else
+                                        {
+                                           <option value="@option">@option</option>
+                                        }
+                                      }
+                                    </select>
+                                </label>
+                            <div class="btn-group">
+                                    <button class="btn buttons-collection dropdown-toggle btn-label-secondary me-4" tabindex="0" id="exportDropdown" type="button" aria-haspopup="dialog" data-bs-toggle="dropdown" aria-expanded="false"><span><i class="bx bx-export me-2 bx-sm"></i>Xuất File</span></button> 
+                                    <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                       <li><a class="dropdown-item" href="@Url.Action("ExportToExcel","ProductList")">Định dạng Excel</a></li>
+                                    </ul>    
+                                </div>
+                            </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h5 class="card-header">Danh sách hóa đơn</h5>
+                <div class="table-responsive text-nowrap border-bottom">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">STT</th>
+                            <th class="text-center">No</th>
+                            <th class="text-center">Tên khách hàng</th>
+                            <th class="text-center">Phương thức thanh toán</th>
+                            <th class="text-center">Trạng thái đơn hàng</th>
+                            <th class="text-center">Giá trị đơn hàng</th>
+                            <th class="text-center">Ghi chú</th>
+                            <th class="text-center">Ngày tạo</th>                        
+                            <th class="text-center">
+                            Thao tác
+                           </th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                       @foreach(var order in Model?.item)
+                      { 
+                        current_total_item+=1;
+
+                        switch(order.Status)
+                        {
+                            case "Processing":
+                            {
+                                curr_status_class="bg-label-primary";
+                                break;
+                            }
+                            case "Finished":
+                            {
+                                curr_status_class="bg-label-success";
+                                break;
+                            }
+                            case "Cancelled":
+                            {
+                                curr_status_class="bg-label-danger";
+                                break;
+                            }
+                            case "Refund":
+                            {
+                                curr_status_class="bg-label-warning";
+                                break;
+                            }
+                        }
+                        
+                         <tr>
+                            <td class="text-center">@current_total_item</td>
+                            <td class="text-center">@order.Id</td>
+                            <td class="text-center">
+                                <div class="d-flex">
+                              <div class="avatar-wrapper">
+                                <div class="avatar avatar-sm me-2">
+                                  <img src="@order.User.Avatar" alt="User Avatar">
+                                </div>
+                              </div>
+                              <strong>@order.User.UserName</strong>
+                             </div>
+                              </td>
+                            <td class="text-center">@order.Payment.Paymentname</td>
+                            <td class="text-center"><span class="badge px-2 @curr_status_class">@order_status[order.Status]</span></td>                            
+                            <td class="text-center">@order.Total</td>
+                            <td class="text-center">@order.Note</td>
+                            <td class="text-center">@order.Createddate</td>
+                            <td class="text-center">
+                            <div class="d-flex justify-content-center">
+                              <a data-bs-toggle="modal" data-bs-target="#modalLong" class="btn btn-icon delete-record icon-style-delete mr-2" id="delete-record-btn" data-page=@order.Id title="Xóa đơn hàng">                               
+                                 <i class="bx bx-trash bx-md"></i>
+                              </a>
+                      <div class="modal fade" id="modalLong" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h4 class="modal-title" id="modalLongTitle"><strong>Xóa đơn hàng</strong></h4>
+                              <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                              ></button>
+                            </div>
+                            <div class="modal-body">
+                             <p class="modal-font">
+                               <strong>Bạn có chắc là muốn xóa đơn hàng này?</strong>                               
+                            </p>
+                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" id="remove-btn">Xóa</button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                Đóng                                
+                            </button>
+                        </div>
+                          </div>
+                        </div>
+                      </div>
+                                <a href="@Url.Action("OrderDetail",new{id=order.Id})" class="btn btn-icon icon-style-update" title="Xem chi tiết">
+                                <i class="bx bx-show bx-md"></i>
+                              </a>
+                            
+                             <a href="@Url.Action("OrderStatus",new{id=order.Id})" class="btn btn-icon" style="color:#007bff" title="Cập nhật trạng thái">
+                                <i class="bx bx-edit bx-md"></i>
+                              </a>
+                            </div>
+                            </td>
+                         </tr>
+                         }
+                    </tbody>
+                </table>
+                </div>
+    <div class="pagination-container mt-4">
+      <div class="page-total">Tổng số trang:@Model?.totalCount</div>
+      <div class="page-list justify-content-center">
+     @if(Model!=null && Model.hasPreviousPage)
+     {
+         <a class="page-item" title="Previous" href="@Url.Action("OrderListPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage-1,status=string.IsNullOrEmpty(filtered_order)?"":filtered_order})"><i class="bx bx-chevron-left"></i></a>
+     }
+     else
+     {
+      <span class="page-item" title="Previous" aria-label="previous"><i class="bx bx-chevron-left"></i></span>
+     }
+ 
+    @if(Model?.totalPage<=7)
+    {
+      for(int i=1;i<=Model?.totalPage;i++)
+      {
+        if(i==Model?.currentPage)
+        {
+           <a class="page-item activate" disabled>@i</a> 
+        }
+       else
+       {
+         <a class="page-item" title="@i" href="@Url.Action("OrderListPaging",new{page_size=int.Parse(selected_size),page=i,status=string.IsNullOrEmpty(filtered_order)?"":filtered_order})">@i</a>
+       }
+      }
+    }
+     else
+    {
+     if(Model?.currentPage<5)
+     {
+      for(int i=1;i<=7;i++)
+      {
+        if(i<6)
+        {
+          if(i==Model?.currentPage)
+        {
+           <span class="page-item activate" disable>@i</span> 
+        }
+       else{
+         <a class="page-item" title="@i" href="@Url.Action("OrderListPaging",new{page_size=int.Parse(selected_size),page=i,status=string.IsNullOrEmpty(filtered_order)?"":filtered_order})">@i</a>
+       }
+        }
+        else{
+          if(i==6)
+          {
+            <span class="page-item" disabled>...</span>
+          }
+        else{
+         <a class="page-item" title="@i" href="@Url.Action("OrderListPaging",new{page_size=int.Parse(selected_size),page=i,status=string.IsNullOrEmpty(filtered_order)?"":filtered_order})">@i</a>
+        }
+        }
+      }
+     }
+    else
+    {
+    if((Model?.currentPage>=5 && (Model?.currentPage<(Model.totalPage-3))))
+    {
+         <a class="page-item" title="1" href="@Url.Action("OrderListPaging",new{page_size=int.Parse(selected_size),page=1,status=string.IsNullOrEmpty(filtered_order)?"":filtered_order})">1</a>
+    <span class="page-item" disabled>...</span>
+         <a class="page-item" title="@Model?.currentPage-1" href="@Url.Action("OrderListPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage-1,status=string.IsNullOrEmpty(filtered_order)?"":filtered_order})">@(Model?.currentPage-1)</a>
+    <span class="page-item activate" disabled>@(Model?.currentPage)</span>
+         <a class="page-item" title="@Model?.currentPage+1" href="@Url.Action("OrderListPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage+1,status=string.IsNullOrEmpty(filtered_order)?"":filtered_order})">@(Model?.currentPage+1)</a>
+
+    <span class="page-item" disabled>...</span>
+         <a class="page-item" title="@Model?.totalPage" href="@Url.Action("OrderListPaging",new{page_size=int.Parse(selected_size),page=Model?.totalPage,status=string.IsNullOrEmpty(filtered_order)?"":filtered_order})">@Model?.totalPage</a>
+    }
+    else{
+         <a class="page-item" title="1" href="@Url.Action("OrderListPaging",new{page_size=int.Parse(selected_size),page=1,status=string.IsNullOrEmpty(filtered_order)?"":filtered_order})">1</a>
+    <span class="page-item" disabled>...</span>
+         <a class="page-item" title="@Model?.currentPage-4" href="@Url.Action("OrderListPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage-4,status=string.IsNullOrEmpty(filtered_order)?"":filtered_order})">@(Model?.currentPage-4)</a>
+     for(int i=(Model.totalPage-3);i<=Model?.totalPage;i++)
+     {
+      if(i==Model?.currentPage)
+      {
+          <span class="page-item activate" disabled>@(Model?.currentPage)</span>
+      }
+    else{
+         <a class="page-item" title="@i" href="@Url.Action("OrderListPaging",new{page_size=int.Parse(selected_size),page=i,status=string.IsNullOrEmpty(filtered_order)?"":filtered_order})">@i</a>
+    }
+     }
+    }
+    }
+    } 
+   
+        @* <a class="page-item" title="1" href="@Url.Action("UserList",new{page=1})">1</a>
+       
+    
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a>
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a>
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a>
+
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a>
+
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a> *@
+
+       
+      @if(Model!=null && Model.hasNextPage)
+      {
+         <a class="page-item" title="Next" href="@Url.Action("OrderListPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage+1,status=string.IsNullOrEmpty(filtered_order)?"":filtered_order})"><i class="bx bx-chevron-right"></i></a>
+       }
+      else 
+      {
+        <span class="page-item" title="Next" disabled> <i class="bx bx-chevron-right"></i></span>
+      }
+      </div>
+    </div>  
+ </div>
+  
+
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+
+      <div class="layout-overlay layout-menu-toggle"></div>
+  <script>
+     let delete_page='';
+
+
+    var all_delete_btn=document.querySelectorAll('#delete-record-btn');
+
+    all_delete_btn.forEach((btn)=>{
+    btn.addEventListener('click',()=>{
+    delete_page=btn.getAttribute('data-page');
+     })
+    });
+
+    document.getElementById("status").addEventListener("change",()=>
+    {
+      var status_value=document.getElementById("status").value;
+      var url="@Url.Action("filterOrderList","OrderList",new{status="__status__"})";
+      url=url.replace("__status__",status_value);
+      window.location.href=url;
+    });
+
+     document.getElementById("page-size").addEventListener("change",()=>{
+    
+     var selected_value=document.getElementById("page-size").value;
+     if(selected_value)
+     {
+      selected_value=parseInt(selected_value);
+
+      window.location.href= '@Url.Action("OrderListPaging", "OrderList")' + "?page_size=" + selected_value;
+     }
+     });
+
+     @* document.getElementById("add-page-btn").addEventListener('click',()=>{
+ 
+    var url='@Url.Action("AddStaticFiles","StaticFile")';
+
+    window.location.href=url;
+    }); *@
+    
+    document.getElementById("remove-btn").addEventListener('click',()=>{
+   
+   let delete_page_value=delete_page;
+    
+    var url='';
+    
+    url='@Url.Action("DeleteOrder","OrderList",new{id="__id__"})';
+
+    url=url.replace("__id__",delete_page_value);
+    
+    window.location.href=url;
+
+    });
+
+  </script>

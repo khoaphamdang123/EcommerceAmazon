@@ -1,0 +1,567 @@
+@model PageList<Product>
+@{
+  int count_id= 0;
+  var selected_size=ViewBag.select_size;
+  var filtered_product=ViewBag.filter_obj as FilterProduct;
+  int status_delete=-1;
+  int change_pass_status=-1;
+  var current_total_item=(Model?.currentPage*Model?.pageSize)-Model?.pageSize;  
+  string curr_status_class="";
+  int sub_cat=-1;
+
+  if(ViewBag.SubCat!=null)
+  {
+    sub_cat=Convert.ToInt32(ViewBag.SubCat);
+  }
+  var cat_list=ViewBag.CatList as IEnumerable<Category>;
+  var brand_list=ViewBag.BrandList as IEnumerable<Brand>;
+  Console.WriteLine(cat_list);
+  Console.WriteLine(brand_list);
+  var status_list=ViewBag.StatusList as List<string>;
+  if(TempData["Status_Delete"]!=null)
+  {
+   status_delete=Convert.ToInt32(TempData["Status_Delete"]);
+  }
+  var message_delete =TempData["Message_Delete"];
+  
+  string delete_email_value="";
+  
+  if((filtered_product)==null)
+  {
+    filtered_product=new FilterProduct("","","","","","");
+  }
+  Console.WriteLine("filtered_product"+filtered_product);
+}
+
+@if(status_delete==1)
+{
+   <div
+       class="bs-toast toast fade hide bg-success toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Xóa sản phẩm</div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                            @message_delete
+                        </div>
+                      </div>
+                <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+}
+
+
+@if(status_delete==0)
+{
+   <div
+       class="bs-toast toast fade hide bg-danger toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Xóa sản phẩm</div>
+                        </div>
+                        <div class="toast-body">
+                         @(message_delete)
+                        </div>
+                      </div>
+                        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+}
+  
+          <div class="content-wrapper">
+            <div class="container-xxl flex-grow-1 container-p-y">
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Sản phẩm/</span>Danh sách sản phẩm</h4>
+                <div class="card">
+                    <div class="card-header border-bottom">
+                     <h5 class="card-title mb-0">Lọc danh sách sản phẩm</h5>
+                <form method="post" asp-controller="ProductList" asp-action="ProductList">
+                    <div class="d-flex justify-content-between align-items-center row pt-4 gap-4 gap-md-0 g-6">
+                  <div class="col-md-4">
+                    @* <input type="search" class="form-control" name="categoryname" placeholder="Tên loại sản phẩm"> *@
+                    <select class="form-select select-2" name="category">
+                      <option value="">Chọn loại sản phẩm</option>
+                      @foreach(var option in cat_list)
+                      { if(filtered_product!=null)
+                      {
+                        if(option.CategoryName==filtered_product.Category && !string.IsNullOrEmpty(option.CategoryName))
+                        {
+                          <option value="@option.Id" selected>@option.CategoryName</option>
+                        }
+                        else{
+                          <option value="@option.Id">@option.CategoryName</option>
+                        }
+                      }
+                      else{
+                        <option value="@option.Id">@option.CategoryName</option>
+                      }
+                      }
+                    </select>
+                     </div>
+                    <div class="col-md-4">
+                      <select class="form-select select-2" name="brand">
+                        <option value="">Chọn nhãn hàng</option>
+                        @foreach(var option in brand_list)
+                        { if(filtered_product!=null)
+                        {
+                          if(option.BrandName==filtered_product.Brand && !string.IsNullOrEmpty(option.BrandName))
+                          {
+                            <option value="@option.Id" selected>@option.BrandName</option>
+                          }
+                          else{
+                            <option value="@option.Id">@option.BrandName</option>
+                          }
+                        }
+                        else{
+                          <option value="@option.Id">@option.BrandName</option>
+                        }
+                        }
+                      </select>
+                    </div>
+                   <div class="col-md-4">
+                      <select class="form-select select-2" name="status">
+                        <option value="">Chọn trạng thái</option>
+                        @foreach(var option in status_list)
+                        { if(filtered_product!=null)
+                        {
+                          if(option==filtered_product.Status)
+                          {
+                            <option value="@option" selected>@option</option>
+                          }
+                          else
+                          {
+                            <option value="@option">@option</option>
+                          }
+                        }
+                        else
+                        {
+                          <option value="@option">@option</option>
+                        }
+                        }
+                      </select>
+                    </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-4 mb-4">
+                        <input type="date" class="form-control" placeholder="mm/dd/yyyy" name="startdate" value="@filtered_product.StartDate" id="dateInput" autocomplete="off">
+                    </div>
+                           <div class="col-md-4">
+                        <input type="date" class="form-control" placeholder="mm/dd/yyyy" name="enddate" id="dateInput" value="@filtered_product.EndDate" autocomplete="off">
+                    </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-12 text-center">
+                         <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+                <div class="card-datatable border-bottom">
+                    <div class="row">
+                        <div class="col-md-2">
+                        <div class="ms-2">   
+                      <div class="data-length">
+                            @* <div class="data-length">
+                                <label>
+                                    <select class="form-select" id="page-size">
+                                    
+                                        @foreach(var option in ViewBag.options)
+                                        { if(option==selected_size)
+                                        {
+                                          <option value="@option" selected>@option</option>
+                                        }
+                                        else{
+                                           <option value="@option">@option</option>
+                                        }
+                                        }
+                                    </select>
+                                </label>
+                            </div> *@
+                            <input type="search" class="form-control" name="productname" id='product-name' placeholder="Tìm sản phẩm">
+                          <button type="button" id="product-name-btn"  class="btn btn-primary">Tìm kiếm</button>
+                      </div>
+                            </div>
+                        </div>
+                            <div class="col-md-10">
+                            <div class="dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-end flex-md-row flex-column mb-6 mb-md-0 mt-n6 mt-md-0 gap-md-4">
+                            <div class="data-filter">
+                            <div class="dt-buttons btn-group flex-wrap">
+                                <label>
+                                    <select class="form-select" id="page-size">
+                                     
+                                        @foreach(var option in ViewBag.options)
+                                      { 
+                                        if(option==selected_size)
+                                        {
+                                          <option value="@option" selected>@option</option>
+                                        }
+                                        else
+                                        {
+                                           <option value="@option">@option</option>
+                                        }
+                                      }
+                                    </select>
+                                </label>
+
+                                <div class="btn-group">
+                                    <button class="btn buttons-collection dropdown-toggle btn-label-secondary me-4" tabindex="0" id="exportDropdown" type="button" aria-haspopup="dialog" data-bs-toggle="dropdown" aria-expanded="false"><span><i class="bx bx-export me-2 bx-sm"></i>Xuất File</span></button> 
+                                    <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                       <li><a class="dropdown-item" href="@Url.Action("ExportToExcel","ProductList")">Định dạng Excel</a></li>
+                                    </ul>    
+                                </div>
+                                <button class="btn btn-secondary add-new btn-primary" id="add-category-btn" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><span><i class="bx bx-plus bx-sm me-0 me-sm-2"></i><span class="d-none d-sm-inline-block">Thêm sản phẩm mới</span></span></button>
+                            </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h5 class="card-header">Danh sách sản phẩm</h5>
+                <div class="table-responsive text-nowrap border-bottom">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">STT</th>
+                            <th class="text-center">No</th>
+                            <th class="text-center">Tên sản phẩm</th>
+                            <th class="text-center">Loại sản phẩm</th>
+                            <th class="text-center">Nhãn hàng</th>
+                            <th class="text-center">Giá sản phẩm</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-center">Ngày tạo</th>
+                            <th class="text-center">Ngày cập nhật</th>
+                           <th class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0"  id="tableBody">
+                       @foreach(var product in Model?.item)
+                       { current_total_item+=1;
+
+                         switch(product.Status)
+                        {
+                           
+                            case "Còn hàng":
+                            {
+                                curr_status_class="bg-label-success";
+                                break;
+                            }
+                            case "Hết hàng":
+                            {
+                                curr_status_class="bg-label-danger";
+                                break;                                
+                            }
+                        }
+                         <tr>
+                            <td class="text-center">@current_total_item</td>
+                            <td class="text-center">@product.Id</td>
+                            <td class="text-center">
+                             <div class="d-flex">
+                             @if(!string.IsNullOrEmpty(product.Frontavatar))
+                           {
+                              <div class="avatar-wrapper">
+                                <div class="avatar avatar-sm me-2 rounded-2">
+                                 <img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="User Front Avatar">
+                                </div>
+                              </div>
+                              }  
+                              @if(!string.IsNullOrEmpty(product.Backavatar))
+                              {
+                                  <div class="avatar-wrapper">
+                                <div class="avatar avatar-sm me-2 rounded-2">
+                                  <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="User Back Avatar">
+                                </div>
+                              </div>
+                              }
+                              <strong>@product.ProductName</strong>
+                             </div>
+                              </td>
+                            <td class="text-center">
+                             @if(product?.Category!=null)
+                             {
+                              @product.Category.CategoryName
+                              }
+                              </td>
+                            <td class="text-center">
+                             @if(product?.Brand!=null)
+                             {
+                              @product.Brand.BrandName
+                             }
+                              </td>
+                            <td class="text-center">@product.Price</td>
+                            <td class="text-center"><span class="badge px-2 @curr_status_class">@product.Status</span></td>                            
+                            <td class="text-center">@product.CreatedDate</td>
+                            <td class="text-center">@product.UpdatedDate</td>                            
+                            <td class="text-center">
+                            <div class="d-flex justify-content-center">
+                              <a data-bs-toggle="modal" data-bs-target="#modalLong" class="btn btn-icon delete-record icon-style-delete mr-2" id="delete-record-btn" data-category="@product.Id" title="Xóa sản phẩm">
+                              <i class="bx bx-trash bx-md"></i>
+                              </a>
+                      <div class="modal fade" id="modalLong" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h4 class="modal-title" id="modalLongTitle"><strong>Xóa Sản phẩm</strong></h4>
+                              <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                              ></button>
+                            </div>
+                            <div class="modal-body">
+                             <p class="modal-font">
+                               <strong>Bạn có chắc là muốn xóa sản phẩm này?</strong>                                                              
+                              </p>
+                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" id="remove-btn">Xóa</button>
+                              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                Đóng                                                                
+                              </button>
+                        </div>
+                          </div>
+                        </div>
+                      </div>
+                                <a href="@Url.Action("ProductInfo",new{id=product.Id})" class="btn btn-icon icon-style-update" title="Chi tiết sản phẩm">
+                                <i class="bx bx-show bx-md"></i>
+                              </a>
+                              <a href="@Url.Action("VariantList",new{id=product.Id})" style="margin-right: 5px;" class="btn btn-icon icon-style-reset" title="Danh sách biến thể">
+                                <i class="bx bx-cart bx-md"></i>
+                              </a>
+                             <a href="@Url.Action("ManualListByProduct","ManualList",new{product_id=product.Id})" class="btn btn-icon" title="Danh sách hướng dẫn">
+                                <i style="color: #696cff; margin-right:5px;" class="bx bx-book bx-md"></i>
+                              </a>
+                                <a href="@Url.Action("VideoListByProduct","VideoList",new{product_id=product.Id})" class="btn btn-icon" title="Danh sách video">
+                                <i style="color: #0d6efd;" class="bx bx-video bx-md"></i>                                
+                              </a>
+                            </div>
+                            </td>
+                         </tr>
+                    }
+                    </tbody>
+                </table>
+                </div>
+    <div class="pagination-container mt-4">
+      <div class="page-total">Tổng số sản phẩm:@Model?.totalCount</div>
+    <div class="page-list justify-content-center">
+     @if(Model!=null && Model.hasPreviousPage)
+     {
+         <a class="page-item" title="Previous" href="@Url.Action("ProductListPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage-1,productname=(string.IsNullOrEmpty(filtered_product.ProductName)?"":filtered_product.ProductName),startdate=(string.IsNullOrEmpty(filtered_product.StartDate)?"":filtered_product.StartDate),enddate=(string.IsNullOrEmpty(filtered_product.EndDate)?"":filtered_product.EndDate),brand=(string.IsNullOrEmpty(filtered_product.Brand)?"":filtered_product.Brand),category=(string.IsNullOrEmpty(filtered_product.Category)?"":filtered_product.Category),status=(string.IsNullOrEmpty(filtered_product.Status)?"":filtered_product.Status)})"><i class="bx bx-chevron-left"></i></a>
+     }
+     else
+     {
+      <span class="page-item" title="Previous" aria-label="previous"><i class="bx bx-chevron-left"></i></span>
+     }
+ 
+    @if(Model?.totalPage<=7)
+    {
+      for(int i=1;i<=Model?.totalPage;i++)
+      {
+        if(i==Model?.currentPage)
+        {
+           <a class="page-item activate" disabled>@i</a>
+        }
+       else
+       {
+         <a class="page-item" title="@i" href="@Url.Action("ProductListPaging",new{page_size=int.Parse(selected_size),page=i,productname=(string.IsNullOrEmpty(filtered_product.ProductName)?"":filtered_product.ProductName),startdate=(string.IsNullOrEmpty(filtered_product.StartDate)?"":filtered_product.StartDate),enddate=(string.IsNullOrEmpty(filtered_product.EndDate)?"":filtered_product.EndDate),brand=(string.IsNullOrEmpty(filtered_product.Brand)?"":filtered_product.Brand),category=(string.IsNullOrEmpty(filtered_product.Category)?"":filtered_product.Category),status=(string.IsNullOrEmpty(filtered_product.Status)?"":filtered_product.Status)})">@i</a>
+       }
+      }
+    }
+     else
+    {
+     if(Model?.currentPage<5)
+     {
+      for(int i=1;i<=7;i++)
+      {
+        if(i<6)
+        {
+          if(i==Model?.currentPage)
+        {
+           <span class="page-item activate" disable>@i</span> 
+        }
+       else{
+         <a class="page-item" title="@i" href="@Url.Action("ProductListPaging",new{page_size=int.Parse(selected_size),page=i,productname=(string.IsNullOrEmpty(filtered_product.ProductName)?"":filtered_product.ProductName),startdate=(string.IsNullOrEmpty(filtered_product.StartDate)?"":filtered_product.StartDate),enddate=(string.IsNullOrEmpty(filtered_product.EndDate)?"":filtered_product.EndDate),brand=(string.IsNullOrEmpty(filtered_product.Brand)?"":filtered_product.Brand),category=(string.IsNullOrEmpty(filtered_product.Category)?"":filtered_product.Category),status=(string.IsNullOrEmpty(filtered_product.Status)?"":filtered_product.Status)})">@i</a>
+       }
+        }
+        else{
+          if(i==6)
+          {
+            <span class="page-item" disabled>...</span>
+          }
+        else{
+         <a class="page-item" title="@i" href="@Url.Action("ProductListPaging",new{page_size=int.Parse(selected_size),page=i,productname=(string.IsNullOrEmpty(filtered_product.ProductName)?"":filtered_product.ProductName),startdate=(string.IsNullOrEmpty(filtered_product.StartDate)?"":filtered_product.StartDate),enddate=(string.IsNullOrEmpty(filtered_product.EndDate)?"":filtered_product.EndDate),brand=(string.IsNullOrEmpty(filtered_product.Brand)?"":filtered_product.Brand),category=(string.IsNullOrEmpty(filtered_product.Category)?"":filtered_product.Category),status=(string.IsNullOrEmpty(filtered_product.Status)?"":filtered_product.Status)})">@i</a>
+        }
+        }
+      }
+     }
+    else
+    {
+    if((Model?.currentPage>=5 && (Model?.currentPage<(Model.totalPage-3))))
+    {
+         <a class="page-item" title="1" href="@Url.Action("ProductListPaging",new{page_size=int.Parse(selected_size),page=1,productname=(string.IsNullOrEmpty(filtered_product.ProductName)?"":filtered_product.ProductName),startdate=(string.IsNullOrEmpty(filtered_product.StartDate)?"":filtered_product.StartDate),enddate=(string.IsNullOrEmpty(filtered_product.EndDate)?"":filtered_product.EndDate),brand=(string.IsNullOrEmpty(filtered_product.Brand)?"":filtered_product.Brand),category=(string.IsNullOrEmpty(filtered_product.Category)?"":filtered_product.Category),status=(string.IsNullOrEmpty(filtered_product.Status)?"":filtered_product.Status)})">1</a>
+    <span class="page-item" disabled>...</span>
+         <a class="page-item" title="@(Model?.currentPage-1)" href="@Url.Action("ProductListPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage-1,productname=(string.IsNullOrEmpty(filtered_product.ProductName)?"":filtered_product.ProductName),startdate=(string.IsNullOrEmpty(filtered_product.StartDate)?"":filtered_product.StartDate),enddate=(string.IsNullOrEmpty(filtered_product.EndDate)?"":filtered_product.EndDate),brand=(string.IsNullOrEmpty(filtered_product.Brand)?"":filtered_product.Brand),category=(string.IsNullOrEmpty(filtered_product.Category)?"":filtered_product.Category),status=(string.IsNullOrEmpty(filtered_product.Status)?"":filtered_product.Status)})">@(Model?.currentPage-1)</a>
+    <span class="page-item activate" disabled>@(Model?.currentPage)</span>
+         <a class="page-item" title="@(Model?.currentPage+1)" href="@Url.Action("ProductListPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage+1,productname=(string.IsNullOrEmpty(filtered_product.ProductName)?"":filtered_product.ProductName),startdate=(string.IsNullOrEmpty(filtered_product.StartDate)?"":filtered_product.StartDate),enddate=(string.IsNullOrEmpty(filtered_product.EndDate)?"":filtered_product.EndDate),brand=(string.IsNullOrEmpty(filtered_product.Brand)?"":filtered_product.Brand),category=(string.IsNullOrEmpty(filtered_product.Category)?"":filtered_product.Category),status=(string.IsNullOrEmpty(filtered_product.Status)?"":filtered_product.Status)})">@(Model?.currentPage+1)</a>
+    <span class="page-item" disabled>...</span>
+         <a class="page-item" title="@(Model?.totalPage)" href="@Url.Action("ProductListPaging",new{page_size=int.Parse(selected_size),page=Model?.totalPage,productname=(string.IsNullOrEmpty(filtered_product.ProductName)?"":filtered_product.ProductName),startdate=(string.IsNullOrEmpty(filtered_product.StartDate)?"":filtered_product.StartDate),enddate=(string.IsNullOrEmpty(filtered_product.EndDate)?"":filtered_product.EndDate),brand=(string.IsNullOrEmpty(filtered_product.Brand)?"":filtered_product.Brand),category=(string.IsNullOrEmpty(filtered_product.Category)?"":filtered_product.Category),status=(string.IsNullOrEmpty(filtered_product.Status)?"":filtered_product.Status)})">@(Model?.totalPage)</a>
+    }
+    else
+    {
+         <a class="page-item" title="1" href="@Url.Action("ProductListPaging",new{page_size=int.Parse(selected_size),page=1,productname=(string.IsNullOrEmpty(filtered_product.ProductName)?"":filtered_product.ProductName),startdate=(string.IsNullOrEmpty(filtered_product.StartDate)?"":filtered_product.StartDate),enddate=(string.IsNullOrEmpty(filtered_product.EndDate)?"":filtered_product.EndDate),brand=(string.IsNullOrEmpty(filtered_product.Brand)?"":filtered_product.Brand),category=(string.IsNullOrEmpty(filtered_product.Category)?"":filtered_product.Category),status=(string.IsNullOrEmpty(filtered_product.Status)?"":filtered_product.Status)})">1</a>
+    <span class="page-item" disabled>...</span>
+         <a class="page-item" title="@(Model?.currentPage-4)" href="@Url.Action("ProductListPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage-4,productname=(string.IsNullOrEmpty(filtered_product.ProductName)?"":filtered_product.ProductName),startdate=(string.IsNullOrEmpty(filtered_product.StartDate)?"":filtered_product.StartDate),enddate=(string.IsNullOrEmpty(filtered_product.EndDate)?"":filtered_product.EndDate),brand=(string.IsNullOrEmpty(filtered_product.Brand)?"":filtered_product.Brand),category=(string.IsNullOrEmpty(filtered_product.Category)?"":filtered_product.Category),status=(string.IsNullOrEmpty(filtered_product.Status)?"":filtered_product.Status)})">@(Model?.currentPage-4)</a>
+     for(int i=(Model.totalPage-3);i<=Model?.totalPage;i++)
+     {
+      if(i==Model?.currentPage)
+      {
+          <span class="page-item activate" disabled>@(Model?.currentPage)</span>
+      }
+    else{
+         <a class="page-item" title="@(i)" href="@Url.Action("ProductListPaging",new{page_size=int.Parse(selected_size),page=i,productname=(string.IsNullOrEmpty(filtered_product.ProductName)?"":filtered_product.ProductName),startdate=(string.IsNullOrEmpty(filtered_product.StartDate)?"":filtered_product.StartDate),enddate=(string.IsNullOrEmpty(filtered_product.EndDate)?"":filtered_product.EndDate),brand=(string.IsNullOrEmpty(filtered_product.Brand)?"":filtered_product.Brand),category=(string.IsNullOrEmpty(filtered_product.Category)?"":filtered_product.Category),status=(string.IsNullOrEmpty(filtered_product.Status)?"":filtered_product.Status)})">@i</a>
+    }
+     }
+    }
+    }
+    } 
+   
+        @* <a class="page-item" title="1" href="@Url.Action("UserList",new{page=1})">1</a>
+       
+    
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a>
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a>
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a>
+
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a>
+
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a> *@
+
+       
+      @if(Model!=null && Model.hasNextPage)
+      {
+         <a class="page-item" title="Next" href="@Url.Action("ProductListPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage+1,productname=(string.IsNullOrEmpty(filtered_product.ProductName)?"":filtered_product.ProductName),startdate=(string.IsNullOrEmpty(filtered_product.StartDate)?"":filtered_product.StartDate),enddate=(string.IsNullOrEmpty(filtered_product.EndDate)?"":filtered_product.EndDate),brand=(string.IsNullOrEmpty(filtered_product.Brand)?"":filtered_product.Brand),category=(string.IsNullOrEmpty(filtered_product.Category)?"":filtered_product.Category),status=(string.IsNullOrEmpty(filtered_product.Status)?"":filtered_product.Status)})"><i class="bx bx-chevron-right"></i></a>
+       }
+      else 
+      {
+        <span class="page-item" title="Next" disabled> <i class="bx bx-chevron-right"></i></span>
+      }
+      </div>
+    </div>  
+ </div>
+  
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+
+  <div class="layout-overlay layout-menu-toggle"></div>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.3/dragula.min.js"></script>
+
+  <script>
+    
+    let delete_category='';
+
+    var all_delete_btn=document.querySelectorAll('#delete-record-btn');
+
+    var filter_product_btn=document.getElementById('product-name-btn');
+    
+
+    filter_product_btn.addEventListener('click',()=>
+    {
+      var product_filter = document.getElementById('product-name');
+      var url='@Url.Action("ProductsByName","ProductList",new{product_name="__product__name"})';
+      url=url.replace('__product__name',product_filter.value);  
+      window.location.href=url;
+    });
+
+    all_delete_btn.forEach((btn)=>
+    {
+    btn.addEventListener('click',()=>{
+    delete_category=btn.getAttribute('data-category');
+     })
+    });
+
+    document.getElementById("page-size").addEventListener("change",()=>
+     {
+     var selected_value=document.getElementById("page-size").value;
+
+     if(selected_value)
+     {
+      selected_value=parseInt(selected_value);
+      //window.location.href=`${Url.Action("handleNumberItem",new{page_size=selected_value})}`;
+      window.location.href= '@Url.Action("ProductListPaging", "ProductList")' + "?page_size=" + selected_value;
+     }
+     });
+     document.getElementById("add-category-btn").addEventListener('click',()=>
+     {
+      window.location.href='@Url.Action("AddProductList","ProductList")';
+     });
+    
+    document.getElementById("remove-btn").addEventListener('click',()=>
+    {
+
+    delete_category_value=delete_category;
+
+    window.location.href='@Url.Action("DeleteProduct","ProductList")'+"?id="+delete_category_value; 
+  
+    });
+    
+    @* var drake = dragula([document.getElementById("tableBody")]);
+
+    drake.on("drag",(el)=>{
+      el.className+='el-drag-ex-1';
+    });
+
+    drake.on("drop",(el)=>{
+  el.className = el.className.replace('el-drag-ex-1', '');
+
+    });
+
+    drake.on('cancel',(el)=>{
+      el.className = el.className.replace('el-drag-ex-1', '');
+    }); *@
+
+@*  
+ const convertDateTime=()=> {
+
+    const dateInput = document.getElementById('dateInput').value;
+
+
+    const date = new Date(dateInput);
+
+    if (!isNaN(date)) {
+            const formattedDate =  
+                              ('0' + (date.getMonth() + 1)).slice(-2) +'/'+
+                              ('0' + date.getDate()).slice(-2)+'/'+date.getFullYear();
+
+    }
+} *@
+  </script>

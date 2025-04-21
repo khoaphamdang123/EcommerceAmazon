@@ -1,0 +1,1495 @@
+
+
+@model Product
+@{
+   var created_product=ViewBag.Updated_Product;
+   var create_status=ViewBag.Status;
+   var cat_list =ViewBag.CategoryList as IEnumerable<Category>;
+   var brand_list = ViewBag.BrandList as IEnumerable<Brand>;
+   var sub_cat_list = ViewBag.SubCatList as List<SubCategory>; 
+   var status_list = new List<string>{"Còn hàng","Hết hàng"};
+   string bg_status="";   
+   string dns=Environment.GetEnvironmentVariable("DNS");
+   string env=Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+   Console.WriteLine("Product Info name:"+Model.ProductName);
+   List<string> list_img_avatar = new List<string>();
+    if (!string.IsNullOrEmpty(Model?.Backavatar))
+        {
+            list_img_avatar.Add(Model?.Backavatar);
+        }
+        if (!string.IsNullOrEmpty(Model?.Frontavatar))
+        {
+            list_img_avatar.Add(Model?.Frontavatar);
+        }
+    
+   List<string> avatar_list=new List<string>{Model?.Frontavatar,Model?.Backavatar};
+
+  List<ProductImage> list_img = Model?.ProductImages.ToList();
+  
+  var list_img_json=Newtonsoft.Json.JsonConvert.SerializeObject(list_img,new Newtonsoft.Json.JsonSerializerSettings
+    {
+        ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore
+    });
+
+  var list_img_avatar_json=Newtonsoft.Json.JsonConvert.SerializeObject(list_img_avatar,new Newtonsoft.Json.JsonSerializerSettings
+    {
+        ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore
+    });
+
+   var saved_img_files=Model?.ProductImages;
+   var saved_avatar_files=avatar_list;
+   bg_status=create_status==1||create_status==-1?"bg-danger":create_status==1?"bg-success":"";
+
+    Console.WriteLine("Status here:"+create_status);
+
+    Console.WriteLine("Status here:"+created_product);
+
+}
+
+      <div
+       class="bs-toast toast fade bg-success hide toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+       data-bs-dismiss="toast"
+       style="cursor: pointer;"
+       data-delay="3000"
+       data-bs-autohide="true" 
+       data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Cập nhật sản phẩm</div>
+                        </div>
+                        <div class="toast-body">
+                          Cập nhật sản phẩm thành công
+                        </div>
+                      </div>
+      <div
+       class="bs-toast toast toast-danger fade bg-danger hide toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+       data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Cập nhật sản phẩm</div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                          <p id="toast-message"></p>
+                        </div>
+                      </div>
+
+        
+
+<div class="alert alert-danger alert-dismissible fade" role="alert">
+    Đã vượt quá số hình đại diện cho phép
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+          <div class="content-wrapper">
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Sản phẩm/</span>Thông tin sản phẩm</h4>
+              <div class="row">
+                <div class="col-md-12">
+            <form id="formAccountSettings" method="post">
+                  <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="nav nav-pills">
+                      <a class="nav-link active" href="javascript:void(0);"><i class="bx bx-cart-alt me-1"></i>Sản phẩm</a>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="submit-btn">Cập nhật sản phẩm</button>
+                  </div>
+                  <div class="card mb-4">
+                    <h5 class="card-header">Thông tin sản phẩm</h5>
+                    <hr class="my-0" />
+
+                    <div class="card-body">
+                        <div class="row">
+                          <div class="mb-3 col-md-6">
+                            <label for="productname" class="form-label">Tên sản phẩm</label>
+                            <input
+                              class="form-control"
+                              type="text"
+                              id="productname"
+                              name="productname"
+                              placeholder="Nhập tên sản phẩm"
+                              autofocus
+                              value ="@Model?.ProductName"
+                            />
+                          <span id="product-error" class="text-danger"></span>
+                          </div>
+                        <input type="hidden" id="product-id" name="id" value="@Model.Id" data-id="@Model?.Id">
+                        </div>
+                        <div class="row mb-3 align-items-center">
+                         <div class="col-md-4">
+                            <label class="form-label" for="price">
+                                Giá
+                            </label>
+                           <input type="number" class="form-control" placeholder="Giá sản phẩm" name="price" min="0" id="price" value="@Model?.Price">
+                           <span class="text-danger" id="price-error"></span>
+                         </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="quantity">
+                               Số lượng sản phẩm
+                            </label>
+                           <input type="number" class="form-control" placeholder="Số lượng" name="quantity" min="0" id="quantity" value="@Model?.Quantity">
+                         <span class="text-danger" id="quantity-error"></span>
+                        </div>
+                         <div class="col-md-3">
+                          <label class="form-label" for="discount">
+                            Giảm giá
+                          </label>
+                          <input type="number" class="form-control" placeholder="Giảm giá" min="0" max="100" name="discount" value="@(string.IsNullOrEmpty(Model.Discount.ToString())?0:Model.Discount)" id="discount">
+                        </div>
+                        <div class="col-auto mt-4">
+                          <span>%</span>
+                        </div>  
+                        </div>
+                        <div class="row mt-3 mb-3">
+                         <div class="col">
+                            <label class="form-label" for="SubCategory">Chọn loại sản phẩm phụ</label>
+                            <select class="form-select select-2" id="sub-select" name="SubCategory">
+                              <option value="-1">Chọn loại sản phẩm phụ</option>
+                              @foreach(var subcat in sub_cat_list)
+                              {
+                                <option value="@subcat.Id">@subcat.SubCategoryName</option>
+                              }
+                            </select>
+                         </div>
+                            <div class="col">
+                            <label class="form-label" for="category">Chọn loại sản phẩm</label>
+                            <select class="form-select select-2" name="category" id="cat-select">
+                              <option value="-1">Chọn loại sản phẩm</option>
+                              @foreach(var cat in cat_list)
+                              {if(cat.Id==Model?.CategoryId)
+                              {
+                                <option value="@cat.Id" selected>@cat.CategoryName</option>
+                               }
+                              else{
+                                <option value="@cat.Id">@cat.CategoryName</option>
+                              }
+                              }
+                            </select>
+                         </div>
+                             <div class="col">
+                            <label class="form-label" for="brand">Chọn nhãn hàng</label>
+                            <select class="form-select select-2" id="brand-select" name="brand">
+                              <option value="-1">Chọn nhãn hàng</option>
+                              @foreach(var brand in brand_list)
+                              { if(brand.Id==Model?.BrandId)
+                              {
+                                <option value="@brand.Id" selected>@brand.BrandName</option>   
+                              }
+                              else{
+                                <option value="@brand.Id">@brand.BrandName</option>   
+                              }                             
+                              }
+                            </select>
+                         </div>  
+                             <div class="col">
+                            <label class="form-label" for="brand">Chọn Trạng thái</label>
+                            <select class="form-select select-2" id="brand-select" name="status">
+                              @foreach(var status in status_list)
+                              { if(status==Model?.Status)
+                              {
+                                <option value="@status" selected>@status</option>   
+                              }
+                              else{
+                                <option value="@status">@status</option>   
+                              }                             
+                              }
+                            </select>
+                         </div>  
+                        </div> 
+                    </div>
+                  </div>
+                 <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 card-title">Hình ảnh đại diện sản phẩm</h5>
+                </div>
+             <hr class="my-0"/>
+          <div class="card-body" id="avatar-files" data-img="@saved_avatar_files">
+<div class="drop-zone" id="drop-zone-avatar">
+    <input type="file" id="fileInputAvatar" class="file-input" accept="image/*" multiple hidden />
+<div class="drop-zone-message" id="drop-zone-message-avatar" 
+     style="display: @(string.IsNullOrEmpty(Model?.Frontavatar) || string.IsNullOrEmpty(Model?.Backavatar) ? "block" : "none");">       
+     <div class="mb-3"> 
+        Kéo và thả nhiều nhất 2 hình ảnh vào đây hoặc
+        <button type="button" id="fileInputButtonAvatar" class="upload-button">Chọn File</button>
+       </div>
+        <p style="color:red"><i>Lưu ý chỉ up tối đa 2 hình đại diện cho mặt trước và mặt sau của sản phẩm</i></p>
+    </div>
+
+ <div id="previewImageContainerAvatar" class="image-preview-container">
+    @if (!string.IsNullOrEmpty(Model?.Backavatar) || !string.IsNullOrEmpty(Model?.Frontavatar))
+    {
+        for (int i = 0; i < list_img_avatar.Count; i++)
+        {
+            string relativePath = list_img_avatar[i].Substring(list_img_avatar[i].IndexOf("wwwroot") + "wwwroot".Length).Replace(@"\", "/");
+
+            <div class="card-1" id="avatar-@i">
+                <img class="card-img-top" src="@Url.Content("~" + relativePath)" alt="Image @i" />
+                <div class="card-body-1">
+                    <h5 class="card-title-1">
+                        @System.IO.Path.GetFileName(list_img_avatar[i]).Replace(";", "")
+                    </h5>
+                    <button class="btn btn-danger remove-btn" id='avatar-@i' onclick="remove_img_btn('avatar-@i','avatar-@(System.IO.Path.GetFileName(list_img_avatar[i]))',event)">Xóa</button>
+                </div>
+            </div>
+        }
+    }
+</div>
+</div>
+                 </div>   
+                 </div>
+             <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 card-title">Hình ảnh sản phẩm</h5>
+                </div>
+             <hr class="my-0" />
+                <div class="card-body" id="image-files" data-img="@saved_img_files">
+                  <div class="drop-zone" id="drop-zone">
+    <input type="file" id="fileInput" class="file-input" accept="image/*" multiple hidden />
+    <div class="drop-zone-message" id="drop-zone-message" style="display:@(Model?.ProductImages.Count>0?"none":"block")" >
+        Kéo và thả hình ảnh vào đây hoặc
+        <button type="button" id="fileInputButton" class="upload-button">Chọn File</button>
+    </div>
+    <div id="previewImageContainer" class="image-preview-container">
+     @if (Model?.ProductImages.Count>0)
+    {  
+        for (int i = 0; i < list_img.Count;i++)
+        {
+            string relativePath = list_img[i].Avatar.Substring(list_img[i].Avatar.IndexOf("wwwroot") + "wwwroot".Length).Replace(@"\", "/");
+            <div class="card-1" id="img-@i">
+                <img class="card-img-top" src="@Url.Content("~" + relativePath)" alt="Image @i"/>
+                <div class="card-body-1">
+                    <h5 class="card-title-1">
+                        @System.IO.Path.GetFileName(list_img[i].Avatar).Replace(";", "")
+                    </h5>
+                    <button class="btn btn-danger remove-btn" id='img-@i' onclick="remove_img_btn('img-@i','img-@(System.IO.Path.GetFileName(list_img[i].Avatar))',event)">Xóa</button>
+                </div>
+            </div>
+        }
+    }
+    </div>
+</div>
+        </div>
+        </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                      <h5 class="mb-0 card-title">Miêu tả sản phẩm</h5>
+                    </div>
+                    <hr class="my-0" />
+                    <div class="card-body">
+                    <textarea id="Description" name="description" style="height: 300px;" value="@Model?.Description">@Model?.Description</textarea>
+                    </div>   
+                </div>
+                
+       <div class="card mb-4">
+                    <div class="card-header">
+                      <h5 class="mb-0 card-title">Thông số sản phẩm</h5>
+                    </div>
+                    <hr class="my-0" />
+                    <div class="card-body">
+                    <textarea id="Stat-Description" name="statdescription" style="height: 300px;" value="@Model?.Statdescription">@Model?.Statdescription></textarea>
+                    </div>
+                </div>
+
+             <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0 card-title">Miêu tả trong hộp</h5>
+                    </div>
+                    <hr class="my-0" />
+                    <div class="card-body">
+                 <textarea id="Description-Inbox" name="inboxdescription" style="height: 300px;" value="@Model?.InboxDescription">@Model?.InboxDescription</textarea>
+                    </div>
+                </div>
+            
+             <div class="card mb-4">
+                    <div class="card-header">
+                    <h5 class="mb-0 card-title">Miêu tả giảm giá</h5>
+                    </div>
+                    <hr class="my-0"/>
+                    <div class="card-body">
+                    <textarea id="Discount-Description" name="discountdescription" style="height: 300px;" value="@Model?.DiscountDescription">@Model?.DiscountDescription</textarea>
+                    </div>
+                </div>
+            
+             <div class="card mb-4">
+                    <div class="card-header">
+                  <h5 class="mb-0 card-title">Mẫu khác</h5>
+                    </div>
+                    <hr class="my-0"/>
+                    <div class="card-body">
+                   <div class="group mb-4" id="group-list" data-repeater-list>
+                   @if(Model?.Variants!=null)
+                   { 
+                   foreach(var variant in Model?.Variants)
+                   {
+                    <div class="data-repeater-item position-relative">
+                      <button type="button" class="variant-delete-btn" onclick="variantRemoveBtn(this)">X</button>
+                        <div class="row g-6 mb-6">
+                        <div class="col-4">
+                          <label class="form-label" for="color">Màu sắc</label> 
+                          <input class="form-control" id="color" type="text" placeholder="Nhập màu sắc" value="@(variant.Color!=null?variant.Color.Colorname:"")">
+                        </div>
+                          <div class="col-4">
+                          <label class="form-label" for="weight">Khối lượng</label> 
+                          <input class="form-control" id="weight" type="text" placeholder="Nhập khối lượng" value="@(variant.Weight!=null?variant.Weight:"")">
+                        </div>
+                         <div class="col-4 mb-3">
+                          <label class="form-label" for="size">Kích thước</label> 
+                          <input class="form-control" id="size" type="text" placeholder="Nhập kích thước" value="@(variant.Size!=null?variant.Size.Sizename:"")">
+                        </div>
+                            <div class="col-4 mb-2">
+                          <label class="form-label" for="version">Phiên bản</label> 
+                          <input class="form-control" id="version" type="text" placeholder="Nhập phiên bản" value="@(variant.Version!=null?variant.Version.Versionname:"")">
+                        </div>
+                        <div class="col-4 mb-3">
+                          <label class="form-label" for="mirror">Loại kính</label> 
+                          <input class="form-control" id="mirror" type="text" placeholder="Nhập loại kính" value="@(variant.Mirror!=null?variant.Mirror.Mirrorname:"")">
+                        </div>
+                          <div class="col-4 mb-3">
+                          
+                          <label class="form-label" for="mirror">Giá</label> 
+                          
+                          <input class="form-control" id="prices" type="text" placeholder="Nhập giá" value="@(variant.Price!=null?variant.Price:"")">
+                        </div>
+                        </div>
+                    </div>
+                    }
+                    }
+                else{
+                        <div class="data-repeater-item">
+                        <div class="row g-6 mb-6">
+                        <div class="col-4">
+                          <label class="form-label" for="color">Màu sắc</label> 
+                          <input class="form-control" id="color" type="text" placeholder="Nhập màu sắc">
+                        </div>
+                          <div class="col-4">
+                          <label class="form-label" for="weight">Khối lượng</label> 
+                          <input class="form-control" id="weight" type="number" placeholder="Nhập khối lượng">
+                        </div>
+                         <div class="col-4 mb-3">
+                          <label class="form-label" for="size">Kích thước</label> 
+                          <input class="form-control" id="size" type="text" placeholder="Nhập kích thước">
+                        </div>
+                            <div class="col-4 mb-2">
+                          <label class="form-label" for="version">Phiên bản</label> 
+                          <input class="form-control" id="version" placeholder="Nhập phiên bản">
+                        </div>
+                        <div class="col-4 mb-3">
+                          <label class="form-label" for="mirror">Loại kính</label> 
+                          <input class="form-control" id="mirror" placeholder="Nhập loại kính">
+                        </div>
+                          
+                          <div class="col-4 mb-3">
+                          
+                          <label class="form-label" for="mirror">Giá</label> 
+                          
+                          <input class="form-control" type="text" id="prices" placeholder="Nhập giá">
+                        </div>
+                        </div>
+                    </div>
+                }
+                   </div>
+                   <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary" id="add-variant"><i class="bx bx-plus bx-sm me-2"></i>Thêm mẫu khác</button>
+                   </div>
+                    </div>
+                </div>
+                </form>
+                </div>
+              </div>
+            </div>
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        <!-- / Layout page -->
+
+      <!-- Overlay -->
+      <div class="layout-overlay layout-menu-toggle"></div> 
+<script>
+
+
+function variantRemoveBtn(button)
+{ 
+  event.preventDefault();
+  
+  const item=button.closest('.data-repeater-item');
+
+  if(item)
+  { 
+    item.classList.add('removing');
+
+    setTimeout(()=>
+    {
+      item.remove();
+    },500);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function (event)
+{ 
+
+  new FroalaEditor('#Description',{
+    heightMin: 300,
+    imageUploadToS3: false,
+    imageUploadURL: '/image/upload',
+    imageOutputSize: true,
+    videoUpload:true,
+    videoUploadURL:'/video/upload',
+    toolbarButtons:{  moreText: {
+      buttons: [
+        'bold', 'italic', 'underline', 'strikeThrough', 
+        'subscript', 'superscript', 'fontFamily', 'fontSize', 
+        'textColor', 'backgroundColor', 'inlineClass', 
+        'inlineStyle', 'clearFormatting'
+      ]
+    },
+    moreParagraph: {
+      buttons: [
+        'alignLeft', 'alignCenter', 'formatOLSimple', 
+        'alignRight', 'alignJustify', 'formatOL', 'formatUL', 
+        'paragraphFormat', 'paragraphStyle', 'lineHeight'
+      ]
+    },
+    moreRich: {
+      buttons: [
+        'insertLink', 'insertImage', 'insertVideo', 
+        'insertTable', 'emoticons', 'fontAwesome', 
+        'specialCharacters', 'embedly', 'insertFile', 'insertHR'
+      ]
+    },
+    moreMisc: {
+      buttons: [
+        'undo', 'redo', 'fullscreen', 'print', 'getPDF', 
+        'spellChecker', 'selectAll', 'html', 'help'
+      ]
+    }},
+      fontFamily: {
+      "Arial, Helvetica, sans-serif": "Arial",
+      "Verdana, Geneva, sans-serif": "Verdana",
+      "Times New Roman, Times, serif": "Times New Roman",
+      "Georgia, serif": "Georgia",
+      "Courier New, Courier, monospace": "Courier New",
+      "Trebuchet MS, sans-serif": "Trebuchet MS",
+      "Comic Sans MS, cursive, sans-serif": "Comic Sans MS",
+      "Impact, Charcoal, sans-serif": "Impact",
+      "Lucida Console, Monaco, monospace": "Lucida Console",
+      "Palatino Linotype, Book Antiqua, Palatino, serif": "Palatino Linotype",
+      "Tahoma, Geneva, sans-serif": "Tahoma",
+      "Arial Black, Gadget, sans-serif": "Arial Black",
+      "Garamond, serif": "Garamond",
+      "Bookman, serif": "Bookman",
+      "Brush Script MT, cursive": "Brush Script MT",
+      "Copperplate, Papyrus, fantasy": "Copperplate",
+      "Luminari, fantasy": "Luminari",
+      "Futura, sans-serif": "Futura",
+      "Franklin Gothic Medium, sans-serif": "Franklin Gothic Medium",
+      "Baskerville, serif": "Baskerville",
+      "Century Gothic, sans-serif": "Century Gothic",
+      "Rockwell, serif": "Rockwell",
+      "Didot, serif": "Didot",
+      "Gill Sans, sans-serif": "Gill Sans",
+      "Optima, sans-serif": "Optima",
+      "Cambria, Cochin, Georgia, Times, Times New Roman, serif": "Cambria",
+      "Segoe UI, Tahoma, Geneva, Verdana, sans-serif": "Segoe UI",
+      "Roboto, sans-serif": "Roboto",
+      "Montserrat, sans-serif": "Montserrat",
+      "Lora, serif": "Lora",
+      "Playfair Display, serif": "Playfair Display",
+      "Raleway, sans-serif": "Raleway",
+      "Open Sans, sans-serif": "Open Sans",
+      "Nunito, sans-serif": "Nunito",
+      "Merriweather, serif": "Merriweather",
+      "Dancing Script, cursive": "Dancing Script",
+      "Pacifico, cursive": "Pacifico",
+      "Cinzel, serif": "Cinzel",
+      "Bebas Neue, sans-serif": "Bebas Neue",
+      "Oswald, sans-serif": "Oswald",
+      "Quicksand, sans-serif": "Quicksand",
+      "Lobster, cursive": "Lobster",
+      "Josefin Sans, sans-serif": "Josefin Sans",
+      "Poppins, sans-serif": "Poppins",
+      "Ubuntu, sans-serif": "Ubuntu",
+      "Anton, sans-serif": "Anton",
+      "Abril Fatface, serif": "Abril Fatface",
+      "Vollkorn, serif": "Vollkorn",
+      "Permanent Marker, cursive": "Permanent Marker",
+      "Indie Flower, cursive": "Indie Flower"
+   },
+   fontFamilySelection: true,   
+   fontSize: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', 
+              '24', '26', '28', '30', '32', '34', '36', '38', '40', '42', 
+              '44', '46', '48', '50', '52', '54', '56', '58', '60', '64', 
+              '68', '72', '76', '80', '84', '88', '92', '96', '100', '110', 
+              '120', '130', '140', '150', '160', '170', '180', '190', '200'],
+   fontSizeSelection: true,
+    pluginsEnabled: ['align', 'charCounter', 'codeBeautifier', 'codeView', 'colors', 'draggable', 'embedly', 'emoticons', 'entities', 'file', 'fontFamily', 'fontSize', 'fullscreen', 'image', 'imageManager', 'inlineStyle', 'lineBreaker', 'link', 'lists', 'paragraphFormat', 'paragraphStyle', 'quickInsert', 'quote', 'save', 'table', 'url', 'video', 'wordPaste'],
+    colorsBackground: ['#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFFF00'],
+    colorsText: ['#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00'] 
+  });
+
+   new FroalaEditor('#Stat-Description',{
+  heightMin: 300,
+ imageUploadToS3: false,
+    imageUploadURL: '/image/upload',
+    imageOutputSize: true,
+    videoUpload:true,
+    videoUploadURL:'/video/upload',
+    toolbarButtons:{  moreText: {
+      buttons: [
+        'bold', 'italic', 'underline', 'strikeThrough', 
+        'subscript', 'superscript', 'fontFamily', 'fontSize', 
+        'textColor', 'backgroundColor', 'inlineClass', 
+        'inlineStyle', 'clearFormatting'
+      ]
+    },
+    moreParagraph: {
+      buttons: [
+        'alignLeft', 'alignCenter', 'formatOLSimple', 
+        'alignRight', 'alignJustify', 'formatOL', 'formatUL', 
+        'paragraphFormat', 'paragraphStyle', 'lineHeight'
+      ]
+    },
+    moreRich: {
+      buttons: [
+        'insertLink', 'insertImage', 'insertVideo', 
+        'insertTable', 'emoticons', 'fontAwesome', 
+        'specialCharacters', 'embedly', 'insertFile', 'insertHR'
+      ]
+    },
+    moreMisc: {
+      buttons: [
+        'undo', 'redo', 'fullscreen', 'print', 'getPDF', 
+        'spellChecker', 'selectAll', 'html', 'help'
+      ]
+    }},
+         fontFamily: {
+      "Arial, Helvetica, sans-serif": "Arial",
+      "Verdana, Geneva, sans-serif": "Verdana",
+      "Times New Roman, Times, serif": "Times New Roman",
+      "Georgia, serif": "Georgia",
+      "Courier New, Courier, monospace": "Courier New",
+      "Trebuchet MS, sans-serif": "Trebuchet MS",
+      "Comic Sans MS, cursive, sans-serif": "Comic Sans MS",
+      "Impact, Charcoal, sans-serif": "Impact",
+      "Lucida Console, Monaco, monospace": "Lucida Console",
+      "Palatino Linotype, Book Antiqua, Palatino, serif": "Palatino Linotype",
+      "Tahoma, Geneva, sans-serif": "Tahoma",
+      "Arial Black, Gadget, sans-serif": "Arial Black",
+      "Garamond, serif": "Garamond",
+      "Bookman, serif": "Bookman",
+      "Brush Script MT, cursive": "Brush Script MT",
+      "Copperplate, Papyrus, fantasy": "Copperplate",
+      "Luminari, fantasy": "Luminari",
+      "Futura, sans-serif": "Futura",
+      "Franklin Gothic Medium, sans-serif": "Franklin Gothic Medium",
+      "Baskerville, serif": "Baskerville",
+      "Century Gothic, sans-serif": "Century Gothic",
+      "Rockwell, serif": "Rockwell",
+      "Didot, serif": "Didot",
+      "Gill Sans, sans-serif": "Gill Sans",
+      "Optima, sans-serif": "Optima",
+      "Cambria, Cochin, Georgia, Times, Times New Roman, serif": "Cambria",
+      "Segoe UI, Tahoma, Geneva, Verdana, sans-serif": "Segoe UI",
+      "Roboto, sans-serif": "Roboto",
+      "Montserrat, sans-serif": "Montserrat",
+      "Lora, serif": "Lora",
+      "Playfair Display, serif": "Playfair Display",
+      "Raleway, sans-serif": "Raleway",
+      "Open Sans, sans-serif": "Open Sans",
+      "Nunito, sans-serif": "Nunito",
+      "Merriweather, serif": "Merriweather",
+      "Dancing Script, cursive": "Dancing Script",
+      "Pacifico, cursive": "Pacifico",
+      "Cinzel, serif": "Cinzel",
+      "Bebas Neue, sans-serif": "Bebas Neue",
+      "Oswald, sans-serif": "Oswald",
+      "Quicksand, sans-serif": "Quicksand",
+      "Lobster, cursive": "Lobster",
+      "Josefin Sans, sans-serif": "Josefin Sans",
+      "Poppins, sans-serif": "Poppins",
+      "Ubuntu, sans-serif": "Ubuntu",
+      "Anton, sans-serif": "Anton",
+      "Abril Fatface, serif": "Abril Fatface",
+      "Vollkorn, serif": "Vollkorn",
+      "Permanent Marker, cursive": "Permanent Marker",
+      "Indie Flower, cursive": "Indie Flower"
+   },
+   fontFamilySelection: true,
+    fontSize: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', 
+              '24', '26', '28', '30', '32', '34', '36', '38', '40', '42', 
+              '44', '46', '48', '50', '52', '54', '56', '58', '60', '64', 
+              '68', '72', '76', '80', '84', '88', '92', '96', '100', '110', 
+              '120', '130', '140', '150', '160', '170', '180', '190', '200'],
+   fontSizeSelection: true,
+    pluginsEnabled: ['align', 'charCounter', 'codeBeautifier', 'codeView', 'colors', 'draggable', 'embedly', 'emoticons', 'entities', 'file', 'fontFamily', 'fontSize', 'fullscreen', 'image', 'imageManager', 'inlineStyle', 'lineBreaker', 'link', 'lists', 'paragraphFormat', 'paragraphStyle', 'quickInsert', 'quote', 'save', 'table', 'url', 'video', 'wordPaste'],
+    colorsBackground: ['#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFFF00'],
+    colorsText: ['#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00'] 
+  });
+
+
+  new FroalaEditor('#Description-Inbox',{
+    heightMin: 300,
+    imageUploadToS3: false,
+    imageUploadURL: '/image/upload',
+    imageOutputSize: true,
+    videoUpload:true,
+    videoUploadURL:'/video/upload',
+    toolbarButtons:{  moreText: {
+      buttons: [
+        'bold', 'italic', 'underline', 'strikeThrough', 
+        'subscript', 'superscript', 'fontFamily', 'fontSize', 
+        'textColor', 'backgroundColor', 'inlineClass', 
+        'inlineStyle', 'clearFormatting'
+      ]
+    },
+    moreParagraph: {
+      buttons: [
+        'alignLeft', 'alignCenter', 'formatOLSimple', 
+        'alignRight', 'alignJustify', 'formatOL', 'formatUL', 
+        'paragraphFormat', 'paragraphStyle', 'lineHeight'
+      ]
+    },
+    moreRich: {
+      buttons: [
+        'insertLink', 'insertImage', 'insertVideo', 
+        'insertTable', 'emoticons', 'fontAwesome', 
+        'specialCharacters', 'embedly', 'insertFile', 'insertHR'
+      ]
+    },
+    moreMisc: {
+      buttons: [
+        'undo', 'redo', 'fullscreen', 'print', 'getPDF', 
+        'spellChecker', 'selectAll', 'html', 'help'
+      ]
+    }},
+         fontFamily: {
+      "Arial, Helvetica, sans-serif": "Arial",
+      "Verdana, Geneva, sans-serif": "Verdana",
+      "Times New Roman, Times, serif": "Times New Roman",
+      "Georgia, serif": "Georgia",
+      "Courier New, Courier, monospace": "Courier New",
+      "Trebuchet MS, sans-serif": "Trebuchet MS",
+      "Comic Sans MS, cursive, sans-serif": "Comic Sans MS",
+      "Impact, Charcoal, sans-serif": "Impact",
+      "Lucida Console, Monaco, monospace": "Lucida Console",
+      "Palatino Linotype, Book Antiqua, Palatino, serif": "Palatino Linotype",
+      "Tahoma, Geneva, sans-serif": "Tahoma",
+      "Arial Black, Gadget, sans-serif": "Arial Black",
+      "Garamond, serif": "Garamond",
+      "Bookman, serif": "Bookman",
+      "Brush Script MT, cursive": "Brush Script MT",
+      "Copperplate, Papyrus, fantasy": "Copperplate",
+      "Luminari, fantasy": "Luminari",
+      "Futura, sans-serif": "Futura",
+      "Franklin Gothic Medium, sans-serif": "Franklin Gothic Medium",
+      "Baskerville, serif": "Baskerville",
+      "Century Gothic, sans-serif": "Century Gothic",
+      "Rockwell, serif": "Rockwell",
+      "Didot, serif": "Didot",
+      "Gill Sans, sans-serif": "Gill Sans",
+      "Optima, sans-serif": "Optima",
+      "Cambria, Cochin, Georgia, Times, Times New Roman, serif": "Cambria",
+      "Segoe UI, Tahoma, Geneva, Verdana, sans-serif": "Segoe UI",
+      "Roboto, sans-serif": "Roboto",
+      "Montserrat, sans-serif": "Montserrat",
+      "Lora, serif": "Lora",
+      "Playfair Display, serif": "Playfair Display",
+      "Raleway, sans-serif": "Raleway",
+      "Open Sans, sans-serif": "Open Sans",
+      "Nunito, sans-serif": "Nunito",
+      "Merriweather, serif": "Merriweather",
+      "Dancing Script, cursive": "Dancing Script",
+      "Pacifico, cursive": "Pacifico",
+      "Cinzel, serif": "Cinzel",
+      "Bebas Neue, sans-serif": "Bebas Neue",
+      "Oswald, sans-serif": "Oswald",
+      "Quicksand, sans-serif": "Quicksand",
+      "Lobster, cursive": "Lobster",
+      "Josefin Sans, sans-serif": "Josefin Sans",
+      "Poppins, sans-serif": "Poppins",
+      "Ubuntu, sans-serif": "Ubuntu",
+      "Anton, sans-serif": "Anton",
+      "Abril Fatface, serif": "Abril Fatface",
+      "Vollkorn, serif": "Vollkorn",
+      "Permanent Marker, cursive": "Permanent Marker",
+      "Indie Flower, cursive": "Indie Flower"
+   },
+   fontFamilySelection: true,
+    fontSize: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', 
+              '24', '26', '28', '30', '32', '34', '36', '38', '40', '42', 
+              '44', '46', '48', '50', '52', '54', '56', '58', '60', '64', 
+              '68', '72', '76', '80', '84', '88', '92', '96', '100', '110', 
+              '120', '130', '140', '150', '160', '170', '180', '190', '200'],
+   fontSizeSelection: true,
+    pluginsEnabled: ['align', 'charCounter', 'codeBeautifier', 'codeView', 'colors', 'draggable', 'embedly', 'emoticons', 'entities', 'file', 'fontFamily', 'fontSize', 'fullscreen', 'image', 'imageManager', 'inlineStyle', 'lineBreaker', 'link', 'lists', 'paragraphFormat', 'paragraphStyle', 'quickInsert', 'quote', 'save', 'table', 'url', 'video', 'wordPaste'],
+    colorsBackground: ['#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFFF00'],
+    colorsText: ['#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00'] 
+  });
+
+  new FroalaEditor('#Discount-Description',{
+      heightMin: 300,
+     imageUploadToS3: false,
+    imageUploadURL: '/image/upload',
+    imageOutputSize: true,
+    videoUpload:true,
+    videoUploadURL:'/video/upload',
+    toolbarButtons:{  moreText: {
+      buttons: [
+        'bold', 'italic', 'underline', 'strikeThrough', 
+        'subscript', 'superscript', 'fontFamily', 'fontSize', 
+        'textColor', 'backgroundColor', 'inlineClass', 
+        'inlineStyle', 'clearFormatting'
+      ]
+    },
+    moreParagraph: {
+      buttons: [
+        'alignLeft', 'alignCenter', 'formatOLSimple', 
+        'alignRight', 'alignJustify', 'formatOL', 'formatUL', 
+        'paragraphFormat', 'paragraphStyle', 'lineHeight'
+      ]
+    },
+    moreRich: {
+      buttons: [
+        'insertLink', 'insertImage', 'insertVideo', 
+        'insertTable', 'emoticons', 'fontAwesome', 
+        'specialCharacters', 'embedly', 'insertFile', 'insertHR'
+      ]
+    },
+    moreMisc: {
+      buttons: [
+        'undo', 'redo', 'fullscreen', 'print', 'getPDF', 
+        'spellChecker', 'selectAll', 'html', 'help'
+      ]
+    }},
+         fontFamily: {
+      "Arial, Helvetica, sans-serif": "Arial",
+      "Verdana, Geneva, sans-serif": "Verdana",
+      "Times New Roman, Times, serif": "Times New Roman",
+      "Georgia, serif": "Georgia",
+      "Courier New, Courier, monospace": "Courier New",
+      "Trebuchet MS, sans-serif": "Trebuchet MS",
+      "Comic Sans MS, cursive, sans-serif": "Comic Sans MS",
+      "Impact, Charcoal, sans-serif": "Impact",
+      "Lucida Console, Monaco, monospace": "Lucida Console",
+      "Palatino Linotype, Book Antiqua, Palatino, serif": "Palatino Linotype",
+      "Tahoma, Geneva, sans-serif": "Tahoma",
+      "Arial Black, Gadget, sans-serif": "Arial Black",
+      "Garamond, serif": "Garamond",
+      "Bookman, serif": "Bookman",
+      "Brush Script MT, cursive": "Brush Script MT",
+      "Copperplate, Papyrus, fantasy": "Copperplate",
+      "Luminari, fantasy": "Luminari",
+      "Futura, sans-serif": "Futura",
+      "Franklin Gothic Medium, sans-serif": "Franklin Gothic Medium",
+      "Baskerville, serif": "Baskerville",
+      "Century Gothic, sans-serif": "Century Gothic",
+      "Rockwell, serif": "Rockwell",
+      "Didot, serif": "Didot",
+      "Gill Sans, sans-serif": "Gill Sans",
+      "Optima, sans-serif": "Optima",
+      "Cambria, Cochin, Georgia, Times, Times New Roman, serif": "Cambria",
+      "Segoe UI, Tahoma, Geneva, Verdana, sans-serif": "Segoe UI",
+      "Roboto, sans-serif": "Roboto",
+      "Montserrat, sans-serif": "Montserrat",
+      "Lora, serif": "Lora",
+      "Playfair Display, serif": "Playfair Display",
+      "Raleway, sans-serif": "Raleway",
+      "Open Sans, sans-serif": "Open Sans",
+      "Nunito, sans-serif": "Nunito",
+      "Merriweather, serif": "Merriweather",
+      "Dancing Script, cursive": "Dancing Script",
+      "Pacifico, cursive": "Pacifico",
+      "Cinzel, serif": "Cinzel",
+      "Bebas Neue, sans-serif": "Bebas Neue",
+      "Oswald, sans-serif": "Oswald",
+      "Quicksand, sans-serif": "Quicksand",
+      "Lobster, cursive": "Lobster",
+      "Josefin Sans, sans-serif": "Josefin Sans",
+      "Poppins, sans-serif": "Poppins",
+      "Ubuntu, sans-serif": "Ubuntu",
+      "Anton, sans-serif": "Anton",
+      "Abril Fatface, serif": "Abril Fatface",
+      "Vollkorn, serif": "Vollkorn",
+      "Permanent Marker, cursive": "Permanent Marker",
+      "Indie Flower, cursive": "Indie Flower"
+   },
+   fontFamilySelection: true,
+    fontSize: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', 
+              '24', '26', '28', '30', '32', '34', '36', '38', '40', '42', 
+              '44', '46', '48', '50', '52', '54', '56', '58', '60', '64', 
+              '68', '72', '76', '80', '84', '88', '92', '96', '100', '110', 
+              '120', '130', '140', '150', '160', '170', '180', '190', '200'],
+   fontSizeSelection: true,
+    pluginsEnabled: ['align', 'charCounter', 'codeBeautifier', 'codeView', 'colors', 'draggable', 'embedly', 'emoticons', 'entities', 'file', 'fontFamily', 'fontSize', 'fullscreen', 'image', 'imageManager', 'inlineStyle', 'lineBreaker', 'link', 'lists', 'paragraphFormat', 'paragraphStyle', 'quickInsert', 'quote', 'save', 'table', 'url', 'video', 'wordPaste'],
+    colorsBackground: ['#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFFF00'],
+    colorsText: ['#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00'] 
+  }); 
+
+});
+
+
+ let files_arr=[];
+
+ let variant_file_arr=[];
+
+ let color_list=[];
+
+ let size_list =[];
+
+ let weight_list=[];
+
+ let version_list=[];
+
+ let mirror_list = [];
+
+   
+ const add_variant=document.getElementById("add-variant"); 
+
+add_variant.addEventListener('click',()=>{
+        
+        const groupList = document.getElementById('group-list');
+
+        if(groupList.childElementCount==0)
+        { 
+          const newRow=document.createElement('div');
+
+          newRow.classList.add('data-repeater-item');
+
+          newRow.classList.add('position-relative');
+          
+          newRow.innerHTML = `
+            <button type="button" class="variant-delete-btn" onclick="variantRemoveBtn(this)">X</button>
+            <div class="row g-6 mb-6">
+                <div class="col-4">
+                    <label class="form-label" for="color">Màu sắc</label>
+                    <input class="form-control" name="color" type="text" placeholder="Nhập màu sắc">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" for="weight">Khối lượng</label>
+                    <input class="form-control" name="weight" type="text" placeholder="Nhập khối lượng">
+                </div>
+                <div class="col-4 mb-3">
+                    <label class="form-label" for="size">Kích thước</label>
+                    <input class="form-control" name="size" type="text" placeholder="Nhập kích thước">
+                </div>
+                <div class="col-4 mb-2">
+                    <label class="form-label" for="version">Phiên bản</label>
+                    <input class="form-control" name="version" placeholder="Nhập phiên bản">
+                </div>
+                <div class="col-4 mb-3">
+                    <label class="form-label" for="mirror">Loại kính</label>
+                    <input class="form-control" name="mirror" placeholder="Nhập loại kính">
+                </div>
+                     <div class="col-4 mb-3">
+                      <label class="form-label" for="mirror">Giá</label> 
+                      <input class="form-control" id="prices" type="text" placeholder="Nhập giá">
+                    </div>
+            </div>
+        `;
+       
+       newRow.classList.add('hide');
+       
+        groupList.appendChild(newRow);
+       
+         setTimeout(()=>{
+            newRow.classList.remove('hide');
+            newRow.classList.add('show');
+        },10);
+        }
+      else
+      {
+        const lastRow = groupList.lastElementChild;
+        
+        const newRow = lastRow.cloneNode(true);
+
+        const inputs=lastRow.querySelectorAll('input');
+
+        newRow.querySelectorAll('input').forEach((input,index) => input.value=inputs[index].value);
+
+        newRow.classList.add('hide');
+        
+        
+        groupList.appendChild(newRow);
+       
+         setTimeout(()=>{
+            newRow.classList.remove('hide');
+            newRow.classList.add('show');
+        },10);
+        }
+});
+
+ var is_all_form_valid=true;
+ 
+ const sub_select=document.getElementById("sub-select");
+ 
+ const cat_select = document.getElementById("cat-select");
+ 
+ const drop_zone=document.getElementById("drop-zone");
+
+ const drop_zone_msg=document.getElementById("drop-zone-message");
+ 
+ const file_input = document.getElementById("fileInput");
+ 
+ const file_input_btn = document.getElementById("fileInputButton");
+
+ const preview_img = document.getElementById("previewImageContainer");
+
+ file_input_btn.addEventListener("click",()=>{e.preventDefault();file_input.click();});
+
+ const drop_zone_avatar=document.getElementById("drop-zone-avatar");
+
+ const drop_zone_msg_avatar=document.getElementById("drop-zone-message-avatar");
+ 
+ const file_input_avatar = document.getElementById("fileInputAvatar");
+ 
+ const file_input_avatar_btn = document.getElementById("fileInputButtonAvatar");
+
+ const preview_img_avatar = document.getElementById("previewImageContainerAvatar");
+
+ const imgList=@Html.Raw(list_img_json); 
+
+ const imgAvatarList=@Html.Raw(list_img_avatar_json);
+
+ const dns="@Html.Raw(dns)";
+
+ const environemnt="@Html.Raw(env)";
+
+
+ imgList.forEach(async(file)=>
+ {   
+    var file_name=file["Avatar"];
+    
+    var file_name_value=file_name.split('\\').pop();
+
+    if(environemnt=='Production')
+    {
+      file_name_value=file_name.split('\\').pop().split('/').pop();
+    }
+
+    const url=`${dns}/UploadImages/${file_name_value}`;
+    
+    const response=await fetch(url);
+    
+    if(!response.ok)
+    {
+      alert(response.status);
+    }
+
+
+    const blob =await response.blob();
+
+    const files=new File([blob],file_name_value,{type:blob.type});
+
+     variant_file_arr.push(files);
+ });
+ 
+  imgAvatarList.forEach(async(file)=>
+  {   
+
+    var file_name_value=file.split('\\').pop();
+
+    if(environemnt=='Production')
+    {
+      file_name_value=file.split('\\').pop().split('/').pop();
+    }
+    
+    const url=`${dns}/UploadImages/${file_name_value}`;
+    
+    const response=await fetch(url);
+    
+    if(!response.ok)
+    {
+      alert(response.status);
+    }
+
+
+    const blob =await response.blob();
+
+    const files=new File([blob],file_name_value,{type:blob.type});
+    
+    files_arr.push(files);
+  });
+
+
+ file_input_avatar_btn.addEventListener("click",()=>{e.preventDefault();file_input_avatar.click();});
+
+  drop_zone_avatar.addEventListener("dragover",(e)=>
+  {
+     e.preventDefault();
+     drop_zone_avatar.classList.add("dragging");
+ });
+
+ drop_zone_avatar.addEventListener("dragleave",()=>{
+   drop_zone_avatar.classList.remove("dragging");
+ });
+
+ drop_zone_avatar.addEventListener("drop",(e)=>{
+  e.preventDefault();
+  drop_zone_avatar.classList.remove("dragging");
+  const files = e.dataTransfer.files;
+  if(files.length)
+  {
+    handleFilesAvatar({target:{files:files}});
+  }
+ });
+
+
+ drop_zone_avatar.addEventListener("click",()=>
+ {   
+    file_input_avatar.click();
+ });
+
+
+const remove_img_btn=(id_event,id,event)=>
+{   
+      event.stopPropagation();
+      var img_wrapper = document.getElementById(id_event);
+      var img_id_arr=id.split('-');
+      var img_id='';
+      for(let i=1;i<img_id_arr.length;i++)
+      {if(i<img_id_arr.length-1)
+      {
+        img_id+=img_id_arr[i]+'-';
+      }
+      else
+      {
+        img_id+=img_id_arr[i];
+      }
+      }
+     if(!id.includes("avatar"))
+     {
+      var rmv_img=variant_file_arr.map((file)=>file.name).indexOf(img_id.trim());
+
+      variant_file_arr.splice(rmv_img,1);
+      }
+    else
+    {   var rmv_img=files_arr.map((file)=>file.name).indexOf(img_id.trim());
+
+      files_arr.splice(rmv_img,1);
+    }
+      if(img_wrapper)
+      {
+        img_wrapper.remove();
+      }
+};
+
+
+const handleFilesAvatar=(e)=>
+ {   
+   const files=e.target.files;
+   if(files.length)
+   {
+    var count_child_node=preview_img_avatar.children.length;
+
+    if(count_child_node>=2 || files.length>2)
+    {  
+        $('.alert').addClass('show');
+        window.scrollTo({top:0,behavior:'smooth'});
+        setTimeout(()=>
+        {
+           $('.alert').removeClass('show');
+        },5000);
+        return;
+    }
+    drop_zone_msg_avatar.style.display='none';
+    
+    drop_zone_avatar.style.alignItems='start';
+   
+   for(let i=0;i<2;i++)
+   {
+const file=files[i];
+ files_arr.push(file);
+    const file_reader= new FileReader();
+    file_reader.onload=(event)=>
+    {  const img=document.createElement("img");
+       
+       const img_wrapper=document.createElement('div');
+       
+       img_wrapper.classList.add("card-1");
+
+       img.src=event.target.result;
+       
+       img.classList.add("card-img-top");
+
+       const cardBody = document.createElement('div');
+        
+       cardBody.classList.add('card-body-1');
+
+        const cardTitle = document.createElement('h5');
+        
+        cardTitle.classList.add('card-title-1');
+        
+        cardTitle.textContent = file.name;
+       
+       const remove_btn=document.createElement("button");
+       
+       remove_btn.textContent='Xóa';
+       
+       remove_btn.classList.add('btn', 'btn-danger', 'remove-btn');
+       
+       remove_btn.onclick=(e)=>{
+       
+       e.stopPropagation();
+
+
+       const index_file=files_arr.indexOf(file);
+
+       if(index_file>-1)
+       {
+        files_arr.splice(index_file,1);
+       }
+       
+       preview_img_avatar.removeChild(img_wrapper);
+       
+       if(!preview_img_avatar.hasChildNodes())
+       {
+        drop_zone_avatar.style.alignItems='center';
+
+        drop_zone_msg_avatar.style.display='block';
+       }
+       };
+
+       cardBody.appendChild(cardTitle);
+
+       cardBody.appendChild(remove_btn);
+
+       img_wrapper.appendChild(img);
+       
+       img_wrapper.appendChild(cardBody);
+
+       preview_img_avatar.appendChild(img_wrapper);       
+    };
+
+    file_reader.readAsDataURL(file);    
+
+    }
+    }
+ }
+ 
+ 
+ file_input_avatar.addEventListener('change',handleFilesAvatar);
+
+ const handleFiles=(e)=>
+ { 
+   const files=e.target.files;
+   if(files.length)
+   {
+    drop_zone_msg.style.display='none';
+    drop_zone.style.alignItems='start';
+  for(let i =0;i<files.length;i++)
+  { 
+    const file = files[i];
+
+    variant_file_arr.push(file);
+
+    const file_reader= new FileReader();
+
+    file_reader.onload=(event)=>
+    {  
+       const img=document.createElement("img");
+       
+       const img_wrapper=document.createElement('div');
+       
+       img_wrapper.classList.add("card-1");
+
+       img.src=event.target.result;
+       
+       img.classList.add("card-img-top");
+
+        const cardBody = document.createElement('div');
+        cardBody.classList.add('card-body-1');
+
+        const cardTitle = document.createElement('h5');
+        
+        cardTitle.classList.add('card-title-1');
+        
+        cardTitle.textContent = file.name;
+
+       const remove_btn=document.createElement("button");
+
+       remove_btn.textContent='Xóa';
+       
+
+       remove_btn.classList.add('btn', 'btn-danger', 'remove-btn');
+       
+       remove_btn.onclick=(e)=>{
+       
+       e.stopPropagation();
+       const index_file=variant_file_arr.indexOf(file);
+       if(index_file>-1)
+       {
+        variant_file_arr.splice(index_file,1);
+       }
+       
+       preview_img.removeChild(img_wrapper);
+       
+       var count=preview_img.children.length;
+
+       if(count==0)
+       {
+        drop_zone.style.alignItems='center';
+
+        drop_zone_msg.style.display='block';
+       }
+       };
+
+       cardBody.appendChild(cardTitle);
+
+       cardBody.appendChild(remove_btn);
+
+       img_wrapper.appendChild(img);
+
+       img_wrapper.appendChild(cardBody);
+
+       preview_img.appendChild(img_wrapper);
+    };
+    file_reader.readAsDataURL(file);    
+    }
+} 
+}
+
+
+ file_input.addEventListener("change",handleFiles);
+ 
+ drop_zone.addEventListener("dragover",(e)=>{
+     e.preventDefault();
+     drop_zone.classList.add("dragging");
+ });
+
+ drop_zone.addEventListener("dragleave",()=>
+ {
+   drop_zone.classList.remove("dragging");   
+ });
+
+ drop_zone.addEventListener("drop",(e)=>{
+  e.preventDefault();
+  drop_zone.classList.remove("dragging");
+  const files = e.dataTransfer.files;
+  if(files.length)
+  {
+    handleFiles({target:{files:files}});
+  }
+ });
+
+
+ drop_zone.addEventListener("click",()=>
+ {
+    file_input.click();
+ });
+
+
+
+ sub_select.addEventListener("change",()=>{
+  var sub_index=sub_select.selectedIndex;
+  if(sub_index!=0)
+  {
+   cat_select.selectedIndex=0;
+   cat_select.disabled=true;
+   }
+   else
+   {
+    cat_select.disabled=false;
+   }
+ });
+
+ document.getElementById("submit-btn").addEventListener("click",()=>
+ {
+  var forms=document.querySelectorAll('form');
+  forms.forEach((form)=>{
+    form.requestSubmit();
+    if(!is_all_form_valid)
+    {
+        e.preventDefault();
+
+        e.stopPropagation();
+    }
+    
+  }); 
+ });
+ document.getElementById("sub-select").addEventListener('change',()=>{
+   var sub=document.getElementById("sub-select");
+   if(sub.classList.contains("is-invalid") && sub.value!='')
+   {
+     sub.classList.remove('is-invalid');
+   }
+ });
+
+  document.getElementById("brand-select").addEventListener('change',()=>{
+   var brand=document.getElementById("brand-select");
+   if(brand.classList.contains("is-invalid") && brand.value!='')
+   {
+     brand.classList.remove('is-invalid');
+   }
+ });
+
+  document.getElementById("cat-select").addEventListener('change',()=>{
+   var cat=document.getElementById("cat-select");
+   if(cat.classList.contains("is-invalid") && cat.value!='')
+   {
+     cat.classList.remove('is-invalid');
+   }
+ });
+
+ document.getElementById("formAccountSettings").addEventListener("submit",(e)=>{
+  e.preventDefault();
+ 
+  var is_valid=true;
+  
+  var product=document.getElementById("productname").value.trim();
+  
+  var price =document.getElementById("price").value.trim();
+  
+  var quantity= document.getElementById("quantity").value.trim();
+  
+  var sub_cat=document.getElementById("sub-select");
+  
+  var category=document.getElementById("cat-select");
+  
+  var brand=document.getElementById("brand-select");
+
+  
+  if(product==='')
+  {
+    is_valid=false;
+   is_all_form_valid=false;
+    document.getElementById("product-error").innerHTML='Không được để trống thông tin này';
+  }
+
+  if(price==='')
+  {
+   is_valid=false;
+   is_all_form_valid=false;
+   document.getElementById("price-error").innerHTML='Không được để trống thông tin này';
+  }
+
+  if(quantity==='')
+  {
+    is_valid=false;
+   is_all_form_valid=false;
+    document.getElementById("quantity-error").innerHTML='Không được để trống thông tin này';
+  }
+
+
+  if(sub_cat.value==="-1")
+  {
+    if(category.value==="-1")
+    {
+    is_valid=false;    
+    is_all_form_valid=false;
+    category.classList.add('is-invalid');
+    category.focus();
+    }
+  }
+
+  @* if(brand.value==="-1")
+  {
+    is_valid=false;
+    is_all_form_valid=false;
+    brand.classList.add('is-invalid');
+    brand.focus();
+  } *@
+
+  if(!is_valid)
+  {
+    e.preventDefault();
+  }
+   
+  @* if(files_arr==null)
+  {
+  } *@
+ if(is_valid)
+ {
+  let formDataVal=new FormData(document.getElementById("formAccountSettings"));
+
+   var colors=document.querySelectorAll("#color");
+   var weights=document.querySelectorAll("#weight");
+   var versions=document.querySelectorAll("#version");
+   var mirrors = document.querySelectorAll("#mirror");
+   var sizes= document.querySelectorAll("#size");
+   var prices = document.querySelectorAll("#prices");
+   colors.forEach((color)=>{
+   formDataVal.append("color",color.value);
+   }); 
+
+   weights.forEach((weight)=>{
+    formDataVal.append("weight",weight.value);
+   });
+
+   versions.forEach((version)=>{
+    formDataVal.append("version",version.value);
+   });
+
+   mirrors.forEach((mirror)=>{
+    formDataVal.append("mirror",mirror.value);
+});
+
+   sizes.forEach((size)=>{
+    formDataVal.append("size",size.value);
+   });
+
+    prices.forEach((price)=>{
+      formDataVal.append("prices",price.value);
+    });
+
+  files_arr.forEach(file=>{
+    formDataVal.append("imagefiles",file);
+  });
+    variant_file_arr.forEach((file,index)=>{
+    formDataVal.append(`variantfiles`,file);
+  });
+  
+  var id_ob=document.getElementById("product-id");
+  
+  let  id_value=id_ob.getAttribute("data-id");
+  
+  let url='@Url.Action("GetSampleInfo", "ProductList")';
+    $.ajax({
+                url:url,
+                type: 'POST',
+                data: formDataVal,
+                contentType: false,
+                processData: false, 
+                success:function(response)
+                { 
+                  var status=response.status;
+                  
+                  var message=response.message;
+
+                  if(status==-1 || status==0)
+                {
+                document.getElementById("toast-message").innerHTML=message;
+                var toastEl = document.querySelector('.toast-danger');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+                }
+                else
+                {
+                var toastEl = document.querySelector('.toast');
+                
+                var toast = new bootstrap.Toast(toastEl);
+                
+                toast.show(); 
+                }
+                },
+              error: function (xhr, status, error) 
+            {
+               document.getElementById("toast-message").innerHTML=xhr.responseText;
+                var toastEl = document.querySelector('.toast-danger');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();            
+                }
+            });
+          }
+ });
+</script>

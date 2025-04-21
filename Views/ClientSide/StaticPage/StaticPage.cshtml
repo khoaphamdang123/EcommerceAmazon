@@ -1,0 +1,7 @@
+@{
+    Layout="_UserLayout";
+    string content=ViewBag.content;
+    var categories=ViewBag.categories as List<Category>;
+}
+
+@Html.Raw(content)

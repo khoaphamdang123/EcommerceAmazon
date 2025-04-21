@@ -1,0 +1,216 @@
+@model Video
+@{
+   var created_page=ViewBag.Created_Page;
+   var create_status=ViewBag.Status;
+   var lang_list=ViewBag.language_list as List<string>;
+   var products = ViewBag.products as List<Product>;
+   var categories = ViewBag.categories as List<string>; // Add this line
+}
+
+
+      <div
+       class="bs-toast toast fade hide toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Thêm Video</div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                          <div id="toast-message"></div>
+                        </div>
+                      </div>
+    
+    
+
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="../assets/"
+  data-template="vertical-menu-template-free"
+>
+    <!-- Layout wrapper -->
+  
+
+          <!-- / Navbar -->
+
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Video sản phẩm/</span>Thêm video</h4>
+              <div class="row">
+                <div class="col-md-12">
+                  <ul class="nav nav-pills flex-column flex-md-row mb-3">
+                    <li class="nav-item">
+                      <a class="nav-link active" href="javascript:void(0);"><i class="bx bx-grid me-1"></i>Cập nhật video</a>
+                    </li>     
+                  </ul>
+                  <div class="card mb-4">
+                    <h5 class="card-header">Thông tin video</h5>
+                    <div class="card-body">
+                      <form id="formAccountSettings" method="POST" asp-action="addVideo" asp-controller="VideoList">
+                        <div class="row mb-3">
+                          <div class="mb-3 col-md-6">
+                            <label for="username" class="form-label mb-2">Link Video:</label>
+                            <input
+                              class="form-control"
+                              type="text"
+                              id="filename"
+                              name="link"
+                              autofocus
+                              placeholder="Nhập tên file"
+                              value="@Model.Link"
+                            />
+                          <span id="file-name-error" class="text-danger"></span>
+                          <input name="id" value="@Model.Id" hidden/>
+                          </div>
+                          <div class="mb-3 col-md-6">
+                            <label for="product_id" class="form-label mb-2">Tên sản phẩm</label>
+                            <select name="productid" class="form-select">
+                                @foreach(var product in products)
+                                { if(product.ProductName==Model.Product.ProductName)
+                                { 
+                                    <option selected value="@product.Id">@product.ProductName</option>
+                                }
+                                else
+                                {
+                                    <option value="@product.Id">@product.ProductName</option>
+                                }
+                                }
+                            </select>
+                          </div>
+                        </div>
+                        @* <div class="row">
+                         <div class="mb-3 col-md-3">
+                        <label for="" class="mb-2">Link file PDF:</label>
+                          <input type="text" name="pdflink" id="pdf-link" class="form-control" placeholder="Nhập link file PDF"/>
+                          <span id="link-error" class="text-danger"></span>
+
+                         </div>
+                          <div class="mb-3 col-md-3">
+                          <label for="" class="mb-2">Link file Web:</label>
+                        <input type="text" name="weblink" id="web-link" class="form-control" placeholder="Nhập link file Web"/>
+                        <span id="link-error" class="text-danger"></span>
+
+                          </div>
+                <div class="mb-3 col-md-6">
+                    <label for="language" class="mb-2">Ngôn ngữ:</label>
+                     <select name="language" class="form-select">
+                        @foreach(var lang in lang_list)
+                        {   
+                         if(lang=="English")
+                        {
+                            <option value="@lang" selected>@lang</option>
+                        }
+                        else if(!lang.Contains("Invariant"))
+                        {
+                            <option value="@lang">@lang</option>
+                        }
+                        }
+                     </select>
+                          </div>
+                        </div> *@
+                        <div class="mt-2 d-flex flex-row justify-content-md-start justify-content-sm-between">
+                          <button type="submit" class="btn btn-primary me-4">Cập nhật video</button>
+                          <button type="button" class="btn btn-primary" type="button" id="back-btn">Trở lại danh sách video</button>
+                        </div>
+                      </form>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+      
+            <div class="content-backdrop fade"></div>
+          </div>
+      <div class="layout-overlay layout-menu-toggle"></div>
+
+<script>
+
+  document.getElementById("formAccountSettings").addEventListener("submit",()=>{
+
+event.preventDefault();
+
+  var is_valid=true;
+  
+  var file_name=document.getElementById("filename").value.trim();
+
+
+
+  if(file_name==='')
+  {
+    is_valid=false;
+    document.getElementById("file-name-error").innerHTML='Không được để trống thông tin này';
+  }
+
+ 
+
+  if(!is_valid)
+  {
+    return;
+  }  
+
+   var formData=new FormData(document.getElementById("formAccountSettings"));
+
+  
+  var url='@Url.Action("updateVideoList","VideoList")';
+
+
+   $.ajax({  
+                url: url,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false, 
+                success:function(response)
+                { 
+                  var status=response.status;
+                  var message=response.message;
+                 var toast_obj=document.querySelector('.toast');
+                 var toast_message=document.getElementById('toast-message');
+                 toast_message.innerText=message;
+                  if(status==0)
+                { 
+                 toast_obj.classList.add('bg-danger');
+                }
+
+                else{
+
+               toast_obj.classList.add('bg-success');
+                }
+                var toast = new bootstrap.Toast(toast_obj);
+                toast.show();       
+                },
+                error: function (xhr, status, error) {
+               document.getElementById('toast-message').innerText=error.message;
+               document.querySelector('.toast').classList.add('bg-danger');
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();            
+              }
+            });
+            });
+
+
+  document.getElementById('back-btn').addEventListener("click",()=>
+  {
+   var url='@Url.Action("VideoList","VideoList")';
+   window.location.href=url;
+  });
+
+
+</script>

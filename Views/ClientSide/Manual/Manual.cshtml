@@ -1,0 +1,289 @@
+@model List<Manual>
+@using Newtonsoft.Json;
+@{
+    Layout = "_UserLayout";
+    var avatar="";
+    string product_name="";
+    var video_list=ViewBag.videos as List<Video>;
+    string pdf_link="";
+    string web_link="";
+    string pdf_modifield_date="";
+    string web_modifield_date="";
+    if(Model.Count>0)
+    {
+        avatar=@Model[0]?.Product.Frontavatar.Substring(Model[0].Product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1)).Replace("\\","/");
+
+        product_name=Model[0].Product.ProductName;
+        
+    }
+   Manual english_model=Model.Where(x=>(x.Language=="English" || x.Language.Contains("Vietnamese")) && x.ProductId==Model[0].ProductId).FirstOrDefault();
+
+   if(english_model!=null)
+   {
+  
+  string[] link_details=english_model.ManualLink.Split(',');
+  
+  if(link_details.Length>1)
+  {
+    pdf_link=link_details[0];
+    
+    web_link=link_details[1];
+
+    pdf_modifield_date=english_model.UpdatedDate;
+
+    web_modifield_date=english_model.UpdatedDate;
+
+  }
+  else if(link_details.Length==1)
+  {
+    if(link_details[0].Contains("pdf"))
+    {
+        pdf_link=link_details[0];
+        pdf_modifield_date=english_model.UpdatedDate;
+
+    }
+    else
+    {
+        web_link=link_details[0];
+        web_modifield_date=english_model.UpdatedDate;
+  }
+   }
+   }
+}
+    <section class="sp__results">
+        <div class="sp__results__wrapper">
+            <div class="sp__results__wrapper__sidebar">
+                <div class="sp__results-sidebar">
+                    <div class="sp__product">
+                        <div class="sp__product__image-wrapper"><a href="#" class="js__product-reset-state">
+                        <img
+                                class="sp__product__image"
+                                src="~/@avatar"
+                                alt="@product_name"></a></div>
+                        <div class="sp__product__info-wrapper"><h2 class="sp__product__name"><a href="#"
+                                                                                                class="js__product-reset-state">@product_name</a></h2><a id="sp__product__change-product-button" href="#" class="sp__product__change">Thay
+                            đổi sản phẩm</a></div>
+                    </div>
+                    <nav id="js__results-nav-tabs" class="sp__results-sidebar__nav">
+                        <ul>
+                            <li><a href="#" class="" data-tab-id="2"><span>Sổ tay hướng dẫn</span></a></li>
+                            <li><a href="#" class="" data-tab-id="4"><span>Video</span></a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div id="js__results-content-1" hidden  class="sp__results__wrapper__content">
+                <div class="sp__topics"><!----><!---->
+                    <div class="sp__results__wrapper__content__topics">
+                        <div class="sp__tab-content"><h3 class="sp__topics__heading">Chọn một chủ đề</h3>
+                            <ul class="sc__chip-choices" id="sc__topic-choices">
+                                <li><a class="sc__chip" href="#"><span><g-icon-arrow-right><svg class="g-icon"
+                                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                                viewBox="0 0 11.2 18.1"><path
+                                        d="M11.2 9l-9.1 9.1L0 16l6.9-7L0 2.1 2.1 0l9.1 9z"></path></svg></g-icon-arrow-right></span>
+                                    BaseCamp</a></li>
+                                <li><a class="sc__chip" href="#"><span><g-icon-arrow-right><svg class="g-icon"
+                                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                                viewBox="0 0 11.2 18.1"><path
+                                        d="M11.2 9l-9.1 9.1L0 16l6.9-7L0 2.1 2.1 0l9.1 9z"></path></svg></g-icon-arrow-right></span>
+                                    BirdsEye</a></li>
+                                <li><a class="sc__chip" href="#"><span><g-icon-arrow-right><svg class="g-icon"
+                                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                                viewBox="0 0 11.2 18.1"><path
+                                        d="M11.2 9l-9.1 9.1L0 16l6.9-7L0 2.1 2.1 0l9.1 9z"></path></svg></g-icon-arrow-right></span>
+                                    cài đặt cá nhân</a></li>
+                                <li><a class="sc__chip" href="#"><span><g-icon-arrow-right><svg class="g-icon"
+                                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                                viewBox="0 0 11.2 18.1"><path
+                                        d="M11.2 9l-9.1 9.1L0 16l6.9-7L0 2.1 2.1 0l9.1 9z"></path></svg></g-icon-arrow-right></span>
+                                    Geocaching</a></li>
+                                <li><a class="sc__chip" href="#"><span><g-icon-arrow-right><svg class="g-icon"
+                                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                                viewBox="0 0 11.2 18.1"><path
+                                        d="M11.2 9l-9.1 9.1L0 16l6.9-7L0 2.1 2.1 0l9.1 9z"></path></svg></g-icon-arrow-right></span>
+                                    Bắt đầu</a></li>
+                                <li><a class="sc__chip" href="#"><span><g-icon-arrow-right><svg class="g-icon"
+                                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                                viewBox="0 0 11.2 18.1"><path
+                                        d="M11.2 9l-9.1 9.1L0 16l6.9-7L0 2.1 2.1 0l9.1 9z"></path></svg></g-icon-arrow-right></span>
+                                    Bản đồ</a></li>
+                                <li><a class="sc__chip" href="#"><span><g-icon-arrow-right><svg class="g-icon"
+                                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                                viewBox="0 0 11.2 18.1"><path
+                                        d="M11.2 9l-9.1 9.1L0 16l6.9-7L0 2.1 2.1 0l9.1 9z"></path></svg></g-icon-arrow-right></span>
+                                    Thẻ microSD</a></li>
+                                <li><a class="sc__chip" href="#"><span><g-icon-arrow-right><svg class="g-icon"
+                                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                                viewBox="0 0 11.2 18.1"><path
+                                        d="M11.2 9l-9.1 9.1L0 16l6.9-7L0 2.1 2.1 0l9.1 9z"></path></svg></g-icon-arrow-right></span>
+                                    Dẫn đường
+                                    </a>
+                                    </li>
+                            </ul>
+                            <div>
+                                <div class="form sc__keyword-search"><input id="searchKeyword" type="search"
+                                                                            maxlength="150"
+                                                                            placeholder="Tôi cần trợ giúp về..."
+                                                                            data-hj-allow=""></div>
+                            </div>
+                        </div>
+                    </div><!----><!----><!----><!----></div><!----></div>
+            <div id="js__results-content-2" hidden class="sp__results__wrapper__content"><div class="sp__tab-content--manuals">
+                <h1 id="manuals-content-heading" class="sp__tab-content__heading">Sổ tay hướng dẫn</h1><!---->
+             @if(english_model!=null)
+             {
+                <div class="sp__manuals--list-wrapper"><ul><li class="sp__manuals--list-contents"><ul><li class="sp__manuals--list-contents-item">
+                <a href="@pdf_link" id="pdf-download">Hướng dẫn sử dụng (PDF)</a></li><li class="sp__manuals--list-contents-item"><div class="sp__manuals--list-contents-item-group"><div class="sp__manuals--list-contents-item"><span>Phiên bản chỉnh sửa </span> A</div><div class="sp__manuals--list-contents-item">@pdf_modifield_date</div>
+                <!----></div></li></ul></li><li class="sp__manuals--list-contents"><ul>
+                    <li class="sp__manuals--list-contents-item"><a href="@web_link">Hướng dẫn sử dụng (Web)</a></li>
+                    <li class="sp__manuals--list-contents-item"><div class="sp__manuals--list-contents-item-group"><div class="sp__manuals--list-contents-item"><span>Phiên bản chỉnh sửa </span> A</div><div class="sp__manuals--list-contents-item">@web_modifield_date</div><!----></div>
+                    </li></ul></li></ul>
+                </div>
+                }
+                    <div>
+                <table class="sp__international-manuals-list">
+                    <thead>
+                        <tr><th>Ngôn ngữ</th><th>Tên sách hướng dẫn</th></tr></thead>
+                        <tbody>
+                    @foreach(var manual in Model)
+                    {
+                    string[] details_link=manual.ManualLink.Split(',');
+                    string detail_pdf="";
+                    string detail_web="";
+               string[] link_details=english_model.ManualLink.Split(',');
+  if(link_details.Length>1)
+  {
+    detail_pdf=link_details[0];
+    
+    detail_web=link_details[1];
+  }
+  else if(link_details.Length==1)
+  {
+    if(link_details[0].Contains("pdf"))
+    {
+        detail_pdf=link_details[0];
+    }
+    else
+    {
+        detail_web=link_details[0];
+  }
+  }
+                    <tr>
+
+                 @if(manual.Language.Contains("Vietnamese"))
+                 {
+                    <td>
+ Tiếng Việt
+                    </td>
+                 }
+                 else{
+                    <td>
+                    @manual.Language
+                    </td>
+                 }
+                 <td>
+                   @if(!string.IsNullOrEmpty(detail_pdf))
+                   {
+                    <a href="@detail_pdf"  id="pdf-download-detail" class="sp__international-manuals-list__manual js__manual-link">Hướng dẫn sử dụng (PDF)</a>
+                    }
+
+                   @if(!string.IsNullOrEmpty(detail_web))
+                   {
+                    <a href="@detail_web" class="sp__international-manuals-list__manual js__manual-link">Hướng dẫn sử dụng (Web)</a>
+                    }
+                    </td>
+                </tr>
+            }
+                    @* <tr><td>Tiếng Việt</td><td><a href="https://static.garmin.com/pumac/etrex22x32x_OM_VI-VN.pdf" class="sp__international-manuals-list__manual js__manual-link">Hướng dẫn sử dụng (PDF)</a><a href="https://www8.garmin.com/manuals-apac/webhelp/etrex22x32x/VI-VN/home.html" class="sp__international-manuals-list__manual js__manual-link">Hướng dẫn sử dụng (Web)</a></td></tr>
+                    <tr><td>English</td><td><a href="https://static.garmin.com/pumac/etrex22x32x_OM_EN-SG.pdf" class="sp__international-manuals-list__manual js__manual-link">Owner's Manual (PDF)</a><a href="https://www8.garmin.com/manuals-apac/webhelp/etrex22x32x/EN-SG/index.html" class="sp__international-manuals-list__manual js__manual-link">Owner's Manual (Web)</a></td></tr><tr><td>Bahasa Indonesia</td><td><a href="https://static.garmin.com/pumac/etrex22x32x_OM_ID-ID.pdf" class="sp__international-manuals-list__manual js__manual-link">Panduan (PDF)</a></td></tr><tr><td>ภาษาไทย</td><td><a href="https://static.garmin.com/pumac/eTrex22x32x_OM_TH-TH.pdf" class="sp__international-manuals-list__manual js__manual-link">คู่มือสำหรับเจ้าของ (PDF)</a><a href="https://www8.garmin.com/manuals-apac/webhelp/etrex22x32x/TH-TH/index.html" class="sp__international-manuals-list__manual js__manual-link">คู่มือสำหรับเจ้าของ (เว็บ)</a></td></tr><tr><td>繁體中文 (台灣)</td><td><a href="https://www8.garmin.com/manuals-apac/webhelp/etrex22x32x/ZH-TW/index.html" class="sp__international-manuals-list__manual js__manual-link">使用者手冊 (web)</a></td></tr><tr><td>日本語</td><td><a href="https://static.garmin.com/pumac/etrex22x32x_OM_JA-JP.pdf" class="sp__international-manuals-list__manual js__manual-link">操作マニュアル（PDF）</a></td></tr><tr><td>简体中文 (中国)</td><td><a href="https://www8.garmin.com/manuals-apac/webhelp/etrex22x32x/ZH-CN/index.html" class="sp__international-manuals-list__manual js__manual-link">用户手册 (web)</a></td></tr> *@
+                    </tbody></table></div></div><!----></div>
+
+             @* <div id="js__results-content-3" hidden class="sp__results__wrapper__content"><div><div><div class="sp__software__unavailable"><h1>Thông tin phần mềm hiện không khả dụng</h1> Thông tin này sắp ra mắt, không áp dụng hoặc không còn khả dụng cho sản phẩm này.  </div></div><!----></div><!----></div> *@
+
+            <div id="js__results-content-4"  class="sp__results__wrapper__content">
+                <div class="sp__tab-content--videos"><h1 class="sp__tab-content__heading">Video</h1><!---->
+                <div>
+                 <div class="row">
+                    @foreach(var video in video_list)
+                    {
+                    string video_url=video.Link;
+                     string[] embed_code_arr=video_url.Split('/');
+                     string embed_code=embed_code_arr[embed_code_arr.Length-1];
+                    string embed_url="https://www.youtube.com/embed/"+embed_code;
+                     
+                <div class="col-md-6 mb-3">
+      <iframe width="560" height="315" src="@embed_url" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                     }
+                </div>
+                @* <div data-v-50dbf9d4="" class="sc__video-results__list"><article data-v-f4d5c5a8="" data-v-50dbf9d4="" class="sc__video-result" contentid="Uf8yauLy-qQoetT9Ek_OsQ6-XFod_0lcZtsSJZZGP8A" synopsis="Bạn có câu hỏi nào về sản phẩm hoặc ứng dụng của Garmin không? Bạn có muốn liên hệ với trung tâm hỗ trợ khách hàng của chúng tôi không? Video này sẽ hướng dẫn bạn cách sử dụng trang Trung tâm hỗ trợ " locale="vi-VN" contentsource="YOUTUBE_API_CONSUMER_APAC" contenturl="https://www.youtube.com/watch?v=jiI9qbdJnnE&amp;hl=vi-VN" tags="topic_forerunnerseries,topic_fenixseries,topic_d2charlie,topic_descentseries,topic_instinct,topic_portableother,topic_vivoseries,topic_edgeseries,topic_cars,topic_consumerproducts"><div data-v-f4d5c5a8="" class="sc__video-result__video">
+                
+                <iframe data-v-f4d5c5a8="" src="https://www.youtube-nocookie.com/embed/jiI9qbdJnnE?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen="" title="【Hướng dẫn】  Trung tâm hỗ trợ khách hàng của Garmin: Cách sử dụng"></iframe></div><h1 data-v-f4d5c5a8="" class="sc__video-result__title">【Hướng dẫn】  Trung tâm hỗ trợ khách hàng của Garmin: Cách sử dụng</h1></article><article data-v-f4d5c5a8="" data-v-50dbf9d4="" class="sc__video-result" contentid="kWwv6CG07rQ3GgrIlsg0Ab4QiPgC_7FyEq0U7lfYqJc" synopsis="Bạn có phải đang muốn tìm hiểu sản phẩm Garmin có chống thấm nước hay không? Video này sẽ giải thích định nghĩa về các chỉ số chống nước khác nhau Hãy sử dụng các sản phẩm Garmin chống thấm nước để " locale="vi-VN" contentsource="YOUTUBE_API_CONSUMER_APAC" contenturl="https://www.youtube.com/watch?v=_Kz_qVBApgk&amp;hl=vi-VN" tags="topic_handhelds,topic_multisport,topic_golf,topic_marine,topic_motorcycles,topic_fitness0,topic_cameras,topic_actioncameras"><div data-v-f4d5c5a8="" class="sc__video-result__video">
+                <iframe data-v-f4d5c5a8="" src="https://www.youtube-nocookie.com/embed/_Kz_qVBApgk?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen="" title="Giải thích về chỉ số chống nước"></iframe></div><h1 data-v-f4d5c5a8="" class="sc__video-result__title">Giải thích về chỉ số chống nước</h1></article><article data-v-f4d5c5a8="" data-v-50dbf9d4="" class="sc__video-result" contentid="8NSGAzK3A_xCThTdrwh3cYKrYzstWf7Y-GpT_DefNs8" synopsis="Video này sẽ hướng dẫn bạn cách mua và kích hoạt thuê bao Birdseye ,để sử dụng cho thiết bị Garmin tương thích của bạn." locale="vi-VN" contentsource="YOUTUBE_API_CONSUMER_APAC" contenturl="https://www.youtube.com/watch?v=PUKHCgi2gKQ&amp;hl=vi-VN" tags="topic_birdseye,topic_handhelds,topic_basecamp0,region_basecamp,region_gettingstarted,region_birdseye"><div data-v-f4d5c5a8="" class="sc__video-result__video"><iframe data-v-f4d5c5a8="" src="https://www.youtube-nocookie.com/embed/PUKHCgi2gKQ?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen="" title="Làm thế nào để mua và kích hoạt thuê bao BirdsEye"></iframe></div>
+                <h1 data-v-f4d5c5a8="" class="sc__video-result__title">Làm thế nào để mua và kích hoạt thuê bao BirdsEye</h1></article><article data-v-f4d5c5a8="" data-v-50dbf9d4="" class="sc__video-result" contentid="7sLhzfDJaU9WvtSCeQQ2EbMA2J4qOeXBdqOS3rvCwQ8" synopsis="Video này sẽ hướng dẫn bạn cách tải xuống nội dung BirdsEye trên máy tính cho thiết bị cầm tay Garmin tương thích của bạn." locale="vi-VN" contentsource="YOUTUBE_API_CONSUMER_APAC" contenturl="https://www.youtube.com/watch?v=WUm-eJx_q3k&amp;hl=vi-VN" tags="topic_birdseye,topic_handhelds,topic_basecamp0,region_basecamp,region_gettingstarted,region_birdseye"><div data-v-f4d5c5a8="" class="sc__video-result__video"><iframe data-v-f4d5c5a8="" src="https://www.youtube-nocookie.com/embed/WUm-eJx_q3k?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen="" title="Cách tải xuống BirdsEye (PC)"></iframe></div><h1 data-v-f4d5c5a8="" class="sc__video-result__title">Cách tải xuống BirdsEye (PC)</h1></article><article data-v-f4d5c5a8="" data-v-50dbf9d4="" class="sc__video-result" contentid="Ztk2rXil06RXcmTZMnTiciTvuBGTSr9Q-ldzvaHP3AE" synopsis="Tìm hiểu cách tải hình ảnh vệ tinh BirdsEye qua hệ điều hcho thiết bị cầm tay Garmin tương thích của bạn." locale="vi-VN" contentsource="YOUTUBE_API_CONSUMER_APAC" contenturl="https://www.youtube.com/watch?v=FDWPOGBU6B0&amp;hl=vi-VN" tags="topic_gpsmap64series,topic_gpsmap66series,topic_etrexseries,topic_oregonseries,topic_montanaseries,region_basecamp,region_birdseye,region_mapping0,region_maps"><div data-v-f4d5c5a8="" class="sc__video-result__video"><iframe data-v-f4d5c5a8="" src="https://www.youtube-nocookie.com/embed/FDWPOGBU6B0?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen="" title="Hướng dẫn- Cách tải hình ảnh BirdsEye bằng MAC"></iframe></div><h1 data-v-f4d5c5a8="" class="sc__video-result__title">Hướng dẫn- Cách tải hình ảnh BirdsEye bằng MAC</h1></article><article data-v-f4d5c5a8="" data-v-50dbf9d4="" class="sc__video-result" contentid="wsm7u66CsWRyu272cpMQ83TMpJdvBGuqq5-3Hv7wA6s" synopsis="Giới thiệu chung về ngoại quan và các thiết lập cơ bản của thiết bị cầm tay eTrex Để tìm hiểu thêm, vui lòng truy cập trang web : https://support.garmin.com/vi-VN/" locale="vi-VN" contentsource="YOUTUBE_API_CONSUMER_APAC" contenturl="https://www.youtube.com/watch?v=1A0o81OHCq4&amp;hl=vi-VN" tags="topic_etrexmassstorage,region_getstarted,region_gettingstarted,region_featuredvideo"><div data-v-f4d5c5a8="" class="sc__video-result__video"><iframe data-v-f4d5c5a8="" src="https://www.youtube-nocookie.com/embed/1A0o81OHCq4?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen="" title="[Hướng dẫn] Dòng máy eTrex: Bắt đầu làm quen với dòng máy eTrex"></iframe></div><h1 data-v-f4d5c5a8="" class="sc__video-result__title">[Hướng dẫn] Dòng máy eTrex: Bắt đầu làm quen với dòng máy eTrex</h1></article><article data-v-f4d5c5a8="" data-v-50dbf9d4="" class="sc__video-result" contentid="_2BjzLn4JekKNVe1O7WYwiIHADex5xMDegn8mVCMOf4" synopsis="Bắt đầu với các thiết bị cầm tay của Garmin “Dòng GPSMAP” và “Dòng eTrex”: 0:00 Các phím của Dòng GPSMAP 0:50 Các phím của eTrex Series 1:27 Cài đặt bản đồ chung 1:55 Cài đặt bản nhạc chung 2:11 Cài " locale="vi-VN" contentsource="YOUTUBE_API_CONSUMER_APAC" contenturl="https://www.youtube.com/watch?v=AT8SF7VlJcc&amp;hl=vi-VN" tags="topic_etrexmassstorage,topic_gpsmap64series,topic_gpsmap66series,region_getstarted,region_gettingstarted,region_featuredvideo,region_customizesettings,region_mapping0,region_maps,region_navigation"><div data-v-f4d5c5a8="" class="sc__video-result__video"><iframe data-v-f4d5c5a8="" src="https://www.youtube-nocookie.com/embed/AT8SF7VlJcc?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen="" title="Hướng dẫn - Thiết bị cầm tay Garmin: Bắt đầu và thiết lập điểm tham chiếu"></iframe></div><h1 data-v-f4d5c5a8="" class="sc__video-result__title">Hướng dẫn - Thiết bị cầm tay Garmin: Bắt đầu và thiết lập điểm tham chiếu</h1></article><article data-v-f4d5c5a8="" data-v-50dbf9d4="" class="sc__video-result" contentid="UrJKuuzz0bJpFt724e7kPZMIAh0E19r6sbehbziDzBI" synopsis="Video này sẽ chỉ cho bạn cách bạn có thể tạo hồ sơ đào tạo cá nhân tổng thể tốt hơn về từng hoạt động bằng cách xếp hạng mức độ của bạn và mức độ bạn cảm thấy tốt khi thực hiện. Để được trợ giúp thêm," locale="vi-VN" contentsource="YOUTUBE_API_CONSUMER_APAC" contenturl="https://www.youtube.com/watch?v=PbE-9gNRwJg&amp;hl=vi-VN" tags="topic_etrexmassstorage,topic_gpsmap64series,topic_gpsmap66series,region_getstarted,region_gettingstarted,region_featuredvideo,region_customizesettings,region_mapping0,region_maps,region_navigation"><div data-v-f4d5c5a8="" class="sc__video-result__video"><iframe data-v-f4d5c5a8="" src="https://www.youtube-nocookie.com/embed/PbE-9gNRwJg?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen="" title="Hướng dẫn - Tính năng tự đánh giá"></iframe></div><h1 data-v-f4d5c5a8="" class="sc__video-result__title">Hướng dẫn - Tính năng tự đánh giá</h1></article></div>
+                </section><!----> *@
+                <div class="sp__videos-tab--disclaimer"><p>Garmin đảm bảo cung cấp cho bạn các sản phẩm tốt nhất hiện có. Công nghệ kỹ thuật vẫn đang được cải tiến, nhưng có thể không thể hiện đầy đủ qua hình ảnh, video và thông số kỹ thuật trên trang web của chúng tôi.</p></div></div>
+                </div><!----></div>
+        </div>
+    </section>
+    <script>
+        document.addEventListener("DOMContentLoaded",()=>{
+         
+         function checkMobileScreen()
+         {
+           return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+         }
+
+        function downloadLink(url,filename)
+        {
+            fetch(url).then(response=>response.blob()).then(blob=>{
+               const blobUrl=URL.createObjectURL(blob);
+               
+               const a=document.createElement("a");
+                
+                a.href=blobUrl;
+                
+                a.download=filename;
+                
+                document.body.appendChild(a);
+                
+                a.click();
+                
+                document.body.removeChild(a);
+
+                URL.revokeObjectURL(blobUrl);                
+            }).catch((error)=>
+            {
+                alert(error);
+            }); 
+        }
+
+        var pdf_link=document.getElementById("pdf-download-detail");
+
+        var pdf_temp_link=document.getElementById("pdf-download");
+
+        pdf_temp_link.addEventListener("click",(e)=>
+        {
+            if(checkMobileScreen())
+            {   
+                e.preventDefault();
+                const url=pdf_temp_link.href.replace('http','https');
+                const filename=url.split('/').pop();
+                downloadLink(url,filename);
+            }
+        });
+
+            pdf_link.addEventListener("click",(e)=>
+            {
+                if(checkMobileScreen())
+                {   
+                    e.preventDefault();
+                    const url=pdf_link.href.replace('http','https');
+                    const filename=url.split('/').pop();
+                    downloadLink(url,filename);
+                }
+            });
+        });
+    </script>
+
+

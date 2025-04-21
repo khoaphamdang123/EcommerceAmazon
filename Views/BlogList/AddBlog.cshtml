@@ -1,0 +1,371 @@
+@{
+   var created_page=ViewBag.Created_Page;
+   var create_status=ViewBag.Status;
+   var categories = ViewBag.categories as List<Category>;
+}
+
+
+      <div
+       class="bs-toast toast fade hide toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Thêm bài viết</div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                          <div id="toast-message"></div>
+                        </div>
+                      </div>
+    
+    
+
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="../assets/"
+  data-template="vertical-menu-template-free"
+>
+          <div class="content-wrapper">
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Tin tức/</span>Thêm bài</h4>
+              <div class="row">
+                <div class="col-md-12">
+                  <ul class="nav nav-pills flex-column flex-md-row mb-3">
+                    <li class="nav-item">
+                      <a class="nav-link active" href="javascript:void(0);"><i class="bx bx-grid me-1"></i>Thêm bài</a>
+                    </li>     
+                  </ul>
+                  <div class="card mb-4">
+                    <h5 class="card-header">Thông tin bài viết</h5>
+                <form id="formAccountSettings" method="POST" asp-action="addNewBlog" asp-controller="BlogList">
+                <div class="card-body">
+                      <div class="d-flex align-items-start align-items-sm-center gap-4">
+                        <img
+                          src="https://cdn-icons-png.flaticon.com/128/16955/16955062.png"
+                          alt="user-avatar"
+                          class="d-block rounded"
+                          height="100"
+                          width="100"
+                          id="uploadedAvatar"
+                        />
+                        <div class="button-wrapper">
+                          <label for="upload" class="btn btn-primary me-2 mb-4" tabindex="0">
+                            <span class="d-none d-sm-block" id="upload-btn">Tải ảnh</span>
+                            <i class="bx bx-upload d-block d-sm-none"></i>
+                            <input
+                              type="file"
+                              id="upload"
+                              class="account-file-input"
+                              hidden
+                              name="featureimage"
+                              accept="image/png,image/jpeg"/>
+                          </label>
+                          <button type="button" class="btn btn-outline-secondary account-image-reset mb-4" id="delete-avatar">
+                            <i class="bx bx-reset d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Xoá ảnh</span>
+                          </button>
+                          <p class="text-muted mb-0">Cho phép upload ảnh có định dạng JPG,PNG</p>
+                        </div>
+                      </div>
+                    </div>
+                    <hr class="my-0"/>                    
+                    <div class="card-body">
+                        <div class="row mb-3">
+                          <div class="mb-3 col-md-6">
+                            <label for="username" class="form-label mb-2">Tên tác giả:</label>
+                            <input
+                              class="form-control"
+                              type="text"
+                              id="filename"
+                              name="author"
+                              autofocus
+                              placeholder="Nhập tên tác giả"
+                            />
+                          <span id="file-name-error" class="text-danger"></span>
+                          </div>
+                          <div class="mb-3 col-md-6">
+                            <label for="product_id" class="form-label mb-2">Tên bài viết</label>
+                              <input
+                              class="form-control"
+                              type="text"
+                              id="blogname"
+                              name="blogname"
+                              autofocus                              
+                              placeholder="Tên bài viết"
+                            />                             
+                        <span id="blog-name-error" class="text-danger"></span>
+                          </div>
+                          <div class="mb-3 col-md-3">
+                          <label for="" class="mb-2">Loại sản phẩm:</label>
+                        <select class="form-select" name="categoryid">
+                        <option value="-1">Chọn loại sản phẩm</option>
+                            @foreach(var cat in categories)
+                            {
+                           <option value="@cat.Id">@cat.CategoryName</option>
+                            }
+                        </select>
+                          </div>
+                        </div>
+                        <div class="row">
+                         <div class="mb-3 col-md-8">
+                        <label for="" class="mb-2">Nội dung bài viết:</label>
+                          <textarea id="content" name="content"></textarea>
+                        <span id="content-error" class="text-danger"></span>
+                         </div>
+                        </div>
+                        <div class="mt-2 d-flex flex-row justify-content-md-start justify-content-sm-between">
+                          <button type="submit" class="btn btn-primary me-4">Thêm bài viết</button>
+                          <button type="button" class="btn btn-primary" type="button" id="back-btn">Trở lại danh sách các bài viết</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+      
+            <div class="content-backdrop fade"></div>
+          </div>
+      <div class="layout-overlay layout-menu-toggle"></div>
+
+<script>
+
+ document.addEventListener("DOMContentLoaded",()=>{
+ 
+  new FroalaEditor('#content',
+  {
+ heightMin: 300,
+ imageUploadToS3: false,
+    imageUploadURL: '/image/upload',
+    imageOutputSize: true,
+    videoUpload:true,
+    videoUploadURL:'/video/upload',
+    toolbarButtons:{  moreText: {
+      buttons: [
+        'bold', 'italic', 'underline', 'strikeThrough', 
+        'subscript', 'superscript', 'fontFamily', 'fontSize', 
+        'textColor', 'backgroundColor', 'inlineClass', 
+        'inlineStyle', 'clearFormatting'
+      ]
+    },
+    moreParagraph: {
+      buttons: [
+        'alignLeft', 'alignCenter', 'formatOLSimple', 
+        'alignRight', 'alignJustify', 'formatOL', 'formatUL', 
+        'paragraphFormat', 'paragraphStyle', 'lineHeight'
+      ]
+    },
+    moreRich: {
+      buttons: [
+        'insertLink', 'insertImage', 'insertVideo', 
+        'insertTable', 'emoticons', 'fontAwesome', 
+        'specialCharacters', 'embedly', 'insertFile', 'insertHR'
+      ]
+    },
+    moreMisc: {
+      buttons: [
+        'undo', 'redo', 'fullscreen', 'print', 'getPDF', 
+        'spellChecker', 'selectAll', 'html', 'help'
+      ]
+    }},
+      fontFamily: {
+      "Arial, Helvetica, sans-serif": "Arial",
+      "Verdana, Geneva, sans-serif": "Verdana",
+      "Times New Roman, Times, serif": "Times New Roman",
+      "Georgia, serif": "Georgia",
+      "Courier New, Courier, monospace": "Courier New",
+      "Trebuchet MS, sans-serif": "Trebuchet MS",
+      "Comic Sans MS, cursive, sans-serif": "Comic Sans MS",
+      "Impact, Charcoal, sans-serif": "Impact",
+      "Lucida Console, Monaco, monospace": "Lucida Console",
+      "Palatino Linotype, Book Antiqua, Palatino, serif": "Palatino Linotype",
+      "Tahoma, Geneva, sans-serif": "Tahoma",
+      "Arial Black, Gadget, sans-serif": "Arial Black",
+      "Garamond, serif": "Garamond",
+      "Bookman, serif": "Bookman",
+      "Brush Script MT, cursive": "Brush Script MT",
+      "Copperplate, Papyrus, fantasy": "Copperplate",
+      "Luminari, fantasy": "Luminari",
+      "Futura, sans-serif": "Futura",
+      "Franklin Gothic Medium, sans-serif": "Franklin Gothic Medium",
+      "Baskerville, serif": "Baskerville",
+      "Century Gothic, sans-serif": "Century Gothic",
+      "Rockwell, serif": "Rockwell",
+      "Didot, serif": "Didot",
+      "Gill Sans, sans-serif": "Gill Sans",
+      "Optima, sans-serif": "Optima",
+      "Cambria, Cochin, Georgia, Times, Times New Roman, serif": "Cambria",
+      "Segoe UI, Tahoma, Geneva, Verdana, sans-serif": "Segoe UI",
+      "Roboto, sans-serif": "Roboto",
+      "Montserrat, sans-serif": "Montserrat",
+      "Lora, serif": "Lora",
+      "Playfair Display, serif": "Playfair Display",
+      "Raleway, sans-serif": "Raleway",
+      "Open Sans, sans-serif": "Open Sans",
+      "Nunito, sans-serif": "Nunito",
+      "Merriweather, serif": "Merriweather",
+      "Dancing Script, cursive": "Dancing Script",
+      "Pacifico, cursive": "Pacifico",
+      "Cinzel, serif": "Cinzel",
+      "Bebas Neue, sans-serif": "Bebas Neue",
+      "Oswald, sans-serif": "Oswald",
+      "Quicksand, sans-serif": "Quicksand",
+      "Lobster, cursive": "Lobster",
+      "Josefin Sans, sans-serif": "Josefin Sans",
+      "Poppins, sans-serif": "Poppins",
+      "Ubuntu, sans-serif": "Ubuntu",
+      "Anton, sans-serif": "Anton",
+      "Abril Fatface, serif": "Abril Fatface",
+      "Vollkorn, serif": "Vollkorn",
+      "Permanent Marker, cursive": "Permanent Marker",
+      "Indie Flower, cursive": "Indie Flower"
+   },
+    fontFamilySelection: true,
+    fontSize: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', 
+              '24', '26', '28', '30', '32', '34', '36', '38', '40', '42', 
+              '44', '46', '48', '50', '52', '54', '56', '58', '60', '64', 
+              '68', '72', '76', '80', '84', '88', '92', '96', '100', '110', 
+              '120', '130', '140', '150', '160', '170', '180', '190', '200'],
+    fontSizeSelection: true,
+    pluginsEnabled: ['align', 'charCounter', 'codeBeautifier', 'codeView', 'colors', 'draggable', 'embedly', 'emoticons', 'entities', 'file', 'fontFamily', 'fontSize', 'fullscreen', 'image', 'imageManager', 'inlineStyle', 'lineBreaker', 'link', 'lists', 'paragraphFormat', 'paragraphStyle', 'quickInsert', 'quote', 'save', 'table', 'url', 'video', 'wordPaste'],
+    colorsBackground: ['#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFFF00'],
+    colorsText: ['#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00'] 
+  });
+  });
+
+  document.getElementById("upload").addEventListener("change",()=>
+  {
+    var image_input=document.getElementById("upload");
+    var image_hoder=document.getElementById("uploadedAvatar");
+    const file=image_input.files[0];
+    if(file)
+    {
+     const reader = new FileReader();
+     reader.onload=(e)=>{
+        image_hoder.src=e.target.result;
+     }
+
+    var image_hoder=document.getElementById("uploadedAvatar");
+    
+    const file=image_input.files[0];
+    
+    if(file)
+    {
+     const reader = new FileReader();
+     
+     reader.onload=(e)=>
+     {
+        image_hoder.src=e.target.result;
+     }
+
+     reader.readAsDataURL(file);
+    }
+    }
+  });
+
+  document.getElementById("delete-avatar").addEventListener("click",()=>
+  {
+   var image_holder = document.getElementById("uploadedAvatar");
+   var img_file='https://cdn-icons-png.flaticon.com/128/16955/16955062.png';
+   image_holder.src=img_file;
+  });
+
+
+  document.getElementById("formAccountSettings").addEventListener("submit",(e)=>{
+
+e.preventDefault();
+
+  var is_valid=true;
+  
+  var file_name=document.getElementById("filename").value.trim();
+  
+  var blog_name = document.getElementById("blogname").value.trim();
+
+  var content=document.getElementById("content").value.trim();
+  
+
+  if(file_name==='')
+  {
+    is_valid=false;
+    document.getElementById("file-name-error").innerHTML='Không được để trống thông tin này';
+  }
+
+  if(blog_name==='')
+  {
+    is_valid=false;
+    document.getElementById("blog-name-error").innerHTML='Không được để trống thông tin này';
+  }
+
+  if(content==='')
+  {
+    is_valid=false;
+    document.getElementById("content-error").innerHTML='Không được để trống thông tin này';
+  }
+
+  if(!is_valid)
+  {
+    return;
+  }  
+
+   var formData=new FormData(document.getElementById("formAccountSettings"));
+
+  
+  var url='@Url.Action("addNewBlog","BlogList")';  
+
+   $.ajax({  
+                url: url,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false, 
+                success:function(response)
+                { 
+                  var status=response.status;
+                  var message=response.message;
+                 var toast_obj=document.querySelector('.toast');
+                 var toast_message=document.getElementById('toast-message');
+                 toast_message.innerText=message;
+                  if(status==0)
+                { 
+                 toast_obj.classList.add('bg-danger');
+                }
+
+                else{
+
+               toast_obj.classList.add('bg-success');
+                }
+                var toast = new bootstrap.Toast(toast_obj);
+                toast.show();       
+                },
+                error: function (xhr, status, error) {
+               document.getElementById('toast-message').innerText=error.message;
+               document.querySelector('.toast').classList.add('bg-danger');
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();            
+              }
+            });
+            });
+
+
+  document.getElementById('back-btn').addEventListener("click",()=>
+  {
+   var url='@Url.Action("BlogList","BlogList")';
+
+   window.location.href=url;
+  });
+
+
+</script>

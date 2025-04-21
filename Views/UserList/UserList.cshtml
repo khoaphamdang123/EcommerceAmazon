@@ -1,0 +1,455 @@
+
+<!-- =========================================================
+* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
+==============================================================
+
+* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
+* Created by: ThemeSelection
+* License: You must have a valid license purchased in order to legally use the theme for your project.
+* Copyright ThemeSelection (https://themeselection.com)
+
+=========================================================
+ -->
+<!-- beautify ignore:start -->
+@model PageList<ApplicationUser>
+@{
+  int count_id= 0;
+  var selected_size=ViewBag.select_size;
+  var filtered_user=ViewBag.filter_user as FilterUser;
+  int status_delete=-1;
+  int change_pass_status=-1;
+  string url=ViewBag.URL;
+  var current_total_item=(Model?.currentPage*Model?.pageSize)-Model?.pageSize;  
+
+  if(TempData["Status_Delete"]!=null)
+  {
+   status_delete=Convert.ToInt32(TempData["Status_Delete"]);
+  }
+  var message_delete =TempData["Message_Delete"];
+  if(TempData["change_res"]!=null)
+  {
+    change_pass_status = Convert.ToInt32(TempData["change_res"]);
+  }
+  var message_change = TempData["message_change"];
+ 
+  string delete_email_value="";
+  
+  if((filtered_user)==null)
+  {
+    filtered_user=new FilterUser("","","","","");
+  }
+  Console.WriteLine("filtered_user:"+filtered_user);
+}
+
+@if(status_delete==1 || change_pass_status==1)
+{
+   <div
+       class="bs-toast toast fade hide bg-success toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">@(status_delete==1?"Xóa User":"Đổi mật khẩu")</div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                         @(status_delete==1?message_delete:message_change)
+                        </div>
+                      </div>
+                <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+}
+
+
+@if(status_delete==0 || change_pass_status==0)
+{
+   <div
+       class="bs-toast toast fade hide bg-danger toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">@(status_delete==1?"Xóa User":"Đổi mật khẩu")</div>
+                        </div>
+                        <div class="toast-body">
+                         @(status_delete==1?message_delete:message_change)
+                        </div>
+                      </div>
+                        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+}
+
+
+
+
+    <!-- Layout wrapper -->
+
+          <div class="content-wrapper">
+
+            <div class="container-xxl flex-grow-1 container-p-y">
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Khách hàng /</span>Danh sách khách hàng</h4>
+                <div class="card">
+                    <div class="card-header border-bottom">
+                     <h5 class="card-title mb-0">Lọc danh sách User</h5>
+                <form method="post" asp-controller="UserList" asp-action="UserList">
+                    <div class="d-flex justify-content-between align-items-center row pt-4 gap-4 gap-md-0 g-6">
+                     <div class="col-md-4">
+                    <input type="search" class="form-control" name="UserName" placeholder="Tên khách hàng">
+                     </div>
+                     <div class="col-md-4">
+                        <input type="email" class="form-control" name="Email" placeholder="Email">
+                     </div>
+                    <div class="col-md-4">
+                      <input type="search" class="form-control" name="PhoneNumber" placeholder="Số điện thoại">
+                     </div>
+                       @* <div class="col-md-4 user_role">
+                        <input type="date" class="form-control" placeholder="Ngày sinh:yyyy-mm-dd" autocomplete="off" value>
+                    </div> *@
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-4 mb-4">
+                        <input type="date" class="form-control" placeholder="mm/dd/yyyy" name="datetime" id="dateInput" value="@filtered_user.DateTime" autocomplete="off">
+                    </div>
+                     <div class="col-md-4">
+                        <input type="date" class="form-control" placeholder="mm/dd/yyyy" name="endtime" id="dateInput" value="@filtered_user.EndTime" autocomplete="off">
+                    </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-12 text-center">
+                         <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+                <div class="card-datatable border-bottom">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="ms-2">   
+                            <div class="data-length">
+                                <label>
+                                    <select class="form-select" id="page-size">
+                        
+                                        @foreach(var option in ViewBag.options)
+                                        { if(option==selected_size)
+                                        {
+                                          <option value="@option" selected>@option</option>
+                                        }
+                                        else{
+                                           <option value="@option">@option</option>
+                                        }
+                                        }
+                                    </select>
+                                </label>
+                            </div>
+                            </div>
+                        </div>
+                            <div class="col-md-10">
+                            <div class="dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-end flex-md-row flex-column mb-6 mb-md-0 mt-n6 mt-md-0 gap-md-4">
+                            <div class="data-filter">
+                            <div class="dt-buttons btn-group flex-wrap">
+                                <div class="btn-group">
+                                    <button class="btn buttons-collection dropdown-toggle btn-label-secondary me-4" tabindex="0" id="exportDropdown" type="button" aria-haspopup="dialog" data-bs-toggle="dropdown" aria-expanded="false"><span><i class="bx bx-export me-2 bx-sm"></i>Xuất File</span></button> 
+                                    <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                       <li><a class="dropdown-item" href="@Url.Action("ExportPdf")">Định dạng PDF</a></li>
+                                       <li><a class="dropdown-item" href="@Url.Action("ExportExel")">Định dạng Excel</a></li>
+                                       <li><a class="dropdown-item" href="@Url.Action("ExportCsv")">Định dạng CSV</a></li>
+                                    </ul>    
+                                </div>
+                                <button class="btn btn-secondary add-new btn-primary" id="add-user-btn" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><span><i class="bx bx-plus bx-sm me-0 me-sm-2"></i><span class="d-none d-sm-inline-block">Thêm khách hàng mới</span></span></button>
+                            </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h5 class="card-header">Danh sách User</h5>
+                <div class="table-responsive text-nowrap border-bottom">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">STT</th>
+                            <th class="text-center">No</th>
+                            <th class="text-center">Tên User</th>
+                            <th class="text-center">Email</th>
+                            <th class="text-center">Giới tính</th>
+                            <th class="text-center">
+                                Số điện thoại
+                            </th>
+                            <th class="text-center">
+                                Địa chỉ 1
+                            </th>
+                            <th class="text-center">
+                                Địa chỉ 2
+                            </th>
+                           <th class="text-center">
+                            Ngày tạo
+                           </th>
+                           <th class="text-center">
+                            Thao tác
+                           </th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                       @foreach(var user in Model?.item)
+                       { 
+                        if(user.UserName=="company")
+                        {
+                          continue;
+                        }
+                        current_total_item+=1;
+                         <tr>
+                            <td class="text-center">@current_total_item</td>
+                            <td class="text-center">@user.Seq</td>
+                            <td class="text-center">
+                             <div class="d-flex">
+                              <div class="avatar-wrapper">
+                                <div class="avatar avatar-sm me-2">
+                                  <img src="@user.Avatar" alt="User Avatar">
+                                </div>
+                              </div>
+                              <strong>@user.UserName</strong>
+                             </div>
+                              </td>
+                            <td class="text-center">@user.Email</td>
+                            <td class="text-center">@user.Gender</td>
+                            <td class="text-center">@user.PhoneNumber</td>
+                            <td class="text-center">@user.Address1</td>
+                            <td class="text-center">@user.Address2</td>
+                            <td class="text-center">@user.Created_Date</td>
+                            
+                            <td class="text-center">
+                       
+                            <div class="d-flex align-items-center justify-content-center">
+                              <a data-bs-toggle="modal" data-bs-target="#modalLong" class="btn btn-icon delete-record icon-style-delete" id="delete-record-btn" data-email="@user.Email" title="Xóa User">
+                                <i class="bx bx-trash bx-md"></i>
+                              </a>
+                      <div class="modal fade" id="modalLong" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h4 class="modal-title" id="modalLongTitle"><strong>Xóa User</strong></h4>
+                              <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                              ></button>
+                            </div>
+                            <div class="modal-body">
+                             <p class="modal-font">
+                               <strong>Bạn có chắc là muốn xóa User này?</strong>
+                              </p>
+                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" id="remove-btn">Xóa</button>
+                              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                Đóng
+                              </button>
+                        </div>
+                          </div>
+                        </div>
+                      </div>
+                                <a href="@Url.Action("UserInfo",new {email=user.Email})" class="btn btn-icon icon-style-update" title="Xem thông tin User">
+                                <i class="bx bx-show bx-md"></i>
+                              </a>
+                              <a href="@Url.Action("ResetPasswordUser",new{email=user.Email})" class="btn btn-icon icon-style-reset" title="Đặt lại mật khẩu">
+                                <i class="bx bx-key bx-md"></i>
+                              </a>
+                            </div>
+                            
+                            </td>
+                         </tr>
+                         }
+                    </tbody>
+                </table>
+                </div>
+    <div class="pagination-container mt-4">
+      <div class="page-total">Tổng số User:@Model?.totalCount</div>
+      <div class="page-list justify-content-center">
+     @if(Model!=null && Model.hasPreviousPage)
+     {
+       <a class="page-item" title="Previous" href="@Url.Action("UserListPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage-1,UserName=(string.IsNullOrEmpty(filtered_user.UserName)?"":filtered_user.UserName),email=(string.IsNullOrEmpty(filtered_user.Email)?"":filtered_user.Email),phonenumber=(string.IsNullOrEmpty(filtered_user.PhoneNumber)?"":filtered_user.PhoneNumber),datetime=(string.IsNullOrEmpty(filtered_user.DateTime)?"":filtered_user.DateTime),endtime=(string.IsNullOrEmpty(filtered_user.EndTime)?"":filtered_user.EndTime)})"><i class="bx bx-chevron-left"></i></a>
+       }
+     else
+     {
+      <span class="page-item" title="Previous" aria-label="previous"><i class="bx bx-chevron-left"></i></span>
+     }
+ 
+    @if(Model?.totalPage<=7)
+    {
+      for(int i=1;i<=Model?.totalPage;i++)
+      {
+        if(i==Model?.currentPage)
+        {
+           <a class="page-item activate" disabled>@i</a> 
+        }
+       else
+       {
+         <a class="page-item" title="@i" href="@Url.Action("UserListPaging",new{page_size=int.Parse(selected_size),page=i,UserName=(string.IsNullOrEmpty(filtered_user.UserName)?"":filtered_user.UserName),email=(string.IsNullOrEmpty(filtered_user.Email)?"":filtered_user.Email),phonenumber=(string.IsNullOrEmpty(filtered_user.PhoneNumber)?"":filtered_user.PhoneNumber),datetime=(string.IsNullOrEmpty(filtered_user.DateTime)?"":filtered_user.DateTime),endtime=(string.IsNullOrEmpty(filtered_user.EndTime)?"":filtered_user.EndTime)})">@i</a>
+       }
+      }
+    }
+     else
+    {
+     if(Model?.currentPage<5)
+     {
+      for(int i=1;i<=7;i++)
+      {
+        if(i<6)
+        {
+          if(i==Model?.currentPage)
+        {
+           <span class="page-item activate" disable>@i</span> 
+        }
+       else{
+         <a class="page-item" title="@i" href="@Url.Action("UserListPaging",new{page_size=int.Parse(selected_size),page=i,UserName=(string.IsNullOrEmpty(filtered_user.UserName)?"":filtered_user.UserName),email=(string.IsNullOrEmpty(filtered_user.Email)?"":filtered_user.Email),phonenumber=(string.IsNullOrEmpty(filtered_user.PhoneNumber)?"":filtered_user.PhoneNumber),datetime=(string.IsNullOrEmpty(filtered_user.DateTime)?"":filtered_user.DateTime),endtime=(string.IsNullOrEmpty(filtered_user.EndTime)?"":filtered_user.EndTime)})">@i</a>
+       }
+        }
+        else{
+          if(i==6)
+          {
+            <span class="page-item" disabled>...</span>
+          }
+        else{
+         <a class="page-item" title="@i" href="@Url.Action("UserListPaging",new{page_size=int.Parse(selected_size),page=Model?.totalPage,UserName=(string.IsNullOrEmpty(filtered_user.UserName)?"":filtered_user.UserName),email=(string.IsNullOrEmpty(filtered_user.Email)?"":filtered_user.Email),phonenumber=(string.IsNullOrEmpty(filtered_user.PhoneNumber)?"":filtered_user.PhoneNumber),datetime=(string.IsNullOrEmpty(filtered_user.DateTime)?"":filtered_user.DateTime),endtime=(string.IsNullOrEmpty(filtered_user.EndTime)?"":filtered_user.EndTime)})">@Model?.totalPage</a>
+        }
+        }
+      }
+     }
+    else
+    {
+    if((Model?.currentPage>=5 && (Model?.currentPage<(Model.totalPage-3))))
+    {
+         <a class="page-item" title="1" href="@Url.Action("UserListPaging",new{page_size=int.Parse(selected_size),page=1,UserName=(string.IsNullOrEmpty(filtered_user.UserName)?"":filtered_user.UserName),email=(string.IsNullOrEmpty(filtered_user.Email)?"":filtered_user.Email),phonenumber=(string.IsNullOrEmpty(filtered_user.PhoneNumber)?"":filtered_user.PhoneNumber),datetime=(string.IsNullOrEmpty(filtered_user.DateTime)?"":filtered_user.DateTime),endtime=(string.IsNullOrEmpty(filtered_user.EndTime)?"":filtered_user.EndTime)})">1</a>
+    <span class="page-item" disabled>...</span>
+         <a class="page-item" title="@(Model?.currentPage-1)" href="@Url.Action("UserListPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage-1,UserName=(string.IsNullOrEmpty(filtered_user.UserName)?"":filtered_user.UserName),email=(string.IsNullOrEmpty(filtered_user.Email)?"":filtered_user.Email),phonenumber=(string.IsNullOrEmpty(filtered_user.PhoneNumber)?"":filtered_user.PhoneNumber),datetime=(string.IsNullOrEmpty(filtered_user.DateTime)?"":filtered_user.DateTime),endtime=(string.IsNullOrEmpty(filtered_user.EndTime)?"":filtered_user.EndTime)})">@(Model?.currentPage-1)</a>
+    <span class="page-item activate" disabled>@(Model?.currentPage)</span>
+    <a class="page-item" title="@(Model?.currentPage+1)" href="@Url.Action("UserListPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage+1,UserName=(string.IsNullOrEmpty(filtered_user.UserName)?"":filtered_user.UserName),email=(string.IsNullOrEmpty(filtered_user.Email)?"":filtered_user.Email),phonenumber=(string.IsNullOrEmpty(filtered_user.PhoneNumber)?"":filtered_user.PhoneNumber),datetime=(string.IsNullOrEmpty(filtered_user.DateTime)?"":filtered_user.DateTime),endtime=(string.IsNullOrEmpty(filtered_user.EndTime)?"":filtered_user.EndTime)})">@(Model?.currentPage+1)</a>
+
+    <span class="page-item" disabled>...</span>
+         <a class="page-item" title="@(Model?.totalPage)" href="@Url.Action("UserListPaging",new{page_size=int.Parse(selected_size),page=Model?.totalPage,UserName=(string.IsNullOrEmpty(filtered_user.UserName)?"":filtered_user.UserName),email=(string.IsNullOrEmpty(filtered_user.Email)?"":filtered_user.Email),phonenumber=(string.IsNullOrEmpty(filtered_user.PhoneNumber)?"":filtered_user.PhoneNumber),datetime=(string.IsNullOrEmpty(filtered_user.DateTime)?"":filtered_user.DateTime),endtime=(string.IsNullOrEmpty(filtered_user.EndTime)?"":filtered_user.EndTime)})">@Model?.totalPage</a>
+    }
+    else{
+         <a class="page-item" title="1" href="@Url.Action("UserListPaging",new{page_size=int.Parse(selected_size),page=1,UserName=(string.IsNullOrEmpty(filtered_user.UserName)?"":filtered_user.UserName),email=(string.IsNullOrEmpty(filtered_user.Email)?"":filtered_user.Email),phonenumber=(string.IsNullOrEmpty(filtered_user.PhoneNumber)?"":filtered_user.PhoneNumber),datetime=(string.IsNullOrEmpty(filtered_user.DateTime)?"":filtered_user.DateTime),endtime=(string.IsNullOrEmpty(filtered_user.EndTime)?"":filtered_user.EndTime)})">1</a>
+    <span class="page-item" disabled>...</span>
+         <a class="page-item" title="@(Model?.currentPage-4)" href="@Url.Action("UserListPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage-4,UserName=(string.IsNullOrEmpty(filtered_user.UserName)?"":filtered_user.UserName),email=(string.IsNullOrEmpty(filtered_user.Email)?"":filtered_user.Email),phonenumber=(string.IsNullOrEmpty(filtered_user.PhoneNumber)?"":filtered_user.PhoneNumber),datetime=(string.IsNullOrEmpty(filtered_user.DateTime)?"":filtered_user.DateTime)})">@(Model?.currentPage-4)</a>
+     for(int i=(Model.totalPage-3);i<=Model?.totalPage;i++)
+     {
+      if(i==Model?.currentPage)
+      {
+          <span class="page-item activate" disabled>@(Model?.currentPage)</span>
+      }
+    else{
+         <a class="page-item" title="@i" href="@Url.Action("UserListPaging",new{page_size=int.Parse(selected_size),page=i,UserName=(string.IsNullOrEmpty(filtered_user.UserName)?"":filtered_user.UserName),email=(string.IsNullOrEmpty(filtered_user.Email)?"":filtered_user.Email),phonenumber=(string.IsNullOrEmpty(filtered_user.PhoneNumber)?"":filtered_user.PhoneNumber),datetime=(string.IsNullOrEmpty(filtered_user.DateTime)?"":filtered_user.DateTime),endtime=(string.IsNullOrEmpty(filtered_user.EndTime)?"":filtered_user.EndTime)})">@i</a>
+    }
+     }
+    }
+    }
+    } 
+   
+        @* <a class="page-item" title="1" href="@Url.Action("UserList",new{page=1})">1</a>
+       
+    
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a>
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a>
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a>
+
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a>
+
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a> *@
+
+       
+      @if(Model!=null && Model.hasNextPage)
+      {
+       <a class="page-item" title="Next" href="@Url.Action("UserListPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage+1,UserName=(string.IsNullOrEmpty(filtered_user.UserName)?"":filtered_user.UserName),email=(string.IsNullOrEmpty(filtered_user.Email)?"":filtered_user.Email),phonenumber=(string.IsNullOrEmpty(filtered_user.PhoneNumber)?"":filtered_user.PhoneNumber),datetime=(string.IsNullOrEmpty(filtered_user.DateTime)?"":filtered_user.DateTime),endtime=(string.IsNullOrEmpty(filtered_user.EndTime)?"":filtered_user.EndTime)})">></a>
+       }
+      else 
+      {
+        <span class="page-item" title="Next" disabled> <i class="bx bx-chevron-right"></i></span>
+      }
+      </div>
+    </div>  
+ </div>
+  
+
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+
+      <div class="layout-overlay layout-menu-toggle"></div>
+
+  <script>
+     let delete_email='';
+
+    var all_delete_btn=document.querySelectorAll('#delete-record-btn');
+
+    all_delete_btn.forEach((btn)=>{
+     btn.addEventListener('click',()=>{
+      delete_email=btn.getAttribute('data-email');
+     })
+    });
+
+     document.getElementById("page-size").addEventListener("change",()=>{
+    
+     var selected_value=document.getElementById("page-size").value;
+     if(selected_value)
+     {
+      selected_value=parseInt(selected_value);
+      //window.location.href=`${Url.Action("handleNumberItem",new{page_size=selected_value})}`;
+      window.location.href= '@Url.Action("UserListPaging", "UserList")' + "?page_size=" + selected_value;
+     }
+     });
+     document.getElementById("add-user-btn").addEventListener('click',()=>{
+      window.location.href='@Url.Action("AddUserList","UserList")';
+     });
+    
+    document.getElementById("remove-btn").addEventListener('click',()=>{
+
+    let convert_email=delete_email;
+    
+    delete_email_value=convert_email;
+
+     window.location.href='@Url.Action("UserInfoDelete","UserList")'+"?email="+delete_email_value; 
+    });
+@*  
+ const convertDateTime=()=> {
+
+    const dateInput = document.getElementById('dateInput').value;
+
+
+    const date = new Date(dateInput);
+
+    if (!isNaN(date)) {
+            const formattedDate =  
+                              ('0' + (date.getMonth() + 1)).slice(-2) +'/'+
+                              ('0' + date.getDate()).slice(-2)+'/'+date.getFullYear();
+
+    }
+} *@
+  </script>

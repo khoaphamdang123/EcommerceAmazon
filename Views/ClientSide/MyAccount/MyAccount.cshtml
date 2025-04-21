@@ -1,0 +1,488 @@
+ @{
+    Layout = "_UserLayout";
+    var siteKey=ViewBag.SiteKey;
+    var account= ViewBag.Account;
+    var register_status=TempData["register_status"];
+    
+    string register_msg="";
+    if(register_status!=null)
+    {
+     switch(register_status)
+     {
+      case 1:register_msg="Đăng ký thành công";break;
+      case 0:register_msg="Đăng ký thất bại";break;
+      case -1:register_msg="Email này đã tồn tại";break;
+      case 2 :register_msg="Link đã hết thời hạn";break;
+      case 3:register_msg="Timestamp đã bị phá hoại";break;
+     }
+    }
+    Console.WriteLine("register message:"+register_msg);
+    var saved_account= ViewBag.SavedAccount;
+    string username="";
+    string password="";
+  if(account!=null)
+  {  string[] account_part=account.Split('\n');
+     username=account_part[0];
+     password=account_part[1];
+  }
+}
+ 
+
+ <div
+       class="bs-toast toast fade bg-success hide toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+       data-bs-dismiss="toast"
+       style="cursor: pointer; position: fixed; top: 20px; right: 20px; z-index: 1050;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold" id="toast-title"></div>
+                        </div>
+                        <div class="toast-body" id="toast-message">                        
+                        </div>
+                      </div>
+  
+
+      <div
+       class="bs-toast toast toast-danger fade bg-danger hide toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+       data-bs-dismiss="toast"
+       style="cursor: pointer; position: fixed; top: 20px; right: 20px; z-index: 1050;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold" id="toast-title-error"></div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body" id="toast-message-error">
+                          @register_msg
+                        </div>
+                      </div>
+ 
+
+ <div class="page-banner-area page-banner-height-2" data-background="@Url.Content("~/user_layout/img/banner/page-banner-4.jpg")">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="page-banner-content text-center">
+                            <h4 class="breadcrumb-title">Tài khoản</h4>
+                            <div class="breadcrumb-two">
+                                <nav>
+                                   <nav class="breadcrumb-trail breadcrumbs">
+                                      <ul class="breadcrumb-menu">
+                                         <li class="breadcrumb-trail">
+                                            <a href="@Url.Action("HomePage","HomePage")"><span>Trang chủ</span></a>
+                                         </li>
+                                         
+                                         <li class="trail-item">
+                                            <span>Tài khoản</span>
+                                         </li>
+                                      </ul>
+                                   </nav> 
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- page-banner-area-end -->
+
+        <!-- account-area-start -->
+        <div class="account-area mt-70 mb-70">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="basic-login mb-50">
+                            <h5>Đăng nhập</h5>
+                            <form id="signinForm" method="POST" asp-action="MyAccount" asp-controller="MyAccount">
+                                <label for="username">Tên tài khoản<span>*</span></label>
+                                <input id="username" name="username" type="text" placeholder="Nhập tên tài khoản" value="@(!string.IsNullOrEmpty(username)?username:"")">
+                                  <span class="forgot-login f-right">
+                                       <a href="@Url.Action("ChangePassword","MyAccount")">Đổi mật khẩu?</a>
+                                    </span>
+                                <span class="text-danger" id="username-error"></span><br>
+                                <label for="password">Mật khẩu<span>*</span></label>
+                                <input id="password" name="password" type="password" placeholder="Nhập tên mật khẩu" value="@(!string.IsNullOrEmpty(password)?password:"")">
+                                <span class="text-danger" id="password-error"></span><br>
+                                <div class="login-action mb-10 fix">
+                                    <span class="log-rem f-left">
+                                     @if(saved_account!=null && saved_account)
+                                     {
+                                       <input type="checkbox" id="rememberme" name="rememberme" value="true" checked>
+                                       }
+                                     else
+                                      {
+                                    <input type="checkbox" id="rememberme" name="rememberme" value="true">
+                                      }
+                                       <label for="rememberme">Nhớ mật khẩu</label>
+                                    </span>
+                                    <span class="forgot-login f-right">
+                                       <a href="@Url.Action("ForgotPassword","MyAccount")">Quên mật khẩu?</a>
+                                    </span>
+                                </div>
+                                <button type="button" onclick="submitForm('signinForm')" class="tp-in-btn w-100 mb-4">Đăng nhập</button>
+                                <div class="g-recaptcha" id="sitekey" data-sitekey="@siteKey"></div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="basic-login">
+                            <h5>Đăng ký</h5>
+                            <form  id="registerForm" method="POST" asp-action="MyAccount" asp-controller="MyAccount">
+                                <label for="username">Tên tài khoản<span>*</span></label>
+                                <input id="username-register" name="username" type="text" placeholder="Nhập tên người dùng">
+                            <span class="text-danger" id="username-register-error"></span><br>
+                                <label for="email">Địa chỉ Email<span>*</span></label>
+                                <input id="email" type="email" name ="email" placeholder="Nhập địa chỉ Email">
+                                <span class="text-danger" id="email-error"></span><br>
+
+                                <label for="password">Mật khẩu<span>*</span></label>
+                                <input id="password-register" name="password" type="password" placeholder="Nhập mật khẩu">
+                                <span class="text-danger" id="password-register-error"></span><br>
+
+                                <label for="con-pass">Nhập lại mật khẩu<span>*</span></label>
+                                
+                                <input id="con-pass" type="password" placeholder="Nhập lại mật khẩu">
+                                
+                                <span class="text-danger" id="re-password-register-error"></span><br>
+                                
+                                <label for="phonenumber">Số điện thoại</label>
+                                
+                                <input id="phonenumber" name="phonenumber" type="number" placeholder="Nhập số điện thoại">
+                                
+                                <span class="text-danger" id="phone-error"></span><br>
+
+                               <label for="address1">Địa chỉ</label>
+                                
+                                <input id="address1" name="address1" type="text" placeholder="Nhập địa chỉ">
+                                
+                                <ul id="addressSuggestions" class="list-group position-absolute w-100" style="z-index: 1000; display: none;"></ul>
+
+                               <label for="address2">Địa chỉ giao hàng</label>
+                                
+                               <input id="address2" name="address2" type="text" placeholder="Nhập địa chỉ giao hàng">
+                               
+                               <ul id="addressSuggestions2" class="list-group position-absolute w-100" style="z-index: 1000; display: none;"></ul>
+
+                               <label for="gender">Giới tính</label>
+                               <br>
+                                <select id="gender" name="gender" class="mb-3">
+                               <option value="Male">Nam</option>
+                               <option value="Female">Nữ</option>
+                               <option value="Other">Khác</option>
+                               </select>
+                               <br>
+                                <button type="button" onclick="submitForm('registerForm')" class="tp-in-btn w-100 mb-4">Đăng ký</button>
+                              
+                            <div class="g-recaptcha" data-sitekey="@siteKey"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- account-area-end -->
+
+        <!-- cta-area-start -->
+      
+@* <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNwNVY3rQCn935p0SkZB2ttgmzhlG1CK8&loading=async&libraries=places&callback=initMap">
+</script> *@
+
+<script>
+  
+ 
+
+ @* let autocompleteService;
+   
+ let geocoder;
+
+  function initializeGoogleServices() {
+        
+        autocompleteService = new google.maps.places.AutocompleteService();
+      
+        geocoder = new google.maps.Geocoder();
+    }
+
+ window.onload = function () {
+        if (google && google.maps) {
+          initializeGoogleServices();       
+          } else {
+          alert("maps is not loaded");
+            console.error("Google Maps API is not loaded.");
+        }
+    }; *@
+
+  
+
+
+      @* function getPlacePredictions(query) 
+      {
+        const suggestionsContainer = document.getElementById('addressSuggestions');
+
+        if (!query) {
+            suggestionsContainer.style.display = 'none';
+            suggestionsContainer.innerHTML = '';
+            return;
+        }
+
+
+        // Get autocomplete predictions
+        autocompleteService.getPlacePredictions({ input: query }, function (predictions, status) {
+          
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                // Clear the suggestions container
+                suggestionsContainer.innerHTML = '';
+
+                // Populate suggestions
+                predictions.forEach(prediction => {
+                    
+                    const suggestionItem = document.createElement('li');
+                    
+                    suggestionItem.classList.add('list-group-item', 'list-group-item-action');
+                    
+                    suggestionItem.textContent = prediction.description;
+
+                    // On click, select the suggestion and fetch details
+                    suggestionItem.onclick = function () {
+                        document.getElementById('address1').value = prediction.description;
+                        suggestionsContainer.style.display = 'none';
+                        // Fetch place details
+                      
+
+                    // Append to the container
+                    suggestionsContainer.appendChild(suggestionItem);
+                });
+
+                // Show the container
+                suggestionsContainer.style.display = 'block';
+            } else {
+                // Hide suggestions if no matches
+                suggestionsContainer.style.display = 'none';
+            }
+        });
+    } *@
+  
+
+
+
+
+  function submitForm(formId)
+   {
+    var is_valid=true;
+
+    let action="";
+    
+ if(formId=="signinForm")
+ {
+    var username=document.getElementById("username").value;
+    var password=  document.getElementById("password").value;
+    action="LoginHandle";
+    if(username=="")
+    { is_valid=false;
+      document.getElementById("username-error").innerHTML="Tên người dùng không được để trống";
+    }
+    
+    if(password=="")
+    { is_valid=false;
+      document.getElementById("password-error").innerHTML="Mật khẩu không được để trống";
+    }
+ }
+ else
+ {
+    var username=document.getElementById("username-register").value;
+
+    var password=  document.getElementById("password-register").value;
+    
+    var email = document.getElementById("email").value;
+    
+    var re_password = document.getElementById("con-pass").value;
+    
+    action="SendMailRegister";
+
+    if(username=="")
+    { is_valid=false;
+      document.getElementById("username-register-error").innerHTML="Tên người dùng không được để trống";
+    }
+    
+   
+    if(password=="")
+    { is_valid=false;
+      document.getElementById("password-register-error").innerHTML="Mật khẩu không được để trống";
+    }
+
+    if(re_password=="")
+    {
+        is_valid=false;
+        document.getElementById("re-password-register-error").innerHTML="Không được để trống trường này";
+    }
+
+    if(email=="")
+    {
+        is_valid=false;
+        document.getElementById("email-error").innerHTML="Không được để trống email";
+    }
+
+    if(password!="" && re_password!="" && password!=re_password)
+    {
+        is_valid=false;
+        document.getElementById("re-password-register-error").innerHTML="Mật khẩu không khớp";
+    }
+ 
+ }
+    if(!is_valid)
+    {
+      event.preventDefault();
+    }
+else
+{
+  let formDataVal=new FormData(document.getElementById(formId));
+  
+  var url='@Url.Action("_action","MyAccount")';
+  
+  url=url.replace("_action",action);
+
+   $.ajax({  
+                url: url,
+                type: 'POST',
+                data: formDataVal,
+                contentType: false,
+                processData: false, 
+                success:function(response)
+                { 
+                  var status=response.status;
+
+                  var message=response.message;
+                  
+                  var title=response.title;
+                  
+                  var sitekey=response.siteKey;
+         
+                  if(sitekey!=null && siteKey!=undefined)
+                  { 
+                      var siteKey= document.getElementById("sitekey");
+                      
+                      siteKey.setAttribute("data-sitekey",sitekey);
+                      
+                      grecaptcha.reset();
+                  }
+
+                  if(status==-1 || status==0)
+                  { 
+                   document.getElementById("toast-title-error").innerHTML=title;
+                 document.getElementById("toast-message-error").innerHTML=message;
+                var toastEl = document.querySelector('.toast-danger');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+                }
+                else{
+                 @* document.getElementById("toast-title").innerHTML=title;
+                document.getElementById("toast-message").innerHTML=message;
+                  var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl); *@
+                if(action=="SendMailRegister")
+                {
+                document.getElementById("toast-title").innerHTML=title;
+                document.getElementById("toast-message").innerHTML=message;
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+                }
+                else
+                {
+                window.location.href="@Url.Action("HomePage","HomePage")";
+                }
+
+                //toast.show(); 
+                }
+                },
+                error: function (xhr, status, error) {
+                document.getElementById("toast-title-error").innerHTML="Lỗi xử lý";
+                 document.getElementById("toast-message-error").innerHTML=error;
+                var toastEl = document.querySelector('.toast-danger');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();            
+              }
+            });
+   }
+   }
+   
+
+  document.addEventListener("DOMContentLoaded",()=>{
+
+   var register_status="@Html.Raw(register_status)";
+
+  var register_msg="@Html.Raw(register_msg)";
+
+ if(register_status=="1")
+ {
+                       
+                 document.getElementById("toast-title").innerHTML="Đăng ký tài khoản";
+                 document.getElementById("toast-message").innerHTML=register_msg;
+                var toastEl = document.querySelector('.toast-success');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();       
+      
+ }
+
+ else if(register_status=="0" || register_status=="-1" || register_status=="2" || register_status=="3")
+ {
+                document.getElementById("toast-title-error").innerHTML="Đăng ký tài khoản";
+                 document.getElementById("toast-message-error").innerHTML=register_msg;
+                var toastEl = document.querySelector('.toast-danger');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+ }
+
+  document.getElementById("username-register").addEventListener("keydown",(event)=>{
+      var username_error=document.getElementById("username-register-error").value;
+      if(username_error!="")
+      {
+        document.getElementById("username-register-error").innerHTML="";
+      }
+    });
+
+  document.getElementById("password-register").addEventListener("keydown",(event)=>{
+      var password_error=document.getElementById("password-register-error").value;
+      if(password_error!="")
+      {
+        document.getElementById("password-register-error").innerHTML="";
+      }
+    });
+
+ document.getElementById("con-pass").addEventListener("keydown",(event)=>{
+      var password_error=document.getElementById("re-password-register-error").value;
+      if(password_error!="")
+      {
+        document.getElementById("re-password-register-error").innerHTML="";
+      }
+    });
+
+  document.getElementById("email").addEventListener("keydown",(event)=>{
+      var email_error=document.getElementById("email-error").value;
+      if(email_error!="")
+      {
+        document.getElementById("email-error").innerHTML="";
+      }
+    });
+    
+    document.getElementById("password").addEventListener("keydown",(event)=>{
+      var password_errror = document.getElementById("password-error").value;
+      if(password_errror!="")
+      {
+        document.getElementById("password-error").innerHTML="";
+      }
+    });
+   
+  });  
+</script>

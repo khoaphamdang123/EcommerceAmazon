@@ -1,0 +1,74 @@
+@{
+      string username="";
+        string email="";
+        string password = "";
+        string avatar="";
+       int total_value=0;
+        ChangePassword change_pass= null;
+       if(User.Identity.IsAuthenticated && User.IsInRole("User"))
+       {
+        username=this.ViewContext.HttpContext.Session.GetString("UserName");
+        email=this.ViewContext.HttpContext.Session.GetString("Email");
+        password = this.ViewContext.HttpContext.Session.GetString("Password");
+        avatar = this.ViewContext.HttpContext.Session.GetString("Avatar");
+        change_pass=new ChangePassword(email,password,"");
+        }  
+}
+   <div class="nav-item navbar-dropdown dropdown-user dropdown">
+                        <a class="icon-link dropdown-toggle hide-arrow" data-bs-toggle="dropdown" href="javascript:void(0);">
+                      @if(avatar!=null)
+                      { 
+                       if(avatar.Contains("wwwroot"))
+                       { 
+                        <img
+                          src="~/@avatar.Substring(avatar.IndexOf("wwwroot")+("wwwroot".Length+1))"
+                          alt="User Avatar" class="rounded-circle" style="width: 30px; height: 30px; margin-right: 5px;"
+                        />
+                        }
+                        else{
+                      <img
+                        src="@avatar"
+                        alt="User Avatar" class="rounded-circle" style="width: 30px; height: 30px; margin-right: 5px;"
+                        />
+                        }
+                        }
+                    else
+                    {
+                     <img src="@avatar" alt="User Avatar" class="rounded-circle" style="width: 30px; height: 30px; margin-right: 5px;"/>
+                    }
+                     <span class="text">                    
+                     <span class="sub">Xin chào</span>
+                     @username
+                     </span>
+                    </a>
+                 <ul class="dropdown-menu dropdown-menu-end">
+                   <li class="dropdown-header text-center">
+                    Thông tin User
+                   </li>
+                    <li>
+                      <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="@Url.Action("AccountInfo","MyAccount",new{username=username})">
+                        <i class="bx bx-user me-2"></i>
+                        <span class="align-middle">Thông tin User</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="@Url.Action("ChangePassword","MyAccount",new{username=username,email=email,password=password})">
+                        <i class="bx bx-cog me-2"></i>
+                        <span class="align-middle">Đổi mật khẩu</span>
+                      </a>
+                    </li>
+                    <li>
+                      <div class="dropdown-divider"></div>                      
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="@Url.Action("Logout","MyAccount")">
+                        <i class="bx bx-power-off me-2"></i>
+                      <span class="align-middle">Đăng xuất</span>
+                      </a>
+                    </li>
+                  </ul>
+                      </div>
+                        

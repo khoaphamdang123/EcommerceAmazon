@@ -1,0 +1,409 @@
+<!-- =========================================================
+* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
+==============================================================
+
+* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
+* Created by: ThemeSelection
+* License: You must have a valid license purchased in order to legally use the theme for your project.
+* Copyright ThemeSelection (https://themeselection.com)
+
+=========================================================
+ -->
+<!-- beautify ignore:start -->
+@model PageList<Payment>
+@{
+  int count_id= 0;
+  var selected_size=ViewBag.select_size;
+  var filtered_user=ViewBag.filter_obj;
+  int status_delete=-1;
+  int status_update=-1;
+  var message_update="";
+  var category_id=ViewBag.Category_Id;
+  var current_total_item=(Model?.currentPage*Model?.pageSize)-Model?.pageSize;  
+  if(TempData["Status_Delete"]!=null)
+  {
+   status_delete=Convert.ToInt32(TempData["Status_Delete"]);
+  }
+  if(TempData["Status_Update"]!=null)
+  {
+   status_update=Convert.ToInt32(TempData["Status_Update"]);
+  }
+  if(TempData["Message_Update"]!=null)
+  {
+  message_update =TempData["Message_Update"] as string;
+  }
+  var message_delete =TempData["Message_Delete"];
+
+}
+
+@if(status_delete==1 || status_update==1)
+{
+   <div
+       class="bs-toast toast fade hide bg-success toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                        @if(status_update==1)
+                        {
+                          <div class="me-auto fw-semibold">Cập nhật trạng thái thanh toán</div>
+                          }
+                        else{
+                            <div class="me-auto fw-semibold">Xóa phương thức thanh toán</div>
+                        }
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                          @if(status_update==1)
+                          {
+                            <span>@message_update</span>
+                            }
+                          else
+                          {
+                          <span>@message_delete</span>
+                          }
+                        </div>
+                      </div>
+                <script>
+            document.addEventListener('DOMContentLoaded', function() 
+            {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();                
+            });
+        </script>
+}
+
+
+@if(status_delete==0 ||status_update==0)
+{
+   <div
+       class="bs-toast toast fade hide bg-danger toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                    @if(status_update==0)
+                        {
+                          <div class="me-auto fw-semibold">Cập nhật trạng thái thanh toán</div>
+                          }
+                        else{
+                            <div class="me-auto fw-semibold">Xóa phương thức thanh toán</div>
+                        }                        </div>
+                        <div class="toast-body">
+                 @if(status_update==0)
+                          {
+                            <span>@message_update</span>
+                            }
+                          else
+                          {
+                          <span>@message_delete</span>
+                          }                        </div>
+                      </div>
+                        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+}
+
+    <!-- Layout wrapper -->
+          <div class="content-wrapper">
+            <div class="container-xxl flex-grow-1 container-p-y">
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Thanh toán/</span>Danh sách phương thức thanh toán</h4>
+                <div class="card">
+                <div class="card-datatable border-bottom">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="ms-2">   
+                            <div class="data-length">
+                                <label>
+                                    <select class="form-select" id="page-size">
+                                 
+                                        @foreach(var option in ViewBag.options)
+                                        { if(option==selected_size)
+                                        {
+                                          <option value="@option" selected>@option</option>
+                                        }
+                                        else{
+                                           <option value="@option">@option</option>
+                                        }
+                                        }
+                                    </select>
+                                </label>
+                            </div>
+                            </div>
+                        </div>
+                            <div class="col-md-10">
+                            <div class="dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-end flex-md-row flex-column mb-6 mb-md-0 mt-n6 mt-md-0 gap-md-4">
+                            <div class="data-filter">
+                            <div class="dt-buttons btn-group flex-wrap">
+                                <button class="btn btn-secondary add-new btn-primary" id="add-page-btn" tabindex="0" aria-controls="DataTables_Table_0" type="button"><span><i class="bx bx-plus bx-sm me-0 me-sm-2"></i><span class="d-none d-sm-inline-block">Thêm phương thức</span></span></button>
+                            </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h5 class="card-header">Danh sách phương thức thanh toán</h5>
+                <div class="table-responsive text-nowrap border-bottom">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">STT</th>
+                            <th class="text-center">No</th>
+                            <th class="text-center">Phương thức</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-center">Ngày tạo</th>
+                           <th class="text-center">
+                            Thao tác
+                           </th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                       @foreach(var file in Model?.item)
+                       { 
+                        current_total_item+=1;
+                         <tr>
+                            <td class="text-center">@current_total_item</td>
+                            <td class="text-center">@file.Id</td>
+                            <td class="text-center">
+                              <strong>@file.Paymentname</strong>
+                              </td>
+                            <td class="text-center">
+                            @if(file.Status==1)
+                            {
+                              <span class="badge bg-success">Hoạt động</span>
+                            }
+                            else
+                            {
+                              <span class="badge bg-danger">Không hoạt động</span>
+                            }
+                            </td>
+                            <td class="text-center">@file.Createddate</td>
+                            <td class="text-center">
+                            <div class="d-flex justify-content-center">
+                              <a data-bs-toggle="modal" data-bs-target="#modalLong" class="btn btn-icon delete-record icon-style-delete mr-2" id="delete-record-btn"  data-page="@file.Id">
+                                <i class="bx bx-trash bx-md"></i>
+                              </a>
+                      <div class="modal fade" id="modalLong" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h4 class="modal-title" id="modalLongTitle"><strong>Xóa phương thức thanh toán</strong></h4>
+                              <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                              ></button>
+                            </div>
+                            <div class="modal-body">
+                             <p class="modal-font">
+                               <strong>Bạn có chắc là muốn xóa phương thức thanh toán này?</strong>
+                              </p>
+                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" id="remove-btn">Xóa</button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                Đóng
+                            </button>
+                        </div>
+                          </div>
+                        </div>
+                      </div>
+                       @if(file.Status==0)
+                               { 
+                            <a href="@Url.Action("UpdatePayment","PaymentList",new{id=@file.Id})" class="btn btn-icon delete-record" style="color:red !important" id="delete-record-btn"  data-page="@file.Id">
+                              
+                                <i class="bx bx-toggle-left bx-md"></i>
+                                </a>
+                                }
+                                
+                              else{
+                              <a href="@Url.Action("UpdatePayment","PaymentList",new{id=@file.Id})" class="btn btn-icon delete-record icon-style-update" style="color:" id="delete-record-btn"  data-page="@file.Id">
+                              
+                                <i class="bx bx-toggle-right bx-md"></i>
+                                </a>
+                              }
+                            </div>
+                            </td>
+                         </tr>
+                         }
+                    </tbody>
+                </table>
+                </div>
+    <div class="pagination-container mt-4">
+      <div class="page-total">Tổng số trang:@Model?.totalCount</div>
+      <div class="page-list justify-content-center">
+     @if(Model!=null && Model.hasPreviousPage)
+     {
+         <a class="page-item" title="Previous" href="@Url.Action("PaymentPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage-1})"><i class="bx bx-chevron-left"></i></a>
+     }
+     else
+     {
+      <span class="page-item" title="Previous" aria-label="previous"><i class="bx bx-chevron-left"></i></span>
+     }
+ 
+    @if(Model?.totalPage<=7)
+    {
+      for(int i=1;i<=Model?.totalPage;i++)
+      {
+        if(i==Model?.currentPage)
+        {
+           <a class="page-item activate" disabled>@i</a> 
+        }
+       else
+       {
+         <a class="page-item" title="@i" href="@Url.Action("PaymentPaging",new{page_size=int.Parse(selected_size),page=i})">@i</a>
+       }
+      }
+    }
+     else
+    {
+     if(Model?.currentPage<5)
+     {
+      for(int i=1;i<=7;i++)
+      {
+        if(i<6)
+        {
+          if(i==Model?.currentPage)
+        {
+           <span class="page-item activate" disable>@i</span> 
+        }
+       else{
+         <a class="page-item" title="@i" href="@Url.Action("PaymentPaging",new{page_size=int.Parse(selected_size),page=i})">@i</a>
+       }
+        }
+        else{
+          if(i==6)
+          {
+            <span class="page-item" disabled>...</span>
+          }
+        else{
+         <a class="page-item" title="@i" href="@Url.Action("PaymentPaging",new{page_size=int.Parse(selected_size),page=i})">@i</a>
+        }
+        }
+      }
+     }
+    else
+    {
+    if((Model?.currentPage>=5 && (Model?.currentPage<(Model.totalPage-3))))
+    {
+         <a class="page-item" title="1" href="@Url.Action("PaymentPaging",new{page_size=int.Parse(selected_size),page=1})">1</a>
+    <span class="page-item" disabled>...</span>
+         <a class="page-item" title="@(Model?.currentPage-1)" href="@Url.Action("PaymentPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage-1})">@(Model?.currentPage-1)</a>
+    <span class="page-item activate" disabled>@(Model?.currentPage)</span>
+         <a class="page-item" title="@(Model?.currentPage+1)" href="@Url.Action("PaymentPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage+1})">@(Model?.currentPage+1)</a>
+
+    <span class="page-item" disabled>...</span>
+    <a class="page-item" title="@Model?.totalPage" href="@Url.Action("PaymentPaging",new{page_size=int.Parse(selected_size),page=Model?.totalPage})">@Model?.totalPage</a>
+    }
+    else{
+         <a class="page-item" title="1" href="@Url.Action("PaymentPaging",new{page_size=int.Parse(selected_size),page=1})">1</a>
+    <span class="page-item" disabled>...</span>
+         <a class="page-item" title="@(Model?.currentPage-4)" href="@Url.Action("PaymentPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage-4})">@(Model?.currentPage-4)</a>
+     for(int i=(Model.totalPage-3);i<=Model?.totalPage;i++)
+     {
+      if(i==Model?.currentPage)
+      {
+          <span class="page-item activate" disabled>@(Model?.currentPage)</span>
+      }
+    else{
+         <a class="page-item" title="@i" href="@Url.Action("PaymentPaging",new{page_size=int.Parse(selected_size),page=i})">@i</a>
+    }
+     }
+    }
+    }
+    } 
+   
+        @* <a class="page-item" title="1" href="@Url.Action("UserList",new{page=1})">1</a>
+       
+    
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a>
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a>
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a>
+
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a>
+
+         <a class="page-item" title="@i" href="@Url.Action("UserList",new{page=i})">i</a> *@
+
+       
+      @if(Model!=null && Model.hasNextPage)
+      {
+         <a class="page-item" title="Next" href="@Url.Action("PaymentPaging",new{page_size=int.Parse(selected_size),page=Model?.currentPage+1})"><i class="bx bx-chevron-right"></i></a>
+       }
+      else 
+      {
+        <span class="page-item" title="Next" disabled> <i class="bx bx-chevron-right"></i></span>
+      }
+      </div>
+    </div>  
+ </div>
+  
+
+            <div class="content-backdrop fade"></div>
+          </div>
+        </div>
+
+
+      <div class="layout-overlay layout-menu-toggle"></div>
+  <script>
+     let delete_page='';
+
+
+    var all_delete_btn=document.querySelectorAll('#delete-record-btn');
+
+    all_delete_btn.forEach((btn)=>{
+    btn.addEventListener('click',()=>{
+    delete_page=btn.getAttribute('data-page');
+     })
+    });
+
+     document.getElementById("page-size").addEventListener("change",()=>{
+    
+     var selected_value=document.getElementById("page-size").value;
+     if(selected_value)
+     {
+      selected_value=parseInt(selected_value);
+
+      window.location.href= '@Url.Action("PaymentPaging", "PaymentList")' + "?page_size=" + selected_value;
+     }
+     });
+
+     document.getElementById("add-page-btn").addEventListener('click',()=>{
+ 
+    var url='@Url.Action("AddPayment","PaymentList")';
+
+    window.location.href=url;
+    });
+    
+    document.getElementById("remove-btn").addEventListener('click',()=>{
+   
+   let delete_page_value=delete_page;
+    
+    var url='';
+    
+    url='@Url.Action("DeletePayment","PaymentList",new{id="__id__"})';
+
+    url=url.replace("__id__",delete_page_value);
+    
+    window.location.href=url;
+    });
+
+  </script>

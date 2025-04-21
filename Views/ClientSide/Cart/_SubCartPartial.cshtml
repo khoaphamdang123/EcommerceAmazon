@@ -1,0 +1,111 @@
+@model List<CartModel>
+    
+@{
+  int total_value=0;
+ }
+                        <div class="d-flex align-items-center justify-content-between gap-3">
+                                <div class="block-cart action">
+                                    <a class="icon-link" href="@Url.Action("Cart","Cart")">
+                                    <i class="flaticon-shopping-bag"></i>
+                                    <span class="count" id="count-cart">@Model.Count</span>
+                                    <span class="text">
+                                    <span class="sub">Giỏ hàng:</span>
+
+                                @foreach(var item in Model)
+                                {
+                                    int discount=string.IsNullOrEmpty(item.Product.Discount.ToString()) ? 0 : Convert.ToInt32(item.Product.Discount);
+                                    
+                                    string price_value=!string.IsNullOrEmpty(item.Price) ? item.Price : item.Product.Price;
+                                    
+                                    int current_price=(Convert.ToInt32(price_value)-(Convert.ToInt32(price_value)*(discount)/100));
+                                    
+                                    total_value+=current_price*item.Quantity;
+                                }   
+
+                                    @total_value VNĐ
+                                   
+                                   </span>
+                                    </a>
+             @if(Model.Count>0)
+                { 
+                                    <div class="cart">
+                                        <div class="cart__mini">
+                                                  <div id="update-count" data-count="@Model.Count"></div>
+                                                  <div class="cart__title">
+                                                    <h4>Giỏ hàng của bạn</h4>
+                                                    <span>(@Model.Count sản phẩm)</span>
+                                                  </div>
+                                                  
+                        <div id="sub-list-section" class="cart-index">
+
+                     @Html.Partial("~/Views/ClientSide/Cart/_SubListPartial.cshtml",Model)
+
+                        </div>
+                                                    <a href="@Url.Action("Cart","Cart")" class="wc-cart mb-10">Xem giỏ hàng</a>
+                                                    
+                                                    <a href="@Url.Action("Checkout","Checkout")" class="wc-checkout">Đặt hàng</a>
+                                        </div>
+                                    </div>
+                                    }
+                                else
+                                { 
+                                    <div class="cart">
+                                    <div class="cart__mini">
+                                   <div class="empty-cart">
+                                     <img src="~/user_layout/img/banner/shopping-bag.png" alt="empty-cart" class="empty-cart-image"/>
+                                    <p class="empty-cart-text">Chưa có sản phẩm nào trong giỏ hàng...</p>
+                                    <a href="@Url.Action("HomePage","HomePage")" class="cart-btn" type="button">Tiếp tục mua sắm</a>
+                                   </div>
+                                   </div>
+                                   </div>
+                                }
+                        </div>
+                        <div class="contact-header">
+                        <span><a href="@Url.Action("AboutUs","StaticPage")">Liên hệ</a></span>
+                        </div>
+                        </div>
+
+<script>
+     function attachRemoveButtonListeners() {
+
+    document.querySelectorAll(".remove-btn").forEach((item) => 
+    {
+        item.addEventListener("click", () => {
+            var product_id = item.getAttribute("data-product-id");
+            var cart_name="view";
+            let formData = new FormData();
+
+            formData.append("product_id", product_id);
+
+            formData.append("view_name",cart_name);
+            
+            $.ajax({
+                url: "@Url.Action("removeItemFromCart","Cart")",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                   
+                    $("#sub-list-section").html(response);
+                    attachRemoveButtonListeners();
+                    var updated_count=$("#update-count").data("count");                    
+                    $("#count-cart").text(updated_count);
+                },
+                error: function(xhr, status, error) 
+                {
+                    @* document.getElementById("toast-title").innerHTML = "Thông báo";
+                    document.getElementById("toast-message").innerHTML = xhr.responseText;
+                    var toastEl = document.querySelector('.toast');
+                    toastEl.classList.add('bg-danger');
+                    var toast = new bootstrap.Toast(toastEl); *@
+                    //toast.show(); 
+                }
+            });
+        });
+    });
+}
+
+attachRemoveButtonListeners();
+
+</script>

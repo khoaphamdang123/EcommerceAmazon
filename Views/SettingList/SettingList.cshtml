@@ -1,0 +1,366 @@
+
+
+
+
+
+<!-- / Menu -->
+
+
+
+    <!-- Layout container -->
+      
+      
+
+
+
+<!-- Navbar -->
+
+
+  
+@model List<Setting>
+@{
+ var status=ViewBag.Status;
+ var message  = ViewBag.Message;
+}  
+
+@if(status==0)
+{
+     <div
+       class="bs-toast toast fade hide bg-danger toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Cập nhật cấu hình</div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                            @message
+                        </div>
+                      </div>
+                <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+}
+
+@if(status==1){
+    <div
+       class="bs-toast toast fade hide bg-success toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Cập nhật cấu hình</div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                            @message
+                        </div>
+                      </div>
+                <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+}
+
+      
+<div class="content-wrapper">
+
+<div class="container-xxl flex-grow-1 container-p-y">
+            
+            
+<div class="row g-6">
+
+
+  <div class="pt-6 pt-lg-0">
+    <div class="tab-content p-0">
+      <div class="tab-pane fade show active" id="notifications" role="tabpanel">
+        <div class="card mb-3">
+          <div class="card-body">
+        <form asp-controller="SettingList" asp-action="SettingList" method="post">
+            <h5 class="card-title mb-3">Khách hàng</h5>
+            <div class="card shadow-none mb-5 border-0">
+              <div class="table-responsive border rounded">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th class="text-nowrap w-50">Loại</th>
+                      <th class="text-nowrap text-center w-25">Trạng thái</th>
+                     <th class="text-nowrap text-center w-25">App</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="text-nowrap text-heading">Khách hàng mới đăng ký</td>
+                      <td>
+                        <div class="form-check d-flex justify-content-center">
+                          <input class="form-check-input" type="checkbox" id="defaultCheck_cust_1" name="signup" value="checked" @(Model?.FirstOrDefault(s=>s.Settingname=="signup")?.Status==1?"checked":"")/>
+                        </div>
+                      </td>
+                    <td class="text-nowrap text-heading text-center">Email</td>
+
+                    </tr>
+                    <tr>
+                      <td class="text-nowrap text-heading">Khách hàng đổi mật khẩu</td>
+                      <td>
+                        <div class="form-check d-flex justify-content-center">
+                          <input class="form-check-input" type="checkbox" id="defaultCheck_cust_4" name="changepassword" value="checked" @(Model?.FirstOrDefault(s=>s.Settingname=="changepassword")?.Status==1?"checked":"") />
+                        </div>
+                      </td>
+                    <td class="text-nowrap text-heading text-center">Email</td>
+
+                    </tr>
+                    <tr class="border-transparent">
+                      <td class="text-nowrap text-heading">Cài đặt reCaptcha</td>
+                      <td>
+                        <div class="form-check d-flex justify-content-center">
+                          <input class="form-check-input" type="checkbox" id="defaultCheck_cust_7" name="recaptcha" value="checked" @(Model?.FirstOrDefault(s=>s.Settingname=="recaptcha")?.Status==1?"checked":"") />
+                        </div>
+                      </td>
+                    <td class="text-nowrap text-heading text-center"></td>
+
+                
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <h5 class="card-title mb-3">Hóa đơn</h5>
+            <div class="card shadow-none mb-5 border-0">
+              <div class="table-responsive border rounded">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th class="text-nowrap w-50">Loại</th>
+                      <th class="text-nowrap text-center w-25">Trạng thái</th>
+                    <th class="text-nowrap text-center w-25">App</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="text-nowrap text-heading">Đơn đã hoàn thành</td>
+                      <td>
+                        <div class="form-check d-flex justify-content-center">
+                          <input class="form-check-input" type="checkbox" id="defaultCheck_order_1" name="purchased" value="checked" @(Model?.FirstOrDefault(s=>s.Settingname=="purchased")?.Status==1?"checked":"") />
+                        </div>
+                      </td>
+            
+                      <td class="text-nowrap text-heading text-center">Email</td>
+                    </tr>
+                    <tr>
+                      <td class="text-nowrap text-heading">Đơn bị hủy</td>
+                      <td>
+                        <div class="form-check d-flex justify-content-center">
+                          <input class="form-check-input" type="checkbox" id="defaultCheck_order_4" name="cancelled" value="checked" @(Model?.FirstOrDefault(s=>s.Settingname=="cancelled")?.Status==1?"checked":"") />
+                        </div>
+                      </td>
+                   <td class="text-nowrap text-heading text-center">Email</td>
+                    </tr>
+                    <tr>
+                      <td class="text-nowrap text-heading">Đơn hoàn tiền</td>
+                      <td>
+                        <div class="form-check d-flex justify-content-center">
+                          <input class="form-check-input" type="checkbox" id="defaultCheck_order_7" name="refund" value="checked" @(Model?.FirstOrDefault(s=>s.Settingname=="refund")?.Status==1?"checked":"")/>
+                        </div>
+                      </td>
+                    <td class="text-nowrap text-heading text-center">Email</td>
+                    </tr>
+                    @* <tr>
+                      <td class="text-nowrap text-heading">Order confirmation</td>
+                      <td>
+                        <div class="form-check d-flex justify-content-center">
+                          <input class="form-check-input" type="checkbox" id="defaultCheck_order_9" checked />
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check d-flex justify-content-center">
+                          <input class="form-check-input" type="checkbox" id="defaultCheck_order_10" />
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="border-transparent">
+                      <td class="text-nowrap text-heading">Payment error</td>
+                      <td>
+                        <div class="form-check d-flex justify-content-center">
+                          <input class="form-check-input" type="checkbox" id="defaultCheck_order_11" checked />
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check d-flex justify-content-center">
+                          <input class="form-check-input" type="checkbox" id="defaultCheck_order_12" />
+                        </div>
+                      </td>
+                    </tr> *@
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          
+      <h5 class="card-title mb-3">Cài đặt hiển thị nội dung</h5>
+            <div class="card shadow-none mb-5 border-0">
+              <div class="table-responsive border rounded">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th class="text-nowrap w-50">Trang</th>
+                      <th class="text-nowrap text-center w-25">Nội dung</th>
+                    <th class="text-nowrap text-center w-25"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="text-nowrap text-heading">Trang chủ</td>
+                      <td>
+                        <div class="form-check d-flex justify-content-center">
+                          <input class="form-control" type="text" id="defaultCheck_order_1" name="homepage"  value="@(!string.IsNullOrEmpty(Model?.FirstOrDefault(s=>s.Settingname=="homepage")?.App)?Model?.FirstOrDefault(s=>s.Settingname=="homepage")?.App:"")"/>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <h5 class="card-title mb-3">Cài đặt chung</h5>
+            <div class="card shadow-none mb-6 border-0">
+              <div class="table-responsive border rounded">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th class="text-nowrap w-50">Loại</th>
+                      <th class="text-nowrap text-center w-25">Trạng thái</th>
+                    <th class="text-nowrap text-center w-25"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="text-nowrap text-heading">Bảo trì trang web</td>
+                      <td>
+                        <div class="form-check d-flex justify-content-center">
+                          <input class="form-check-input" type="checkbox" id="defaultCheck_order_1" name="maintainance" value="checked" @(Model?.FirstOrDefault(s=>s.Settingname=="maintainance")?.Status==1?"checked":"") />
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            @* <h5 class="card-title mb-4">Shipping</h5> *@
+            @* <div class="card shadow-none border-0">
+              <div class="table-responsive border border-top-0 rounded">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th class="text-nowrap w-50">Type</th>
+                      <th class="text-nowrap text-center w-25">Email</th>
+                      <th class="text-nowrap text-center w-25">App</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="text-nowrap text-heading">Picked up</td>
+                      <td>
+                        <div class="form-check d-flex justify-content-center">
+                          <input class="form-check-input" type="checkbox" id="defaultCheck_ship_1" checked />
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check d-flex justify-content-center">
+                          <input class="form-check-input" type="checkbox" id="defaultCheck_ship_2" checked />
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-nowrap text-heading">Shipping update</td>
+                      <td>
+                        <div class="form-check d-flex justify-content-center">
+                          <input class="form-check-input" type="checkbox" id="defaultCheck_ship_3" checked />
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check d-flex justify-content-center">
+                          <input class="form-check-input" type="checkbox" id="defaultCheck_ship_4" />
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="border-transparent">
+                      <td class="text-nowrap text-heading">Delivered</td>
+                      <td>
+                        <div class="form-check d-flex justify-content-center">
+                          <input class="form-check-input" type="checkbox" id="defaultCheck_ship_5" />
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check d-flex justify-content-center">
+                          <input class="form-check-input" type="checkbox" id="defaultCheck_ship_6" checked />
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div> *@
+        </form>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end gap-4">
+          <button type="button" class="btn btn-danger" id="unchecked-btn">Hủy bỏ</button>
+          <button type="button" id="save-changes" class="btn btn-primary">Lưu cài đặt</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /Options-->
+</div>
+
+
+          </div>
+          <div class="content-backdrop fade"></div>
+        </div>
+
+<script>
+      $(document).ready(function() {
+        $("#save-changes").click(function() {
+            $("form").each(function() {
+                this.submit();
+            });
+        });
+
+        $("#unchecked-btn").click(function(){
+            $("input[type=checkbox]").each(function(){
+                $(this).prop("checked", false);
+            });
+        });
+    });
+</script>    
+    
+    
+    
+
+
+
+
+

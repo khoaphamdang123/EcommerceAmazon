@@ -1,0 +1,1641 @@
+@model Product
+@using Newtonsoft.Json;
+@using System.Text.RegularExpressions;
+@{
+    Layout = "_UserLayout";    
+    
+    var count_reviews=ViewBag.count_reviews as Dictionary<string,int>;
+    
+    var rating=ViewBag.rating_star;
+    
+    var review_list = ViewBag.review_list as List<Reviewdetail>;
+    
+    @* string manual_link = ViewBag.manual_link; *@
+    
+    var variants=ViewBag.variants as Dictionary<string,List<string>>;
+    
+
+    string? product_discount=Model.Discount.ToString();
+    
+    List<string> sizes=new List<string>();
+    
+    List<string> colors = new List<string>();
+    
+    List<string> versions=new List<string>();
+    
+    List<string> mirrors=new List<string>();
+
+    List<string> prices = new List<string>();
+
+    if(variants!=null)
+    {
+        sizes=variants["sizes"];
+        colors=variants["colors"];
+        versions=variants["versions"];
+        mirrors=variants["mirrors"];
+        prices=variants["prices"];
+    }
+
+    string sizes_json=JsonConvert.SerializeObject(sizes);
+
+    string colors_json=JsonConvert.SerializeObject(colors);
+
+    string version_json=JsonConvert.SerializeObject(versions);
+    
+    string mirror_json=JsonConvert.SerializeObject(mirrors);
+
+    string price_json=JsonConvert.SerializeObject(prices);
+
+
+
+   List<string> size_value=sizes.Where(p=>p!="").Select(p=>p).Distinct().ToList();
+
+   List<string> color_value=colors.Where(p=>p!="").Select(p=>p).Distinct().ToList();
+
+   List<string> version_value =versions.Where(p=>p!="").Select(p=>p).Distinct().ToList();
+
+   List<string> mirror_value=mirrors.Where(p=>p!="").Select(p=>p).Distinct().ToList();
+    
+    int nums_review=0;
+
+    int img_count=0;
+
+    if(review_list!=null)
+    {
+     nums_review=review_list.Count;
+    }
+    var count_stars=ViewBag.count_stars as Dictionary<string,int>;
+    List<double> star_percen=new List<double>();   
+   var stats_description=Html.Raw(Model?.Statdescription);
+   Console.WriteLine(stats_description);
+   var user=this.ViewContext.HttpContext.Session.GetString("UserName");
+   Console.WriteLine("User id here is:"+user);
+   
+    for(int i=1;i<=5;i++)
+    {
+        if(count_stars.ContainsKey(i.ToString()) && count_reviews[Model?.ProductName]!=0)
+        {   
+            double value=(double)(count_stars[i.ToString()]/count_reviews[Model?.ProductName])*100;
+
+            star_percen.Add(value);                        
+        }
+        else
+        {
+            star_percen.Add(0);
+        }
+    }
+}
+
+ <div
+       class="bs-toast toast fade hide toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+       data-bs-dismiss="toast"
+       style="cursor: pointer; position: fixed; top: 20px; right: 20px; z-index: 1050;"
+       data-delay="3000"
+       data-bs-autohide="true" 
+       data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold" id="toast-title"></div>
+                        </div>
+                        <div class="toast-body" id="toast-message">                        
+                        </div>
+        </div>
+        <section class="breadcrumb__area box-plr-75">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xxl-12">
+                        <div class="breadcrumb__wrapper">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                  <li class="breadcrumb-item"><a href="@Url.Action("HomePage","HomePage")">Trang chủ</a></li>
+                                  <li class="breadcrumb-item active" aria-current="page"><a href="@Url.Action("Products","Products")">Danh sách sản phẩm</a></li>
+                                  <li class="breadcrumb-item active" aria-current="page">@Model?.ProductName</li>
+                                </ol>
+                              </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="product-details">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="product__details-nav d-sm-flex align-items-start">
+                            <ul class="nav nav-tabs flex-sm-column justify-content-between d-none d-md-flex" id="productThumbTab" role="tablist">
+                            @if(Model?.ProductImages!=null && Model.ProductImages.Any())
+                            {   <li class="nav-item" role="presentation">
+                                  <button class="nav-link data-nav" id="thumb-tab" data-bs-target="#productImageCarousel" type="button" data-bs-slide-to="0" onclick="changeImageLoaded(this)">
+                                    <img src="~/@Model?.Frontavatar.Substring(Model.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))"alt="thumbnail-img" class="thumbnail-img">
+                                  </button>
+                                </li>                                
+                              @foreach(var item in Model?.ProductImages)
+                              { 
+                                img_count+=1;
+
+                                <li class="nav-item" role="presentation">
+                                  <button class="nav-link data-nav" id="thumb-tab" data-bs-target="#productImageCarousel" type="button" data-bs-slide-to="@img_count" onclick="changeImageLoaded(this)">
+                                      <img src="~/@item.Avatar.Substring(item.Avatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="detail-img" class="thumbnail-img">
+                                  </button>
+                                </li>
+                                }
+                                }
+                            </ul>
+                            <div class="product__details-thumb">
+                                <div class="tab-content" id="productThumbContent">
+                                    <div class="tab-pane fade show active" id="thumb" role="tabpanel" aria-labelledby="thumb-tab">
+                                    <div id="productImageCarousel" class="carousel slide" data-bs-ride="carousel">
+                                        <div class="carousel-inner text-center">                                        
+                                          <div class="carousel-item active">
+                                        <img draggable="false" src="~/@Model?.Frontavatar.Substring(Model.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="main-img" id="mainImage" class="d-flex img-fluild zoomable-image">
+                                            </div>
+                                            @foreach(var item in Model?.ProductImages)
+                                            {
+                                            <div class="carousel-item">
+                                             <img draggable="false" src="~/@item.Avatar.Substring(item.Avatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="main-img" id="subImage" class="d-flex img-fluild zoomable-image">
+                                            </div>
+                                            }
+                                        </div>                                        
+                    <button class="carousel-control-prev" type="button" data-bs-target="#productImageCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden"><i class="fal fa-angle-double-left icon-background"></i></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#productImageCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden"><i class="fal fa-angle-double-right icon-background"></i></span>
+                    </button>
+                </div>
+<div id="zoomedImageModal" class="zoomed-image-modal" style="display: none;">
+  <div class="overlay" onclick="closeZoom()">
+  </div>
+  <button id="prevBtn" class="zoomed-nav-btn" onclick="showPrevImage()">
+    <i class="fal fa-angle-left"></i>
+  </button>
+
+  <img id="zoomedImage" src="" class="zoomed-img" />
+ <button id="nextBtn" class="zoomed-nav-btn" onclick="showNextImage()">
+    <i class="fal fa-angle-right"></i>
+  </button>
+</div>
+                                    </div>
+                                  </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="product__details-content">
+                            <h6>@Model?.ProductName</h6>                                                                                   
+                            <div class="pd-rating mb-10">
+                            @if(rating!=0)
+                            {   
+                                int remain=5-rating;
+                                
+                                <ul class="rating">
+                                    @for(int i=1;i<=rating;i++)
+                                    {
+                                        <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    }
+
+                                  @if(remain!=0)
+                                  {
+                                    @for(int i=1;i<=remain;i++)
+                                    {
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>                            
+                                    }
+                                   }
+                                </ul>
+                                }
+                                else
+                                {
+                                 <ul class="rating">
+                                    <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                </ul>
+                                }
+                              @if(count_reviews!=null)
+                              {
+                                <span>(@(count_reviews[Model?.ProductName]) đánh giá)</span>                                
+                              }   
+                                <span><button type="button" onclick="scrollToReview()">Thêm đánh giá</button></span>                                
+                            </div>
+                           @if(!string.IsNullOrEmpty(Model?.Discount.ToString()) && Model?.Discount!=0)
+                           {
+                               <div class="product__offer_detail">
+                                   <span class="discount mb-10">-@Model?.Discount%</span> 
+                                       </div>
+                           }
+                          @if(Convert.ToInt32(Model.Price.Replace(",",""))>0)
+                          {
+                            <div class="price mb-10" id="price-block">
+                                   @if(!string.IsNullOrEmpty(Model?.Discount.ToString()) && Model?.Discount!=0)
+                                   {
+                                    <span class="original-price">@Model.Price đ</span>
+                                    
+                                    <span class="discounted-price">@((Convert.ToInt32(Model.Price.Replace(",","")) * (double)(1 - Model.Discount / 100.0)).ToString()) đ</span>
+                                    }
+                                    else
+                                    {
+                                    <span class="discounted-price">@Model.Price đ</span>   
+                                    }
+                                
+                            </div>
+                            }
+                            <div class="features-des mb-20 mt-10">
+                              <div class="product-options">
+@if(size_value.Count>0)
+{
+<div class="size-selector">
+    <h3>Kích thước:</h3>
+    <div class="size-buttons" id="size-buttons">
+    @foreach(string size in size_value)
+    {  
+    <button class="size-btn">@size</button>
+    }
+    </div>
+</div>   
+
+} 
+@if(color_value.Count>0)
+    {
+    <div class="color-selector">
+    <h3>Màu sắc:</h3>
+    <div class="size-buttons" id="color-buttons">
+    @foreach(string color in color_value)
+    { 
+    <button class="size-btn">@color</button>
+    }
+    </div>
+   </div>   
+      }
+                    
+                @if(version_value.Count>0)
+                     {
+                    <div class="version-selector">
+
+                    <h3>Phiên bản:</h3>
+
+    <div class="size-buttons"  id="version-buttons">
+
+    @foreach(string version in version_value)
+    {  
+    <button  class="size-btn">@version</button>
+    }
+    </div>
+</div>   
+    
+    }
+
+ @if(mirror_value.Count>0)
+  {
+    <div class="mirror-selector">
+
+    <h3>Loại kính:</h3>
+    
+    <div class="size-buttons" id="mirror-buttons">
+    
+    @foreach(string mirror in mirror_value)
+    {  
+    <button class="size-btn">@mirror</button>    
+    }
+
+    </div>
+</div>   
+            }
+
+                              </div>                 
+                                    @* <li><a href=""><i class="fas fa-circle"></i> Bass and Stereo Sound.</a></li>
+                                    <li><a href=""><i class="fas fa-circle"></i> Display with 3088 x 1440 pixels resolution.</a></li>
+                                    <li><a href=""><i class="fas fa-circle"></i> Memory, Storage &amp; SIM: 12GB RAM, 256GB.</a></li>
+                                    <li><a href=""><i class="fas fa-circle"></i> Androi v10.0 Operating system.</a></li> *@
+                            </div>
+                          
+                            <div class="cart-option mb-15">
+                                <div class="product-quantity mr-20">
+                                    <div class="cart-plus-minus p-relative"><input type="text" id="quantity-value" value="1"><div class="dec qtybutton">-</div><div class="inc qtybutton">+</div></div>
+                                </div>
+                                <button class="cart-btn" id="add-cart" data-product-name="@Model.ProductName" data-product-id="@Model.Id">Thêm vào giỏ hàng</button>
+                            </div>
+                         
+                            <div class="product-tag-area mt-15 mb-10">
+                                <div class="product_info mb-5">
+                                    <span class="posted_in">
+                                        
+                                        <span class="title">Loại sản phẩm:</span>
+
+                                        <a href="@Url.Action("ProductsByCategory","Products",new {category_name=Regex.Replace(Model?.Category?.CategoryName,@"[^\w\d]", "-")})">@Model?.Category?.CategoryName</a>
+                                    
+                                    </span>
+                                </div>
+                                <div class="product_info mb-10 mt-10">
+                                <span class="posted_in">
+                                     <span class="title">Nhãn hàng:</span>
+                                        <a href="@Url.Action("ProductByBrand","Products",new {brand_name=Model?.Brand?.BrandName})">@Model?.Brand?.BrandName</a>
+                                    </span>
+                                </div>
+                                <div class="product_info">
+                                    <span class="posted_in">
+                                        <span class="title">Trạng thái:</span>
+                                       @Model.Status
+                                    </span>
+                                </div>
+                            </div>
+    <div class="rating-card">
+        <h4>Đánh giá khách hàng</h4>
+    <div class="overall-rating">
+        <span class="average-rating">@rating</span> 
+        <span class="total-ratings">(@count_reviews[Model.ProductName] đánh giá)</span> 
+    </div>
+
+    <div class="star-rating-breakdown">
+        <div class="star-row">
+              <span class="star-level"> 
+               @for(int i=1;i<=5;i++)
+               { 
+                <i class="fas fa-star" style="color:#FFD700;"></i>
+                }
+             </span>
+            <div class="rating-bar">
+                <div class="filled-bar" style="width:@star_percen[4]%"></div> 
+            </div>
+            <span class="rating-count">@count_stars["5"]</span> 
+        </div>
+        <div class="star-row">
+   <span class="star-level"> 
+               @for(int i=1;i<=4;i++)
+               { 
+                <i class="fas fa-star" style="color:#FFD700;"></i>
+                }
+             </span>            
+             <div class="rating-bar">
+                <div class="filled-bar" style="width: @star_percen[3]%;"></div>
+            </div>
+            <span class="rating-count">@count_stars["4"]</span>
+        </div>
+        <div class="star-row">
+   <span class="star-level"> 
+               @for(int i=1;i<=3;i++)
+               { 
+                <i class="fas fa-star" style="color:#FFD700;"></i>
+                }
+             </span>            
+             <div class="rating-bar">
+                <div class="filled-bar" style="width: @star_percen[2]%;"></div>
+            </div>
+            <span class="rating-count">@count_stars["3"]</span>
+        </div>
+        <div class="star-row">
+             <span class="star-level"> 
+               @for(int i=1;i<=2;i++)
+               { 
+                <i class="fas fa-star" style="color:#FFD700;"></i>
+                }
+             </span>
+            <div class="rating-bar">
+                <div class="filled-bar" style="width: @star_percen[1]%;"></div>
+            </div>
+            <span class="rating-count">@count_stars["2"]</span>
+        </div>
+        <div class="star-row">
+            <span class="star-level"><i class="fas fa-star" style="color:#FFD700;"></i></span>
+            <div class="rating-bar">
+                <div class="filled-bar" style="width: @star_percen[0]%;"></div>
+            </div>
+            <span class="rating-count">@count_stars["1"]</span>
+        </div>
+    </div>
+</div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+        <div class="product-details-des mt-40 mb-60">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="product__details-des-tab">
+                            <ul class="nav nav-tabs flex-column flex-md-row" id="productDesTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                  <button class="nav-link active" id="des-tab" data-bs-toggle="tab" data-bs-target="#des" type="button" role="tab" aria-controls="des" aria-selected="true">Mô tả sản phẩm</button>
+                                </li>
+                             @if(!string.IsNullOrEmpty(Model?.Statdescription))
+                             {
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="aditional-tab" data-bs-toggle="tab" data-bs-target="#aditional" type="button" role="tab" aria-controls="aditional" aria-selected="false">Thông số</button>
+                                  </li>
+                                  }
+                            @if(!string.IsNullOrEmpty(Model?.InboxDescription))
+                            {
+                                <li class="nav-item" role="presentation">
+                                  <button class="nav-link" id="inbox-des-tab" data-bs-toggle="tab" data-bs-target="#inbox-des" type="button" role="tab" aria-controls="inbox-des" aria-selected="false">Trong hộp</button>
+                                </li>
+                            }
+                            @if(!string.IsNullOrEmpty(Model?.DiscountDescription))
+                            {
+                                
+                                <li class="nav-item" role="presentation">
+                                  <button class="nav-link" id="discount-des-tab" data-bs-toggle="tab" data-bs-target="#discount-des" type="button" role="tab" aria-controls="discount-des" aria-selected="false">Thông tin giảm giá</button>
+                                </li>
+                            }
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="review-tab" data-bs-toggle="tab" data-bs-target="#review" type="button" role="tab" aria-controls="review" aria-selected="false">Đánh giá</button> 
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="support-tab" data-bs-toggle="tab" data-bs-target="#support" type="button" role="tab" aria-controls="support" aria-selected="false">Hỗ trợ</button>
+                            </li>
+                              </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="prodductDesTaContent">
+                    <div class="tab-pane fade active show" id="des" role="tabpanel" aria-labelledby="des-tab">
+                    <div class="product-content-wrapper" id="product-content-wrapper">
+                        @* <div class="product__details-des-wrapper">
+                            <p class="des-text mb-35">Designed by Hans J. Wegner in 1949 as one of the first models created especially for Carl Hansen & Son, and produced since 1950. The last of a series of chairs wegner designed based on inspiration from antique Chinese armchairs. The gently rounded top together with the back and seat offers a variety of comfortable seating positions,ideal for both long visits to the dining table and relaxed lounging.</p>
+                            <h6 class="des-sm-title">The standard passage, used since the 1500s.</h6>
+                            <p class="des-text mb-35">A light chair, easy to move around the dining table and about the room. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                            <div class="features-des-image text-center">
+                                <img src="assets/img/features-product/product-content-1.jpg" alt="">
+                            </div>
+                            <div class="product-des-section mb-90">
+                                <h5 class="des-section mb-30">Get 30% Daily Cash
+                                  <br>  Back with Membership Card.</h5>
+                                  <p>A new collection of lounge furniture, occasional tables and a stool by Edward Barber & Jay Osgerby offers a relaxed, contemporary attitude toward interior design. The lounge furniture includes four individualized sized sofas, and three complementary ottomans. Available in a range of upholstery fabrics and leathers, the lounge furniture is distinguished by stitched seams that reinforce its architectural profile, softened by the curvature of cushions on each face range of upholstery fabrics and leathers.</p>
+                            </div>
+                            <div class="row mb-80">
+                                <div class="col-xl-6">
+                                    <div class="des-single mb-30 text-center">
+                                        <div class="features-des-image text-center">
+                                            <img src="assets/img/features-product/product-content-2.jpg" alt="">
+                                        </div>
+                                        <h5 class="des-section">Get 30% Daily Cash
+                                            <br>  Back with Membership Card.</h5>
+                                        <p>Sit amet conse ctetur adipisicing elit, sed do <br> eiusmod tempor incididunt ut labore et dolore  magna aliqua.</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6">
+                                    <div class="des-single text-center mb-30">
+                                        <div class="features-des-image">
+                                            <img src="assets/img/features-product/product-content-3.jpg" alt="">
+                                        </div>
+                                        <h5 class="des-section text-center">Get 70% Daily Cash
+                                            <br>  Back with Membership Card.</h5>
+                                        <p>Sit amet conse ctetur adipisicing elit, sed do <br> eiusmod tempor incididunt ut labore et dolore  magna aliqua.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="features-des-image features-des-image-2 text-center mb-50 w-img">
+                                <img src="assets/img/features-product/product-content-4.jpg" alt="">
+                            </div>
+                            <div class="des-sm-features">
+                                <div class="des-sm-fet text-center mb-30">
+                                    <img src="assets/img/features-product/product-content-5.png" alt="">
+                                    <span>Ultra Wide Angle</span>
+                                </div>
+                                <div class="des-sm-fet text-center mb-30">
+                                    <img src="assets/img/features-product/product-content-6.png" alt="">
+                                    <span>Live Focus On</span>
+                                </div>
+                            </div>
+                            <p class="des-text mb-35">Designed by Puik in 1949 as one of the first models created especially for Carl Hansen & Son, and produced since 1950. The last of a series of chairs wegner designed based on inspiration from antique Chinese armchairs. The gently rounded top together with the back and seat offers a variety of comfortable seating positions,ideal for both long visits to the dining table and relaxed lounging. A light chair easy to move around the dining table and about the room. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla.</p>
+                            <h6 class="des-sm-title">Section 1.10.32 of "de Finibus Bonorum et Malorum", written by Cicero in 45 BC.</h6>
+                            <p class="des-text mb-25">Sound of Marshall, unplugs the chords, and takes the show on the road. Weighing in under 7 pounds, the Kilburn is a lightweight piece of vintage styled engineering. Setting the bar as one of the loudest speakers in its class, the Kilburn is a compact, stout-hearted hero with a well-balanced audio which boasts a clear midrange and extended highs for a sound that is both articulate and pronounced. The analogue knobs allow you to fine tune the controls to your personal preferences while the guitar-influenced leather strap enables easy and stylish travel.</p>
+                        </div> *@
+                        <div class="refresh-container">
+                        @if(!string.IsNullOrEmpty(Model?.Description))
+                        {
+                            @Html.Raw(Model?.Description.Replace("Froala Editor","").Replace("Powered by",""))
+                        }
+                        </div>
+                    </div>
+                      <div class="text-center" style="margin-top:20px;margin-bottom: 25px;">
+                        <button id="showFullButton" class="show-btn" style="font-weight: bold;">+ Xem toàn bộ nội dung</button>
+                      </div>
+                    </div>
+                
+                     <div class="tab-pane fade" id="inbox-des" role="tabpanel" aria-labelledby="inbox-des-tab">
+                        
+                        @if(!string.IsNullOrEmpty(Model?.InboxDescription))
+                        {  <div class="refresh-container">
+                            @Html.Raw(Model?.InboxDescription.Replace("Froala Editor","").Replace("Powered by",""))
+                            </div>
+                        }
+                    </div>
+
+                       <div class="tab-pane fade" id="discount-des" role="tabpanel" aria-labelledby="discount-des-tab">
+                    
+                        @if(!string.IsNullOrEmpty(Model?.DiscountDescription))
+                        {  <div class="refresh-container">
+                            @Html.Raw(Model?.DiscountDescription.Replace("Froala Editor","").Replace("Powered by",""))
+                            </div>
+                        }
+                    </div>
+                    <div class="tab-pane fade" id="aditional" role="tabpanel" aria-labelledby="aditional-tab">
+                        @if(!string.IsNullOrEmpty(Model.Statdescription))
+                         {
+           @* <iframe style="width: 100%; border: none;" srcdoc="@Html.Raw(System.Web.HttpUtility.HtmlEncode(Model.Statdescription))"></iframe>                          *@
+                                <div class="refresh-container">
+                                       @Html.Raw(Model?.Statdescription.Replace("Froala Editor","").Replace("Powered by",""))
+                                </div>
+            }     
+                    </div>
+                
+                    <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
+                        <div class="product__details-review">
+                            <div class="row">
+                                <div class="col-xl-4">
+                                    <div class="review-rate">
+                                        <h5>5.00</h5>
+                                        <div class="review-star">
+                                            <a href="#"><i class="fas fa-star"></i></a>
+                                            <a href="#"><i class="fas fa-star"></i></a>
+                                            <a href="#"><i class="fas fa-star"></i></a>
+                                            <a href="#"><i class="fas fa-star"></i></a>
+                                            <a href="#"><i class="fas fa-star"></i></a>
+                                        </div>
+                                        <span class="review-count">@(nums_review) đánh giá</span>
+                                    </div>
+                                </div>
+                                <div class="col-xl-8">
+                                    <div class="review-des-infod">
+                                      @if(nums_review==0)
+                                      {
+                                    <h6 class="">Chưa có đánh giá nào cho sản phẩm này</h6>
+                                      }
+                                      else
+                                      {
+                                        <h6>Có @(nums_review) đánh giá cho "<span>@Model.ProductName</span>"</h6>
+                                      }
+                                   @if(review_list!=null)
+                                   {
+                                    @foreach(var review in review_list)
+                                    {
+                                        <div class="review-details-des">
+                                            <div class="author-image mr-15">
+                                                <img src="~/@review.User.Avatar.Substring(review.User.Avatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="User avatar"
+                                                class="rounded-circle" style="width: 60px; height: 60px; margin-right: 5px;">
+                                            </div>
+
+                                            <div class="review-details-content">
+                                                
+                                                <div class="name-date mb-30 mt-15">
+                                                    <h6> @review.User.UserName – <span>@review.CreatedDate</span></h6>
+                                                </div>
+                                                <p>@review.ReviewText</p>
+                                            </div>
+                                        </div>
+                                        }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="product__details-comment ">
+                                        <div class="comment-title mb-20">
+                                           <h3>Thêm đánh giá</h3>
+                                          @if(string.IsNullOrEmpty(user))
+                                          {
+                                           <p class="text-danger">*Bạn cần phải đăng nhập để thêm đánh giá*</p>
+                                           }
+                                        <div class="comment-input-box">
+                                           <form id="review-form" method="post">
+                                              <div class="row">                                            
+                                                 <div class="col-xxl-12">
+                                                    @if(string.IsNullOrEmpty(user))
+                                                    {  
+                                                       <textarea placeholder="Đánh giá của bạn..." disabled class="comment-input comment-textarea"></textarea>
+                                                    }
+                                                    else
+                                                    {
+                                                <textarea placeholder="Đánh giá của bạn..." class="comment-input comment-textarea" name="review"></textarea>
+                                                    }
+                                                 </div>
+                                                 <div class="col-xxl-12">
+                                                    <div class="comment-submit">
+                                                      @if(!string.IsNullOrEmpty(user))
+                                                      {
+                                                       <button type="submit" id="review-btn" data-user-id="@user" data-product-id="@Model.Id" class="cart-btn">Thêm đánh giá</button>
+                                                       }
+                                                    else
+                                                    {
+                                                        <button type="submit" class="cart-btn" disabled>Thêm đánh giá</button>
+                                                    }
+                                                    </div>
+                                                 </div>
+                                              </div>
+                                           </form>
+                                        </div>
+                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="support" aria-labelledby="support-tab" role="tabpanel">
+                    <h3>Danh sách video</h3>
+                    <div class="row">
+                    @foreach(var video in Model.Videos)
+                    {
+                    string video_url=video.Link;
+                     
+                    string[] embed_code_arr=video_url.Split('/');
+                     
+                    string embed_code=embed_code_arr[embed_code_arr.Length-1];
+                     
+                    string embed_url="https://www.youtube.com/embed/"+embed_code;                    
+                                         
+                <div class="col-md-6 mb-3">
+      <iframe width="560" height="315" src="@embed_url" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                     }
+                </div>
+            </div>
+        </div>
+            <div id="js__product__sidebar__quickLinks" class="app__sidebar__wrapper">
+                <section class="app__sidebar__con"><div class="app__related__card app__related__card--has-icon app__sidebar__card" id="js__sidebar__manuals"><a class="app__related__card__inner" href="@Url.Action("Manual","Manual",new{id=Model.Id})"><div class="app__related__card__image"><svg id="manual_Layer_1" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" viewBox="0 0 100 100" xml:space="preserve"><g id="Audiobooks_1_"><defs><path id="manual_SVGID_21_" d="M0 3.2h100v93.5H0z"></path></defs><clipPath id="manual_SVGID_2_"><use xlink:href="#manual_SVGID_21_" overflow="visible"></use></clipPath><g clip-path="url(#manual_SVGID_2_)"><defs><path id="manual_SVGID_23_" d="M0 3.2h100v93.5H0z"></path></defs><clipPath id="manual_SVGID_4_"><use xlink:href="#manual_SVGID_23_" overflow="visible"></use></clipPath><path d="M50 17.6v67m39.8-71.3h8.8v69.1H72.1c-8.8 0-15.5 4.3-15.5 13H43.4c0-8.6-6.6-13-15.5-13H1.4V13.3h8.8m39.9 73.4c0-8.6 4.4-13 13.2-13h26.5V4.6H63.3C54.4 4.6 50 9 50 17.6c0-8.6-4.4-13-13.3-13H10.2v69.1h26.5c8.9.1 13.4 4.4 13.4 13z" clip-path="url(#manual_SVGID_4_)" fill="none" stroke="#231f20" stroke-width="2.778" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10"></path></g></g></svg></div><span class="app__related__card__title"><span class="app__related__card__title__text">Sách hướng dẫn</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 16" class="app__related__card__title__arrow"><defs></defs><g data-name="Layer 2"><g data-name="Layer 1"><path class="" d="M5.7 8L0 13.8 2.1 16 10 8 2.1 0 0 2.2 5.7 8z"></path></g></g></svg></span></a></div><div class="app__related__card app__related__card--has-icon app__sidebar__card" id="js__software__link"><a class="app__related__card__inner" href="@Url.Action("Manual","Manual",new{id=Model.Id})"><div class="app__related__card__image"><svg id="software_Layer_1" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" viewBox="0 0 100 100" xml:space="preserve"><g id="Software_Updates_1_"><defs><path id="software_SVGID_25_" d="M0 8.5h100v82.9H0z"></path></defs><clipPath id="software_SVGID_2_"><use xlink:href="#software_SVGID_25_" overflow="visible"></use></clipPath><g clip-path="url(#software_SVGID_2_)"><defs><path id="software_SVGID_27_" d="M0 8.5h100v82.9H0z"></path></defs><clipPath id="software_SVGID_4_"><use xlink:href="#software_SVGID_27_" overflow="visible"></use></clipPath><path d="M51.2 47.6c0 7.3-5.9 13.3-13.2 13.3-7.3 0-13.2-6-13.2-13.3 0-7.3 5.9-13.3 13.2-13.3 7.3 0 13.2 6 13.2 13.3zm15.3-6.8l8.4-4.9-8.4-14.6-8.4 4.9c-3.3-3.1-7.3-5.4-11.7-6.7V9.6H29.6v9.8c-4.4 1.3-8.4 3.6-11.7 6.7l-8.4-4.9-8.4 14.7 8.4 4.9c-1.1 4.9-1.1 8.7 0 13.6l-8.4 4.9 8.4 14.6 8.4-4.9c3.3 3.1 7.3 5.4 11.7 6.7v9.8h16.8v-9.8m41-5L76.1 81.4 64.9 70.7m11.2 10.7V56m22.8 12.7c0 12-10.2 21.7-22.8 21.7-12.6 0-22.8-9.7-22.8-21.7S63.5 47 76.1 47c12.6.1 22.8 9.8 22.8 21.7z" clip-path="url(#software_SVGID_4_)" fill="none" stroke="#231f20" stroke-width="2.171" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10"></path></g></g></svg></div><span class="app__related__card__title"><span class="app__related__card__title__text">Phần mềm</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 16" class="app__related__card__title__arrow"><defs></defs><g data-name="Layer 2"><g data-name="Layer 1"><path class="" d="M5.7 8L0 13.8 2.1 16 10 8 2.1 0 0 2.2 5.7 8z"></path></g></g></svg></span></a></div><div class="app__related__card app__related__card--has-icon app__sidebar__card" id="js__supportcenter__link"><a class="app__related__card__inner" href="@Url.Action("Manual","Manual",new{id=Model.Id})"><div class="app__related__card__image"><svg id="support_Layer_1" version="1.1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 100 100" xml:space="preserve"><path d="M20.8 45.2l-6.1 17.4 19.4-12c2.3.4 4.5.6 6.7.6h1.4c-1-1.1-1.8-2.2-2.5-3.4-1.8-.1-3.7-.3-5.6-.6l-.6-.2-12.4 7.7 3.8-10.9-1.2-.7c-6.8-4.3-10.8-10.6-10.8-17.5 0-12.2 12.5-22.2 27.9-22.2 10.6 0 19.9 4.8 24.6 11.8 1.4.1 2.8.2 4.2.4C64.8 6.4 53.7 0 40.8 0 23.6 0 9.5 11.5 9.5 25.6c0 7.7 4.1 14.7 11.3 19.6z"></path><path d="M41.8 38.1c0 10.1 10 18.3 22.3 18.3 2.3 0 4.6-.3 6.8-.9l16.5 7.2-6.8-12.4c3.7-3.4 5.7-7.7 5.7-12.2 0-10.1-10-18.3-22.3-18.3S41.8 28 41.8 38.1zm41.1 0c0 4-1.9 7.7-5.5 10.5l-1.1.9 3.4 6.2-8.6-3.7-.6.2c-2.1.6-4.3.9-6.5.9-10.4 0-18.9-6.7-18.9-14.9S53.6 23.3 64 23.3s18.9 6.6 18.9 14.8z"></path><circle cx="53.4" cy="38.8" r="2.5"></circle><circle cx="64.1" cy="38.8" r="2.5"></circle><circle cx="74.8" cy="38.8" r="2.5"></circle><path d="M29.2 100v-9.3c0-1.1-.9-2-2-2h-5.8v3.4h4.4v7.9h3.4zM5 90.7v9.3h3.4v-7.9h4.4v-3.4H7c-1.1 0-2 .9-2 2zM11.7 85.1c1.5 1.1 3.4 1.7 5.4 1.7s3.9-.6 5.4-1.7c2.4-1.7 4-4.5 4-7.6 0-5.2-4.2-9.4-9.4-9.4s-9.4 4.2-9.4 9.4c0 3.1 1.6 5.9 4 7.6zm5.4-13.6c3.3 0 6 2.7 6 6s-2.7 6-6 6-6-2.7-6-6 2.7-6 6-6zM95 100v-9.3c0-1.1-.9-2-2-2h-5.8v3.4h4.4v7.9H95zM78.6 88.7h-5.8c-1.1 0-2 .9-2 2v9.3h3.4v-7.9h4.4v-3.4zM92.3 77.5c0-5.2-4.2-9.4-9.4-9.4s-9.4 4.2-9.4 9.4c0 3.2 1.6 6 4 7.6 1.5 1.1 3.4 1.7 5.4 1.7 2 0 3.9-.6 5.4-1.7 2.4-1.7 4-4.5 4-7.6zm-9.4 5.9c-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6c0 3.4-2.7 6-6 6z"></path></svg></div><span class="app__related__card__title"><span class="app__related__card__title__text">Những câu hỏi thường gặp</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 16" class="app__related__card__title__arrow"><defs></defs><g data-name="Layer 2"><g data-name="Layer 1"><path class="" d="M5.7 8L0 13.8 2.1 16 10 8 2.1 0 0 2.2 5.7 8z"></path></g></g></svg></span></a></div></section><section id="js__quicklinks__content" class="app__sidebar__con"></section></div>
+        
+@* <div class="related-products-section mt-5">
+    <h2 class="st-titile">Sản phẩm liên quan</h2>
+    <div class="related-products-container">
+<div class="product__item product__item-2 b-radius-2 mb-20">
+                            <div class="product__thumb fix">
+                                <div class="product-image w-img">
+                                    <a href="@Url.Action("ProductDetail","ProductDetail")">
+                                        <img src= alt="product">
+                                    </a>
+                                </div>
+                                <div class="product__offer">
+                                
+                                </div>
+                                <div class="product-action 
+                                product-action-2">
+                                   
+                                    <a href="#" class="icon-box icon-box-1" data-bs-toggle="modal" data-product-name="" data-product-price="" data-main-avatar="" 
+                                                    data-product-category=
+                                                    data-product-quantity=""  
+                                                    data-product-id=""
+                                                    data-count-review=""
+                                                    data-img-0=""
+                                                 
+                                                    data-bs-target="#productModalId">
+
+                                        <i class="fal fa-eye"></i>
+                                        
+                                        <i class="fal fa-eye"></i>
+                                    </a>
+                        
+                                    <a href="@Url.Action("ProductDetail","ProductDetail")"  class="icon-box icon-box-1">
+                                        <i class="fal fa-layer-group"></i>
+                                        <i class="fal fa-layer-group"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="product__content product__content-2">
+                                <h6><a href="@Url.Action("ProductDetail","ProductDetail")"></a></h6>
+                                <div class="rating mb-5 mt-10">
+                                    <ul>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                    </ul>
+                                </div>
+                                <div class="price">
+                                    <span>đ</span>
+                                </div>
+                            </div>
+                            <div class="product__add-cart text-center">
+                                <button type="button" id="add-cart" data-product-name="" data-product-id=""  data-product-price="" class="cart-btn-3 product-modal-sidebar-open-btn d-flex align-items-center justify-content-center w-100">
+                               Thêm vào giỏ hàng
+                                </button>
+                            </div>
+                        </div>
+    </div>
+</div> *@
+
+
+        </div>
+        <!-- product-details-des-end -->
+
+        <!-- shop modal start -->
+        <div class="modal fade" id="productModalId" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered product__modal" role="document">
+                <div class="modal-content">
+                    <div class="product__modal-wrapper p-relative">
+                        <div class="product__modal-close p-absolute">
+                            <button data-bs-dismiss="modal"><i class="fal fa-times"></i></button>
+                        </div>
+                        <div class="product__modal-inner">
+                            <div class="row">
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                <div class="product__modal-box">
+                                    <div class="tab-content" id="modalTabContent">
+                                        <div class="tab-pane fade show active" id="nav1" role="tabpanel" aria-labelledby="nav1-tab">
+                                            <div class="product__modal-img w-img">
+                                                <img src="assets/img/quick-view/quick-view-1.jpg" alt="">
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="nav2" role="tabpanel" aria-labelledby="nav2-tab">
+                                            <div class="product__modal-img w-img">
+                                                <img src="assets/img/quick-view/quick-view-2.jpg" alt="">
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="nav3" role="tabpanel" aria-labelledby="nav3-tab">
+                                            <div class="product__modal-img w-img">
+                                                <img src="assets/img/quick-view/quick-view-3.jpg" alt="">
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="nav4" role="tabpanel" aria-labelledby="nav4-tab">
+                                            <div class="product__modal-img w-img">
+                                                <img src="assets/img/quick-view/quick-view-4.jpg" alt="">
+                                            </div>
+                                        </div>
+                                        </div>
+                                    <ul class="nav nav-tabs" id="modalTab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="nav1-tab" data-bs-toggle="tab" data-bs-target="#nav1" type="button" role="tab" aria-controls="nav1" aria-selected="true">
+                                                <img src="assets/img/quick-view/quick-nav-1.jpg" alt="">
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="nav2-tab" data-bs-toggle="tab" data-bs-target="#nav2" type="button" role="tab" aria-controls="nav2" aria-selected="false">
+                                            <img src="assets/img/quick-view/quick-nav-2.jpg" alt="">
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="nav3-tab" data-bs-toggle="tab" data-bs-target="#nav3" type="button" role="tab" aria-controls="nav3" aria-selected="false">
+                                            <img src="assets/img/quick-view/quick-nav-3.jpg" alt="">
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="nav4-tab" data-bs-toggle="tab" data-bs-target="#nav4" type="button" role="tab" aria-controls="nav4" aria-selected="false">
+                                            <img src="assets/img/quick-view/quick-nav-4.jpg" alt="">
+                                            </button>
+                                        </li>
+                                        </ul>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                <div class="product__modal-content">
+                                    <h4><a href="product-details.html">Samsung C49J89: £875, Debenhams Plus</a></h4>
+                                    <div class="product__review d-sm-flex">
+                                        <div class="rating rating__shop mb-10 mr-30">
+                                        <ul>
+                                            <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                            <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                            <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                            <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                            <li><a href="#"><i class="fal fa-star"></i></a></li>
+                                        </ul>
+                                        </div>
+                                        <div class="product__add-review mb-15">
+                                        <span>01 review</span>
+                                        </div>
+                                    </div>
+                                    <div class="product__price">
+                                        <span>$109.00 – $307.00</span>
+                                    </div>
+                                    <div class="product__modal-des mt-20 mb-15">
+                                        <ul>
+                                            <li><a href="#"><i class="fas fa-circle"></i> Bass and Stereo Sound.</a></li>
+                                            <li><a href="#"><i class="fas fa-circle"></i> Display with 3088 x 1440 pixels resolution.</a></li>
+                                            <li><a href="#"><i class="fas fa-circle"></i> Memory, Storage & SIM: 12GB RAM, 256GB.</a></li>
+                                            <li><a href="#"><i class="fas fa-circle"></i> Androi v10.0 Operating system.</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="product__stock mb-20">
+                                        <span class="mr-10">Availability :</span>
+                                        <span>1795 in stock</span>
+                                    </div>
+                                    <div class="product__modal-form">
+                                        <form action="#">
+                                        <div class="pro-quan-area d-lg-flex align-items-center">
+                                            <div class="product-quantity mr-20 mb-25">
+                                                <div class="cart-plus-minus p-relative"><input type="text" value="1" /></div>
+                                            </div>
+                                            <div class="pro-cart-btn mb-25">
+                                                <button class="cart-btn" type="submit">Add to cart</button>
+                                            </div>
+                                        </div>
+                                        </form>
+                                    </div>
+                                    <div class="product__stock mb-30">
+                                        <ul>
+                                            <li><a href="#">
+                                                <span class="sku mr-10">SKU:</span>
+                                                <span>Samsung C49J89: £875, Debenhams Plus</span></a>
+                                            </li>
+                                            <li><a href="#">
+                                                <span class="cat mr-10">Categories:</span>
+                                                <span>iPhone, Tablets</span></a>
+                                            </li>
+                                            <li><a href="#">
+                                                <span class="tag mr-10">Tags:</span>
+                                                <span>Smartphone, Tablets</span></a>
+                                            </li>
+                                        </ul>
+                                    </div> 
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script>
+    
+    const sizes=@Html.Raw(sizes_json);
+
+    const colors=@Html.Raw(colors_json);
+
+    const versions=@Html.Raw(version_json);
+
+    const mirrors=@Html.Raw(mirror_json);
+
+    const prices = @Html.Raw(price_json);
+
+    function getAllIndex(buttonId,value)
+    {
+     switch(buttonId)
+     {
+        case "color-buttons":
+        {
+         return colors.map((color,index)=>color==value?index:-1).filter((val)=>val!==-1);
+        }
+        case "size-buttons":
+        {
+         return sizes.map((size,index)=>size==value?index:-1).filter((val)=>val!==-1);
+        }
+        case "version-buttons":
+        {
+         return versions.map((version,index)=>version==value?index:-1).filter((val)=>val!==-1);
+        }
+        case "mirror-buttons":
+        {
+         return mirrors.map((mirror,index)=>mirror==value?index:-1).filter((val)=>val!==-1);
+        }
+     }
+    }
+    
+
+   function initClickButton(product_discount='0')
+   { var all_id=['color-buttons','size-buttons','version-buttons','mirror-buttons'];
+   var container=null;
+   var buttonId=null;
+     for(let id of all_id)
+     {
+        container=document.getElementById(id);
+        if(container!=null)
+        {  buttonId=id;
+            break;
+        }
+     }
+    if(container==null)
+    {
+        return;
+    }
+    container.querySelectorAll('.size-btn').forEach((button,index)=>
+    {
+    if(index==0)
+   {
+    button.classList.add('active');
+    
+    var all_container_index=getAllIndex(buttonId,button.textContent);
+
+    var first_index=all_container_index[0];
+
+    var original_price=document.querySelector('.price .original-price');
+
+    var price=document.querySelector('.price .discounted-price');
+
+  if(original_price!=null)
+  {
+   alert("here");
+    if(product_discount!='0')
+    { 
+        var new_price_value=parseInt(prices[first_index])*(1-parseInt(product_discount)/100);
+        price.innerHTML=new_price_value+' <u>đ</u>';
+        original_price.innerHTML=prices[first_index]+' <u>đ</u>';
+    }
+   else
+    {
+    price.innerHTML=prices[first_index]+' <u>đ</u>';
+    }
+
+    var product_price_block=document.getElementById('price-block');
+
+    if(parseInt(prices[first_index])<=0)
+    {
+        product_price_block.style.display='none';
+    }
+    else
+    {
+        product_price_block.style.display='block';
+    }
+}
+    
+
+   var container_size=null;
+   
+   var container_color=null;
+
+   var container_version=null;
+   
+   var container_mirror = null;
+
+   for(let id of all_id)
+   {
+   if(id==buttonId)
+   {
+    continue;    
+   }
+   if(id=='color-buttons')
+   {
+     container_color=document.getElementById(id);
+   }   
+  else if(id=='size-buttons')
+  {
+    container_size=document.getElementById(id);
+  }
+  else if(id=='version-buttons')
+  {
+    container_version=document.getElementById(id);
+  }
+  else if(id=='mirror-buttons')
+  {
+    container_mirror=document.getElementById(id);
+  }
+  }
+  if(container_color!=null && container_color!=container)
+  {
+    container_color.querySelectorAll('.size-btn').forEach((btn,index)=>
+    { btn.classList.remove('active');
+     if(colors[first_index]==btn.textContent)
+     {
+      btn.classList.add('active');
+     }
+    });
+  }
+    if(container_mirror!=null && container_mirror!=container)
+  {
+    container_mirror.querySelectorAll('.size-btn').forEach((btn,index)=>
+    { 
+     btn.classList.remove('active');
+     
+     if(mirrors[first_index]==btn.textContent)
+     {
+      btn.classList.add('active');
+     }
+    });
+  }
+    if(container_size!=null && container_size!=container)
+  {
+    container_size.querySelectorAll('.size-btn').forEach((btn,index)=>
+    { 
+     btn.classList.remove('active');
+     
+     if(sizes[first_index]==btn.textContent)
+     {
+      btn.classList.add('active');
+     }
+    }); 
+  }
+    if(container_version!=null && container_version!=container)
+  {
+    container_version.querySelectorAll('.size-btn').forEach((btn,index)=>
+    { btn.classList.remove('active');
+     if(versions[first_index]==btn.textContent)
+     {
+      btn.classList.add('active');
+     }
+    });
+  }
+  }
+    });
+   }
+
+function handleClickButton(buttonId,product_discount='0')
+ { 
+   const container=document.getElementById(buttonId);
+   
+   var all_id=['color-buttons','size-buttons','version-buttons','mirror-buttons'];
+
+   var container_size=null;
+   
+   var container_color=null;
+
+   var container_version=null;
+   
+   var container_mirror = null;
+
+   for(let id of all_id)
+   {
+   
+   if(id==buttonId)
+   {
+    continue;
+   }
+   if(id=='color-buttons')
+   {
+     container_color=document.getElementById(id);
+   }   
+  else if(id=='size-buttons')
+  {
+    container_size=document.getElementById(id);
+  }
+  else if(id=='version-buttons')
+  {
+    container_version=document.getElementById(id);
+  }
+  else if(id=='mirror-buttons')
+  {
+    container_mirror=document.getElementById(id);    
+  }
+}
+
+  if(container==null)
+  {
+    return;    
+  }
+   container.querySelectorAll('.size-btn').forEach((button,index)=>
+   {
+
+ button.addEventListener('click',()=>
+ { 
+  
+ container.querySelectorAll('.size-btn').forEach((btn) =>{btn.classList.remove('active');});
+
+   
+ button.classList.add('active');
+
+ var button_context=button.textContent;
+ 
+ var color_value=null;
+
+ var size_value=null;
+
+ var version_value=null;
+
+ var mirror_value=null;
+
+ var len_container=0;
+
+
+ var all_container_index=getAllIndex(buttonId,button_context);
+
+ if(container_color!=null)
+ { len_container++;
+   container_color.querySelectorAll('.size-btn').forEach((btn)=>
+   {
+    if(btn.classList.contains('active'))
+    {
+         color_value=btn.textContent; 
+    }
+   });
+ }
+
+
+ if(container_size!=null)
+ { len_container++;
+   container_size.querySelectorAll('.size-btn').forEach((btn) =>
+   { 
+    if(btn.classList.contains('active'))
+    {
+         size_value=btn.textContent;
+    }
+   });
+ }
+  if(container_version!=null)
+ { 
+    len_container++;
+   
+   container_version.querySelectorAll('.size-btn').forEach((btn) =>{
+    if(btn.classList.contains('active'))
+    {
+         version_value=btn.textContent;
+    }
+   });
+ }
+  if(container_mirror!=null)
+ { len_container++;
+   container_mirror.querySelectorAll('.size-btn').forEach((btn) =>{
+    if(btn.classList.contains('active'))
+    {
+         mirror_value=btn.textContent;
+    }
+   });
+ }
+  let is_changed=false;
+  let current_item=-1;
+  for(let item of all_container_index)
+  { 
+    let count_value=0;
+
+    current_item=item; 
+
+    if(color_value!=null && container_color!=container)
+    {
+        if(colors[item]==color_value)
+        { 
+            count_value++;
+        }
+    }
+    if(size_value!=null && container_size!=container)
+    {   
+        if(sizes[item]==size_value)
+        { 
+            count_value++;
+        }
+    }
+    if(version_value!=null && container_version!=container)
+    {
+        if(versions[item]==version_value)
+        {
+            count_value++;
+        }
+    }
+    if(mirror_value!=null && container_mirror!=container)
+    {
+        if(mirrors[item]==mirror_value)
+        {
+          count_value++;
+        }
+    }
+    if(count_value==(len_container))
+    {  
+        is_changed=true;
+        
+        break;
+    }
+  }
+  if(!is_changed)
+  { 
+    let container_index=all_container_index[0];
+    if(container_color!=null && container_color!=container)
+    { 
+      container_color.querySelectorAll('.size-btn').forEach((btn,index)=>
+      {
+        btn.classList.remove('active');
+       
+       if(btn.textContent==colors[container_index])
+       {
+        btn.classList.add('active');
+       }
+      });
+    }
+        if(container_size!=null && container_size!=container)
+    { 
+      container_size.querySelectorAll('.size-btn').forEach((btn,index)=>
+      {
+        btn.classList.remove('active');
+        
+       if(btn.textContent==sizes[container_index])
+       {
+        btn.classList.add('active');
+       }
+      });
+    }
+        if(container_version!=null && container_version!=container)
+    { 
+      container_version.querySelectorAll('.size-btn').forEach((btn,index)=>
+      {
+        btn.classList.remove('active');
+       
+       if(btn.textContent==versions[container_index])
+       {
+        btn.classList.add('active');
+       }
+      });
+    }
+        if(container_mirror!=null && container_mirror!=container)
+    { 
+      container_mirror.querySelectorAll('.size-btn').forEach((btn,index)=>
+      {
+        btn.classList.remove('active');
+       if(btn.textContent==mirrors[container_index])
+       {
+        btn.classList.add('active');
+       }
+      });
+    }
+    var price_inject=document.getElementById('price');
+    if(price_inject!=null)
+    {
+    price_inject.innerHTML=prices[all_container_index[0]]+' <u>đ</u>';
+    }
+  }
+  else
+  {
+
+    var new_price=document.querySelector('.price .discounted-price');
+    
+    var original_price=document.querySelector('.price .original-price');
+
+    if(product_discount!='0' && original_price!=null)
+    {
+        var new_price_value=parseInt(prices[current_item])*(1-parseInt(product_discount)/100);
+        
+        new_price.innerHTML=new_price_value+' <u>đ</u>';
+        
+        original_price.innerHTML=prices[current_item]+' <u>đ</u>';
+    }
+    else
+    {
+        new_price.innerHTML=prices[current_item]+' <u>đ</u>';
+    }
+
+    var price_block=document.getElementById('price-block');
+
+    if(parseInt(prices[current_item])<=0)
+    {
+        price_block.style.display='none';
+    }
+    else
+    {
+        price_block.style.display='block';
+    }
+    
+   @* document.getElementById('price').innerHTML=prices[current_item]+' <u>đ</u>'; *@
+   }
+    });
+   });        
+    }    
+    var currIndex=0;
+
+    var images=Array.from(document.querySelectorAll('.zoomable-image')).map(img=>img.src);
+
+     document.addEventListener("DOMContentLoaded",()=>
+     {
+     var product_discount='@Html.Raw(product_discount)'; 
+     
+     initClickButton(product_discount);
+
+     handleClickButton('color-buttons',product_discount);
+
+     handleClickButton('size-buttons',product_discount);
+    
+     handleClickButton('version-buttons',product_discount);
+
+     handleClickButton('mirror-buttons',product_discount);
+
+     var show_button=document.getElementById("showFullButton");
+
+     show_button.addEventListener("click",()=>
+     {
+    var description=document.getElementById("product-content-wrapper");
+
+    description.classList.toggle("expanded");
+    
+    if(description.classList.contains("expanded"))
+    {  
+        show_button.textContent="- Thu gọn nội dung";
+    }
+    else
+    {
+        show_button.textContent="+ Xem toàn bộ nội dung";
+    }
+     });
+
+     var add_cart=document.querySelectorAll("#add-cart");     
+      
+     add_cart.forEach((cart,index)=>{
+     
+     cart.addEventListener("click",()=>
+     {
+       var product_name=cart.getAttribute("data-product-name");
+       var product_id=cart.getAttribute("data-product-id");
+       var quantity_value=document.getElementById('quantity-value').value;
+       let formData = new FormData();
+       var size_container = document.getElementById('size-buttons');
+       var color_container = document.getElementById('color-buttons');
+       var version_container = document.getElementById('version-buttons');
+       var mirror_container = document.getElementById('mirror-buttons');
+       var price='';
+       if(product_discount!='0')
+       {
+        price=document.querySelector('.price .original-price').textContent;
+       }
+       else
+       {
+        price=document.querySelector('.price .discounted-price').textContent;
+       }
+      if(price!=null)
+      {
+       price=price.replace('đ','').trim();
+      }
+       var size_value=null;
+       var color_value=null;
+       var version_value=null;
+       var mirror_value=null;
+       if(size_container!=null)
+       {
+        size_value=size_container.querySelector('.size-btn.active').textContent;
+
+        formData.append("size",size_value);
+       }
+       if(color_container!=null)
+       {
+        color_value=color_container.querySelector('.size-btn.active').textContent;
+        
+        formData.append("color",color_value);
+
+       }
+       if(version_container!=null)
+       {
+        version_value=version_container.querySelector('.size-btn.active').textContent;
+        
+        formData.append("version",version_value);
+       }
+       if(mirror_container!=null)
+       {
+        mirror_value=mirror_container.querySelector('.size-btn.active').textContent;
+        formData.append("mirror",mirror_value);
+       }
+
+       formData.append("product_id",product_id);
+       
+       formData.append("quantity",quantity_value);
+       
+       formData.append("product_name",product_name);
+       
+       formData.append("price",price);
+
+       $.ajax({
+            url:"@Url.Action("addItemToCart","Cart")",
+            type:"POST",
+            data:formData,
+            contentType: false,
+            processData: false, 
+            success:function(response)
+            {
+                const status=response.status;
+
+                const message = response.message;
+                
+                const data=response.data;
+
+             if(data!="")
+             {
+                $("#count-cart").text(data.length);
+               
+                var section_url="@Url.Action("SubCartPartialView","Cart")";
+                   $.ajax({
+                    url:section_url,
+                    type:"POST",
+                    success: function(partialHtml) 
+                    {
+                        $('#sub-cart-section').html(partialHtml);
+                    }
+                });
+            }
+                document.getElementById("toast-title").innerHTML="Thông báo";
+                document.getElementById("toast-message").innerHTML=message;
+                var toastEl = document.querySelector('.toast');
+
+                if(status==1)
+                {
+                 toastEl.classList.add('bg-success');
+                }
+            else
+            {
+                toastEl.classList.add('bg-danger');
+            }
+                var toast = new bootstrap.Toast(toastEl);
+                
+                 toast.show();
+            },
+            error:function(xhr, status, error)
+            {
+                  document.getElementById("toast-title").innerHTML="Thông báo";
+                 document.getElementById("toast-message").innerHTML=error;
+                var toastEl = document.querySelector('.toast');
+                toastEl.classList.add('bg-danger');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();           
+            }
+        });
+     });
+     });
+   
+    var review_form=document.getElementById("review-form");
+
+    var review_btn = document.getElementById("review-btn");
+    
+
+    const carousel = document.getElementById("productImageCarousel");
+    
+    const navLinks=document.querySelectorAll(".data-nav");    
+
+   carousel.addEventListener("slide.bs.carousel", (e) => {
+     const index = e.to;     
+     activeIndex(index);
+    });
+
+    function activeIndex(index)
+    {
+        navLinks.forEach((navLink) => {
+            navLink.classList.remove("active");
+        });
+        navLinks[index].classList.add("active");        
+    }
+
+    navLinks.forEach((navLink,index) => {
+      navLink.addEventListener("click", (e) => 
+      {
+      activeIndex(index);      
+      });
+    });
+
+    document.querySelectorAll(".zoomable-image").forEach((img,index) => 
+    {
+      img.addEventListener("click", (e) => {
+      const zoomedImage = document.getElementById("zoomedImage");
+
+      const zoomedImageModal = document.getElementById('zoomedImageModal');
+      currIndex=index;
+
+      zoomedImage.src = img.src;
+      
+      document.getElementById("zoomedImageModal").style.display = "flex";                
+        setTimeout(() => {
+      zoomedImageModal.classList.add('show');
+    }, 10); 
+      });
+    });
+
+    let startX = 0;
+
+    let endX = 0;
+
+    // Mouse events for desktop
+    carousel.addEventListener("mousedown", (e) => {
+
+      startX = e.clientX;
+  });
+
+    carousel.addEventListener("mouseup", (e) => 
+    {
+      endX = e.clientX;
+      handleDrag();
+    });
+
+    // Touch events for mobile
+    carousel.addEventListener("touchstart", (e) => {
+      startX = e.touches[0].clientX;
+    });
+
+    carousel.addEventListener("touchend", (e) => {
+      endX = e.changedTouches[0].clientX;
+      handleDrag();
+    });
+
+    function handleDrag() {
+      const threshold = 20; 
+      const carouselInstance = bootstrap.Carousel.getInstance(carousel) || new bootstrap.Carousel(carousel);
+      if (startX - endX > threshold) 
+      {
+        carouselInstance.next();
+      } else if (endX - startX > threshold) {
+        carouselInstance.prev();
+      }
+    }
+
+   review_form.addEventListener("submit",(e)=>{
+
+   e.preventDefault();
+
+    var formData=new FormData(review_form);
+
+     var product_id=review_btn.getAttribute("data-product-id");
+
+     var user_id=review_btn.getAttribute("data-user-id");
+
+
+     formData.append("user_id",user_id);
+
+     formData.append("product_id",product_id);
+        
+             $.ajax({
+            url:"@Url.Action("addProductReviews","ProductDetail")",
+            type:"POST",
+            data:formData,
+            contentType: false,
+            processData: false, 
+            success:function(response)
+            {
+                const status=response.status;
+                const message = response.message;
+                document.getElementById("toast-title").innerHTML="Thông báo";
+                document.getElementById("toast-message").innerHTML=message;
+                var toastEl = document.querySelector('.toast');
+
+                if(status==1)
+                {
+              
+                 toastEl.classList.add('bg-success');
+      
+                }
+            else
+            {
+                toastEl.classList.add('bg-danger');
+            }
+                var toast = new bootstrap.Toast(toastEl);
+                
+                toast.show();
+            },
+            error:function(xhr, status, error)
+            {
+                  document.getElementById("toast-title").innerHTML="Thông báo";
+                 document.getElementById("toast-message").innerHTML=error;
+                var toastEl = document.querySelector('.toast');
+                toastEl.classList.add('bg-danger');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();           
+                 }
+        });
+    });
+
+     });
+
+
+
+function showZoomedImage(index,direction=null) {
+  const zoomedImageModal = document.getElementById('zoomedImageModal');
+  const zoomedImage = document.getElementById('zoomedImage');
+  zoomedImage.src = images[index]; 
+
+  zoomedImage.classList.remove('slide-in-left', 'slide-in-right');
+ 
+ if(direction==='left')
+ {
+    zoomedImage.classList.add('slide-in-left');
+ }
+    else if(direction==='right')
+    {
+        zoomedImage.classList.add('slide-in-right');
+    }
+  zoomedImageModal.style.display = 'flex'; 
+  setTimeout(() => {
+  zoomedImage.classList.add('show');
+  }, 10); 
+}
+     function showPrevImage()
+     {
+      currIndex = (currIndex - 1 + images.length) % images.length; 
+      showZoomedImage(currIndex,'left');
+     }
+
+     function showNextImage()
+     {
+        currIndex = (currIndex + 1) % images.length; 
+        showZoomedImage(currIndex,'right');
+     }
+    
+    function closeZoom()
+    {   
+        const zoomedImageModal = document.getElementById('zoomedImageModal');
+
+        zoomedImageModal.classList.remove('show');
+
+  setTimeout(() => {
+    zoomedImageModal.style.display = 'none'; 
+  }, 300);    }
+
+
+     function changeImageLoaded(thumbnail)
+     {
+        var slide_to=thumbnail.getAttribute("data-bs-slide-to");
+        
+        const caroulsel=document.getElementById("productImageCarousel");
+        const carouselInstance = bootstrap.Carousel.getInstance(carousel) || new bootstrap.Carousel(carousel);
+       carouselInstance.to(slide_to);
+     }
+
+    function scrollToReview()
+    {
+    
+    let reviewTab = new bootstrap.Tab(document.querySelector('#review-tab'));
+    
+    reviewTab.show();
+
+  setTimeout(() => {
+    document.getElementById("review").scrollIntoView({ behavior: "smooth" });
+  }, 300);
+    
+}
+    </script>
+
+
+ 

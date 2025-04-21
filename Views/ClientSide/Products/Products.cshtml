@@ -1,0 +1,417 @@
+@{
+    Layout = "_UserLayout";
+
+    var products = ViewBag.products as PageList<Product>;
+    
+    var brands= ViewBag.brands as List<Brand>;
+    
+    var selected_size= ViewBag.selected_size;
+    
+    int select_size=Convert.ToInt32(selected_size);
+    
+    int count_id=0;
+
+    var current_tab=ViewBag.current_tab!=null?ViewBag.current_tab:0;    
+
+    Console.WriteLine("Selected size is:"+selected_size);
+    var options = ViewBag.options;
+    
+    var total_size = products.totalCount;
+
+    Console.WriteLine("Total size is:"+total_size);
+    var current_page=products.currentPage;
+    Console.WriteLine("Current page is:"+current_page);
+    var current_size = (select_size*current_page)-select_size;
+    Console.WriteLine("Current size is:"+current_size);
+    var product_banner=ViewBag.product_banner;
+    Console.WriteLine("Product banner:"+product_banner);
+    
+    var sub_product_banner=ViewBag.sub_banner;
+    
+    //var count_product_reviews=ViewBag.count_product_reviews as Dictionary<string,int>;
+
+    Console.WriteLine("Sub Product banner:"+sub_product_banner);
+
+} 
+        <section class="breadcrumb__area box-plr-75">
+            <div class="container" style="margin-top: 10px;">
+                <div class="row">
+                    <div class="col-xxl-12">
+                        <div class="breadcrumb__wrapper">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                  <li class="breadcrumb-item"><a href="@Url.Action("HomePage","HomePage")">Trang chủ</a></li>
+                                  <li class="breadcrumb-item active" aria-current="page">Danh sách sản phẩm</li>
+                                </ol>
+                              </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+  
+        <div class="shop-area mb-20">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-3 col-lg-4">
+                     
+                        <div class="product-widget mb-30">
+                            <h5 class="pt-title">Chọn giá sản phẩm</h5>
+                            <div class="price__slider mt-30">
+                                <div id="slider-range" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"><div class="ui-slider-range ui-corner-all ui-widget-header" style="left: 0%; width: 100%;"></div><span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 0%;"></span><span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 100%;"></span></div>
+                                <div>
+                                    <form action="#" class="s-form mt-20">
+                                        <input type="text" id="new-amount" readonly="">
+                                        @* <button type="submit" class="tp-btn-square-lg">Filter</button> *@
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="product-widget mb-30">
+                            <h5 class="pt-title">Chọn đánh giá sao</h5>                            
+                            <div class="widget-category-list mt-20">
+                                <form action="#">
+                                    <div class="single-widget-rating">
+                                        <input type="checkbox" id="star-item-1" name="star-item" data-star="5" class="star-checkbox">
+                                        <label for="star-item-1">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                         @* @if(count_product_reviews!=null)
+                                         {
+                                            <span>(@(count_product_reviews["5"]) sản phẩm)</span>
+                                            } *@
+                                        </label>
+                                    </div>
+                                    <div class="single-widget-rating">
+                                        <input type="checkbox" id="star-item-2" name="star-item" data-star="4"  class="star-checkbox">
+                                        <label for="star-item-2">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fal fa-star"></i>
+                                         @* @if(count_product_reviews!=null)
+                                         {
+                                            <span>(@(count_product_reviews["4"]) sản phẩm)</span>
+                                            }                                        </label> *@
+                                    </div>
+                                    <div class="single-widget-rating">
+                                        <input type="checkbox" id="star-item-3" name="star-item" data-star="3"  class="star-checkbox">
+                                        <label for="star-item-3">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fal fa-star"></i>
+                                            <i class="fal fa-star"></i>
+                                       @* @if(count_product_reviews!=null)
+                                         {
+                                            <span>(@(count_product_reviews["3"]) sản phẩm)</span>
+                                            }                                        </label> *@
+                                    </div>
+                                    <div class="single-widget-rating">
+                                        <input type="checkbox" id="star-item-4" name="star-item" data-star="2" class="star-checkbox">
+                                        <label for="star-item-4">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fal fa-star"></i>
+                                            <i class="fal fa-star"></i>
+                                            <i class="fal fa-star"></i>
+                                       @* @if(count_product_reviews!=null)
+                                         {
+                                            <span>(@(count_product_reviews["2"]) sản phẩm)</span>
+                                            }                                        </label> *@
+                                    </div>
+                                    <div class="single-widget-rating">
+                                        <input type="checkbox" id="star-item-5" name="star-item" data-star="1"  class="star-checkbox">
+                                        <label for="star-item-5">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fal fa-star"></i>
+                                            <i class="fal fa-star"></i>
+                                            <i class="fal fa-star"></i>
+                                            <i class="fal fa-star"></i>
+                                          @* @if(count_product_reviews!=null)
+                                         {
+                                            <span>(@(count_product_reviews["1"]) sản phẩm)</span>
+                                            }                                        </label> *@
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="product-widget mb-30">
+                            <h5 class="pt-title">Chọn hãng sản phẩm</h5>
+                            <div class="widget-category-list mt-20">
+                               @foreach(var brand in brands)
+                               {    count_id+=1;
+                                    <div class="single-widget-category">
+                                        <input type="checkbox" id="brand-item-@count_id" class="brand-checkbox" name="brand-item">
+                                        <label for="brand-item-@count_id">@brand.BrandName</label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-9 col-lg-8">
+                        <div class="shop-banner mb-30">
+                            <div class="banner-image">
+                                <img class="banner-l" src="~/@product_banner.Substring(product_banner.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="banner">
+                                <img class="banner-sm" src="~/@sub_product_banner.Substring(sub_product_banner.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="">
+                           
+                            </div>
+                        </div>
+                        <div class="product-lists-top">
+                            <div class="product__filter-wrap">
+                                <div class="row align-items-center">
+                                    <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6">
+                                        <div class="product__filter d-sm-flex align-items-center">
+                                            <div class="product__col">
+                                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                                    <li class="nav-item" role="presentation">
+                                                      <button class="nav-link active" id="FourCol-tab" data-bs-toggle="tab" data-bs-target="#FourCol" type="button" role="tab" aria-controls="FourCol" aria-selected="true">
+                                                        <i class="fal fa-th"></i>
+                                                      </button>
+                                                    </li>
+                                                    <li class="nav-item" role="presentation">
+                                                      <button class="nav-link" id="FiveCol-tab" data-bs-toggle="tab" data-bs-target="#FiveCol" type="button" role="tab" aria-controls="FiveCol" aria-selected="false">
+                                                        <i class="fal fa-list"></i>
+                                                      </button>
+                                                    </li>
+                                                  </ul>
+                                            </div>
+                                            <div class="product__result pl-60">
+                                                <p>Show @current_size trên @total_size kết quả</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6">
+                                        <div class="product__filter-right d-flex align-items-center justify-content-md-end">
+                                            <div class="product__sorting product__show-no">
+
+                                    <select id="page-size" onchange="hello()">
+                                      
+                                      @foreach(var option in ViewBag.options)
+                                      { 
+                                        if(option==selected_size)
+                                        {
+                                          <option value="@option" selected>@option</option>
+                                        }
+                                        else
+                                        {
+                                           <option value="@option">@option</option>
+                                        }
+                                      } 
+                                    </select>
+
+                                    </div>                  
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        </div>
+                        <div id="productList">
+                            @Html.Partial("~/Views/ClientSide/Products/_ProductsPartial.cshtml", products)
+                        </div>
+                </div>
+            </div>
+        </div>
+      
+  <script>
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+ var current_t=@Html.Raw(current_tab);
+  
+  if(current_t==1)
+  {
+    var my_tab=new bootstrap.Tab(document.getElementById('FiveCol-tab'));
+    my_tab.show();
+  }
+  else
+  {
+    var my_tab=new bootstrap.Tab(document.getElementById('FourCol-tab'));
+    my_tab.show();
+  }
+
+   $(document).ready(function () 
+   {
+    $("#slider-range").slider({
+        range: true,
+        min: 0,
+        max: 50000000,
+        values: [0, 50000000],  
+        slide: function (event, ui) 
+        {
+            @* $("#new-amount").val(ui.values[0] + "VND - " + ui.values[1]+"VND");
+            var value=`${ui.values[0]}-${ui.values[1]}`;
+            const page_size= $("#page-size").val();
+            const all_selected_brands=document.querySelectorAll('input[name="brand-item"]:checked');
+          
+               var checkedBrands = [];
+    var checkboxes = document.querySelectorAll('input[name="brand-item"]:checked');
+    
+    checkboxes.forEach(function(checkbox) {
+        checkedBrands.push(checkbox.nextElementSibling.textContent);
+    });
+    var checked_brands_value=checkedBrands.join(",");
+
+    var checkedStars = [];
+    
+    var checkboxes_star = document.querySelectorAll('input[name="star-item"]:checked');
+    
+    checkboxes_star.forEach(function(checkbox) {
+        checkedStars.push(checkbox.getAttribute("data-star"));
+    });
+    var checked_star_value=checkedStars.join(",");
+
+
+            $.ajax({
+                    url: '@Url.Action("FilterProducts", "Products")',
+                    type: 'GET',
+                    data: {pageSize: page_size ,prices:value,brands:checked_brands_value,stars:checked_star_value},
+                    success: function (data) {
+                        $("#productList").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", status, error);
+                    }
+                }); *@
+        },
+    stop:function(event,ui)
+    {
+     $("#new-amount").val(ui.values[0] + "VND - " + ui.values[1]+"VND");
+    var value=`${ui.values[0]}-${ui.values[1]}`;
+    
+    const page_size= $("#page-size").val();
+           
+    const all_selected_brands=document.querySelectorAll('input[name="brand-item"]:checked');
+          
+    var checkedBrands = [];
+    
+    var checkboxes = document.querySelectorAll('input[name="brand-item"]:checked');
+
+    checkboxes.forEach(function(checkbox) {
+        checkedBrands.push(checkbox.nextElementSibling.textContent);
+    });
+    
+    var checked_brands_value=checkedBrands.join(",");
+
+    var checkedStars = [];
+    
+    var checkboxes_star = document.querySelectorAll('input[name="star-item"]:checked');
+    
+    checkboxes_star.forEach(function(checkbox) {
+        checkedStars.push(checkbox.getAttribute("data-star"));
+    });
+    var checked_star_value=checkedStars.join(",");
+
+            $.ajax({
+                    url: '@Url.Action("FilterProducts", "Products")',
+                    type: 'GET',
+                    data: {pageSize: page_size ,prices:value,brands:checked_brands_value,stars:checked_star_value},
+                    success: function (data) {
+                        $("#productList").html(data);
+                    },
+                    error: function (xhr, status, error) 
+                    {
+                     console.error("AJAX Error:", status, error);
+                    }
+                });
+    }
+    });
+
+    $("#new-amount").val($("#slider-range").slider("values", 0) + "VND - " + $("#slider-range").slider("values", 1)+"VND");
+    
+    $(".brand-checkbox").on("change",()=>{
+      
+      const page_size= $("#page-size").val();      
+      
+      const price_value=$("#new-amount").val().replace(/VND/g,"");
+
+    var checked_brand=$(".brand-checkbox:checked").map(function(){
+        return $(this).next().text();
+      }).get();
+      
+    var checked_brands=checked_brand.join(",");
+
+    var checkedStars = [];
+    
+    var checkboxes = document.querySelectorAll('input[name="star-item"]:checked');
+    
+    checkboxes.forEach(function(checkbox) 
+    {
+     checkedStars.push(checkbox.getAttribute("data-star"));
+    });
+    
+    var checked_star_value=checkedStars.join(",");
+
+      $.ajax({
+                    url: '@Url.Action("FilterProducts", "Products")',
+                    type: 'GET',
+                    data: {pageSize: page_size ,prices:price_value,brands:checked_brands,stars:checked_star_value},
+                    success: function (data) 
+                    {
+                        $("#productList").html(data);
+                    },
+                    error: function(xhr, status, error) 
+                    {
+                    }
+                });
+
+}); 
+   $(".star-checkbox").on("change",()=>
+   {
+
+    const page_size= $("#page-size").val();
+      
+    const price_value=$("#new-amount").val().replace(/VND/g,"");
+
+    var checkedBrands = [];
+    
+    var checkboxes = document.querySelectorAll('input[name="brand-item"]:checked');
+    
+    checkboxes.forEach(function(checkbox) {
+        checkedBrands.push(checkbox.nextElementSibling.textContent);
+    });
+    var checked_brands_value=checkedBrands.join(",");
+    
+     var checked_star=$(".star-checkbox:checked").map(function(){
+        return $(this).attr("data-star");
+      }).get();
+      
+      var checked_stars=checked_star.join(",");
+
+    $.ajax({
+                    url: '@Url.Action("FilterProducts", "Products")',
+                    type: 'GET',
+                    data: {pageSize: page_size ,prices:price_value,brands:checked_brands_value,stars:checked_stars},
+                    success: function (data) {
+                        $("#productList").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                      
+                    }
+                });
+    });
+     
+
+   });
+    
+     });
+    function hello()
+    { 
+      var selected_value=document.getElementById("page-size").value;
+     if(selected_value!=null)
+     {
+      selected_value=parseInt(selected_value);      
+      @* var url='@Url.Action("ProductsPaging", "Products"),new{page_size=__page_size__}';
+      
+      url=url.replace("__page_size__",selected_value); *@
+      window.location.href= '@Url.Action("ProductsPaging", "Products")' + "?page_size=" + selected_value;
+    }
+    }
+
+ </script>

@@ -1,0 +1,364 @@
+@{
+    Layout="_UserLayout";
+    var cart =ViewBag.cart as List<CartModel>; 
+    int total_amount=0;
+} 
+   <div
+       class="bs-toast toast fade hide toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+       data-bs-dismiss="toast"
+       style="cursor: pointer; position: fixed; top: 20px; right: 20px; z-index: 5000;"
+       data-delay="3000"
+       data-bs-autohide="true"        
+       data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold" id="toast-title"></div>
+                        </div>
+                        <div class="toast-body" id="toast-message">
+                        </div>
+        </div>
+        <div class="page-banner-area page-banner-height-2" data-background="@Url.Content("~/user_layout/img/banner/page-banner-4.jpg")">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="page-banner-content text-center">
+                            <h4 class="breadcrumb-title">Giỏ hàng của bạn</h4>
+                            <div class="breadcrumb-two">
+                                <nav>
+                                   <nav class="breadcrumb-trail breadcrumbs">
+                                      <ul class="breadcrumb-menu">
+                                         <li class="breadcrumb-trail">
+                                            <a href="@Url.Action("HomePage","HomePage")"><span>Trang chủ</span></a>
+                                         </li>
+                                         <li class="trail-item">
+                                            <span>Giỏ hàng</span>                                            
+                                         </li>
+                                      </ul>
+                                   </nav> 
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      <div id="cart-section">
+         @Html.Partial("~/Views/ClientSide/Cart/_CartPartial.cshtml",cart)
+      </div>
+@*   
+        <section class="cart-area pt-120 pb-120">
+            <div class="container">
+               <div class="row">
+              @if(cart.Count>0)
+              {
+                  <div class="col-12">
+                        <form action="#">
+                           <div class="table-content table-responsive">
+                              <table class="table">
+                                    <thead>
+                                       <tr>
+                                          <th class="product-thumbnail">Hình ảnh</th>
+                                          <th class="cart-product-name">Tên sản phẩm</th>
+                                          <th class="product-price">Giá tiền</th>
+                                          <th class="product-quantity">Số lượng</th>
+                                          <th class="product-subtotal">Tổng cộng</th>
+                                          <th class="product-remove">Xóa</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach(var item in cart)
+                                        {total_amount+=Convert.ToInt32(item.Product.Price)*item.Quantity;
+                                       <tr>
+                                          <td class="product-thumbnail"><img src="~/@item.Product.Frontavatar.Substring(item.Product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="User Front Avatar"></td>
+                                          <td class="product-name"><a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=item.Product.ProductName})">@item.Product.ProductName</a></td>
+                                          <td class="product-price"><span class="amount">@item.Product.Price đ</span></td>
+                                          <td class="product-quantity">
+                                                <div class="cart-plus-minus"><input class="quantity-value" type="text" value="@item.Quantity" data-price="@(Convert.ToInt32(item.Product.Price))"></div>
+                                          </td>
+                                          <td class="product-subtotal"><span class="amount">@(Convert.ToInt32(item.Product.Price)*item.Quantity) đ</span></td>
+                                          <td class="product-remove"><a href="javascript:void(0);" type="button" class="remove-btn" data-product-id="@item.Product.Id"><i class="fa fa-times"></i></a></td>
+                                       </tr>
+                                      
+                                       }
+                                    </tbody>
+                              </table>
+                           </div>
+                           <div class="row">
+                              <div class="col-12">
+                                    <div class="coupon-all">
+                                       <div class="coupon">
+                                          <input id="coupon_code" class="input-text" name="coupon_code" value="" placeholder="Coupon code" type="text">
+                                          <button class="tp-btn-h1" name="apply_coupon" type="submit">Apply
+                                                coupon</button>
+                                       </div>
+                                       <div class="coupon2">
+                                          <button class="tp-btn-h1" name="update_cart" type="submit">Cập nhật giỏ hàng</button>
+                                       </div>
+                                    </div>
+                              </div>
+                           </div>
+                           <div class="row justify-content-end">
+                              <div class="col-md-5">
+                                    <div class="cart-page-total">
+                                       <h2>Cart totals</h2>
+                                       <ul class="mb-20">
+                                          <li>Subtotal <span>$250.00</span></li>
+                                          <li>Total <span>$250.00</span></li>
+                                       </ul>
+                                       <a class="tp-btn-h1" href="checkout.html">Tiến hành đặt hàng</a>
+                                    </div>
+                              </div>
+                           </div>
+                        </form>
+                  </div>
+                  }
+                 else{
+                    <div class="text-center">
+                        <h1>Giỏ hàng của bạn đang trống</h1>
+                        <button type="button" id="redirect-btn" class="cart-btn mt-5" onclick="redirectToHomePage()">Tiếp tục mua sắm</button>
+                    </div>
+                 } 
+               </div>
+            </div>
+         </section>
+      *@
+   <script>
+  
+     var redirect_btn=document.getElementById("redirect-btn");
+   const redirectToHomePage=()=>
+   { 
+       window.location.href="@Url.Action("HomePage","HomePage")";
+   }
+
+ document.addEventListener("DOMContentLoaded",()=>{
+  document.querySelectorAll(".dec").forEach((item)=>
+    {
+        item.addEventListener("click",()=>
+        {
+         const quantity_ob=item.parentElement.querySelector(".quantity-value");
+         const subtotal_amount=document.getElementById("subtotal-amount");
+        const total_amount=document.getElementById("total-amount");
+        const subtotal_amount_value=parseInt(subtotal_amount.textContent.replace('VNĐ','').trim());
+        const total_amount_value=parseInt(total_amount.textContent.replace('VNĐ','').trim());
+        var row=item.closest('tr');
+      var current_price=row.querySelector('#product-price');
+        var current_price_value=current_price.textContent.replace('đ','').trim();
+            const discount=row.querySelector('#discount').value;
+        const new_price=(parseInt(current_price_value));
+
+         var quantity=parseInt(quantity_ob.value);
+
+        var prev_quantity=quantity>0?quantity+1:1;
+
+         const pricePerItem = parseInt(quantity_ob.getAttribute('data-price'));
+        const old_total=new_price*prev_quantity;
+         const subtotal=new_price*quantity;
+         const new_subtotal=subtotal_amount_value-old_total+subtotal;
+         const new_total=total_amount_value-old_total+subtotal;
+         subtotal_amount.textContent=`${new_subtotal} VNĐ`;
+         total_amount.textContent=`${new_total} VNĐ`;
+         const subtotalDisplay = quantity_ob.closest('tr').querySelector('.product-subtotal .amount');
+         subtotalDisplay.textContent = `${subtotal} đ`;
+        });
+    });
+
+   document.querySelectorAll(".inc").forEach((item)=>
+    {
+        item.addEventListener("click",()=>
+        {
+        const quantity_ob=item.parentElement.querySelector(".quantity-value");
+        const subtotal_amount=document.getElementById("subtotal-amount");
+        const total_amount=document.getElementById("total-amount");
+        const subtotal_amount_value=parseInt(subtotal_amount.textContent.replace('VNĐ','').trim());
+        const total_amount_value=parseInt(total_amount.textContent.replace('VNĐ','').trim());
+        var row=item.closest('tr');
+        var current_price=row.querySelector('#product-price');
+        var current_price_value=current_price.textContent.replace('đ','').trim();
+        const discount=row.querySelector('#discount').value;
+         var quantity=parseInt(quantity_ob.value);
+         var prev_quantity=quantity>1?quantity-1:1;
+        const new_price=(parseInt(current_price_value));
+         const pricePerItem = parseInt(quantity_ob.getAttribute('data-price'));
+         const old_total=new_price*prev_quantity;
+         const subtotal=new_price*quantity;
+         const new_subtotal=subtotal_amount_value-old_total+subtotal;
+         const new_total=total_amount_value-old_total+subtotal;
+         subtotal_amount.textContent=`${new_subtotal} VNĐ`;
+         total_amount.textContent=`${new_total} VNĐ`;
+         const subtotalDisplay = quantity_ob.closest('tr').querySelector('.product-subtotal .amount');
+         subtotalDisplay.textContent = `${subtotal} đ`;}); 
+    });
+      document.querySelectorAll('.quantity-value').forEach(input => {
+      
+      input.addEventListener('input', function () {
+      
+            const pricePerItem = parseInt(this.getAttribute('data-price'));
+            
+            const quantity = parseInt(this.value) || 1; 
+            
+            const subtotal = pricePerItem * quantity;
+            
+            const subtotalDisplay = this.closest('tr').querySelector('.product-subtotal .amount');
+            
+            subtotalDisplay.textContent = `${subtotal} đ`;
+        });
+    });
+  
+  
+  function attatchAddValue()
+  {
+   
+    document.querySelectorAll(".dec").forEach((item)=>
+    {
+        item.addEventListener("click",()=>
+        {
+         const quantity_ob=item.parentElement.querySelector(".quantity-value");         
+         var quantity=parseInt(quantity_ob.value)||1;
+       if(quantity>1)
+       {
+         quantity_ob.value=quantity-1;
+       }
+         const pricePerItem = parseInt(quantity_ob.getAttribute('data-price'));
+         const subtotal=pricePerItem*quantity;
+         const subtotalDisplay = quantity_ob.closest('tr').querySelector('.product-subtotal .amount');
+         subtotalDisplay.textContent = `${subtotal} đ`;
+        });
+    });
+
+   document.querySelectorAll(".inc").forEach((item)=>
+    {
+        item.addEventListener("click",()=>
+        {
+        const quantity_ob=item.parentElement.querySelector(".quantity-value");
+         var quantity=parseInt(quantity_ob.value);
+         quantity_ob.value=quantity+1;
+         const pricePerItem = parseInt(quantity_ob.getAttribute('data-price'));
+         const subtotal=pricePerItem*quantity;
+         const subtotalDisplay = quantity_ob.closest('tr').querySelector('.product-subtotal .amount');
+         subtotalDisplay.textContent = `${subtotal} đ`;}); 
+
+    });
+      document.querySelectorAll('.quantity-value').forEach(input => {
+      
+      input.addEventListener('input', function () {
+      
+            const pricePerItem = parseInt(this.getAttribute('data-price'));
+            
+            const quantity = parseInt(this.value) || 1; 
+            
+            const subtotal = pricePerItem * quantity;
+            
+            const subtotalDisplay = this.closest('tr').querySelector('.product-subtotal .amount');
+            
+            subtotalDisplay.textContent = `${subtotal} đ`;
+        });
+    });
+    }
+    
+  function attachRemoveButtonListeners() {
+    document.querySelectorAll(".remove-btn").forEach((item) => {
+        item.addEventListener("click", () => {
+            var product_id = item.getAttribute("data-product-id");
+            var cart_name="cart";
+            let formData = new FormData();
+            formData.append("product_id", product_id);
+            formData.append("view_name",cart_name);
+            $.ajax({
+                url: "@Url.Action("removeItemFromCart","Cart")",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    $("#cart-section").html(response);
+                    attachRemoveButtonListeners();
+                    attatchAddValue();
+                   var section_url="@Url.Action("SubCartPartialView","Cart")";
+                   $.ajax({
+                    url:section_url,
+                    type:"POST",
+                    success: function(partialHtml) {
+                        $('#sub-cart-section').html(partialHtml);
+                    }
+                });  
+                },
+                error: function(xhr, status, error) {
+                    document.getElementById("toast-title").innerHTML = "Thông báo";
+                    document.getElementById("toast-message").innerHTML = error;
+                    var toastEl = document.querySelector('.toast');
+                    toastEl.classList.add('bg-danger');
+                    var toast = new bootstrap.Toast(toastEl);
+                    toast.show(); 
+                  
+                }
+            });
+        });
+    });
+}
+attachRemoveButtonListeners();
+ const add_cart_btn=document.getElementById("update-cart");
+    add_cart_btn.addEventListener("click",()=>{
+        const quantity_values=document.querySelectorAll(".quantity-value");
+        const product_ids_value=document.querySelectorAll("#product-id");
+        const quantities=Array.from(quantity_values).map((item)=>parseInt(item.value));
+        const product_ids=Array.from(product_ids_value).map((item)=>parseInt(item.value));
+        let formData = new FormData();
+        quantities.forEach((item,index)=>
+        {
+            formData.append(`quantities[${index}]`,item);
+        });
+        product_ids.forEach((item,index)=>
+        {
+            formData.append(`product_ids[${index}]`,item);
+        });
+        $.ajax({
+            url: "@Url.Action("updateCart","Cart")",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                   const status=response.status;
+                const message = response.message;
+                document.getElementById("toast-title").innerHTML="Thông báo";
+                document.getElementById("toast-message").innerHTML=message;
+                var toastEl = document.querySelector('.toast');
+                if(status==1)
+                {
+              
+                 toastEl.classList.add('bg-success');
+      
+                }
+            else
+            {
+                toastEl.classList.add('bg-danger');
+            }
+                var toast = new bootstrap.Toast(toastEl);
+                
+                 toast.show();
+                var section_url="@Url.Action("SubCartPartialView","Cart")";
+                   $.ajax({
+                    url:section_url,
+                    type:"POST",
+                    success: function(partialHtml) {
+                        $('#sub-cart-section').html(partialHtml);
+                    }
+                });  
+            },
+            error: function(xhr, status, error) {
+                document.getElementById("toast-title").innerHTML = "Thông báo";
+                document.getElementById("toast-message").innerHTML = error;
+                var toastEl = document.querySelector('.toast');
+                toastEl.classList.add('bg-danger');
+                var toast = new bootstrap.Toast(toastEl);
+                //toast.show(); 
+            }
+        });
+    });
+      });
+
+   </script>
