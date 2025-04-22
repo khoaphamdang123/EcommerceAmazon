@@ -23,17 +23,19 @@
        }
         ChangePassword change_pass= null;
        if(User.Identity.IsAuthenticated)
-       {id_user=this.ViewContext.HttpContext.Session.GetString("AdminId");
-       Console.WriteLine("Id user is:"+id_user);
+       {
+        id_user=this.ViewContext.HttpContext.Session.GetString("AdminId");
+        Console.WriteLine("Id user is:"+id_user);
         username=this.ViewContext.HttpContext.Session.GetString("Username");
         email=this.ViewContext.HttpContext.Session.GetString("Email");
         password = this.ViewContext.HttpContext.Session.GetString("Password");
         avatar = this.ViewContext.HttpContext.Session.GetString("Avatar");
-        change_pass=new ChangePassword(email,password,"");
+        change_pass=new ChangePassword(email,password,"");        
        }
         if(string.IsNullOrEmpty(id_user))
-        {Console.WriteLine("in here");
-          Html.ActionLink("Index","LoginAdmin");
+        { 
+          Console.WriteLine("in here");
+          Html.ActionLink("Index","LoginAdmin");          
         }
         Console.WriteLine("Current view controller is:"+view_controller);
         Console.WriteLine("Current action is:"+view_action);
@@ -41,9 +43,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Ecommerce_Product</title>
-   <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-   <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - Ecommerce_Amazon</title>
+   <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+   <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/TestComikApp.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/vendor/css/core.css" class="template-customizer-core-css"/>
     <link rel="stylesheet" href="~/vendor/css/theme-default.css" class="template-customizer-theme-css" />
@@ -53,12 +55,8 @@
     <link rel="icon" type="image/x-icon" href="~/@(logo_path)"/>
     <link rel="stylesheet" href="~/vendor/css/pages/page-misc.css"/>
     <link rel="stylesheet" href="~/vendor/fonts/boxicons.css"/>
-    <link rel="stylesheet" href="~/vendor/libs/apex-charts/apex-charts.css" />
-
-
+    <link rel="stylesheet" href="~/vendor/libs/apex-charts/apex-charts.css" />    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.3/dragula.min.css">
-
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -209,7 +207,7 @@
             <li class="menu-item @(view_controller=="UserList"?"active open":"")">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-user"></i>
-                <div data-i18n="Account Settings">Khách hàng</div>
+                <div data-i18n="Account Settings">Khách hàng</div>                
               </a>
               <ul class="menu-sub">
                 <li class="menu-item @((view_action=="UserList"||(view_controller=="UserList" && view_action=="UserListPaging"))?"active":"")">
@@ -246,7 +244,7 @@
             </li>
 
 
-              @* <li class="menu-item @(view_controller=="CategoryList"?"active open":"")">
+              <li class="menu-item @(view_controller=="CategoryList"?"active open":"")">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-dock-top"></i>
                 <div data-i18n="Account Settings">Category</div>
@@ -268,7 +266,7 @@
                   </a>
                 </li>
               </ul>
-            </li>   *@
+            </li>  
 
               <li class="menu-item @(view_controller=="ProductList"?"active open":"")">
               <a href="javascript:void(0);" class="menu-link menu-toggle">

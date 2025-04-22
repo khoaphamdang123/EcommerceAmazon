@@ -13,6 +13,7 @@ namespace Ecommerce_Product.Models
    public string PaymentMethod{get;set;}
 
    public string Note{get;set;}
+
  }
 
 public class CheckoutItemModel
@@ -23,5 +24,4 @@ public class CheckoutItemModel
 
   public string OrderId{get;set;}
 }
-
 }

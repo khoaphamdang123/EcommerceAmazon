@@ -87,10 +87,11 @@
                         </div>
                       </div>
                         <script>
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function() 
+            {
                 var toastEl = document.querySelector('.toast');
                 var toast = new bootstrap.Toast(toastEl);
-                toast.show();
+                toast.show();                
             });
         </script>
 }
@@ -254,6 +255,9 @@
                             <th class="text-center">Nhãn hàng</th>
                             <th class="text-center">Giá sản phẩm</th>
                             <th class="text-center">Trạng thái</th>
+                            <th class="text-center">Nhà sản xuất</th>
+                            <th class="text-center">Số liệu kích thước sản phẩm</th>
+                            <th class="text-center">Mẫu sản phẩm</th>
                             <th class="text-center">Ngày tạo</th>
                             <th class="text-center">Ngày cập nhật</th>
                            <th class="text-center">Thao tác</th>
@@ -286,7 +290,7 @@
                            {
                               <div class="avatar-wrapper">
                                 <div class="avatar avatar-sm me-2 rounded-2">
-                                 <img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="User Front Avatar">
+                                 <img src="@product.Frontavatar" alt="Product FrontAvatar">
                                 </div>
                               </div>
                               }  
@@ -294,7 +298,7 @@
                               {
                                   <div class="avatar-wrapper">
                                 <div class="avatar avatar-sm me-2 rounded-2">
-                                  <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="User Back Avatar">
+                                  <img src="@product.Backavatar" alt="Product BackAvatar">
                                 </div>
                               </div>
                               }
@@ -307,14 +311,11 @@
                               @product.Category.CategoryName
                               }
                               </td>
-                            <td class="text-center">
-                             @if(product?.Brand!=null)
-                             {
-                              @product.Brand.BrandName
-                             }
-                              </td>
                             <td class="text-center">@product.Price</td>
-                            <td class="text-center"><span class="badge px-2 @curr_status_class">@product.Status</span></td>                            
+                            <td class="text-center"><span class="badge px-2 @curr_status_class">@product.Status</span></td>
+                            <td class="text-center">@product.Manufacturer</td>
+                            <td class="text-center">@product.Package_Dimensions</td>
+                            <td class="text-center">@product.Model</td>                            
                             <td class="text-center">@product.CreatedDate</td>
                             <td class="text-center">@product.UpdatedDate</td>                            
                             <td class="text-center">
@@ -354,12 +355,12 @@
                               <a href="@Url.Action("VariantList",new{id=product.Id})" style="margin-right: 5px;" class="btn btn-icon icon-style-reset" title="Danh sách biến thể">
                                 <i class="bx bx-cart bx-md"></i>
                               </a>
-                             <a href="@Url.Action("ManualListByProduct","ManualList",new{product_id=product.Id})" class="btn btn-icon" title="Danh sách hướng dẫn">
+                             @* <a href="@Url.Action("ManualListByProduct","ManualList",new{product_id=product.Id})" class="btn btn-icon" title="Danh sách hướng dẫn">
                                 <i style="color: #696cff; margin-right:5px;" class="bx bx-book bx-md"></i>
                               </a>
                                 <a href="@Url.Action("VideoListByProduct","VideoList",new{product_id=product.Id})" class="btn btn-icon" title="Danh sách video">
                                 <i style="color: #0d6efd;" class="bx bx-video bx-md"></i>                                
-                              </a>
+                              </a> *@
                             </div>
                             </td>
                          </tr>

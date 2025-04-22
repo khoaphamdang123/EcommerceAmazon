@@ -6,5 +6,5 @@ public class ForgotPassword
 {
     [Required]
    public string Email{get;set;}
-   public string Receiver{get;set;}
+   public string Receiver{get;set;}   
 }

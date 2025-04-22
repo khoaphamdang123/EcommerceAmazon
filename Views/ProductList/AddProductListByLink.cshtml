@@ -1,32 +1,4 @@
-
-<!-- =========================================================
-* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
-==============================================================
-
-* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
-* Created by: ThemeSelection
-* License: You must have a valid license purchased in order to legally use the theme for your project.
-* Copyright ThemeSelection (https://themeselection.com)
-
-=========================================================
- -->
-<!-- beautify ignore:start -->
-@{
-   var created_product=ViewBag.Created_Product;
-   
-   @* var create_status=ViewBag.Status; *@
-   
-   var cat_list =ViewBag.CategoryList as IEnumerable<Category>;
-   
-   @* var brand_list = ViewBag.BrandList as IEnumerable<Brand>;
-   
-   var sub_cat_list = ViewBag.SubCatList as List<SubCategory>;  *@
-
-
-}
-
-
-    
+ 
  
  <div
        class="bs-toast toast fade bg-success hide toast-placement-ex top-5 end-0"
@@ -71,29 +43,6 @@
                         </div>
                       </div>
     
-
-         <div
-       class="bs-toast toast toast-primary fade bg-primary hide toast-placement-ex top-5 end-0"
-       role="alert"
-       aria-live="assertive"
-       aria-atomic="true"
-       data-bs-dismiss="toast"
-       style="cursor: pointer;"
-       data-delay="2000"
-         data-bs-autohide="true" 
-         data-bs-delay="2000"
-             >
-                        <div class="toast-header">
-                          <i class="bx bx-bell me-2"></i>
-                          <div class="me-auto fw-semibold">Thêm sản phẩm</div>
-                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
-                        </div>
-                        <div class="toast-body">
-
-                          <p id="toast-message">Vui lòng chờ trong quá trình thêm sản phẩm</p>
-                        </div>
-                      </div>
-
     <div class="content-wrapper">
     <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Sản phẩm /</span>Thêm sản phẩm</h4>
@@ -131,10 +80,10 @@
                 <label for="linkCategory" class="form-label mt-2">Loại sản phẩm</label>
                 <select class="form-select" id="linkCategory1" name="category">
                     <option value="" disabled selected>Chọn loại sản phẩm</option>
-                   @foreach(var item in cat_list)
-                   {
-                    <option value="@item.Id">@item.CategoryName</option>
-                    }
+                    <option value="t-shirt">T-Shirt</option>
+                    <option value="video">Video</option>
+                    <option value="website">Website</option>
+                    <option value="other">Other</option>
                 </select>
                 <div class="invalid-feedback">
                     Cần chọn loại sản phẩm
@@ -142,24 +91,24 @@
             </div>
            <div class="mb-7 d-none" id="fileInputGroup">
                 <label for="fileInput" class="form-label">Upload File Excel</label>
-                <input type="file" class="form-control" id="fileInput" accept=".xls,.xlsx">
+                <input type="file" class="form-control" id="fileInput">
                 <div class="invalid-feedback">
                 Chọn file không hợp lệ
                 </div>
                 <label for="fileCategory" class="form-label mt-2">Loại sản phẩm</label>
                 <select class="form-select" id="linkCategory2" name="category" >
                     <option value="" disabled selected>Chọn loại sản phẩm</option>
-                      @foreach(var item in cat_list)
-                   {
-                    <option value="@item.Id">@item.CategoryName</option>
-                    }
+                    <option value="t-shirt">T-Shirt</option>
+                    <option value="image">Image</option>
+                    <option value="video">Video</option>
+                    <option value="other">Other</option>
                 </select>
                 <div class="invalid-feedback">
                     Cần chọn loại sản phẩm
                 </div>
             </div>
              <div class="text-center">
-            <button type="submit" id="submit-btn" class="btn btn-primary text-center">Thêm sản phẩm</button>
+            <button type="submit" class="btn btn-primary text-center">Thêm sản phẩm</button>
             </div>
     </div>
      </div>
@@ -177,10 +126,8 @@
       const input_link = document.getElementById("linkInput");
       const input_file = document.getElementById("fileInput");
       const link_category_1 = document.querySelector("#linkCategory1");
-      const link_category_2 = document.querySelector("#linkCategory2");
+      const link_category_2 = document.querySelector("#linkCategory2");s
       const form = document.getElementById("formAccountSettings");
-      const submit_btn = document.getElementById("submit-btn");
-
       linkOption.addEventListener('change',()=>{
      if(linkOption.checked)
       {
@@ -203,62 +150,22 @@
      form.addEventListener("submit",()=>
      {
       event.preventDefault();
-      const formData = new FormData();      
+      const formData = new FormData();
       if(linkOption.checked)
       {
         const link = input_link.value;
-        
-        const category = document.getElementById("linkCategory1");
-        
-        if(link=='')
-        {
-         input_link.classList.add("is-invalid");
-         
-         return;
-        }
-        if(category.selectedIndex==0)
-        {
-          category.classList.add("is-invalid");
-          
-          return;
-        }
-        
-        input_link.classList.remove('is-invalid');
-        
+        const category = document.getElementById("linkCategory1").value;
         formData.append("link",link);
-        
-        formData.append("category",category.value);
+        formData.append("category",category);
       }
       else
       {
         const file = input_file.files[0];
-        
-        const category = document.getElementById("linkCategory2");
-        
-        if(category.selectedIndex==0)
-        {
-          category.classList.add("is-invalid");
-
-          return;
-        }
-        
+        const category = document.getElementById("linkCategory2").value;
         formData.append("file",file);
-        
-        formData.append("category",category.value);
+        formData.append("category",category);
       }
-     if(submit_btn!=null)
-     {
-      submit_btn.setAttribute("disabled",true);
-     }
-                    
-                var toastEl = document.querySelector('.toast-primary');
-                
-                var toast = new bootstrap.Toast(toastEl);
-                
-                toast.show();
-
-     $.ajax(
-      {  
+     $.ajax({  
                 url: '@Url.Action("GetSampleData", "ProductList")',
                 type: 'POST',
                 data: formData,
@@ -267,85 +174,31 @@
                 success:function(response)
                 { 
                   var status=response.status;
-                  
                   var message=response.message;
-
-               
-                  submit_btn.disabled=false;
-                  
-
-                  
                   if(status== -1 || status==0)
                   {
-                
                 document.getElementById("toast-message").innerHTML=message;
-                
                 var toastEl = document.querySelector('.toast-danger');
-                
                 var toast = new bootstrap.Toast(toastEl);
-                
                 toast.show();
                 }
 
-                else
-                {
-                var toastEl = document.querySelector('.toast');
-                
+                else{
+                  var toastEl = document.querySelector('.toast');
                 var toast = new bootstrap.Toast(toastEl);
-                
                 toast.show(); 
                 }
-
                 },
-                error: function (xhr, status, error) 
-              {
+                error: function (xhr, status, error) {
                   alert(error);
                   alert(error.message);
-                  
-                 submit_btn.disabled=false;
-                 
-                document.getElementById("toast-message").innerHTML=error;
+                 document.getElementById("toast-message").innerHTML=error;
                 var toastEl = document.querySelector('.toast-danger');
                 var toast = new bootstrap.Toast(toastEl);
-                toast.show();  
+                toast.show();            
               }
             });
      });
-
-     const handleFile=(e)=>
-     {
-     const file = e.target.files[0];
-     if(!file)
-     {
-      return;
-     }
-
-    const reader = new FileReader();
-
-    reader.onload = (e) =>
-    {
-      try
-      {
-       const data = new Uint8Array(e.target.result);
-       const workbook = XLSX.read(data, { type: 'array' });
-       const sheetName = workbook.SheetNames[0];
-       const worksheet = workbook.Sheets[sheetName];
-      
-      const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-      
-      rows.forEach((row,index)=>{
-      });
-
-      }
-      catch(error)
-      {
-        console.error("Error reading file:", error);
-        alert("Error reading file");
-      }
-    }
-
-     }
-
     });
 
     </script>

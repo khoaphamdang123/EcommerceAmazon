@@ -6,7 +6,7 @@ public class AddProductModel
 {   public int Id{get;set;}
     public string ProductName{get;set;}
 
-    public string Price{get;set;}
+    public int Price{get;set;}
 
     public int Quantity{get;set;}
     
@@ -24,7 +24,7 @@ public class AddProductModel
 
     public List<string> ImageFiles{get;set;}
 
-    public List<IFormFile> VariantFiles{get;set;}
+    public List<string> VariantFiles{get;set;}
 
     public List<string> Color{get;set;}
 

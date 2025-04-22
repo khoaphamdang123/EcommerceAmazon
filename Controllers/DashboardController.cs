@@ -45,19 +45,32 @@ public class DashboardController : BaseAdminController
    }
 
     int total_orders=this._dashboard.countToTalOrder();    
+
+    Console.WriteLine("Still come to here");
     
     int profit_in_day=this._dashboard.countProfitByDay(DateTime.Now.Day);
+
     
     int order_in_day=this._dashboard.countOrderByDay(DateTime.Now.Day);
-    
+
+    Console.WriteLine("Still come to here2");
+
     int order_in_year=this._dashboard.countOrderByYear(DateTime.Now.Year);
-    
+
+    Console.WriteLine("Still come to here3");
+
     decimal total_profit=this._dashboard.countToTalProfit();    
-    
+
+    Console.WriteLine("Still come to here4");
+
     int total_profit_previous_1_year=this._dashboard.countProfitByYear(DateTime.Now.Year-1);
-    
+
+    Console.WriteLine("Still come to here5");
+
     int total_profit_previous_2_year=this._dashboard.countProfitByYear(DateTime.Now.Year-2);
-    
+
+    Console.WriteLine("Still come to here6");
+
     var cat_list = await this._category.getAllCategory();
     
     int total_visitors=await this._trackData.getCurrentVisitedCount();

@@ -10,6 +10,7 @@ using System.Collections.Frozen;
 using StackExchange.Redis;
 using System.Text.Json;
 using Newtonsoft.Json;
+using System.Globalization;
 
 
 namespace Ecommerce_Product.Service;
@@ -776,10 +777,9 @@ public async Task<bool> checkProductExist(string product_name)
 public async Task<int> addNewProductByLink(string link,int category)
 { 
   int created_res=0;
-
   try
   {
-   
+
    using(HttpClient client = new HttpClient())
    {
     string api_url=Environment.GetEnvironmentVariable("SCRAPER_URL");
@@ -788,12 +788,25 @@ public async Task<int> addNewProductByLink(string link,int category)
 
     string asin= this._sp_services.extractASIN(link);
 
+    Console.WriteLine("API_URL:"+api_url);
+
+    Console.WriteLine("API_KEY:"+api_key);
+
+    Console.WriteLine("ASIN:"+asin);
+
     if(!string.IsNullOrEmpty(asin))
     {  
-    string request_url=$"{api_url}?api_key={api_key}&asin={link}&country=us&tld=com";
+
+    string request_url=$"{api_url}?api_key={api_key}&asin={asin}&country=us&tld=com";
+    Console.WriteLine("Request_url:"+request_url);
+    DateTime startTime = DateTime.Now;
     var response = await client.GetAsync(request_url);
     if(response.IsSuccessStatusCode)
-    {
+    { 
+    DateTime endTime = DateTime.Now;
+
+    Console.WriteLine("Time taken to get response:"+(endTime-startTime).TotalSeconds);
+
       var data = await response.Content.ReadAsStringAsync();
 
       var product_data=JsonConvert.DeserializeObject<ProductAmazon>(data);
@@ -801,8 +814,15 @@ public async Task<int> addNewProductByLink(string link,int category)
       if(product_data!=null)
       {
        string product_name=product_data.Name;
+
+      var check_product_exist=await this._context.Products.FirstOrDefaultAsync(c=>c.ProductName==product_name);
+
+      if(check_product_exist!=null)
+      {
+      return -1;
+      }
        
-       string product_price=product_data.Pricing;
+       string product_price=product_data.Pricing.Replace("$","").Replace(".",",").Trim();
        
        string full_description = product_data.Full_Description;
        
@@ -881,7 +901,8 @@ public async Task<int> addNewProductByLink(string link,int category)
 
   var new_size_ob = await this._context.Sizes.FirstOrDefaultAsync(c=>c.Sizename==size);
 
-  var new_varian_ob=new Variant{Colorid=new_color_ob!=null?new_color_ob.Id:null,Sizeid=new_size_ob!=null?new_size_ob.Id:null,Price=string.IsNullOrEmpty(price_value)?0:Convert.ToInt32(price_value)};
+  var new_varian_ob=new Variant{Colorid=new_color_ob!=null?new_color_ob.Id:null,Sizeid=new_size_ob!=null?new_size_ob.Id:null,Price=string.IsNullOrEmpty(price_value)?0:decimal.Parse(price_value,CultureInfo.InvariantCulture)};
+ 
  if(new_color_ob!=null || new_size_ob!=null)
  {
   variant.Add(new_varian_ob);
@@ -929,292 +950,292 @@ public async Task<int> addNewProductByLink(string link,int category)
 
 public async Task<int> addNewProduct(AddProductModel model)
 { int created_res=0;
-  try
-  {
+//   try
+//   {
   
-  List<IFormFile> img_files=new List<IFormFile>();
+//   List<IFormFile> img_files=new List<IFormFile>();
 
-  List<IFormFile> variant_files=new List<IFormFile>();
+//   List<IFormFile> variant_files=new List<IFormFile>();
 
-   string product_name=model.ProductName;
+//    string product_name=model.ProductName;
 
-   int discount = model.Discount;
+//    int discount = model.Discount;
 
-   Console.WriteLine("Product name:"+product_name);
+//    Console.WriteLine("Product name:"+product_name);
    
-   int price=model.Price;
+//    int price=model.Price;
 
-   if(price<0)
-   {
-    price=0;
-   }
+//    if(price<0)
+//    {
+//     price=0;
+//    }
 
-      Console.WriteLine("Price:"+price);
-
-   
-   int quantity = model.Quantity;
-
-      Console.WriteLine("QUANTITY:"+quantity);
+//       Console.WriteLine("Price:"+price);
 
    
-   int sub_cat=model.SubCategory;
+//    int quantity = model.Quantity;
 
-      Console.WriteLine("Subcat:"+sub_cat);
-
-   
-   int brand=model.Brand;
-      Console.WriteLine("brand:"+brand);
-
-
-   int category = model.Category;
-
-         Console.WriteLine("category:"+category);
-
-
-   string description=model.Description;
-
-   string stat_description=model.StatDescription;
-
-         Console.WriteLine("description:"+description);
+//       Console.WriteLine("QUANTITY:"+quantity);
 
    
-   string inbox_description=model.InboxDescription;
-   
-      Console.WriteLine("inbox:"+inbox_description);
+//    int sub_cat=model.SubCategory;
 
-
-   string discount_description = model.DiscountDescription;
-
-    Console.WriteLine("discount:"+discount_description);
-
-
-   string folder_name="UploadImages";
-
-   string upload_path=Path.Combine(this._webHostEnv.WebRootPath,folder_name);
-
-  string front_avatar="";
-
-  string back_avatar="";
-
-  Console.WriteLine("CHECK POINT 0");
-
-   List<string> colors=model.Color;
-
-        Console.WriteLine("colors:"+colors.Count);
+//       Console.WriteLine("Subcat:"+sub_cat);
 
    
-   List<string> weights=model.Weight;
+//    int brand=model.Brand;
+//       Console.WriteLine("brand:"+brand);
+
+
+//    int category = model.Category;
+
+//          Console.WriteLine("category:"+category);
+
+
+//    string description=model.Description;
+
+//    string stat_description=model.StatDescription;
+
+//          Console.WriteLine("description:"+description);
+
+   
+//    string inbox_description=model.InboxDescription;
+   
+//       Console.WriteLine("inbox:"+inbox_description);
+
+
+//    string discount_description = model.DiscountDescription;
+
+//     Console.WriteLine("discount:"+discount_description);
+
+
+//    string folder_name="UploadImages";
+
+//    string upload_path=Path.Combine(this._webHostEnv.WebRootPath,folder_name);
+
+//   string front_avatar="";
+
+//   string back_avatar="";
+
+//   Console.WriteLine("CHECK POINT 0");
+
+//    List<string> colors=model.Color;
+
+//         Console.WriteLine("colors:"+colors.Count);
+
+   
+//    List<string> weights=model.Weight;
   
-      Console.WriteLine("weight:"+weights.Count);
+//       Console.WriteLine("weight:"+weights.Count);
 
    
-   List<string> sizes=model.Size;
+//    List<string> sizes=model.Size;
 
-          Console.WriteLine("sizes:"+sizes.Count);
-
-   
-   List<string> mirrors=model.Mirror;
-
-          Console.WriteLine("mirror:"+mirrors.Count);
+//           Console.WriteLine("sizes:"+sizes.Count);
 
    
-   List<string> versions=model.Version;
+//    List<string> mirrors=model.Mirror;
+
+//           Console.WriteLine("mirror:"+mirrors.Count);
+
    
-   List<string> prices = model.Prices;
+//    List<string> versions=model.Version;
+   
+//    List<string> prices = model.Prices;
 
-          Console.WriteLine("version:"+versions.Count);
+//           Console.WriteLine("version:"+versions.Count);
 
- if(model.ImageFiles!=null)
- {
-  img_files=model.ImageFiles;
- }
+//  if(model.ImageFiles!=null)
+//  {
+//   img_files=model.ImageFiles;
+//  }
 
       
-  Console.WriteLine("img_file:"+img_files.Count);
+//   Console.WriteLine("img_file:"+img_files.Count);
 
-if(model.VariantFiles!=null)
-{
-variant_files = model.VariantFiles;
-}
+// if(model.VariantFiles!=null)
+// {
+// variant_files = model.VariantFiles;
+// }
 
-  Console.WriteLine("variant file:"+variant_files.Count);
+//   Console.WriteLine("variant file:"+variant_files.Count);
 
    
-   if(await checkProductExist(product_name))
-   {
-    created_res=-1;
-    return created_res;
-   }
+//    if(await checkProductExist(product_name))
+//    {
+//     created_res=-1;
+//     return created_res;
+//    }
 
-   if(sub_cat!=-1)
-   {
-      var sub_cat_ob=await this.findCatIdBySubId(sub_cat);
-      if(sub_cat_ob!=null)
-      {
-        category=sub_cat_ob.Category.Id;
-      } 
-   }
-  Console.WriteLine("check point 1");
+//    if(sub_cat!=-1)
+//    {
+//       var sub_cat_ob=await this.findCatIdBySubId(sub_cat);
+//       if(sub_cat_ob!=null)
+//       {
+//         category=sub_cat_ob.Category.Id;
+//       } 
+//    }
+//   Console.WriteLine("check point 1");
 
-  if(!Directory.Exists(upload_path))
-  {
-    Directory.CreateDirectory(upload_path);
-  }
+//   if(!Directory.Exists(upload_path))
+//   {
+//     Directory.CreateDirectory(upload_path);
+//   }
 
- Console.WriteLine("check point 2");
+//  Console.WriteLine("check point 2");
 
- Console.WriteLine("check point 2.5");
+//  Console.WriteLine("check point 2.5");
 
 
- string created_date=DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss");
+//  string created_date=DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss");
  
- string updated_date = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss");
+//  string updated_date = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss");
  
- List<Variant> variant=new List<Variant>();
+//  List<Variant> variant=new List<Variant>();
  
-Console.WriteLine("colors count:"+colors.Count);
+// Console.WriteLine("colors count:"+colors.Count);
 
- for(int i=0;i<colors.Count;i++)
- {
-  string color=colors[i];
-  string weight=weights[i];
-  string size=sizes[i];
-  string version=versions[i];
-  string mirror=mirrors[i];
-  string price_value = prices[i];
-  Regex reg=new Regex("[^0-9]");
-  if(weight!=null)
-  {
-  weight=reg.Replace(weight,"");
-  }
- Console.WriteLine("inside here.");
-  var check_color_exist = await this._context.Colors.FirstOrDefaultAsync(c=>c.Colorname==color);
-  var check_size_exist = await this._context.Sizes.FirstOrDefaultAsync(c=>c.Sizename==size);
-  var check_version_exist = await this._context.Versions.FirstOrDefaultAsync(c=>c.Versionname==version);
-  var check_mirror_exist = await this._context.Mirrors.FirstOrDefaultAsync(c=>c.Mirrorname==mirror);
-  Console.WriteLine("throught here");
-  if(check_color_exist==null)
-  {if(!string.IsNullOrEmpty(color))
-  {
-    var new_color = new Models.Color{Colorname=color};
+//  for(int i=0;i<colors.Count;i++)
+//  {
+//   string color=colors[i];
+//   string weight=weights[i];
+//   string size=sizes[i];
+//   string version=versions[i];
+//   string mirror=mirrors[i];
+//   string price_value = prices[i];
+//   Regex reg=new Regex("[^0-9]");
+//   if(weight!=null)
+//   {
+//   weight=reg.Replace(weight,"");
+//   }
+//  Console.WriteLine("inside here.");
+//   var check_color_exist = await this._context.Colors.FirstOrDefaultAsync(c=>c.Colorname==color);
+//   var check_size_exist = await this._context.Sizes.FirstOrDefaultAsync(c=>c.Sizename==size);
+//   var check_version_exist = await this._context.Versions.FirstOrDefaultAsync(c=>c.Versionname==version);
+//   var check_mirror_exist = await this._context.Mirrors.FirstOrDefaultAsync(c=>c.Mirrorname==mirror);
+//   Console.WriteLine("throught here");
+//   if(check_color_exist==null)
+//   {if(!string.IsNullOrEmpty(color))
+//   {
+//     var new_color = new Models.Color{Colorname=color};
 
-    await this._context.Colors.AddAsync(new_color);
-  }
-  }
-   if(check_version_exist==null)
-  {
-   if(!string.IsNullOrEmpty(version))
-   {
-    var new_version = new Ecommerce_Product.Models.Version{Versionname=version};
-    await this._context.Versions.AddAsync(new_version);
-   }
-  }
-   if(check_size_exist==null)
-  { if(!string.IsNullOrEmpty(size))
-  {
-    var new_size = new Ecommerce_Product.Models.Size{Sizename=size};
-    await this._context.Sizes.AddAsync(new_size);
-  }
-  }
-   if(check_mirror_exist==null)
-  { if(!string.IsNullOrEmpty(mirror))
-  {
-    var new_mirror = new Ecommerce_Product.Models.Mirror{Mirrorname=mirror};
-    await this._context.Mirrors.AddAsync(new_mirror);
-  }
-  }
+//     await this._context.Colors.AddAsync(new_color);
+//   }
+//   }
+//    if(check_version_exist==null)
+//   {
+//    if(!string.IsNullOrEmpty(version))
+//    {
+//     var new_version = new Ecommerce_Product.Models.Version{Versionname=version};
+//     await this._context.Versions.AddAsync(new_version);
+//    }
+//   }
+//    if(check_size_exist==null)
+//   { if(!string.IsNullOrEmpty(size))
+//   {
+//     var new_size = new Ecommerce_Product.Models.Size{Sizename=size};
+//     await this._context.Sizes.AddAsync(new_size);
+//   }
+//   }
+//    if(check_mirror_exist==null)
+//   { if(!string.IsNullOrEmpty(mirror))
+//   {
+//     var new_mirror = new Ecommerce_Product.Models.Mirror{Mirrorname=mirror};
+//     await this._context.Mirrors.AddAsync(new_mirror);
+//   }
+//   }
 
-  await this.saveChanges();
+//   await this.saveChanges();
  
- Console.WriteLine("out of here");
+//  Console.WriteLine("out of here");
  
-  var new_color_ob=await this._context.Colors.FirstOrDefaultAsync(c=>c.Colorname==color);
+//   var new_color_ob=await this._context.Colors.FirstOrDefaultAsync(c=>c.Colorname==color);
 
-  var new_size_ob = await this._context.Sizes.FirstOrDefaultAsync(c=>c.Sizename==size);
+//   var new_size_ob = await this._context.Sizes.FirstOrDefaultAsync(c=>c.Sizename==size);
 
-  var new_version_ob = await this._context.Versions.FirstOrDefaultAsync(c=>c.Versionname==version);
+//   var new_version_ob = await this._context.Versions.FirstOrDefaultAsync(c=>c.Versionname==version);
 
-  var new_mirror_ob = await this._context.Mirrors.FirstOrDefaultAsync(c=>c.Mirrorname==mirror);
+//   var new_mirror_ob = await this._context.Mirrors.FirstOrDefaultAsync(c=>c.Mirrorname==mirror);
 
-  var new_varian_ob=new Variant{Colorid=new_color_ob!=null?new_color_ob.Id:null,Sizeid=new_size_ob!=null?new_size_ob.Id:null,Weight=string.IsNullOrEmpty(weight)?-1:Convert.ToUInt32(weight),Price=string.IsNullOrEmpty(price_value)?0:Convert.ToInt32(price_value),Versionid=new_version_ob!=null?new_version_ob.Id:null,Mirrorid=new_mirror_ob!=null?new_mirror_ob.Id:null};
- if(new_color_ob!=null || new_size_ob!=null || new_version_ob!=null || new_mirror_ob!=null)
- {
-  variant.Add(new_varian_ob);
- } 
- }
+//   var new_varian_ob=new Variant{Colorid=new_color_ob!=null?new_color_ob.Id:null,Sizeid=new_size_ob!=null?new_size_ob.Id:null,Weight=string.IsNullOrEmpty(weight)?-1:Convert.ToUInt32(weight),Price=string.IsNullOrEmpty(price_value)?0:Convert.ToInt32(price_value),Versionid=new_version_ob!=null?new_version_ob.Id:null,Mirrorid=new_mirror_ob!=null?new_mirror_ob.Id:null};
+//  if(new_color_ob!=null || new_size_ob!=null || new_version_ob!=null || new_mirror_ob!=null)
+//  {
+//   variant.Add(new_varian_ob);
+//  } 
+//  }
 
- Console.WriteLine("check point 3");
+//  Console.WriteLine("check point 3");
 
-if(img_files!=null)
-{
- for(int i=0;i<img_files.Count;i++)
- { 
-   var img=img_files[i];
+// if(img_files!=null)
+// {
+//  for(int i=0;i<img_files.Count;i++)
+//  { 
+//    var img=img_files[i];
    
-  string extension=Path.GetExtension(img.FileName);
+//   string extension=Path.GetExtension(img.FileName);
 
-  string file_name=Guid.NewGuid().ToString()+extension;
+//   string file_name=Guid.NewGuid().ToString()+extension;
 
-  string file_path = Path.Combine(upload_path,file_name);
-   if(i==0)
-   {
-   front_avatar=file_path;
-   }
-   else
-   {
-    back_avatar=file_path;
-   }
+//   string file_path = Path.Combine(upload_path,file_name);
+//    if(i==0)
+//    {
+//    front_avatar=file_path;
+//    }
+//    else
+//    {
+//     back_avatar=file_path;
+//    }
     
-   using(var fileStream=new FileStream(file_path,FileMode.Create))
-   {
-    await img.CopyToAsync(fileStream);
-   }
- }
-}
+//    using(var fileStream=new FileStream(file_path,FileMode.Create))
+//    {
+//     await img.CopyToAsync(fileStream);
+//    }
+//  }
+// }
 
-List<ProductImage> list_img=new List<ProductImage>();
+// List<ProductImage> list_img=new List<ProductImage>();
 
-if(variant_files!=null)
-{ 
-for(int i=0;i<variant_files.Count;i++)
-{
-  var img = variant_files[i];
+// if(variant_files!=null)
+// { 
+// for(int i=0;i<variant_files.Count;i++)
+// {
+//   var img = variant_files[i];
 
-  string extension=Path.GetExtension(img.FileName);
+//   string extension=Path.GetExtension(img.FileName);
 
-  string file_name=Guid.NewGuid().ToString()+extension;
+//   string file_name=Guid.NewGuid().ToString()+extension;
 
-  string file_path = Path.Combine(upload_path,file_name);
+//   string file_path = Path.Combine(upload_path,file_name);
 
-  var img_obj=new ProductImage{Avatar=file_path};
+//   var img_obj=new ProductImage{Avatar=file_path};
 
-  list_img.Add(img_obj);
+//   list_img.Add(img_obj);
 
-  using(var fileStream=new FileStream(file_path,FileMode.Create))
-  {
-    await img.CopyToAsync(fileStream);
-  }
-}
-} 
+//   using(var fileStream=new FileStream(file_path,FileMode.Create))
+//   {
+//     await img.CopyToAsync(fileStream);
+//   }
+// }
+// } 
   
- var latest_sort_id=await this._context.Products.MaxAsync(c=>c.SortId)??0;
+//  var latest_sort_id=await this._context.Products.MaxAsync(c=>c.SortId)??0;
 
- var new_sort_id=latest_sort_id+1;
+//  var new_sort_id=latest_sort_id+1;
 
- var product= new Product{ProductName=product_name,CategoryId=category,Discount=discount,SubCatId=sub_cat==-1?null:sub_cat,BrandId=brand==-1?null:brand,Price=price.ToString(),Quantity=quantity,Status="Còn hàng",Description=description,Statdescription=stat_description,InboxDescription=inbox_description,DiscountDescription=discount_description,Frontavatar=front_avatar,Backavatar=back_avatar,SortId=new_sort_id,SortProminentId=new_sort_id,CreatedDate=created_date,UpdatedDate=updated_date,ProductImages=list_img,Variants=variant};
+//  var product= new Product{ProductName=product_name,CategoryId=category,Discount=discount,SubCatId=sub_cat==-1?null:sub_cat,BrandId=brand==-1?null:brand,Price=price.ToString(),Quantity=quantity,Status="Còn hàng",Description=description,Statdescription=stat_description,InboxDescription=inbox_description,DiscountDescription=discount_description,Frontavatar=front_avatar,Backavatar=back_avatar,SortId=new_sort_id,SortProminentId=new_sort_id,CreatedDate=created_date,UpdatedDate=updated_date,ProductImages=list_img,Variants=variant};
 
-  await this._context.Products.AddAsync(product);
+//   await this._context.Products.AddAsync(product);
 
-  await this.saveChanges();
+//   await this.saveChanges();
 
-  created_res=1;
+  // created_res=1;
 
-  Console.WriteLine("Created res here is:"+created_res);
-  }
-  catch(Exception er)
-  { created_res=0;
-    Console.WriteLine("Add New Product Exception:"+er.Message);
-  }
+  // Console.WriteLine("Created res here is:"+created_res);
+  // }
+  // catch(Exception er)
+  // { created_res=0;
+  //   Console.WriteLine("Add New Product Exception:"+er.Message);
+  // }
 
   return created_res;
 }
@@ -1280,6 +1301,9 @@ try
 
   string back_avatar="";
 
+
+
+
   Console.WriteLine("CHECK POINT 0");
 
    List<string> colors=model.Color;
@@ -1291,11 +1315,7 @@ try
    List<string> sizes=model.Size;
 
 
-   
-
-
-   
-
+  
    
    
    List<string> prices = model.Prices;
@@ -1307,19 +1327,19 @@ try
    Console.WriteLine("img_file:"+img_files.Count);
 
    
-   List<IFormFile> variant_files = model.VariantFiles;
+   List<string> variant_files = model.VariantFiles;
 
 
 
-   if(sub_cat!=-1)
-   {
-      var sub_cat_ob=await this.findCatIdBySubId(sub_cat);
+  //  if(sub_cat!=-1)
+  //  {
+  //     var sub_cat_ob=await this.findCatIdBySubId(sub_cat);
       
-      if(sub_cat_ob!=null)
-      {
-        category=sub_cat_ob.Category.Id;
-      }
-   }
+  //     if(sub_cat_ob!=null)
+  //     {
+  //       category=sub_cat_ob.Category.Id;
+  //     }
+  //  }
   Console.WriteLine("check point 1");
 
   if(!Directory.Exists(upload_path))
@@ -1338,30 +1358,22 @@ if(colors!=null)
 {
  for(int i=0;i<colors.Count;i++)
  {
-  Console.WriteLine("color:"+colors.Count);
-    Console.WriteLine("weight:"+weights.Count);
-  Console.WriteLine("Inside here:"+sizes.Count);
-    Console.WriteLine("Inside here:"+colors.Count);
-  Console.WriteLine("Inside here:"+versions.Count);
-    Console.WriteLine("Inside here:"+mirrors.Count);
-      Console.WriteLine("prices:"+prices.Count);
+  // Console.WriteLine("color:"+colors.Count);
+  //   Console.WriteLine("weight:"+weights.Count);
+  // Console.WriteLine("Inside here:"+sizes.Count);
+  //   Console.WriteLine("Inside here:"+colors.Count);
+  // Console.WriteLine("Inside here:"+versions.Count);
+  //   Console.WriteLine("Inside here:"+mirrors.Count);
+  //     Console.WriteLine("prices:"+prices.Count);
 
   string? color=colors[i];
-  string? weight=weights[i];
   string? size=sizes[i];
-  string? version=versions[i];
-  string? mirror=mirrors[i];
   string? price_value=prices[i];
-  Console.WriteLine("Version:"+version);
   Regex reg=new Regex("[^0-9]");
-  if(weight!=null)
-  {
-  weight=reg.Replace(weight,"");
-  }
+
   var check_color_exist=new Models.Color();
   var check_size_exist=new Models.Size();
-  var check_version_exist=new Models.Version();
-  var check_mirror_exist=new Models.Mirror();
+
 
  if(!string.IsNullOrEmpty(color))
  {
@@ -1369,19 +1381,12 @@ if(colors!=null)
  }
 
   Console.WriteLine("check color exist");
+  
   if(!string.IsNullOrEmpty(size))
   {
    check_size_exist = await this._context.Sizes.FirstOrDefaultAsync(c=>c.Sizename==size);
   }
-  if(!string.IsNullOrEmpty(version))
-  {
-   check_version_exist = await this._context.Versions.FirstOrDefaultAsync(c=>c.Versionname==version);   
-  }
-  if(!string.IsNullOrEmpty(mirror))
-  {
-   check_mirror_exist = await this._context.Mirrors.FirstOrDefaultAsync(c=>c.Mirrorname==mirror);
-  }
-
+ 
   if(check_color_exist==null)
   {
     if(!string.IsNullOrEmpty(color))
@@ -1391,30 +1396,13 @@ if(colors!=null)
     await this._context.Colors.AddAsync(new_color);
   }
   }
-   if(check_version_exist==null)
-  {
-   if(!string.IsNullOrEmpty(version))
-   {
-    var new_version = new Models.Version{Versionname=version};
-    
-    await this._context.Versions.AddAsync(new_version);
-   }
-  }
+  
    if(check_size_exist==null)
   { if(!string.IsNullOrEmpty(size))
   {
     var new_size = new Models.Size{Sizename=size};
     
     await this._context.Sizes.AddAsync(new_size);
-  }
-  }
-   if(check_mirror_exist==null)
-  { 
-    if(!string.IsNullOrEmpty(mirror))
-  {
-    var new_mirror = new Mirror{Mirrorname=mirror};
-
-    await this._context.Mirrors.AddAsync(new_mirror);    
   }
   }
 
@@ -1424,13 +1412,9 @@ if(colors!=null)
 
   var new_size_ob = await this._context.Sizes.FirstOrDefaultAsync(c=>c.Sizename==size);
 
-  var new_version_ob = await this._context.Versions.FirstOrDefaultAsync(c=>c.Versionname==version);
+  var new_varian_ob=new Variant{Colorid=new_color_ob!=null?new_color_ob.Id:null,Sizeid=new_size_ob!=null?new_size_ob.Id:null,Price=string.IsNullOrEmpty(price_value)?0:Convert.ToInt32(price_value)};
 
-  var new_mirror_ob = await this._context.Mirrors.FirstOrDefaultAsync(c=>c.Mirrorname==mirror);
-
-  var new_varian_ob=new Variant{Colorid=new_color_ob!=null?new_color_ob.Id:null,Sizeid=new_size_ob!=null?new_size_ob.Id:null,Weight=string.IsNullOrEmpty(weight)?-1:Convert.ToUInt32(weight),Price=string.IsNullOrEmpty(price_value)?0:Convert.ToInt32(price_value),Versionid=new_version_ob!=null?new_version_ob.Id:null,Mirrorid=new_mirror_ob!=null?new_mirror_ob.Id:null};
-
- if(new_color_ob!=null || new_size_ob!=null || new_version_ob!=null || new_mirror_ob!=null)
+ if(new_color_ob!=null || new_size_ob!=null)
  {
   variant.Add(new_varian_ob);
  } 
@@ -1445,13 +1429,8 @@ if(img_files!=null)
  
  for(int i=0;i<img_files.Count;i++)
  { 
-  var img=img_files[i];
-   
-  string extension=Path.GetExtension(img.FileName);
 
-  string file_name=Guid.NewGuid().ToString()+extension;
-
-  string file_path = Path.Combine(upload_path,file_name);
+  string file_path = img_files[i];
    
    if(i==0)
    {
@@ -1473,10 +1452,10 @@ if(img_files!=null)
     }
    }
  
-   using(var fileStream=new FileStream(file_path,FileMode.Create))
-   {
-    await img.CopyToAsync(fileStream);  
-  }
+  //  using(var fileStream=new FileStream(file_path,FileMode.Create))
+  //  {
+  //   await img.CopyToAsync(fileStream);  
+  // }
  }
 }
 else
@@ -1496,22 +1475,22 @@ if(variant_files!=null)
 {//Console.WriteLine("Lengh of variant file here is:"+variant_files.Count);
 for(int i=0;i<variant_files.Count;i++)
 {
-  var img = variant_files[i];
+//   var img = variant_files[i];
 
- string extension=Path.GetExtension(img.FileName);
+//  string extension=Path.GetExtension(img.FileName);
 
-  string file_name=Guid.NewGuid().ToString()+extension;
+//   string file_name=Guid.NewGuid().ToString()+extension;
 
-  string file_path = Path.Combine(upload_path,file_name);
+  string file_path = variant_files[i];
 
   var img_obj=new ProductImage{Avatar=file_path};
 
   list_img.Add(img_obj);
 
-  using(var fileStream=new FileStream(file_path,FileMode.Create))
-  {
-    await img.CopyToAsync(fileStream);
-  }
+  // using(var fileStream=new FileStream(file_path,FileMode.Create))
+  // {
+  //   await img.CopyToAsync(fileStream);
+  // }
   
   foreach(var prod_img in product_ob.ProductImages )
   {
@@ -1534,7 +1513,7 @@ else
   Console.WriteLine("temp list img count:"+temp_list_img.Count);
 }
 
- var product= new Product{ProductName=product_name,Discount=discount,CategoryId=category,SubCatId=sub_cat==-1?null:sub_cat,BrandId=brand==-1?null:brand,Price=price.ToString(),Quantity=quantity,Status=status,Description=description,Statdescription=stat_description,InboxDescription=inbox_description,DiscountDescription=discount_description,Frontavatar=string.IsNullOrEmpty(front_avatar)?"":front_avatar,Backavatar=string.IsNullOrEmpty(back_avatar)?"":back_avatar,UpdatedDate=updated_date,ProductImages=list_img.Count==0?list_img:list_img,Variants=variant};
+ var product= new Product{ProductName=product_name,Discount=discount,CategoryId=category,Price=price.ToString(),Quantity=quantity,Status=status,Description=description,Frontavatar=string.IsNullOrEmpty(front_avatar)?"":front_avatar,Backavatar=string.IsNullOrEmpty(back_avatar)?"":back_avatar,Small_Description=small_description,UpdatedDate=updated_date,ProductImages=list_img.Count==0?list_img:list_img,Variants=variant};
 
   if(product_ob!=null)
   {
@@ -1551,62 +1530,33 @@ else
     product_ob.Variants=product.Variants;
     product_ob.Status=product.Status;
     product_ob.Description=product.Description;
-    product_ob.Statdescription=product.Statdescription;
-    product_ob.InboxDescription=product.InboxDescription;
-    product_ob.DiscountDescription=product.DiscountDescription;
+    product_ob.Small_Description=product.Small_Description;
     product_ob.UpdatedDate=product.UpdatedDate;
     this._context.Products.Update(product_ob);
     await this.saveChanges();
     Console.WriteLine("DID STAY HERE");
     updated_res=1;
-    if(!string.IsNullOrEmpty(temp_front_avatar))
-    {
-      await this._sp_services.removeFiles(temp_front_avatar);
-    }
-    if(!string.IsNullOrEmpty(temp_back_avatar))
-    {
-      await this._sp_services.removeFiles(temp_back_avatar);
-    }
-    if(temp_list_img.Count>0)
-    {
-      foreach(var img in temp_list_img)
-      {
-        await this._sp_services.removeFiles(img);
-      }
-    }
+    // if(!string.IsNullOrEmpty(temp_front_avatar))
+    // {
+    //   await this._sp_services.removeFiles(temp_front_avatar);
+    // }
+    // if(!string.IsNullOrEmpty(temp_back_avatar))
+    // {
+    //   await this._sp_services.removeFiles(temp_back_avatar);
+    // }
+    // if(temp_list_img.Count>0)
+    // {
+    //   foreach(var img in temp_list_img)
+    //   {
+    //     await this._sp_services.removeFiles(img);
+    //   }
+    // }
   }
 }
 catch(Exception er)
 { 
   Console.WriteLine("Update Product Exception:"+er.Message);
 }
-
-  // var redis_item=await getProductRedis();
-
-  // var prominent_item=await getProminentProductRedis();
-  
-  // var new_add_product =await this.findProductByName(model.ProductName);
-  
-  // for(int i=0;i<redis_item.Count;i++)
-  // {
-  //   if(redis_item[i].Id==id)
-  //   {
-  //     redis_item[i]=new_add_product;
-  //   }
-  //   if(prominent_item[i].Id==id)
-  //   {
-  //     prominent_item[i]=new_add_product;
-  //   }
-  // }
-
-  // await this.saveProductRedis(redis_item);
-
-  // await this.saveProminentProductRedis(prominent_item);
-
-  // if(await this._db.KeyExistsAsync("products"))
-  // {
-  //   await this._db.KeyDeleteAsync("products");
-  // }
 
 return updated_res;
 }

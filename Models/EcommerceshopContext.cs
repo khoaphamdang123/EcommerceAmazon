@@ -490,13 +490,13 @@ public partial class EcommerceshopContext : DbContext
             entity.Property(e => e.UpdatedDate).HasColumnType("character varying");
             entity.Property(e=>e.SortId).HasColumnName("sortid");
             entity.Property(e=>e.SortProminentId).HasColumnName("sortprominentid");
-            entity.Property(e=>e.Manufacturer).HasColumnType("character varying");
-            entity.Property(e=>e.Small_Description).HasColumnType("character varying");
-            entity.Property(e=>e.Asin).HasColumnType("character varying");
-            entity.Property(e=>e.Package_Dimensions).HasColumnType("character varying");
-            entity.Property(e=>e.Model).HasColumnType("character varying");
+            entity.Property(e=>e.Manufacturer).HasColumnType("character varying").HasColumnName("manufacturer");
+            entity.Property(e=>e.Small_Description).HasColumnType("character varying").HasColumnName("small_description");
+            entity.Property(e=>e.Asin).HasColumnType("character varying").HasColumnName("asin");
+            entity.Property(e=>e.Package_Dimensions).HasColumnType("character varying").HasColumnName("package_dimensions");
+            entity.Property(e=>e.Model).HasColumnType("character varying").HasColumnName("model");
             
-            entity.Property(e=>e.Date_First_Available).HasColumnType("character varying");
+            entity.Property(e=>e.Date_First_Available).HasColumnType("character varying").HasColumnName("date_first_available");
 
             entity.HasOne(d => d.Brand).WithMany(p => p.Products)
                 .HasForeignKey(d => d.BrandId)

@@ -58,6 +58,7 @@ public async Task<string> convertVNDToUSD(string value)
 }
 
 public string extractASIN(string link)
+{ try
 {
    string pattern = @"/dp/([A-Z0-9]{10})";
 
@@ -69,6 +70,11 @@ public string extractASIN(string link)
         
         return asin;
     }
+}
+catch(Exception er)
+{
+    Console.WriteLine("Extract ASIN Exception:"+er.Message);
+}
     return null;
 }
 

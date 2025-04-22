@@ -326,36 +326,40 @@ public async Task<IActionResult> ProductsByName(string product_name)
   { 
     var category_list=await this._category.getAllCategory();
     
-    var brand_list = await this._category.getAllBrandList();
+    // var brand_list = await this._category.getAllBrandList();
 
-    List<SubCategory> sub_cat_list=new List<SubCategory>();
+    // List<SubCategory> sub_cat_list=new List<SubCategory>();
 
-    foreach(var cat in category_list)
-    {
-      foreach(var sub_cat in cat.SubCategory)
-      {
-        sub_cat_list.Add(sub_cat);
-      }
-    }
+    // foreach(var cat in category_list)
+    // {
+    //   foreach(var sub_cat in cat.SubCategory)
+    //   {
+    //     sub_cat_list.Add(sub_cat);
+    //   }
+    // }
     
     ViewBag.CategoryList=category_list;
     
-    ViewBag.BrandList=brand_list;
+    // ViewBag.BrandList=brand_list;
     
-    ViewBag.SubCatList=sub_cat_list;
+    // ViewBag.SubCatList=sub_cat_list;
     
     return View();
   }
-
+ 
   
   [Route("product_list/add_val")]
   [HttpPost]
-  public async Task<JsonResult> GetSampleData(AddProductModel model)
-{ Console.WriteLine("used to stay here:"+model.ProductName);
+  public async Task<JsonResult> GetSampleData(string link,int category)
+{ 
     
     StatusResponse response_data; 
 
-    int created_res = await this._product.addNewProduct(model);
+    Console.WriteLine("Link for this product is:"+link);
+
+    Console.WriteLine("Category for this product is:"+category);
+
+    int created_res = await this._product.addNewProductByLink(link,category);
 
     if (created_res == 0)
     {  
@@ -639,7 +643,6 @@ public async Task<IActionResult> UploadVideo(IFormFile file)
   
   StatusResponse response_data; 
 
-  Console.WriteLine("sample info:"+product.StatDescription);
 
   int created_res =await this._product.updateProduct(product.Id,product);
 
