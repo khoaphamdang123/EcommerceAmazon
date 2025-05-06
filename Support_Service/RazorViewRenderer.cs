@@ -16,7 +16,7 @@ public class RazorViewRenderer
 
      Console.WriteLine("View Path:"+viewsPath); 
 
-        _engine = new RazorLightEngineBuilder()
+    _engine = new RazorLightEngineBuilder()
             .UseFileSystemProject(viewsPath)
             .UseMemoryCachingProvider()
             .Build();        

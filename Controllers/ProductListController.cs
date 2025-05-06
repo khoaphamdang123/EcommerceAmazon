@@ -350,7 +350,7 @@ public async Task<IActionResult> ProductsByName(string product_name)
   
   [Route("product_list/add_val")]
   [HttpPost]
-  public async Task<JsonResult> GetSampleData(string link,int category)
+  public async Task<JsonResult> GetSampleData(string link,string link_background,int category)
 { 
     
     StatusResponse response_data; 
@@ -359,25 +359,30 @@ public async Task<IActionResult> ProductsByName(string product_name)
 
     Console.WriteLine("Category for this product is:"+category);
 
-    int created_res = await this._product.addNewProductByLink(link,category);
+    List<string> link_product=link.Split('\n').ToList();
 
-    if (created_res == 0)
+    List<string> link_background_product=link_background.Split('\n').ToList();
+
+    string failed_product="";
+
+    string existed_product="";
+
+    for(int i=0; i<link_product.Count;i++)
+    {    
+    string link_product_ob=link_product[i].Trim();
+    string link_background_ob=link_background_product[i].Trim();
+    int created_res = await this._product.addNewProductByLink(link_product_ob,link_background_ob,category);
+    if(created_res==0)
     {  
-        response_data = new StatusResponse 
-        {
-            Status = 0,
-            Message = "Thêm sản phẩm thất bại"
-        };
+        failed_product+=link_product_ob+",";
     }
-    else if (created_res == -1)
+    else if(created_res==-1)
     {
-        response_data = new StatusResponse  
-        {
-            Status = -1,
-            Message = "Sản phẩm đã tồn tại trong hệ thống"
-        };
+        existed_product+=link_product_ob+",";
     }
-    else
+    }
+
+    if(string.IsNullOrEmpty(failed_product) && string.IsNullOrEmpty(existed_product))
     {
         response_data = new StatusResponse  
         {
@@ -385,6 +390,57 @@ public async Task<IActionResult> ProductsByName(string product_name)
             Message = "Thêm sản phẩm thành công"
         };
     }
+    else if(!string.IsNullOrEmpty(failed_product) && string.IsNullOrEmpty(existed_product))
+    {
+        response_data = new StatusResponse  
+        {
+            Status = 0,
+            Message = "Thêm sản phẩm thất bại:"+failed_product
+        };
+    }
+    else if(string.IsNullOrEmpty(failed_product) && !string.IsNullOrEmpty(existed_product))
+    {
+        response_data = new StatusResponse  
+        {
+            Status = -1,
+            Message = "Sản phẩm đã tồn tại trong hệ thống:"+existed_product
+        };
+    }
+    else
+    {
+        response_data = new StatusResponse  
+        {
+            Status = 0,
+            Message = "Thêm sản phẩm thất bại:"+failed_product+"Sản phẩm đã tồn tại trong hệ thống:"+existed_product
+        };
+    }
+
+    // int created_res = await this._product.addNewProductByLink(link,category);
+
+    // if (created_res == 0)
+    // {  
+    //     response_data = new StatusResponse 
+    //     {
+    //         Status = 0,
+    //         Message = "Thêm sản phẩm thất bại"
+    //     };
+    // }
+    // else if (created_res == -1)
+    // {
+    //     response_data = new StatusResponse  
+    //     {
+    //         Status = -1,
+    //         Message = "Sản phẩm đã tồn tại trong hệ thống"
+    //     };
+    // }
+    // else
+    // {
+    //     response_data = new StatusResponse  
+    //     {
+    //         Status = 1,
+    //         Message = "Thêm sản phẩm thành công"
+    //     };
+    // }
     
     return Json(response_data);
     

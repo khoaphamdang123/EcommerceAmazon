@@ -236,6 +236,7 @@ public class ProductService:IProductRepository
   public async Task<Manual> findManualByLanguage(string language,Product product)
   { 
     var manual_ob=new Manual();
+
     try
     {
     var manuals=product.Manuals;
@@ -446,6 +447,7 @@ public async Task<int> deleteProduct(int id)
    {
     int val =await this._sp_services.removeFiles(ob.Avatar);
    }
+
  }
  catch(Exception er)
  {
@@ -610,7 +612,7 @@ private async Task<int> calculateAvgStar(Dictionary<int,int> list_star)
    {
     avg=total_star/total_reviews;
    }
-   return avg;
+   return avg;         
 }
 
 public async Task<int>getSingleProductRating(int product_id)
@@ -774,7 +776,7 @@ public async Task<bool> checkProductExist(string product_name)
   return false;
 }
 
-public async Task<int> addNewProductByLink(string link,int category)
+public async Task<int> addNewProductByLink(string link,string link_background,int category)
 { 
   int created_res=0;
   try
@@ -793,6 +795,7 @@ public async Task<int> addNewProductByLink(string link,int category)
     Console.WriteLine("API_KEY:"+api_key);
 
     Console.WriteLine("ASIN:"+asin);
+
 
     if(!string.IsNullOrEmpty(asin))
     {  
@@ -830,7 +833,7 @@ public async Task<int> addNewProductByLink(string link,int category)
        
        string back_avatar= product_data.Images[0];
        
-       string front_avatar="";
+       string front_avatar=link_background;
        
        string manufacturer = product_data.Product_Information.Manufacturer;
        
@@ -925,7 +928,7 @@ public async Task<int> addNewProductByLink(string link,int category)
 
  var new_sort_id=latest_sort_id+1;
 
- var product= new Product{ProductName=product_name,CategoryId=category,Price=product_price,Quantity=100,Status="Available",Description=full_description,Frontavatar=front_avatar,Backavatar=back_avatar,SortId=new_sort_id,SortProminentId=new_sort_id,Small_Description=small_description,Model=model,Manufacturer=manufacturer,Asin=asin,Package_Dimensions=package_dimensions,Date_First_Available=date_first_available,CreatedDate=created_date,UpdatedDate=updated_date,ProductImages=product_images,Variants=variant};
+ var product= new Product{ProductName=product_name,CategoryId=category,Price=product_price,Quantity=100,Status="Còn hàng",Description=full_description,Frontavatar=front_avatar,Backavatar=back_avatar,SortId=new_sort_id,SortProminentId=new_sort_id,Small_Description=small_description,Model=model,Manufacturer=manufacturer,Asin=asin,Package_Dimensions=package_dimensions,Date_First_Available=date_first_available,CreatedDate=created_date,UpdatedDate=updated_date,ProductImages=product_images,Variants=variant};
 
   await this._context.Products.AddAsync(product);
 
@@ -1261,18 +1264,21 @@ try
 
    Console.WriteLine("Product name:"+product_name);
    
-   int price=model.Price;
+   string price=model.Price;
+   
+  int parse_price = Convert.ToInt32(price.Replace(",","").Replace(".",""),CultureInfo.InvariantCulture);
 
-   if(price<0)
+   if(parse_price<0)
    {
-    price=0;
+    price="0";
    }
 
-      Console.WriteLine("Price:"+price);
+   Console.WriteLine("Price:"+price);
 
    
    int quantity = model.Quantity;
 
+   
    Console.WriteLine("QUANTITY:"+quantity);
    
 
@@ -1286,7 +1292,6 @@ try
    string description=model.Description;
 
    Console.WriteLine("description:"+description);
-
 
    string status=model.Status;
 
@@ -1302,32 +1307,24 @@ try
   string back_avatar="";
 
 
-
-
   Console.WriteLine("CHECK POINT 0");
 
-   List<string> colors=model.Color;
+  List<string> colors=model?.Color;
 
-   
-  
-
-   
-   List<string> sizes=model.Size;
+    
+  List<string> sizes=model?.Size;
 
 
-  
-   
-   
-   List<string> prices = model.Prices;
+  List<string> prices = model?.Prices;
 
 
-   List<string> img_files=model.ImageFiles;
+  List<IFormFile> img_files=model?.ImageFiles;
 
       
-   Console.WriteLine("img_file:"+img_files.Count);
+  //  Console.WriteLine("img_file:"+img_files.Count);
 
    
-   List<string> variant_files = model.VariantFiles;
+  List<IFormFile> variant_files = model?.VariantFiles;
 
 
 
@@ -1429,8 +1426,13 @@ if(img_files!=null)
  
  for(int i=0;i<img_files.Count;i++)
  { 
+  var img=img_files[i];
+   
+  string extension=Path.GetExtension(img.FileName);
 
-  string file_path = img_files[i];
+  string file_name=Guid.NewGuid().ToString()+extension;
+
+  string file_path = Path.Combine(upload_path,file_name);
    
    if(i==0)
    {
@@ -1452,10 +1454,10 @@ if(img_files!=null)
     }
    }
  
-  //  using(var fileStream=new FileStream(file_path,FileMode.Create))
-  //  {
-  //   await img.CopyToAsync(fileStream);  
-  // }
+   using(var fileStream=new FileStream(file_path,FileMode.Create))
+   {
+    await img.CopyToAsync(fileStream);  
+  }
  }
 }
 else
@@ -1475,22 +1477,22 @@ if(variant_files!=null)
 {//Console.WriteLine("Lengh of variant file here is:"+variant_files.Count);
 for(int i=0;i<variant_files.Count;i++)
 {
-//   var img = variant_files[i];
+  var img = variant_files[i];
 
-//  string extension=Path.GetExtension(img.FileName);
+ string extension=Path.GetExtension(img.FileName);
 
-//   string file_name=Guid.NewGuid().ToString()+extension;
+  string file_name=Guid.NewGuid().ToString()+extension;
 
-  string file_path = variant_files[i];
+  string file_path = Path.Combine(upload_path,file_name);
 
   var img_obj=new ProductImage{Avatar=file_path};
 
   list_img.Add(img_obj);
 
-  // using(var fileStream=new FileStream(file_path,FileMode.Create))
-  // {
-  //   await img.CopyToAsync(fileStream);
-  // }
+  using(var fileStream=new FileStream(file_path,FileMode.Create))
+  {
+    await img.CopyToAsync(fileStream);
+  }
   
   foreach(var prod_img in product_ob.ProductImages )
   {
@@ -1513,7 +1515,7 @@ else
   Console.WriteLine("temp list img count:"+temp_list_img.Count);
 }
 
- var product= new Product{ProductName=product_name,Discount=discount,CategoryId=category,Price=price.ToString(),Quantity=quantity,Status=status,Description=description,Frontavatar=string.IsNullOrEmpty(front_avatar)?"":front_avatar,Backavatar=string.IsNullOrEmpty(back_avatar)?"":back_avatar,Small_Description=small_description,UpdatedDate=updated_date,ProductImages=list_img.Count==0?list_img:list_img,Variants=variant};
+ var product= new Product{ProductName=product_name,Discount=discount,CategoryId=category,Price=price,Quantity=quantity,Status=status,Description=description,Frontavatar=string.IsNullOrEmpty(front_avatar)?"":front_avatar,Backavatar=string.IsNullOrEmpty(back_avatar)?"":back_avatar,Small_Description=small_description,UpdatedDate=updated_date,ProductImages=list_img.Count==0?list_img:list_img,Variants=variant};
 
   if(product_ob!=null)
   {
@@ -1524,9 +1526,18 @@ else
     product_ob.BrandId=product.BrandId;
     product_ob.SubCatId=product.SubCatId;
     product_ob.Discount=product.Discount;
+   if(!string.IsNullOrEmpty(front_avatar))
+   {
     product_ob.Frontavatar=product.Frontavatar;
+   }
+   if(!string.IsNullOrEmpty(back_avatar))
+   {
     product_ob.Backavatar=product.Backavatar;
+   }
+   if(list_img.Count>0)
+   {
     product_ob.ProductImages=product.ProductImages;
+  }
     product_ob.Variants=product.Variants;
     product_ob.Status=product.Status;
     product_ob.Description=product.Description;
@@ -1536,21 +1547,21 @@ else
     await this.saveChanges();
     Console.WriteLine("DID STAY HERE");
     updated_res=1;
-    // if(!string.IsNullOrEmpty(temp_front_avatar))
-    // {
-    //   await this._sp_services.removeFiles(temp_front_avatar);
-    // }
-    // if(!string.IsNullOrEmpty(temp_back_avatar))
-    // {
-    //   await this._sp_services.removeFiles(temp_back_avatar);
-    // }
-    // if(temp_list_img.Count>0)
-    // {
-    //   foreach(var img in temp_list_img)
-    //   {
-    //     await this._sp_services.removeFiles(img);
-    //   }
-    // }
+    if(!string.IsNullOrEmpty(temp_front_avatar))
+    {
+      await this._sp_services.removeFiles(temp_front_avatar);
+    }
+    if(!string.IsNullOrEmpty(temp_back_avatar))
+    {
+      await this._sp_services.removeFiles(temp_back_avatar);
+    }
+    if(temp_list_img.Count>0)
+    {
+      foreach(var img in temp_list_img)
+      {
+        await this._sp_services.removeFiles(img);
+      }
+    }
   }
 }
 catch(Exception er)

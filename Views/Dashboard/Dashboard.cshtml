@@ -283,7 +283,15 @@
                     <li class="d-flex mb-4 pb-1">
                          <div class="avatar flex-shrink-0 me-3">
                             <span class="avatar-initial rounded bg-label-primary">
-                              <img src="~/@item.Key.Avatar.Substring(item.Key.Avatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="Category Name"></span>
+                             @if(item.Key.Avatar.Contains("http") || item.Key.Avatar.Contains("https"))
+                             {
+                              <img src="@item.Key.Avatar" alt="Category Name">
+                              }
+                              else
+                              {
+                              <img src="~/@item.Key.Avatar.Substring(item.Key.Avatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="Category Name">
+                              }
+                              </span>
                           </div>
                           <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                             <div class="me-2">

@@ -292,10 +292,13 @@ public async Task logoutUser()
 public List<string> getListOfLanguage()
 {
     List<string> languages=new List<string>();
+
     foreach(CultureInfo culture in CultureInfo.GetCultures(CultureTypes.AllCultures))
     {
         languages.Add(culture.DisplayName);
     }
-    return languages;
+
+    return languages;    
+
 }
 }

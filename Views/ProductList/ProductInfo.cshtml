@@ -5,8 +5,8 @@
    var created_product=ViewBag.Updated_Product;
    var create_status=ViewBag.Status;
    var cat_list =ViewBag.CategoryList as IEnumerable<Category>;
-   var brand_list = ViewBag.BrandList as IEnumerable<Brand>;
-   var sub_cat_list = ViewBag.SubCatList as List<SubCategory>; 
+   //var brand_list = ViewBag.BrandList as IEnumerable<Brand>;
+   //var sub_cat_list = ViewBag.SubCatList as List<SubCategory>; 
    var status_list = new List<string>{"Còn hàng","Hết hàng"};
    string bg_status="";   
    string dns=Environment.GetEnvironmentVariable("DNS");
@@ -44,6 +44,8 @@
     Console.WriteLine("Status here:"+create_status);
 
     Console.WriteLine("Status here:"+created_product);
+
+    Console.WriteLine("Gía sản phẩm:"+Model?.Price);
 
 }
 
@@ -132,7 +134,8 @@
                             <label class="form-label" for="price">
                                 Giá
                             </label>
-                           <input type="number" class="form-control" placeholder="Giá sản phẩm" name="price" min="0" id="price" value="@Model?.Price">
+                           <input type="text" class="form-control" placeholder="Giá sản phẩm" name="price" id="price" value="@Model?.Price">
+
                            <span class="text-danger" id="price-error"></span>
                          </div>
                         <div class="col-md-4">
@@ -143,17 +146,15 @@
                          <span class="text-danger" id="quantity-error"></span>
                         </div>
                          <div class="col-md-3">
-                          <label class="form-label" for="discount">
-                            Giảm giá
-                          </label>
-                          <input type="number" class="form-control" placeholder="Giảm giá" min="0" max="100" name="discount" value="@(string.IsNullOrEmpty(Model.Discount.ToString())?0:Model.Discount)" id="discount">
-                        </div>
-                        <div class="col-auto mt-4">
-                          <span>%</span>
-                        </div>  
+    <label class="form-label" for="discount">Giảm giá</label>
+    <div class="input-group">
+        <input type="number" class="form-control" placeholder="Giảm giá" min="0" max="100" name="discount" value="@(string.IsNullOrEmpty(Model.Discount.ToString()) ? 0 : Model.Discount)" id="discount">
+        <span class="input-group-text">%</span>
+    </div>
+</div>
                         </div>
                         <div class="row mt-3 mb-3">
-                         <div class="col">
+                         @* <div class="col">
                             <label class="form-label" for="SubCategory">Chọn loại sản phẩm phụ</label>
                             <select class="form-select select-2" id="sub-select" name="SubCategory">
                               <option value="-1">Chọn loại sản phẩm phụ</option>
@@ -162,8 +163,8 @@
                                 <option value="@subcat.Id">@subcat.SubCategoryName</option>
                               }
                             </select>
-                         </div>
-                            <div class="col">
+                         </div> *@
+                            <div class="col-md-4">
                             <label class="form-label" for="category">Chọn loại sản phẩm</label>
                             <select class="form-select select-2" name="category" id="cat-select">
                               <option value="-1">Chọn loại sản phẩm</option>
@@ -178,7 +179,24 @@
                               }
                             </select>
                          </div>
-                             <div class="col">
+
+                            <div class="col-md-4">
+                            <label class="form-label" for="asin">
+                            ASIN
+                            </label>
+                           <input type="text" class="form-control" placeholder="Mã asin" name="asin" id="asin" disabled value="@Model?.Asin">
+                        </div>
+
+                           <div class="col-md-4">
+                            <label class="form-label" for="package_dimensions">
+                             Số chiều sản phẩm
+                           </label>
+                           <input type="text" class="form-control" placeholder="Số chiều sản phẩm" name="package_dimensions" disabled id="pakacege-dimensions" value="@Model?.Package_Dimensions">
+                        </div>
+
+                        
+                         
+                             @* <div class="col">
                             <label class="form-label" for="brand">Chọn nhãn hàng</label>
                             <select class="form-select select-2" id="brand-select" name="brand">
                               <option value="-1">Chọn nhãn hàng</option>
@@ -192,8 +210,8 @@
                               }                             
                               }
                             </select>
-                         </div>  
-                             <div class="col">
+                         </div>   *@
+                             <div class="col-md-4">
                             <label class="form-label" for="brand">Chọn Trạng thái</label>
                             <select class="form-select select-2" id="brand-select" name="status">
                               @foreach(var status in status_list)
@@ -301,7 +319,7 @@
                     <textarea id="Stat-Description" name="statdescription" style="height: 300px;" value="@Model?.Statdescription">@Model?.Statdescription></textarea>
                     </div>
                 </div>
-
+@* 
              <div class="card mb-4">
                     <div class="card-header">
                         <h5 class="mb-0 card-title">Miêu tả trong hộp</h5>
@@ -310,9 +328,9 @@
                     <div class="card-body">
                  <textarea id="Description-Inbox" name="inboxdescription" style="height: 300px;" value="@Model?.InboxDescription">@Model?.InboxDescription</textarea>
                     </div>
-                </div>
+                </div> *@
             
-             <div class="card mb-4">
+             @* <div class="card mb-4">
                     <div class="card-header">
                     <h5 class="mb-0 card-title">Miêu tả giảm giá</h5>
                     </div>
@@ -320,7 +338,7 @@
                     <div class="card-body">
                     <textarea id="Discount-Description" name="discountdescription" style="height: 300px;" value="@Model?.DiscountDescription">@Model?.DiscountDescription</textarea>
                     </div>
-                </div>
+                </div> *@
             
              <div class="card mb-4">
                     <div class="card-header">
@@ -340,22 +358,22 @@
                           <label class="form-label" for="color">Màu sắc</label> 
                           <input class="form-control" id="color" type="text" placeholder="Nhập màu sắc" value="@(variant.Color!=null?variant.Color.Colorname:"")">
                         </div>
-                          <div class="col-4">
+                          @* <div class="col-4">
                           <label class="form-label" for="weight">Khối lượng</label> 
                           <input class="form-control" id="weight" type="text" placeholder="Nhập khối lượng" value="@(variant.Weight!=null?variant.Weight:"")">
-                        </div>
+                        </div> *@
                          <div class="col-4 mb-3">
-                          <label class="form-label" for="size">Kích thước</label> 
+                          <label class="form-label" for="size">Kích thước</label>                           
                           <input class="form-control" id="size" type="text" placeholder="Nhập kích thước" value="@(variant.Size!=null?variant.Size.Sizename:"")">
                         </div>
-                            <div class="col-4 mb-2">
+                            @* <div class="col-4 mb-2">
                           <label class="form-label" for="version">Phiên bản</label> 
                           <input class="form-control" id="version" type="text" placeholder="Nhập phiên bản" value="@(variant.Version!=null?variant.Version.Versionname:"")">
-                        </div>
-                        <div class="col-4 mb-3">
+                        </div> *@
+                        @* <div class="col-4 mb-3">
                           <label class="form-label" for="mirror">Loại kính</label> 
                           <input class="form-control" id="mirror" type="text" placeholder="Nhập loại kính" value="@(variant.Mirror!=null?variant.Mirror.Mirrorname:"")">
-                        </div>
+                        </div> *@
                           <div class="col-4 mb-3">
                           
                           <label class="form-label" for="mirror">Giá</label> 
@@ -638,7 +656,7 @@ document.addEventListener("DOMContentLoaded", function (event)
   });
 
 
-  new FroalaEditor('#Description-Inbox',{
+  @* new FroalaEditor('#Description-Inbox',{
     heightMin: 300,
     imageUploadToS3: false,
     imageUploadURL: '/image/upload',
@@ -735,9 +753,9 @@ document.addEventListener("DOMContentLoaded", function (event)
     pluginsEnabled: ['align', 'charCounter', 'codeBeautifier', 'codeView', 'colors', 'draggable', 'embedly', 'emoticons', 'entities', 'file', 'fontFamily', 'fontSize', 'fullscreen', 'image', 'imageManager', 'inlineStyle', 'lineBreaker', 'link', 'lists', 'paragraphFormat', 'paragraphStyle', 'quickInsert', 'quote', 'save', 'table', 'url', 'video', 'wordPaste'],
     colorsBackground: ['#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFFF00'],
     colorsText: ['#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00'] 
-  });
+  }); *@
 
-  new FroalaEditor('#Discount-Description',{
+  @* new FroalaEditor('#Discount-Description',{
       heightMin: 300,
      imageUploadToS3: false,
     imageUploadURL: '/image/upload',
@@ -834,7 +852,7 @@ document.addEventListener("DOMContentLoaded", function (event)
     pluginsEnabled: ['align', 'charCounter', 'codeBeautifier', 'codeView', 'colors', 'draggable', 'embedly', 'emoticons', 'entities', 'file', 'fontFamily', 'fontSize', 'fullscreen', 'image', 'imageManager', 'inlineStyle', 'lineBreaker', 'link', 'lists', 'paragraphFormat', 'paragraphStyle', 'quickInsert', 'quote', 'save', 'table', 'url', 'video', 'wordPaste'],
     colorsBackground: ['#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFFF00'],
     colorsText: ['#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00'] 
-  }); 
+  });  *@
 
 });
 
@@ -931,7 +949,7 @@ add_variant.addEventListener('click',()=>{
 
  var is_all_form_valid=true;
  
- const sub_select=document.getElementById("sub-select");
+ @* const sub_select=document.getElementById("sub-select"); *@
  
  const cat_select = document.getElementById("cat-select");
  
@@ -969,6 +987,11 @@ add_variant.addEventListener('click',()=>{
  imgList.forEach(async(file)=>
  {   
     var file_name=file["Avatar"];
+
+    if(file_name==null  || file_name.includes('https') || file_name.includes('http'))
+    {
+      return;
+    } 
     
     var file_name_value=file_name.split('\\').pop();
 
@@ -983,7 +1006,7 @@ add_variant.addEventListener('click',()=>{
     
     if(!response.ok)
     {
-      alert(response.status);
+      alert(response.status);           
     }
 
 
@@ -996,6 +1019,10 @@ add_variant.addEventListener('click',()=>{
  
   imgAvatarList.forEach(async(file)=>
   {   
+      if(file==null  || file.includes('https') || file.includes('http'))
+    {
+      return;
+    } 
 
     var file_name_value=file.split('\\').pop();
 
@@ -1054,9 +1081,13 @@ add_variant.addEventListener('click',()=>{
 const remove_img_btn=(id_event,id,event)=>
 {   
       event.stopPropagation();
+
       var img_wrapper = document.getElementById(id_event);
+      
       var img_id_arr=id.split('-');
+      
       var img_id='';
+      
       for(let i=1;i<img_id_arr.length;i++)
       {if(i<img_id_arr.length-1)
       {
@@ -1290,7 +1321,7 @@ const file=files[i];
 
 
 
- sub_select.addEventListener("change",()=>{
+ @* sub_select.addEventListener("change",()=>{
   var sub_index=sub_select.selectedIndex;
   if(sub_index!=0)
   {
@@ -1301,7 +1332,7 @@ const file=files[i];
    {
     cat_select.disabled=false;
    }
- });
+ }); *@
 
  document.getElementById("submit-btn").addEventListener("click",()=>
  {
@@ -1317,21 +1348,21 @@ const file=files[i];
     
   }); 
  });
- document.getElementById("sub-select").addEventListener('change',()=>{
+ @* document.getElementById("sub-select").addEventListener('change',()=>{
    var sub=document.getElementById("sub-select");
    if(sub.classList.contains("is-invalid") && sub.value!='')
    {
      sub.classList.remove('is-invalid');
    }
- });
+ }); *@
 
-  document.getElementById("brand-select").addEventListener('change',()=>{
+  @* document.getElementById("brand-select").addEventListener('change',()=>{
    var brand=document.getElementById("brand-select");
    if(brand.classList.contains("is-invalid") && brand.value!='')
    {
      brand.classList.remove('is-invalid');
    }
- });
+ }); *@
 
   document.getElementById("cat-select").addEventListener('change',()=>{
    var cat=document.getElementById("cat-select");
@@ -1352,11 +1383,11 @@ const file=files[i];
   
   var quantity= document.getElementById("quantity").value.trim();
   
-  var sub_cat=document.getElementById("sub-select");
+  //var sub_cat=document.getElementById("sub-select");
   
   var category=document.getElementById("cat-select");
   
-  var brand=document.getElementById("brand-select");
+  //var brand=document.getElementById("brand-select");
 
   
   if(product==='')
@@ -1381,7 +1412,7 @@ const file=files[i];
   }
 
 
-  if(sub_cat.value==="-1")
+  @* if(sub_cat.value==="-1")
   {
     if(category.value==="-1")
     {
@@ -1390,7 +1421,7 @@ const file=files[i];
     category.classList.add('is-invalid');
     category.focus();
     }
-  }
+  } *@
 
   @* if(brand.value==="-1")
   {

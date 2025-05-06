@@ -86,6 +86,19 @@
                  <form id="formAccountSettings" method="post" enctype="multipart/form-data" asp-controller="CategoryList" asp-action="UpdateCategory">
                     <div class="card-body">
                       <div class="d-flex align-items-start align-items-sm-center gap-4">
+                       @if(Model.Avatar.Contains("https") || Model.Avatar.Contains("http"))
+                       {
+                        <img
+                          src="@Model.Avatar"
+                          alt="category-avatar"
+                          class="d-block rounded"
+                          height="100"
+                          width="100"
+                          id="uploadedAvatar"
+                        />
+                       }
+                       else
+                       {
                         <img
                           src="~/@Model.Avatar.Substring(Model.Avatar.IndexOf("wwwroot")+("wwwroot".Length+1))"
                           alt="category-avatar"
@@ -94,6 +107,7 @@
                           width="100"
                           id="uploadedAvatar"
                         />
+                       }
                         <div class="button-wrapper">
                           <label for="upload" class="btn btn-primary me-2 mb-4" tabindex="0">
                             <span class="d-none d-sm-block" id="upload-btn">Tải ảnh</span>

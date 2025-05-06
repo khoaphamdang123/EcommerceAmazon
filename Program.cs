@@ -25,7 +25,6 @@ var username = Environment.GetEnvironmentVariable("DB_USER");
 var password = Environment.GetEnvironmentVariable("DB_PASSWORD");
 
 Console.WriteLine("DB_HOST:"+host);
-
 Console.WriteLine("DB_PORT:"+port);
 Console.WriteLine("DB_NAME:"+database);
 Console.WriteLine("DB_USER:"+username);

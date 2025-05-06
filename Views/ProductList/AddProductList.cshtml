@@ -1,16 +1,3 @@
-
-<!-- =========================================================
-* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
-==============================================================
-
-* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
-* Created by: ThemeSelection
-* License: You must have a valid license purchased in order to legally use the theme for your project.
-* Copyright ThemeSelection (https://themeselection.com)
-
-=========================================================
- -->
-<!-- beautify ignore:start -->
 @{
    var created_product=ViewBag.Created_Product;
    
@@ -35,9 +22,9 @@
        aria-atomic="true"
        data-bs-dismiss="toast"
         style="cursor: pointer;"
-         data-delay="3000"
+         data-delay="10000"
          data-bs-autohide="true" 
-         data-bs-delay="3000"
+         data-bs-delay="10000"
              >
                         <div class="toast-header">
                           <i class="bx bx-bell me-2"></i>
@@ -57,9 +44,9 @@
        aria-atomic="true"
        data-bs-dismiss="toast"
         style="cursor: pointer;"
-         data-delay="3000"
+         data-delay="10000"
          data-bs-autohide="true" 
-         data-bs-delay="3000"
+         data-bs-delay="10000"
              >
                         <div class="toast-header">
                           <i class="bx bx-bell me-2"></i>
@@ -70,7 +57,6 @@
                           <p id="toast-message"></p>
                         </div>
                       </div>
-    
 
          <div
        class="bs-toast toast toast-primary fade bg-primary hide toast-placement-ex top-5 end-0"
@@ -79,9 +65,9 @@
        aria-atomic="true"
        data-bs-dismiss="toast"
        style="cursor: pointer;"
-       data-delay="2000"
+       data-delay="3000"
          data-bs-autohide="true" 
-         data-bs-delay="2000"
+         data-bs-delay="3000"
              >
                         <div class="toast-header">
                           <i class="bx bx-bell me-2"></i>
@@ -124,7 +110,12 @@
             </div>
        <div class="mb-5" id="linkInputGroup">
                 <label for="linkInput" class="form-label">Nhập đường link sản phẩm</label>
-                <input type="url" class="form-control" id="linkInput" placeholder="https://amazon.com" pattern="https?://.*">
+                <input type="url" class="form-control mb-3" id="linkInput" placeholder="Nhập link sản phẩm" pattern="https?://.*">
+                <div class="invalid-feedback">
+                   Đường Link không hợp lệ
+                </div>
+                 <label for="linkBackground" class="form-label">Nhập đường link hình ảnh</label>
+                <input type="url" class="form-control mb-3" id="linkBackground" placeholder="Nhập link hình ảnh" pattern="https?://.*">
                 <div class="invalid-feedback">
                    Đường Link không hợp lệ
                 </div>
@@ -167,7 +158,11 @@
     </div>
     </div>
 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
     <script>
+
     document.addEventListener("DOMContentLoaded",()=>
     {
       const linkOption = document.getElementById("linkOption");
@@ -175,11 +170,14 @@
       const linkInputGroup = document.getElementById("linkInputGroup");
       const fileInputGroup = document.getElementById("fileInputGroup");
       const input_link = document.getElementById("linkInput");
+      const input_background = document.getElementById("linkBackground");
       const input_file = document.getElementById("fileInput");
       const link_category_1 = document.querySelector("#linkCategory1");
       const link_category_2 = document.querySelector("#linkCategory2");
       const form = document.getElementById("formAccountSettings");
       const submit_btn = document.getElementById("submit-btn");
+      var links_product=[];
+      var links_product=[];
 
       linkOption.addEventListener('change',()=>{
      if(linkOption.checked)
@@ -190,7 +188,8 @@
         link_category_2.selectedIndex=0;
       }
       })
-      fileOption.addEventListener('change',()=>{
+      fileOption.addEventListener('change',()=>
+      {
         if(fileOption.checked)
       {
         linkInputGroup.classList.add("d-none");
@@ -203,19 +202,31 @@
      form.addEventListener("submit",()=>
      {
       event.preventDefault();
-      const formData = new FormData();      
+
+      const formData = new FormData();
+            
       if(linkOption.checked)
       {
         const link = input_link.value;
+
+        const background = input_background.value;
         
         const category = document.getElementById("linkCategory1");
         
         if(link=='')
         {
          input_link.classList.add("is-invalid");
-         
-         return;
+
+         return;         
         }
+
+        if(background=='')
+        {
+         input_background.classList.add("is-invalid");
+
+         return;         
+        }
+
         if(category.selectedIndex==0)
         {
           category.classList.add("is-invalid");
@@ -226,6 +237,8 @@
         input_link.classList.remove('is-invalid');
         
         formData.append("link",link);
+
+        formData.append("link_background",background);
         
         formData.append("category",category.value);
       }
@@ -239,12 +252,29 @@
         {
           category.classList.add("is-invalid");
 
-          return;
+          return;          
         }
+
+        var link="";
+
+        links_product.forEach((item,index)=>
+        {
+         link+=item+"\n";
+        });
+
+        var background="";
+
+        links_img.forEach((item,index)=>
+        {
+         background+=item+"\n";
+        });
         
-        formData.append("file",file);
-        
+        formData.append("link",link);
+
+        formData.append("link_background",background);
+
         formData.append("category",category.value);
+
       }
      if(submit_btn!=null)
      {
@@ -269,24 +299,20 @@
                   var status=response.status;
                   
                   var message=response.message;
-
                
                   submit_btn.disabled=false;
-                  
-
-                  
+                                    
                   if(status== -1 || status==0)
                   {
                 
-                document.getElementById("toast-message").innerHTML=message;
+                document.getElementById("toast-message").innerHTML=message;                
                 
                 var toastEl = document.querySelector('.toast-danger');
                 
                 var toast = new bootstrap.Toast(toastEl);
-                
+                                
                 toast.show();
                 }
-
                 else
                 {
                 var toastEl = document.querySelector('.toast');
@@ -297,16 +323,20 @@
                 }
 
                 },
-                error: function (xhr, status, error) 
+                error: function(xhr, status, error) 
               {
                   alert(error);
+                  
                   alert(error.message);
                   
                  submit_btn.disabled=false;
                  
                 document.getElementById("toast-message").innerHTML=error;
+                
                 var toastEl = document.querySelector('.toast-danger');
+                
                 var toast = new bootstrap.Toast(toastEl);
+                
                 toast.show();  
               }
             });
@@ -315,9 +345,10 @@
      const handleFile=(e)=>
      {
      const file = e.target.files[0];
+
      if(!file)
      {
-      return;
+        return;
      }
 
     const reader = new FileReader();
@@ -327,25 +358,42 @@
       try
       {
        const data = new Uint8Array(e.target.result);
+       
        const workbook = XLSX.read(data, { type: 'array' });
+       
        const sheetName = workbook.SheetNames[0];
+       
        const worksheet = workbook.Sheets[sheetName];
       
-      const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-      
-      rows.forEach((row,index)=>{
-      });
+       const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1});
 
+       var all_link_product=[];
+
+       var all_link_img = [];
+      
+       rows.forEach((row,index)=>
+       {
+           all_link_product.push(row[0]);
+
+           all_link_img.push(row[1]);
+       });
+       
+       links_product=all_link_product;
+       
+       links_img=all_link_img;       
       }
       catch(error)
       {
         console.error("Error reading file:", error);
-        alert("Error reading file");
+        
+        alert("Error reading file"+error);
       }
     }
+    reader.readAsArrayBuffer(file);    
+    }
 
-     }
-
+    input_file.addEventListener("change",handleFile);
+    
     });
 
     </script>

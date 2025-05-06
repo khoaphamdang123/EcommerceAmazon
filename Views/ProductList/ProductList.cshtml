@@ -252,7 +252,6 @@
                             <th class="text-center">No</th>
                             <th class="text-center">Tên sản phẩm</th>
                             <th class="text-center">Loại sản phẩm</th>
-                            <th class="text-center">Nhãn hàng</th>
                             <th class="text-center">Giá sản phẩm</th>
                             <th class="text-center">Trạng thái</th>
                             <th class="text-center">Nhà sản xuất</th>
@@ -290,7 +289,15 @@
                            {
                               <div class="avatar-wrapper">
                                 <div class="avatar avatar-sm me-2 rounded-2">
+                                @if(product.Frontavatar.Contains("http") || product.Frontavatar.Contains("https"))
+                                {
                                  <img src="@product.Frontavatar" alt="Product FrontAvatar">
+                                 }
+                                  else
+                                  {
+                            <img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="User Front Avatar">
+
+                                  }
                                 </div>
                               </div>
                               }  
@@ -298,7 +305,14 @@
                               {
                                   <div class="avatar-wrapper">
                                 <div class="avatar avatar-sm me-2 rounded-2">
+                                 @if(product.Backavatar.Contains("http") || product.Backavatar.Contains("https"))
+                                 {
                                   <img src="@product.Backavatar" alt="Product BackAvatar">
+                                  }
+                                  else
+                                  {
+                                  <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="User Back Avatar">
+                                  }
                                 </div>
                               </div>
                               }

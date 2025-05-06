@@ -62,7 +62,7 @@ public interface IProductRepository
 
   public Task<int> updateProduct(int id,AddProductModel product);
   
-  public Task<int> addNewProductByLink(string link,int category);
+  public Task<int> addNewProductByLink(string link,string link_background,int category);
   
   public Task<List<Variant>> getVariantByProductId(int id);
 

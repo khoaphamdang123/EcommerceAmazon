@@ -195,7 +195,14 @@
                              <div class="d-flex align-items-center justify-content-center">
                               <div class="avatar-wrapper">
                                 <div class="avatar avatar-sm me-2">
+                                @if(category.Avatar.Contains("https") || category.Avatar.Contains("http"))
+                                {
+                                 <img src="@category.Avatar">
+                                 }
+                                 else
+                                 {
                                  <img src="@avatarUrl">
+                                 }
                                 </div>
                               </div>
                               <strong>@category.CategoryName</strong>
