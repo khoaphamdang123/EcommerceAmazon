@@ -50,7 +50,7 @@ if(string.IsNullOrEmpty(id_user))
 }
           string select_size="7";
           ViewBag.select_size=select_size;
-          List<string> options=new List<string>(){"7","10","20","50"};
+          List<string> options=new List<string>(){"50","100","150","200"};
           ViewBag.options=options;
           FilterProduct prod_filter=new FilterProduct("","","","","","");
           ViewBag.filter_obj=prod_filter;
@@ -93,7 +93,7 @@ if(string.IsNullOrEmpty(id_user))
             prods =PageList<Product>.CreateItem(filter_prods.AsQueryable(),page,page_size);
             ViewBag.SubCat=sub_cat;
          }
-          List<string> options=new List<string>(){"7","10","20","50"};
+          List<string> options=new List<string>(){"50","100","150","200"};
           
           ViewBag.options=options;
 
@@ -143,7 +143,7 @@ if(string.IsNullOrEmpty(id_user))
    enddate=reformatted[1]+"/"+reformatted[2]+"/"+reformatted[0];
  }      string select_size="7"; 
           ViewBag.select_size=select_size;
-          List<string> options=new List<string>(){"7","10","20","50"};
+          List<string> options=new List<string>(){"50","100","150","200"};
           ViewBag.options=options;
          var cats=await this._category.getAllCategory();
           var brands=await this._category.getAllBrandList();
@@ -213,7 +213,7 @@ public async Task<IActionResult> ProductsByName(string product_name)
      string select_size="7";
 
           ViewBag.selected_size=select_size;
-          List<string> options=new List<string>(){"7","10","20","50"};
+          List<string> options=new List<string>(){"50","100","150","200"};
           ViewBag.options=options;
           FilterProduct prod_filter=new FilterProduct("","","","","","");
           ViewBag.filter_obj=prod_filter;         
@@ -656,6 +656,25 @@ public async Task<IActionResult> UploadImage(IFormFile file)
     
     return Ok(new { link = imageUrl });
 }
+
+[Route("product_list/update_status")]
+[HttpGet]
+public async Task<JsonResult> UpdateProductStatus(int id,int status)
+{ 
+  Console.WriteLine("Product id is:"+id);
+
+  Console.WriteLine("Product status is:"+status);
+
+  int res=await this._product.updateProductStatus(id,status);
+
+    if(res==0)
+    {
+       return new JsonResult(new{status=0,message="Cập nhật trạng thái sản phẩm thất bại"});
+    }
+   
+    return new JsonResult(new{status=1,message="Cập nhật trạng thái sản phẩm thành công"});    
+}
+
 
 [HttpPost("/video/upload")]
 

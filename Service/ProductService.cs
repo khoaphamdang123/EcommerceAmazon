@@ -904,7 +904,7 @@ public async Task<int> addNewProductByLink(string link,string link_background,in
 
   var new_size_ob = await this._context.Sizes.FirstOrDefaultAsync(c=>c.Sizename==size);
 
-  var new_varian_ob=new Variant{Colorid=new_color_ob!=null?new_color_ob.Id:null,Sizeid=new_size_ob!=null?new_size_ob.Id:null,Price=string.IsNullOrEmpty(price_value)?0:decimal.Parse(price_value,CultureInfo.InvariantCulture)};
+  var new_varian_ob=new Variant{Colorid=new_color_ob!=null?new_color_ob.Id:null,Sizeid=new_size_ob!=null?new_size_ob.Id:null,Price=string.IsNullOrEmpty(price_value)?"":price_value};
  
  if(new_color_ob!=null || new_size_ob!=null)
  {
@@ -1266,7 +1266,7 @@ try
    
    string price=model.Price;
    
-  int parse_price = Convert.ToInt32(price.Replace(",","").Replace(".",""),CultureInfo.InvariantCulture);
+   int parse_price = Convert.ToInt32(price.Replace(",","").Replace(".",""),CultureInfo.InvariantCulture);
 
    if(parse_price<0)
    {
@@ -1281,9 +1281,7 @@ try
    
    Console.WriteLine("QUANTITY:"+quantity);
    
-
    int discount=model.Discount;
-
 
 
    int category =model.Category;
@@ -1369,8 +1367,8 @@ if(colors!=null)
   Regex reg=new Regex("[^0-9]");
 
   var check_color_exist=new Models.Color();
+  
   var check_size_exist=new Models.Size();
-
 
  if(!string.IsNullOrEmpty(color))
  {
@@ -1395,11 +1393,12 @@ if(colors!=null)
   }
   
    if(check_size_exist==null)
-  { if(!string.IsNullOrEmpty(size))
+  { 
+   if(!string.IsNullOrEmpty(size))
   {
     var new_size = new Models.Size{Sizename=size};
     
-    await this._context.Sizes.AddAsync(new_size);
+    await this._context.Sizes.AddAsync(new_size);    
   }
   }
 
@@ -1409,12 +1408,12 @@ if(colors!=null)
 
   var new_size_ob = await this._context.Sizes.FirstOrDefaultAsync(c=>c.Sizename==size);
 
-  var new_varian_ob=new Variant{Colorid=new_color_ob!=null?new_color_ob.Id:null,Sizeid=new_size_ob!=null?new_size_ob.Id:null,Price=string.IsNullOrEmpty(price_value)?0:Convert.ToInt32(price_value)};
+  var new_varian_ob=new Variant{Colorid=new_color_ob!=null?new_color_ob.Id:null,Sizeid=new_size_ob!=null?new_size_ob.Id:null,Price=string.IsNullOrEmpty(price_value)?"":price_value};
 
- if(new_color_ob!=null || new_size_ob!=null)
- {
-  variant.Add(new_varian_ob);
- } 
+  if(new_color_ob!=null || new_size_ob!=null)
+  {
+   variant.Add(new_varian_ob);
+  } 
  }
 }
 
@@ -1431,7 +1430,7 @@ if(img_files!=null)
   string extension=Path.GetExtension(img.FileName);
 
   string file_name=Guid.NewGuid().ToString()+extension;
-
+  
   string file_path = Path.Combine(upload_path,file_name);
    
    if(i==0)
@@ -1611,7 +1610,9 @@ public async Task<IEnumerable<Product>> filterProductByPriceAndBrands(List<strin
   }
 
   if(products.Count!=0 && stars.Count!=0)
-  { Console.Write("Star count here:"+stars.Count);
+  { 
+   Console.Write("Star count here:"+stars.Count);
+   
    var count_reviews=await this.countAllReview(products.ToList());
 
    var products_with_star=new List<Product>();
@@ -1623,7 +1624,9 @@ public async Task<IEnumerable<Product>> filterProductByPriceAndBrands(List<strin
       products_with_star.Add(products.FirstOrDefault(c=>c.ProductName==product.Key));
     }
    }
+
    return products_with_star;
+
   }
   
     // var product_first=products[0];
@@ -1636,22 +1639,58 @@ public async Task<IEnumerable<Product>> filterProductByPriceAndBrands(List<strin
   {
        var paging_prods_list =PageList<Product>.CreateItem(products.AsQueryable(),page,page_size);
        
-       return paging_prods_list;
+       return paging_prods_list;                     
+  }
+
+  public async Task<int> updateProductStatus(int id,int status)
+  {
+    int res=0;
+
+    try
+    {
+    var product=await this._context.Products.FirstOrDefaultAsync(p=>p.Id==id);
+    if(product!=null)
+    {  Console.WriteLine("Product name:"+product.ProductName);
+      if(status==1)
+      {
+        product.Status="Còn hàng";
+      }
+      else if(status==0)
+      {
+        product.Status="Hết hàng";
+    }
+    res=1;
+
+    this._context.Products.Update(product);
+
+    await this.saveChanges();
+    }
+    else
+    {
+      res=-1;
+    }
+    }
+    catch(Exception er)
+    {
+      Console.WriteLine("Update Product Status Exception:"+er.Message);
+    }
+    return res;
   }
 
   public async Task<PageList<Variant>> pagingVariant(int id,int page_size,int page)
   {
    try
    {
-    var products=await this.findProductById(id);    
-
+    var products=await this.findProductById(id);
+    
     IEnumerable<Variant> all_variant= products.Variants;
 
-   List<Variant> variants=all_variant.OrderByDescending(u=>u.Id).ToList(); 
+    List<Variant> variants=all_variant.OrderByDescending(u=>u.Id).ToList(); 
 
    var variant_list =PageList<Variant>.CreateItem(variants.AsQueryable(),page,page_size);
    
    return variant_list;   
+
    }
    catch(Exception er)
    {
@@ -1659,7 +1698,4 @@ public async Task<IEnumerable<Product>> filterProductByPriceAndBrands(List<strin
    }
    return null;
   }
- 
-
-
 }

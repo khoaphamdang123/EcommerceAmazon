@@ -486,7 +486,7 @@ public partial class EcommerceshopContext : DbContext
             entity.Property(e => e.Statdescription)
                 .HasColumnType("character varying")
                 .HasColumnName("statdescription");
-            entity.Property(e => e.Status).HasColumnType("character varying");
+            entity.Property(e => e.Status).HasColumnType("character varying").HasColumnName("Status");
             entity.Property(e => e.UpdatedDate).HasColumnType("character varying");
             entity.Property(e=>e.SortId).HasColumnName("sortid");
             entity.Property(e=>e.SortProminentId).HasColumnName("sortprominentid");

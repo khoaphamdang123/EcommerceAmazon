@@ -44,18 +44,22 @@ public class AdminListService:IAdminRepository
     string datetime=user.DateTime;
     string endtime=user.EndTime;
     var users=this._userManager.GetUsersInRoleAsync("Admin").Result.ToList().AsQueryable();
+    
     if(!string.IsNullOrEmpty(username))
     {
         users=users.Where(u=>u.UserName==username);
     }
+    
     if(!string.IsNullOrEmpty(email))
     {
         users=users.Where(u=>u.Email==email);
     }
+    
     if(!string.IsNullOrEmpty(phonenumber))
     {
         users=users.Where(u=>u.PhoneNumber==phonenumber);
     }
+   
    if(!string.IsNullOrEmpty(datetime) && string.IsNullOrEmpty(endtime))
    {
     datetime=datetime.Trim();

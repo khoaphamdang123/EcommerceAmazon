@@ -61,6 +61,8 @@ public interface IProductRepository
   public Task<int> addNewProduct(AddProductModel product);
 
   public Task<int> updateProduct(int id,AddProductModel product);
+
+  public Task<int> updateProductStatus(int id,int status);
   
   public Task<int> addNewProductByLink(string link,string link_background,int category);
   

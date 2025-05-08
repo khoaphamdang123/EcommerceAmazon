@@ -19,7 +19,7 @@ public partial class Variant
 
     public decimal? Weight { get; set; }
 
-    public decimal? Price { get; set; }
+    public string? Price { get; set; }
 
     public virtual Color? Color { get; set; }
 

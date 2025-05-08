@@ -64,6 +64,26 @@
         </script>
 }
 
+  <div
+       class="bs-toast toast fade hide toast-placement-ex top-5 end-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+        data-bs-dismiss="toast"
+        style="cursor: pointer;"
+         data-delay="3000"
+         data-bs-autohide="true" 
+         data-bs-delay="3000"
+             >
+                        <div class="toast-header">
+                          <i class="bx bx-bell me-2"></i>
+                          <div class="me-auto fw-semibold">Cập nhật trạng thái</div>
+                          <!--<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        </div>
+                        <div class="toast-body">
+                        </div>
+                      </div>
+
 
 @if(status_delete==0)
 {
@@ -264,7 +284,8 @@
                     </thead>
                     <tbody class="table-border-bottom-0"  id="tableBody">
                        @foreach(var product in Model?.item)
-                       { current_total_item+=1;
+                       { 
+                        current_total_item+=1;
 
                          switch(product.Status)
                         {
@@ -272,11 +293,13 @@
                             case "Còn hàng":
                             {
                                 curr_status_class="bg-label-success";
+                                
                                 break;
                             }
                             case "Hết hàng":
                             {
                                 curr_status_class="bg-label-danger";
+
                                 break;                                
                             }
                         }
@@ -296,7 +319,6 @@
                                   else
                                   {
                             <img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="User Front Avatar">
-
                                   }
                                 </div>
                               </div>
@@ -363,6 +385,20 @@
                           </div>
                         </div>
                       </div>
+                                 @if(product.Status=="Còn hàng")
+                                 {
+  <div class="btn btn-icon delete-record" style="color:#71dd37 !important" id="product-toggle"  data-page="@product.Id">
+                              
+                                <i class="bx bx-toggle-right bx-md" id="toggle-icon"></i>
+                                </div>                                  
+                                }
+                                  else
+                                  {
+  <div class="btn btn-icon delete-record" style="color:red !important" id="product-toggle"  data-page="@product.Id">
+                                <i class="bx bx-toggle-left bx-md"  id="toggle-icon"></i>
+                                </div>                                  
+                                }
+
                                 <a href="@Url.Action("ProductInfo",new{id=product.Id})" class="btn btn-icon icon-style-update" title="Chi tiết sản phẩm">
                                 <i class="bx bx-show bx-md"></i>
                               </a>
@@ -383,7 +419,7 @@
                 </table>
                 </div>
     <div class="pagination-container mt-4">
-      <div class="page-total">Tổng số sản phẩm:@Model?.totalCount</div>
+    <div class="page-total">Tổng số sản phẩm:@Model?.totalCount</div>
     <div class="page-list justify-content-center">
      @if(Model!=null && Model.hasPreviousPage)
      {
@@ -507,7 +543,76 @@
     var all_delete_btn=document.querySelectorAll('#delete-record-btn');
 
     var filter_product_btn=document.getElementById('product-name-btn');
+
+    const product_toggle = document.querySelectorAll("#product-toggle");
+
+    const toggles=document.querySelectorAll("#toggle-icon");
+
+    product_toggle.forEach((product,idx)=>{
+
+    product.addEventListener('click',()=>
+    {  
+        var toggle = toggles[idx];
+
+        var status = toggle.classList.contains("bx-toggle-left") ? 1 : 0;
+
+       $.ajax({
+      url:'@Url.Action("UpdateProductStatus","ProductList")',
+      type:'GET',
+      data:{
+        id:product.getAttribute('data-page'),
+        status:status
+      },
+      success:(data)=>
+      {
+        var status=data.status;
+        var message =data.message;
+        var toast=document.querySelector('.bs-toast');
+        var toast_body=toast.querySelector('.toast-body');
+        toast_body.innerHTML=message;
+        if(status==1)
+        {
+        toast.classList.add('bg-success');
+      
+        //var toggle_container = document.getElementById("product-toggle");
+
+
+
+        if(toggle.classList.contains("bx-toggle-left"))
+        {
+          toggle.classList.remove("bx-toggle-left");
+
+          toggle.classList.add("bx-toggle-right");
+          
+          product.style.setProperty("color", "#71dd37", "important");
+        }
+        else
+        {
+          toggle.classList.remove("bx-toggle-right");
+
+          toggle.classList.add("bx-toggle-left");
+
+          product.style.setProperty("color","red","important");          
+        }
+      }
+        else
+        {
+          toast.classList.add('bg-danger');          
+        }
+        var toast_bs = new bootstrap.Toast(toast);
+        
+        toast_bs.show();
+      },
+        error:(xhr,status,error)=>
+        {
+           alert(xhr.responseText);
+        }
+    });
+    });
     
+    });
+
+   
 
     filter_product_btn.addEventListener('click',()=>
     {
