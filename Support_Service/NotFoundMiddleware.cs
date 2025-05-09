@@ -28,12 +28,12 @@ public class NotFoundMiddleware
         }
 
 
-        if(!context.Request.Path.Value.StartsWith("/admin",StringComparison.OrdinalIgnoreCase)||context.Request.Path.Value.Equals("/admin",StringComparison.OrdinalIgnoreCase)||context.Request.Path.Value.Equals("/admin/",StringComparison.OrdinalIgnoreCase))
-        {         
-            context.Response.Redirect("/admin/login");
+        // if(!context.Request.Path.Value.StartsWith("/admin",StringComparison.OrdinalIgnoreCase)||context.Request.Path.Value.Equals("/admin",StringComparison.OrdinalIgnoreCase)||context.Request.Path.Value.Equals("/admin/",StringComparison.OrdinalIgnoreCase))
+        // {         
+        //     context.Response.Redirect("/admin/login");
 
-            return;                        
-        }
+        //     return;                        
+        // }
 
         int status=0;
 

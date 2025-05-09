@@ -47,8 +47,6 @@ public async Task<IActionResult> HomePage()
 {
     var banners= await this._banner.findBannerByName("Home");
 
-    var banners2=await this._banner.findBannerByName("Home 2");
-
     DateTime startTime=DateTime.Now;
     
     var products = await this._product.getAllProductList();
@@ -89,10 +87,10 @@ public async Task<IActionResult> HomePage()
   
    secons=endTime.Second-startTime.Second;
   
-  foreach(var item in products)
-  {
-    item.Price=this._sp_services.convertToVND(item.Price);    
-  }
+  // foreach(var item in products)
+  // {
+  //   item.Price=this._sp_services.convertToVND(item.Price);    
+  // }
     Console.WriteLine("Time taken to get all reviews is:"+secons);
     
     var blogs= await this._blog.getAllBlog();
@@ -105,15 +103,15 @@ public async Task<IActionResult> HomePage()
     
     ViewBag.banners=banners;
 
-    ViewBag.banners2=banners2;
-
     ViewBag.products = products;
 
     ViewBag.prominent_products=prominent_products;
 
     ViewBag.blogs=blogs;
         
-    ViewBag.brands=brands;
+    ViewBag.brands=brands; 
+
+    Console.WriteLine("Banner count is:"+banners.Count().ToString());
 
     Console.WriteLine("Brand count is:"+brands.Count().ToString());
 

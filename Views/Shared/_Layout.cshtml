@@ -8,9 +8,7 @@
         string password = "";
         string avatar="";
         string id_user="";
-
         string logo_path="";
-    
         
       if(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("Logo")))
       {
@@ -335,7 +333,7 @@
               </ul>
             </li>    
 
-             @* <li class="menu-item @(view_controller=="BlogList"?"active open":"")">
+             <li class="menu-item @(view_controller=="BlogList"?"active open":"")">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-news"></i>
                 <div data-i18n="Account Settings">Tin tức</div>
@@ -352,11 +350,11 @@
                   </a>
                 </li>
               </ul>
-            </li>     *@
+            </li>    
 
 
             
-              @* <li class="menu-item @(view_controller=="BannerList"?"active open":"")">
+              <li class="menu-item @(view_controller=="BannerList"?"active open":"")">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-images"></i>
                 <div data-i18n="Account Settings">Cấu hình banner</div>
@@ -373,7 +371,7 @@
                   </a>
                 </li>
               </ul>
-            </li>  *@
+            </li> 
 @* 
                 <li class="menu-item @(view_controller=="ManualList"?"active open":"")">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -540,13 +538,7 @@
                       </a>
                     </li>
                   </ul>
-                </li>
-
-
-
-                
-              
-                
+                </li>        
               </ul>
             </div>
           </nav>

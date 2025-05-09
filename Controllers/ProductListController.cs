@@ -347,7 +347,7 @@ public async Task<IActionResult> ProductsByName(string product_name)
     return View();
   }
  
-  
+
   [Route("product_list/add_val")]
   [HttpPost]
   public async Task<JsonResult> GetSampleData(string link,string link_background,int category)

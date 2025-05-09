@@ -150,33 +150,51 @@
     <meta name="description" content="A brief description of your webpage. This is what appears on search engine results pages.">
 
     <!-- Keywords for search engines (not very impactful today) -->
-    <meta name="keywords" content="thanhquang,thanhquang-gnss,thiết bị hàng hải,phụ kiện garmin,thiết bị cầm tay">
+    <meta name="keywords" content="tshirt,tshirt low price,accessories,tshirt amazon,new shirt at low price">
 
     <!-- Author of the webpage -->
-    <meta name="author" content="thanhquang-gnss,thanhquang">
+    <meta name="author" content="tshirtatlowprice,tshirt">
 
     <!-- Open Graph tags for social media -->
-    <meta property="og:title" content="thanhquang">
-    <meta property="og:description" content="Công ty Thanhquang bán thiết bị hàng hải và phụ kiện cầm tay garmin.Nơi cung cấp các sản phẩm hàng hải và phụ kiện cầm tay garmin chính hãng">
+    <meta property="og:title" content="tshirtatlowprices" />
+    <meta property="og:description" content="Tshirt Shop sell tshirt and accessories at low prices" />
     
-    <meta property="og:url" content="https://thanhquang-gnss.com">
+    <meta property="og:url" content="https://tshirtatlowprices.com"/>
 
     <!-- Twitter Card tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="thanhquang">
-    <meta name="twitter:description" content="Công ty Thanhquang bán thiết bị hàng hải và phụ kiện cầm tay garmin.Nơi cung cấp các sản phẩm hàng hải và phụ kiện cầm tay garmin chính hãng">
+    <meta name="twitter:title" content="tshirtatlowprices">
+    <meta name="twitter:description" content="Tshirt Shop sell tshirt and accessories at low prices">
     <!-- Robots tag to allow crawling -->
     <meta name="robots" content="INDEX,FOLLOW">
 
-    <title>@ViewData["Title"] Công ty Thanh Quang</title>
+    <title>@ViewData["Title"] TShirt At Low Prices</title>
      
-     <link rel="canonical" href="https://thanhquang-gnss.com"/>
+     <link rel="canonical" href="https://tshirtatlowprices.com"/>
       
-      <link rel="shortcut icon" type="image/x-icon" href="@(logo_path)"/>      
+      @* <link rel="shortcut icon" type="image/x-icon" href="@(logo_path)"/>       *@
       
-      <link rel="stylesheet" href="@Url.Content("~/css/site.css")" asp-append-version="true">
+      @* <link rel="stylesheet" href="@Url.Content("~/css/site.css")" asp-append-version="true"> *@
+
+  <link href="@Url.Content("~/user_layout/css/bootstrap.min.css")" rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+  <!-- Plugins -->
+  <link rel="stylesheet" type="text/css" href="@Url.Content("~/user_layout/plugins/slick/slick.css")" />
+  
+  <link rel="stylesheet" type="text/css" href="@Url.Content("~/user_layout/plugins/slick/slick-theme.css")"/>
+
+  <link href="@Url.Content("~/user_layout/css/style.css")" rel="stylesheet">
+
+  <link href="@Url.Content("~/user_layout/css/dark-theme.css")" rel="stylesheet">
+
+@* <link rel="stylesheet" href="@Url.Content("~/css/demo.css")"> *@
+
+
       
-      <link rel="stylesheet" href="@Url.Content("~/user_layout/css/preloader.css")">
+      @* <link rel="stylesheet" href="@Url.Content("~/user_layout/css/preloader.css")">
      
      <link rel="stylesheet" href="@Url.Content("~/user_layout/css/bootstrap.css")">
         
@@ -220,13 +238,13 @@
 
           <link rel="stylesheet" href="@Url.Content("~/user_layout/css/garmin-style.css")">
 
-          <link rel="stylesheet" href="@Url.Content("~/user_layout/css/manual.css")">
+          <link rel="stylesheet" href="@Url.Content("~/user_layout/css/manual.css")"> *@
 
-         <link rel="stylesheet" href="@Url.Content("~/vendor/css/core_sub_temp.css")" class="template-customizer-core-css">
+         @* <link rel="stylesheet" href="@Url.Content("~/vendor/css/core_sub_temp.css")" class="template-customizer-core-css">
 
         <link rel="stylesheet" href="@Url.Content("~/css/demo.css")">
         
-        <link rel="stylesheet" href="@Url.Content("~/vendor/libs/perfect-scrollbar/perfect-scrollbar.css")">
+        <link rel="stylesheet" href="@Url.Content("~/vendor/libs/perfect-scrollbar/perfect-scrollbar.css")"> *@
 
 
 
@@ -254,11 +272,11 @@
       <link rel="stylesheet"  href="~/user_layout/css/garmin-style.css"> *@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="~/vendor/css/core_sub_temp.css" class="template-customizer-core-css">
+    @* <link rel="stylesheet" href="~/vendor/css/core_sub_temp.css" class="template-customizer-core-css"> *@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="~/css/demo.css">
+    @* <link rel="stylesheet" href="~/css/demo.css"> *@
     @* <link rel="stylesheet" href="~/vendor/css/theme-default.css" class="template-customizer-theme-css" /> *@
-    <link rel="stylesheet" href="~/vendor/libs/perfect-scrollbar/perfect-scrollbar.css">
+    @* <link rel="stylesheet" href="~/vendor/libs/perfect-scrollbar/perfect-scrollbar.css"> *@
     @* <link rel="stylesheet" href="../assets/vendor/fonts/boxicons.css"> *@
 
   
@@ -273,299 +291,174 @@
 
     @if(!view_action.Contains("Maintainance"))
     {
-        <div id="loading">
-        <div id="loading-center">
-            <div id="loading-center-absolute">
-                <svg viewBox="0 0 58 58" id="mustard" class="product">
-                <g>
-                <path style="fill:#ED7161;" d="M39.869,58H18.131C16.954,58,16,57.046,16,55.869V12.621C16,11.726,16.726,11,17.621,11h22.757
-                    C41.274,11,42,11.726,42,12.621v43.248C42,57.046,41.046,58,39.869,58z" />
-                <polygon style="fill:#D13834;" points="35,11 23,11 27.615,0 30.385,0 	" />
-                <rect x="16" y="16" style="fill:#D75A4A;" width="26" height="2" />
-                <rect x="20" y="11" style="fill:#D75A4A;" width="2" height="6" />
-                <rect x="25" y="11" style="fill:#D75A4A;" width="2" height="6" />
-                <rect x="30" y="11" style="fill:#D75A4A;" width="2" height="6" />
-                <rect x="36" y="11" style="fill:#D75A4A;" width="2" height="6" />
-                <circle style="fill:#D13834;" cx="29" cy="36" r="10" />
-                </g>
-                </svg>
-                <svg viewBox="0 0 49.818 49.818" id="meat" class="product">
-                    <g>
-                    <path style="fill:#994530;" d="M0.953,38.891c0,0,3.184,6.921,11.405,9.64c1.827,0.604,3.751,0.751,5.667,0.922
-                        c7.866,0.703,26.714-0.971,31.066-18.976c1.367-5.656,0.76-11.612-1.429-17.003C44.51,5.711,37.447-4.233,22.831,2.427
-                        c-8.328,3.795-7.696,10.279-5.913,14.787c2.157,5.456-2.243,11.081-8.06,10.316C1.669,26.584-1.825,30.904,0.953,38.891z" />
-                    <g>
-                        <path style="fill:#D75A4A;" d="M4.69,37.18c0.402,0.785,3.058,5.552,9.111,7.554c1.335,0.441,2.863,0.577,4.482,0.72l0.282,0.025
-                            c0.818,0.073,1.698,0.11,2.617,0.11c18.18,0,22.854-11.218,24.02-16.041c1.134-4.693,0.706-9.703-1.235-14.488
-                            C41.049,7.874,36.856,4.229,31.506,4.229c-2.21,0-4.683,0.615-7.349,1.83c-2.992,1.364-6.676,3.921-4.13,10.36
-                            c1.284,3.25,0.912,6.746-1.023,9.591c-2.17,3.191-6.002,4.901-9.895,4.39c-0.493-0.065-0.966-0.099-1.404-0.099
-                            c-1.077,0-2.502,0.198-3.173,1.143C3.765,32.524,3.823,34.609,4.69,37.18z" />
-                        <path style="fill:#C64940;" d="M21.184,46.589c-0.948,0-1.858-0.038-2.706-0.114l-0.283-0.025
-                            c-1.674-0.147-3.257-0.287-4.706-0.767c-6.376-2.108-9.188-7.073-9.688-8.047l-0.058-0.137c-0.984-2.917-0.993-5.273-0.026-6.635
-                            c0.912-1.285,2.89-1.807,5.524-1.456c3.537,0.466,6.959-1.054,8.936-3.961c1.746-2.565,2.082-5.723,0.921-8.661
-                            c-3.189-8.065,2.707-10.754,4.645-11.638c9.68-4.407,16.81-1.155,21.152,9.535c2.021,4.981,2.464,10.202,1.28,15.099
-                            C44.953,34.836,40.073,46.589,21.184,46.589z M5.613,36.787c0.401,0.758,2.936,5.155,8.503,6.997
-                            c1.229,0.406,2.699,0.536,4.256,0.673l0.284,0.025c0.788,0.07,1.639,0.106,2.527,0.106c17.469,0,21.938-10.683,23.048-15.276
-                            c1.084-4.487,0.672-9.286-1.19-13.877C40.29,8.663,36.409,5.229,31.506,5.229c-2.067,0-4.4,0.585-6.934,1.74
-                            c-3.02,1.376-5.81,3.532-3.615,9.083c1.408,3.563,0.998,7.398-1.126,10.521c-2.404,3.534-6.563,5.386-10.852,4.818
-                            c-1.793-0.236-3.197,0.019-3.632,0.632C4.912,32.636,4.756,34.207,5.613,36.787z" />
-                    </g>
-                    <g>
-                        <circle style="fill:#E6E6E6;" cx="32.455" cy="12.779" r="4" />
-                        <path style="fill:#7A3726;" d="M32.455,17.779c-2.757,0-5-2.243-5-5s2.243-5,5-5s5,2.243,5,5S35.212,17.779,32.455,17.779z
-                            M32.455,9.779c-1.654,0-3,1.346-3,3s1.346,3,3,3s3-1.346,3-3S34.109,9.779,32.455,9.779z" />
-                    </g>
-                    <path style="fill:#C64940;" d="M25.617,45.684l-1.941-0.479c0.435-1.761-1.063-3.216-3.446-4.859
-                        c-2.875-1.984-4.817-5.117-5.327-8.595c-0.186-1.266-0.425-2.285-0.428-2.295l1.922-0.548c0.01,0.028,1.09,3.104,3.978,4.314
-                        c2.094,0.877,4.667,0.598,7.648-0.832c11.578-5.554,17.102-2.646,17.332-2.52l-0.967,1.752c-0.04-0.021-4.97-2.48-15.5,2.57
-                        c-3.53,1.694-6.662,1.984-9.312,0.863c-0.801-0.339-1.49-0.779-2.078-1.265c0.769,1.974,2.11,3.695,3.867,4.907
-                        C23.149,39.931,26.472,42.222,25.617,45.684z" />
-                    <path style="fill:#C64940;" d="M27.074,27.586c-5.37,0-7.605-3.694-7.633-3.74l1.727-1.01l-0.863,0.505l0.859-0.511
-                        c0.108,0.179,2.714,4.335,9.738,2.105c1.54-0.794,12.038-6.002,15.619-2.289l-1.439,1.389c-1.979-2.052-9.229,0.576-13.332,2.714
-                        l-0.154,0.064C29.892,27.364,28.389,27.586,27.074,27.586z" />
-                    </g>
-                </svg>
-                <svg viewBox="0 0 49 49" id="soda" class="product">
-                    <g>
-                    <path style="fill:#E22F37;" d="M9.5,27V5.918c0-1.362,0.829-2.587,2.094-3.093l0,0C12.642,2.406,13.5,1.14,13.5,0.011L13.5,0v0
-                        l11,0l11,0v0v0.011c0,1.129,0.858,2.395,1.906,2.814l0,0c1.265,0.506,2.094,1.73,2.094,3.093V27v-5v21.082
-                        c0,1.362-0.829,2.587-2.094,3.093h0c-1.048,0.419-1.906,1.686-1.906,2.814V49l0,0h-11h-11l0,0l0-0.011
-                        c0-1.129-0.858-2.395-1.906-2.814h0c-1.265-0.506-2.094-1.73-2.094-3.093V22" />
-                    <path style="fill:#F75B57;" d="M18.5,7h-5c-0.553,0-1-0.447-1-1s0.447-1,1-1h5c0.553,0,1,0.447,1,1S19.053,7,18.5,7z" />
-                    <path style="fill:#F75B57;" d="M35.5,7h-13c-0.553,0-1-0.447-1-1s0.447-1,1-1h13c0.553,0,1,0.447,1,1S36.053,7,35.5,7z" />
-                    <path style="fill:#994530;" d="M18.5,45h-5c-0.553,0-1-0.447-1-1s0.447-1,1-1h5c0.553,0,1,0.447,1,1S19.053,45,18.5,45z" />
-                    <path style="fill:#994530;" d="M35.5,45h-13c-0.553,0-1-0.447-1-1s0.447-1,1-1h13c0.553,0,1,0.447,1,1S36.053,45,35.5,45z" />
-                    <polygon style="fill:#E6E6E6;" points="39.5,32 9.5,42 9.5,20 39.5,10 	" />
-                    <polygon style="fill:#F9D70B;" points="39.5,28 9.5,38 9.5,24 39.5,14 	" />
-                    </g>
-                </svg>
-                <div class="cart-container">
-                    <svg viewBox="0 0 512 512" id="cart">
-                    <circle cx="376.8" cy="440" r="55" />
-                    <circle cx="192" cy="440" r="55" />
-                    <polygon points="128,0 0.8,0 0.8,32 104.8,32 136.8,124.8 170.4,124.8 " />
-                    <polygon style="fill:#ED7161;" points="250.4,49.6 224,124.8 411.2,124.8 " />
-                    <polygon style="fill:#ee5a46;" points="411.2,124.8 224,124.8 170.4,124.8 136.8,124.8 68,124.8 141.6,361.6 427.2,361.6 
-                    511.2,124.8 " />
-                    <g>
-                        <rect x="166.4" y="185.6" style="fill:#FFFFFF;" width="255.2" height="16" />
-                        <rect x="166.4" y="237.6" style="fill:#FFFFFF;" width="166.4" height="16" />
-                    </g>
-                    </svg>
-                </div>
-            </div>
+   <div class="loader-wrapper">
+      <div class="d-flex justify-content-center align-items-center position-absolute top-50 start-50 translate-middle">
+        <div class="spinner-border text-dark" role="status">
+          <span class="visually-hidden">Loading...</span>
         </div>
-    </div>
-
-      <div class="progress-wrap">
-         <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
-            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
-         </svg>
       </div>
-
-     <header class="header d-blue-bg">
-        @* <div class="header-top">
-            <div class="container">
-                <div class="header-inner">
-                    <div class="row align-items-center">
-                        <div class="col-xl-6 col-lg-7">
-                            <div class="header-inner-start">
-                          
-                                <div class="support d-none d-sm-block">
-                                    <p>Cần hỗ trợ? <a href="tel:+001123456789">@(string.IsNullOrEmpty(phone2)?phone1:phone2)</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-6 col-lg-5 d-none d-lg-block">
-                            <div class="header-inner-end text-md-end">
-                                <div class="ovic-menu-wrapper">
-                                    <ul>
-                                        <li><a href="@Url.Action("AboutUs","StaticPage")">Về chúng tôi</a></li>
-                                        <li><a href="contact.html">Liên hệ</a></li>
-                                        <li><a href="faq.html">FAQs</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> *@
-        <div class="header-mid">
-            <div class="container">
-                <div class="heade-mid-inner">
-                    <div class="row align-items-center">
-                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4">
-                            <div class="header__info">
-                                <div class="logo">
-                                    <a href="@Url.Action("HomePage","HomePage")" class="logo-image"><img src="@(logo_path)" alt="logo"></a>
-                                </div>
-                            
-                            </div>
-                        </div>
-                        <div class="col-xl-5 col-lg-4 d-none d-lg-block">
-                            <div class="header__search">
-                                <form id="header-form" method="post" asp-action="FilterProductByNameAndCategory" asp-controller="Products">
-                                    <div class="header__search-box">
-                                        <input class="search-input" type="text" name="product" placeholder="Tìm kiếm...">
-                                        <button class="button" type="submit"><i class="far fa-search"></i></button>
-                                    </div>
-                                    <div class="header__search-cat">
-                            <select name="category" id="filter-cat">
-                                            <option value="">Loại sản phẩm</option>
-
-                                            @foreach(var category in categories)
-                                            {  
-                                                <option value="@category.CategoryName">@category.CategoryName</option>
-                                            } 
-
-                                        </select>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-lg-5 col-md-8 col-sm-8">
-                            <div class="header-action" id="user_avatar">
-                                 @if(User.Identity.IsAuthenticated && User.IsInRole("User"))
-                    {   
-                        @Html.Partial("~/Views/Shared/_LoginUser.cshtml")
-                    }
-                                else
-                                {
-                                    <a class="icon-link" href="@Url.Action("MyAccount","MyAccount")" >
-                                    <i class="flaticon-user"></i> 
-                                    <span class="text">
-                                    <span class="sub">Đăng nhập</span>
-                                    Tài khoản của tôi </span>
-                                    </a>
-                    }
-                    <div id="sub-cart-section">
-                    @Html.Partial("~/Views/ClientSide/Cart/_SubCartPartial.cshtml",cart)
-                    </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="header__bottom">
-            <div class="container">
-                <div class="row g-0 align-items-center">
-                        <div class="cat__menu-wrapper side-border d-none d-lg-block">
-                            <div class="cat-toggle">
-                                <div class="cat__menu">
-                                    <nav id="mobile-menu" style="display: block;">
-                                        <ul>
-                                            <li>
-                                                <a href="@Url.Action("HomePage","HomePage")">Trang chủ
-                                                </a>
-                                            </li>
-                                           <li>
-                                                <a href="@Url.Action("AboutUs","StaticPage")">Về chúng tôi
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="@Url.Action("Products","Products")">Sản phẩm<i class="far fa-angle-down"></i></a>
-                                                <ul class="submenu">
-                                                  @foreach(var cat in categories)
-                                                  {
-                                    string regex_cat=Regex.Replace(cat.CategoryName,@"[^\w\d]", "-");
-                                                  
-                                                  if(cat.SubCategory==null)
-                                                  {
-                                                    <li><a href="@Url.Action("ProductsByCategory","Products",new{category_name=regex_cat})">@cat.CategoryName</a></li>
-                                                  }
-                                                else
-                                                {
-                                                <li><a href="@Url.Action("ProductsByCategory","Products",new{category_name=regex_cat})">@cat.CategoryName<i class="far fa-angle-down"></i></a>
-                                                <ul class="submenu">
-                                                    @foreach(var subcat in cat.SubCategory)
-                                                    {
-                                                    <li><a href="@Url.Action("ProductBySubCategory","Products",new{sub_cat_id=subcat.Id})">@subcat.SubCategoryName</a></li>
-                                                    }
-                                                </ul>
-                                                </li>
-                                                }
-                                                   } 
-                                                </ul>
-                                            </li>
-                                          <li>
-                                            <a href="@Url.Action("Blog","Blog")">Blog
-                                            </a>
-                                            </li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </div>
-                        </div>
-                    <div class="col-lg-6 col-md-6 col-3">
-                      <div class="header__bottom-left d-flex d-xl-block align-items-center">
-                        <div class="side-menu d-lg-none mr-20">
-                            
-                       
-    <div class="menu-container">
-        <button type="button" class="side-menu-btn offcanvas-toggle-btn">
-            <i class="fas fa-bars"></i>
-        </button>
-        <div class="search-wrapper">
-        <form method="post" asp-action="FilterProductByNameAndCategory" asp-controller="Products">
-
-            <input type="text" name="product" class="search-bar" placeholder="Tìm kiếm sản phẩm...">
-            <button type="submit" class="search-btn">
-                <i class="fas fa-search"></i>
-            </button>
-        </form>
-        </div>
     </div>
-
-                        </div>
-                        <div class="main-menu d-none d-lg-block">
-                            <nav>
-                                <ul>
-                                    <li>
-                                        <a href="@Url.Action("HomePage","HomePage")">Trang chủ</a>
-                                    </li>
-                                    <li><a href="@Url.Action("AboutUs","StaticPage")">Về chúng tôi</a></li>
-                                    <li class="product-list">
-                                    <a href="@Url.Action("Products","Products")">Sản phẩm<i class="far fa-angle-down"></i>
-                                    </a>
-                                     <ul class="dropdown">
-                                           @foreach(var cat in categories)
-                                           {
-                                        string regex_cat=Regex.Replace(cat.CategoryName, @"[^\w\d]", "-");
-
-                                           if(cat.SubCategory.Count==0)
-                                           {
-                                            <li><a href="@Url.Action("ProductsByCategory","Products",new{category_name=regex_cat})">@cat.CategoryName</a></li>
-                                            }
-                                            else
-                                            {
-                                                <li>
-                                                 <a href="@Url.Action("ProductsByCategory","Products",new{category_name=regex_cat})">@cat.CategoryName<i class="far fa-angle-down"></i></a>
-                                                <ul class="submenu">
-                                                    @foreach(var subcat in cat.SubCategory)
-                                                    {
-                                                    <li><a href="@Url.Action("ProductBySubCategory","Products",new{sub_cat_id=subcat.Id})">@subcat.SubCategoryName</a></li>
-                                                    }
-                                                </ul>
-                                                </li>
-                                           }
-                                           }
-                                        </ul>
-                                    </li>
-                                    <li><a href="@Url.Action("Blog","Blog")">Blog</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-            </div>
+ 
+  <header class="top-header">
+    <nav class="navbar navbar-expand-xl w-100 navbar-dark container gap-3">
+      <a class="navbar-brand d-none d-xl-inline" href="index.html"><img src="assets/images/logo.webp" class="logo-img" alt=""></a>
+      <a class="mobile-menu-btn d-inline d-xl-none" href="javascript:;" data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasNavbar">
+        <i class="bi bi-list"></i>
+      </a>
+      <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar">
+        <div class="offcanvas-header">
+          <div class="offcanvas-logo"><img src="assets/images/logo.webp" class="logo-img" alt="">
+          </div>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-     </header>
+        <div class="offcanvas-body primary-menu">
+          <ul class="navbar-nav justify-content-start flex-grow-1 gap-1">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="tv-shows.html"
+                data-bs-toggle="dropdown">
+                Categories
+              </a>
+              <div class="dropdown-menu dropdown-large-menu">
+                <div class="row">
+                  <div class="col-12 col-xl-4">
+                    <h6 class="large-menu-title">Fashion</h6>
+                    <ul class="list-unstyled">
+                      <li><a href="javascript:;">Casual T-Shirts</a>
+                      </li>
+                      <li><a href="javascript:;">Formal Shirts</a>
+                      </li>
+                      <li><a href="javascript:;">Jackets</a>
+                      </li>
+                      <li><a href="javascript:;">Jeans</a>
+                      </li>
+                      <li><a href="javascript:;">Dresses</a>
+                      </li>
+                      <li><a href="javascript:;">Sneakers</a>
+                      </li>
+                      <li><a href="javascript:;">Belts</a>
+                      </li>
+                      <li><a href="javascript:;">Sports Shoes</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <!-- end col-3 -->
+                  <div class="col-12 col-xl-4">
+                    <h6 class="large-menu-title">Electronics</h6>
+                    <ul class="list-unstyled">
+                      <li><a href="javascript:;">Mobiles</a>
+                      </li>
+                      <li><a href="javascript:;">Laptops</a>
+                      </li>
+                      <li><a href="javascript:;">Macbook</a>
+                      </li>
+                      <li><a href="javascript:;">Televisions</a>
+                      </li>
+                      <li><a href="javascript:;">Lighting</a>
+                      </li>
+                      <li><a href="javascript:;">Smart Watch</a>
+                      </li>
+                      <li><a href="javascript:;">Galaxy Phones</a>
+                      </li>
+                      <li><a href="javascript:;">PC Monitors</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <!-- end col-3 -->
+                  <div class="col-12 col-xl-4 d-none d-xl-block">
+                    <div class="pramotion-banner1">
+                      <img src="assets/images/menu-img.webp" class="img-fluid" alt="" />
+                    </div>
+                  </div>
+                  <!-- end col-3 -->
+                </div>
+                <!-- end row -->
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="javascript:;" data-bs-toggle="dropdown">
+                Shop
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="cart.html">Shop Cart</a></li>
+                <li><a class="dropdown-item" href="wishlist.html">Wishlist</a></li>
+                <li><a class="dropdown-item" href="product-details.html">Product Details</a></li>
+                <li><a class="dropdown-item" href="payment-method.html">Payment Method</a></li>
+                <li><a class="dropdown-item" href="billing-details.html">Billing Details</a></li>
+                <li><a class="dropdown-item" href="address.html">Addresses</a></li>
+                <li><a class="dropdown-item" href="shop-grid.html">Shop Grid</a></li>
+                <li><a class="dropdown-item" href="shop-grid-type-4.html">Shop Grid 4</a></li>
+                <li><a class="dropdown-item" href="shop-grid-type-5.html">Shop Grid 5</a></li>
+                <li><a class="dropdown-item" href="search.html">Search</a></li>
+              </ul>
+            </li>
+            @* <li class="nav-item">
+              <a class="nav-link" href="about-us.html">About</a>
+            </li> *@
+            <li class="nav-item">
+              <a class="nav-link" href="contact-us.html">Contact</a>
+            </li>
+            @* <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="javascript:;" data-bs-toggle="dropdown">
+                Account
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="account-dashboard.html">Dashboard</a></li>
+                <li><a class="dropdown-item" href="account-orders.html">My Orders</a></li>
+                <li><a class="dropdown-item" href="account-profile.html">My Profile</a></li>
+                <li><a class="dropdown-item" href="account-edit-profile.html">Edit Profile</a></li>
+                <li><a class="dropdown-item" href="account-saved-address.html">Addresses</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="authentication-login.html">Login</a></li>
+                <li><a class="dropdown-item" href="authentication-register.html">Register</a></li>
+                <li><a class="dropdown-item" href="authentication-reset-password.html">Password</a></li>
+              </ul>
+            </li> *@
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="javascript:;" data-bs-toggle="dropdown">
+                Blog
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="blog-post.html">Blog Post</a></li>
+                <li><a class="dropdown-item" href="blog-read.html">Blog Read</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <ul class="navbar-nav secondary-menu flex-row">
+        <li class="nav-item">
+          <a class="nav-link dark-mode-icon" href="javascript:;">
+            <div class="mode-icon">
+              <i class="bi bi-moon"></i>
+            </div>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="search.html"><i class="bi bi-search"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="wishlist.html"><i class="bi bi-suit-heart"></i></a>
+        </li>
+        <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight">
+          <a class="nav-link position-relative" href="javascript:;">
+            <div class="cart-badge">8</div>
+            <i class="bi bi-basket2"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="account-dashboard.html"><i class="bi bi-person-circle"></i></a>
+        </li>
+      </ul>
+    </nav>
+  </header>
 
-<div class="offcanvas__area" style="z-index: 1050;">
+@* <div class="offcanvas__area" style="z-index: 1050;">
         <div class="offcanvas__wrapper">
         <div class="offcanvas__close">
             <button class="offcanvas__close-btn" id="offcanvas__close-btn">
@@ -589,10 +482,10 @@
             </div>
         </div>
         </div>
-    </div>
+    </div> *@
     } 
         <main role="main" class="pb-3" id="main-container">
-            @RenderBody()            
+            @RenderBody()      
           @* <div class="floating-button-container">
         <!-- Round Button -->
         <div class="floating-button" onclick="toggleOptions()">
@@ -606,7 +499,7 @@
             <a href="#option3">Option 3</a>
         </div>
     </div>             *@
-    <div class="addThis_contact  addThis_product_scroll ">
+    @* <div class="addThis_contact  addThis_product_scroll ">
 	<div class="addThis_contact__dialog addThis_listSharing" style="display: none;">
 		<div class="addThis_contact__lists">
 			<button type="button" class="addThis_close" data-dismiss="modal">
@@ -666,236 +559,413 @@
 						<span class="tooltip-text">Đăng kí thông tin và để lại lời nhắn</span>
 					</a>
 				</li> *@
-				<li class="addThis_item">
-					<a class="addThis_item--icon cta-submitform" href="/about-us" aria-label="Liên hệ">
-						<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<circle cx="22" cy="22" r="22" fill="url(#paint5_linear)"></circle>
-							<path d="M22 10C17.0374 10 13 13.7367 13 18.3297C13 24.0297 21.0541 32.3978 21.397 32.7512C21.7191 33.0832 22.2815 33.0826 22.603 32.7512C22.9459 32.3978 31 24.0297 31 18.3297C30.9999 13.7367 26.9626 10 22 10ZM22 22.5206C19.5032 22.5206 17.4719 20.6406 17.4719 18.3297C17.4719 16.0188 19.5032 14.1388 22 14.1388C24.4968 14.1388 26.528 16.0189 26.528 18.3297C26.528 20.6406 24.4968 22.5206 22 22.5206Z" fill="white"></path>
-							<defs>
-								<linearGradient id="paint5_linear" x1="22" y1="0" x2="22" y2="44" gradientUnits="userSpaceOnUse">
-									<stop offset="50%" stop-color="#fecf72"></stop>
-									<stop offset="100%" stop-color="#ef9f00"></stop>
-								</linearGradient>
-							</defs>
-						</svg>
-						<span class="tooltip-text">Xem địa chỉ doanh nghiệp</span>
-					</a>
-				</li>
-			</ul>	
-		</div>
-	</div>
-    
-	<div class="addThis_contact__icons">
-		<div class="box-item box-contact">
-			<div class="svgico">
-				<svg viewBox="0 0 34 35" xmlns="http://www.w3.org/2000/svg"> <path d="M4.35522 31V25.416H5.41122V30.064H7.61122V31H4.35522ZM8.97509 26.216C8.76176 26.216 8.60709 26.168 8.51109 26.072C8.42043 25.976 8.37509 25.8533 8.37509 25.704V25.544C8.37509 25.3947 8.42043 25.272 8.51109 25.176C8.60709 25.08 8.76176 25.032 8.97509 25.032C9.18309 25.032 9.33509 25.08 9.43109 25.176C9.52709 25.272 9.57509 25.3947 9.57509 25.544V25.704C9.57509 25.8533 9.52709 25.976 9.43109 26.072C9.33509 26.168 9.18309 26.216 8.97509 26.216ZM8.46309 26.824H9.48709V31H8.46309V26.824ZM12.834 24.712L13.842 25.944L13.33 26.344L12.37 25.424L11.41 26.344L10.898 25.944L11.906 24.712H12.834ZM12.362 31.096C12.0527 31.096 11.7754 31.0453 11.53 30.944C11.29 30.8373 11.0847 30.6907 10.914 30.504C10.7487 30.312 10.6207 30.0827 10.53 29.816C10.4394 29.544 10.394 29.24 10.394 28.904C10.394 28.5733 10.4367 28.2747 10.522 28.008C10.6127 27.7413 10.7407 27.5147 10.906 27.328C11.0714 27.136 11.274 26.9893 11.514 26.888C11.754 26.7813 12.026 26.728 12.33 26.728C12.6554 26.728 12.938 26.784 13.178 26.896C13.418 27.008 13.6154 27.16 13.77 27.352C13.9247 27.544 14.0394 27.768 14.114 28.024C14.194 28.2747 14.234 28.544 14.234 28.832V29.168H11.458V29.272C11.458 29.576 11.5434 29.8213 11.714 30.008C11.8847 30.1893 12.138 30.28 12.474 30.28C12.73 30.28 12.938 30.2267 13.098 30.12C13.2634 30.0133 13.41 29.8773 13.538 29.712L14.09 30.328C13.9194 30.568 13.6847 30.7573 13.386 30.896C13.0927 31.0293 12.7514 31.096 12.362 31.096ZM12.346 27.496C12.074 27.496 11.858 27.5867 11.698 27.768C11.538 27.9493 11.458 28.184 11.458 28.472V28.536H13.17V28.464C13.17 28.176 13.098 27.944 12.954 27.768C12.8154 27.5867 12.6127 27.496 12.346 27.496ZM15.135 31V26.824H16.159V27.52H16.199C16.2843 27.296 16.4176 27.1093 16.599 26.96C16.7856 26.8053 17.0416 26.728 17.367 26.728C17.799 26.728 18.1296 26.8693 18.359 27.152C18.5883 27.4347 18.703 27.8373 18.703 28.36V31H17.679V28.464C17.679 28.1653 17.6256 27.9413 17.519 27.792C17.4123 27.6427 17.2363 27.568 16.991 27.568C16.8843 27.568 16.7803 27.584 16.679 27.616C16.583 27.6427 16.495 27.6853 16.415 27.744C16.3403 27.7973 16.279 27.8667 16.231 27.952C16.183 28.032 16.159 28.128 16.159 28.24V31H15.135ZM21.7287 25.08H22.7527V27.52H22.7927C22.8781 27.296 23.0114 27.1093 23.1927 26.96C23.3794 26.8053 23.6354 26.728 23.9607 26.728C24.3927 26.728 24.7234 26.8693 24.9527 27.152C25.1821 27.4347 25.2967 27.8373 25.2967 28.36V31H24.2727V28.464C24.2727 28.1653 24.2194 27.9413 24.1127 27.792C24.0061 27.6427 23.8301 27.568 23.5847 27.568C23.4781 27.568 23.3741 27.584 23.2727 27.616C23.1767 27.6427 23.0887 27.6853 23.0087 27.744C22.9341 27.7973 22.8727 27.8667 22.8247 27.952C22.7767 28.032 22.7527 28.128 22.7527 28.24V31H21.7287V25.08ZM28.5918 24.712L29.5998 25.944L29.0878 26.344L28.1278 25.424L27.1678 26.344L26.6558 25.944L27.6638 24.712H28.5918ZM28.1198 31.096C27.8105 31.096 27.5332 31.0453 27.2878 30.944C27.0478 30.8373 26.8425 30.6907 26.6718 30.504C26.5065 30.312 26.3785 30.0827 26.2878 29.816C26.1972 29.544 26.1518 29.24 26.1518 28.904C26.1518 28.5733 26.1945 28.2747 26.2798 28.008C26.3705 27.7413 26.4985 27.5147 26.6638 27.328C26.8292 27.136 27.0318 26.9893 27.2718 26.888C27.5118 26.7813 27.7838 26.728 28.0878 26.728C28.4132 26.728 28.6958 26.784 28.9358 26.896C29.1758 27.008 29.3732 27.16 29.5278 27.352C29.6825 27.544 29.7972 27.768 29.8718 28.024C29.9518 28.2747 29.9918 28.544 29.9918 28.832V29.168H27.2158V29.272C27.2158 29.576 27.3012 29.8213 27.4718 30.008C27.6425 30.1893 27.8958 30.28 28.2318 30.28C28.4878 30.28 28.6958 30.2267 28.8558 30.12C29.0212 30.0133 29.1678 29.8773 29.2958 29.712L29.8478 30.328C29.6772 30.568 29.4425 30.7573 29.1438 30.896C28.8505 31.0293 28.5092 31.096 28.1198 31.096ZM28.1038 27.496C27.8318 27.496 27.6158 27.5867 27.4558 27.768C27.2958 27.9493 27.2158 28.184 27.2158 28.472V28.536H28.9278V28.464C28.9278 28.176 28.8558 27.944 28.7118 27.768C28.5732 27.5867 28.3705 27.496 28.1038 27.496ZM28.1038 32.552C27.8958 32.552 27.7465 32.5067 27.6558 32.416C27.5705 32.3307 27.5278 32.2213 27.5278 32.088V31.912C27.5278 31.7787 27.5705 31.6667 27.6558 31.576C27.7465 31.4907 27.8958 31.448 28.1038 31.448C28.3118 31.448 28.4585 31.4907 28.5438 31.576C28.6345 31.6667 28.6798 31.7787 28.6798 31.912V32.088C28.6798 32.2213 28.6345 32.3307 28.5438 32.416C28.4585 32.5067 28.3118 32.552 28.1038 32.552Z"></path> <path d="M27.2212 0H10.7532C9.76511 0 8.97461 0.834345 8.97461 1.82643V12.334C8.97461 13.3487 9.78701 14.1604 10.7532 14.1604H22.1051L24.6741 16.8211C24.7839 16.9338 24.9157 17.0015 25.0693 17.0015C25.3768 17.0015 25.6402 16.7535 25.6402 16.4153V14.1604H27.2212C28.2092 14.1604 28.9997 13.3261 28.9997 12.334V1.82643C28.9997 0.811779 28.1873 0 27.2212 0ZM13.2783 9.04195C12.378 9.04195 11.6315 8.2753 11.6315 7.35077C11.6315 6.42631 12.378 5.65966 13.2783 5.65966C14.1785 5.65966 14.925 6.42631 14.925 7.35077C14.925 8.2753 14.2005 9.04195 13.2783 9.04195ZM19.0531 9.04195C18.1528 9.04195 17.4062 8.2753 17.4062 7.35077C17.4062 6.42631 18.1528 5.65966 19.0531 5.65966C19.9533 5.65966 20.6998 6.42631 20.6998 7.35077C20.6998 8.2753 19.9533 9.04195 19.0531 9.04195ZM24.8059 9.04195C23.9056 9.04195 23.1591 8.2753 23.1591 7.35077C23.1591 6.42631 23.9056 5.65966 24.8059 5.65966C25.7061 5.65966 26.4526 6.42631 26.4526 7.35077C26.4526 8.2753 25.7061 9.04195 24.8059 9.04195Z"></path> <path d="M7.9649 12.3782V8.79297H6.16437C5.52762 8.79297 5.00066 9.33418 5.00066 9.98807V16.8878C4.97869 17.5868 5.50564 18.128 6.16437 18.128H7.19637V19.6162C7.19637 19.8192 7.37202 19.9995 7.56964 19.9995C7.67944 19.9995 7.76727 19.9544 7.83312 19.8868L9.52385 18.1505H16.9894C17.6261 18.1505 18.1531 17.6094 18.1531 16.9555V15.2418H10.7535C9.2165 15.2418 7.9649 13.9566 7.9649 12.3782Z"></path></svg>
-				<span class="svgico--close">
-					<svg viewBox="0 0 19 19" role="presentation"><path d="M9.1923882 8.39339828l7.7781745-7.7781746 1.4142136 1.41421357-7.7781746 7.77817459 7.7781746 7.77817456L16.9705627 19l-7.7781745-7.7781746L1.41421356 19 0 17.5857864l7.7781746-7.77817456L0 2.02943725 1.41421356.61522369 9.1923882 8.39339828z" fill-rule="evenodd"></path></svg>			
-				</span>
-			</div>
-		</div>
-	</div>
-</div>
-     <footer>
-    <section class="cta-area d-ldark-bg pt-55 pb-10">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-md-6">
-                        <div class="cta-item cta-item-d mb-30">
-                            <h5 class="cta-title">Kết nối với chúng tôi</h5>
-                            <p>Chúng tôi xây dựng một hệ thống bán hàng với trách nhiệm và uy tín cao.</p>
-                            <div class="cta-social">
-                                <div class="social-icon">
-                                    <a href="@facebook" class="facebook"><i class="fab fa-facebook-f" title="facebook"></i></a>
-                                    <a href="#" class="twitter"><i class="fas fa-comment-dots" title="zalo"></i></a>
-                                    <a href="@youtube" class="youtube"><i class="fab fa-youtube" title="youtube"></i></a>
-                                    <a href="#" class="linkedin"><i class="fab fa-linkedin-in" title="linkedin"></i></a>
-                                    <a href="@instagram" class="rss"><i class="fab fa-instagram" title="instagram"></i></a>
-                                    <a href="#" class="dribbble"><i class="fab fa-dribbble" title="dribble"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="cta-item mb-30">
-                            <h5 class="cta-title">Đăng ký nhận tin mới</h5>
-                            <div class="subscribe__form">
-                                <form action="#">
-                                    <input type="email" placeholder="Nhập Email của bạn vào đây...">
-                                    <button>Đăng ký</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        </main>        
-        <div class="fotter-area d-dark-bg">
-            <div class="footer__top pt-80 pb-15">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xl-5 col-lg-4 order-last-md">
-                            <div class="row">
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
-                                    <div class="footer__widget">
-                                        <div class="footer__widget-title">
-                                            <h4>Hỗ trợ khách hàng</h4>
-                                        </div>
-                                        <div class="footer__widget-content">
-                                            <div class="footer__link">
-                                                <ul>
-                                                    <li><a href="#">Sản phẩm khuyến mãi</a></li>
-                                                    <li><a href="#">Tất cả sản phẩm</a></li>
-                                                    <li><a href="#">Phụ kiện</a></li>
-                                                
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
-                                    <div class="footer__widget">
-                                        <div class="footer__widget-title">
-                                            <h4>Dịch vụ khách hàng</h4>
-                                        </div>
-                                        <div class="footer__widget-content">
-                                            <div class="footer__link">
-                                                <ul>
-                                                    <li><a href="#">Trung tâm hỗ trợ</a></li>
-                                                    <li><a href="#">FAQs</a></li>
-                                                    <li><a href="#">Báo cáo lỗi</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-7 col-lg-8 order-first-md">
-                            <div class="footer__top-left">
-                                <div class="row">
-                                    
-                                    <div class="col-xl-7 col-lg-6 col-md-6 col-sm-6">
-                                        <div class="row">
-                                            
-                                            @* <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-                                                <div class="footer__widget">
-                                                    <div class="footer__widget-title">
-                                                        <h4>Chính sách</h4>
-                                                    </div>
-                                                    <div class="footer__widget-content">
-                                                        <div class="footer__link">
-                                                            <ul>
-                                                                <li><a href="#">Chính sách bảo hành</a></li>
-                                                                <li><a href="#">Mua hàng từ xa</a></li>
-                                                                <li><a href="#">Chính sách đổi trả</a></li>
-                                                                <li><a href="#">Chính sách bảo mật</a></li>                                                                
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div> *@
-                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-                                    <div class="footer__widget">
-                                            <div class="footer__widget-title mb-20">
-                                                <h4>Về chúng tôi</h4>
-                                            </div>
-                                            <div class="footer__widget-content">
-                                                @* <p class="footer-text mb-35">Chuyên cung cấp các sản phẩm chính hãng từ Garmin.</p> *@
-                                                
-                                                <div class="footer__hotline d-flex align-items-center mb-10">
-                                                    <div class="icon mr-15">
-                                                        <i class="fal fa-headset"></i>
-                                                    </div>
-                                                    <div class="text">
-                                                        <h4 style="display: inline-block; white-space: nowrap;">Có thắc mắc? Gọi ngay cho chúng tôi!</h4>
-                                                        <span><a style="color:#F9D70B" href="tel:@(string.IsNullOrEmpty(phone1)?phone2:phone1)">@(string.IsNullOrEmpty(phone1)?phone2:phone1)</a></span>
-                                                    </div>
-                                                </div>
-                                                <div class="footer__info">
-                                                    <ul>
-                                                        <li>
-                                                            <span class="about-info">Văn phòng Hồ Chí Minh:<a style="color: #f9d70b;" class="about-info" target="_blank">@address1</a></span>
-                                                        </li>
-                                                        <li><span  class="about-info">Hotline:<a style="color:#F9D70B;" class="about-info" href="tel:@phone1">@phone1</a></span></li>
-                                                    <li>
-                                                        <span class="about-info">Văn phòng Hà Nội:<a style="color:#F9D70B;" class="about-info" target="_blank">@address2</a></span>
-                                                        </li>
-                                                        <li><span  class="about-info">Hotline:<a style="color:#F9D70B;"  class="about-info" href="tel:@phone2">@phone2</a></span></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @* <div class="footer__widget">
-                                        <div class="footer__widget-title">
-                                            <h4>Liên kết nhanh</h4>
-                                        </div>
-                                        <div class="footer__widget-content">
-                                            <div class="footer__link">
-                                                <ul>
-                                                    <li><a href="#">Store Location</a></li>
-                                                    <li><a href="#">My account</a></li>
-                                                    <li><a href="#">Order Tracking</a></li>
-                                                    <li><a href="#">FAQs</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div> *@
-                                </div></div>
-                                    </div>
-                                    @* <div class="col-xl-5 col-lg-6 col-md-6 col-sm-6">
-                                        <div class="footer__widget">
-                                            <div class="footer__widget-title mb-20">
-                                                <h4>Về chúng tôi</h4>
-                                            </div>
-                                            <div class="footer__widget-content">
-                                                
-                                                <div class="footer__hotline d-flex align-items-center mb-10">
-                                                    <div class="icon mr-15">
-                                                        <i class="fal fa-headset"></i>
-                                                    </div>
-                                                    <div class="text">
-                                                        <h4>Có thắc mắc? Gọi ngay cho chúng tôi!</h4>
-                                                        <span><a style="color:#F9D70B" href="tel:100-123-456-7890">@(string.IsNullOrEmpty(phone1)?phone2:phone1)</a></span>
-                                                    </div>
-                                                </div>
-                                                <div class="footer__info">
-                                                    <ul>
-                                                        <li>
-                                                            <span style="display:inline-block;white-space:nowrap;">Văn phòng Hồ Chí Minh:<a style="color:#F9D70B;display:inline-block;white-space:nowrap" target="_blank">@address1</a></span>
-                                                        </li>
-                                                        <li><span>Hotline:<a style="color:#F9D70B;display:inline-block;white-space:nowrap" href="tel:100-123-456-7890">@phone1</a></span></li>
-                                                    <li>
-                                                        <span>Văn phòng Hà Nội:<a style="color:#F9D70B;display:inline-block;white-space:nowrap" target="_blank">@address2</a></span>
-                                                        </li>
-                                                        <li><span style="display:inline-block;white-space:nowrap;">Hotline:<a style="color:#F9D70B;display:inline-block;white-space:nowrap" href="tel:100-123-456-7890">@phone2</a></span></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> *@
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="footer__bottom">
-                <div class="container">
-                    <div class="footer__bottom-content pt-55 pb-45">
-                        <div class="row">
-                            <div class="col-xl-12">
-                                <div class="copy-right-area text-center">
-                                    <p>Copyright © @DateTime.Now.Year <span>ThanhQuangGNSS.</span> All Rights Reserved.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+		</main>
+   
+     <section class="footer-section bg-section-2 section-padding"></section>
+    <div class="container">
+       <div class="row row-cols-1 row-cols-lg-4 g-4">
+        <div class="col">
+          <div class="footer-widget-6">
+            <img src="assets/images/logo.webp" class="logo-img mb-3" alt="">
+            <h5 class="mb-3 fw-bold">About Us</h5>
+             <p class="mb-2">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
+
+             <a class="link-dark" href="javascript:;">Read More</a>
+          </div>
         </div>
-    </footer>
+        <div class="col">
+          <div class="footer-widget-7">
+            <h5 class="mb-3 fw-bold">Explore</h5>
+             <ul class="widget-link list-unstyled">
+              @foreach(var cat in categories)
+              {
+               <li><a href="javascript:;">@cat.CategoryName</a></li>
+               }
+             </ul>
+          </div>
+        </div>
+        <div class="col">
+          <div class="footer-widget-8">
+            <h5 class="mb-3 fw-bold">Company</h5>
+             <ul class="widget-link list-unstyled">
+               <li><a href="javascript:;">About Us</a></li>
+               <li><a href="javascript:;">Contact Us</a></li>
+               <li><a href="javascript:;">FAQ</a></li>
+               <li><a href="javascript:;">Privacy</a></li>
+               <li><a href="javascript:;">Terms</a></li>
+               <li><a href="javascript:;">Complaints</a></li>
+             </ul>
+          </div>
+        </div>
+        <div class="col">
+          <div class="footer-widget-9">
+            <h5 class="mb-3 fw-bold">Follow Us</h5>
+             <div class="social-link d-flex align-items-center gap-2">
+               <a href="@facebook"><i class="bi bi-facebook"></i></a>
+               @* <a href="@t:;"><i class="bi bi-twitter"></i></a> *@
+               <a href="@youtube"><i class="bi bi-youtube"></i></a>
+               <a href="@instagram"><i class="bi bi-instagram"></i></a>
+             </div>
+             <div class="mb-3 mt-3">
+              <h5 class="mb-0 fw-bold">Support</h5>
+              <p class="mb-0 text-muted">@email</p>
+             </div>
+             <div class="">
+              <h5 class="mb-0 fw-bold">Toll Free</h5>
+              <p class="mb-0 text-muted">@(string.IsNullOrEmpty(phone1)?phone2:phone1)</p>
+             </div>
+          </div>
+        </div>
+       </div><!--end row-->
+       <div class="my-5"></div>
+       <div class="row">
+         <div class="col-12">
+           <div class="text-center">
+            <h5 class="fw-bold mb-3">Download Mobile App</h5>
+           </div>
+          <div class="app-icon d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2">
+            <div>
+              <a href="javascript:;">
+                <img src="assets/images/play-store.webp" width="160" alt="">
+              </a>
+            </div>
+            <div>
+              <a href="javascript:;">
+                <img src="assets/images/apple-store.webp" width="160" alt="">
+              </a>
+            </div>
+          </div>
+         </div>
+       </div><!--end row-->
+
+    </div>
+  </section>
+  <!--end footer-->
+
+  <footer class="footer-strip text-center py-3 bg-section-2 border-top positon-absolute bottom-0">
+    <p class="mb-0 text-muted">© @DateTime.Now.Year. www.tshirtatlowprices.com | All rights reserved.</p>
+  </footer>
+
+
+  <!--start cart-->
+  <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasRight"
+    aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header bg-section-2">
+      <h5 class="mb-0 fw-bold" id="offcanvasRightLabel">8 items in the cart</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="cart-list">
+
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/01.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/02.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/03.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/04.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/05.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/06.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/07.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/08.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/09.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/10.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="offcanvas-footer p-3 border-top">
+      <div class="d-grid">
+        <button type="button" class="btn btn-lg btn-dark btn-ecomm px-5 py-3">Checkout</button>
+      </div>
+    </div>
+
+  </div>
+  <!--end cat-->
+
+
+  <!--start quick view-->
+
+  <!-- Modal -->
+  <div class="modal fade" id="QuickViewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content rounded-0">
+
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-12 col-xl-6">
+
+              <div class="wrap-modal-slider">
+
+                <div class="slider-for">
+                  <div>
+                    <img src="assets/images/product-images/01.jpg" alt="" class="img-fluid">
+                  </div>
+                  <div>
+                    <img src="assets/images/product-images/02.jpg" alt="" class="img-fluid">
+                  </div>
+                  <div>
+                    <img src="assets/images/product-images/03.jpg" alt="" class="img-fluid">
+                  </div>
+                  <div>
+                    <img src="assets/images/product-images/04.jpg" alt="" class="img-fluid">
+                  </div>
+                </div>
+
+                <div class="slider-nav mt-3">
+                  <div>
+                    <img src="assets/images/product-images/01.jpg" alt="" class="img-fluid">
+                  </div>
+                  <div>
+                    <img src="assets/images/product-images/02.jpg" alt="" class="img-fluid">
+                  </div>
+                  <div>
+                    <img src="assets/images/product-images/03.jpg" alt="" class="img-fluid">
+                  </div>
+                  <div>
+                    <img src="assets/images/product-images/04.jpg" alt="" class="img-fluid">
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+            <div class="col-12 col-xl-6">
+              <div class="product-info">
+                <h4 class="product-title fw-bold mb-1">Check Pink Kurta</h4>
+                <p class="mb-0">Women Pink & Off-White Printed Kurta with Palazzos</p>
+                <div class="product-rating">
+                  <div class="hstack gap-2 border p-1 mt-3 width-content">
+                    <div><span class="rating-number">4.8</span><i class="bi bi-star-fill ms-1 text-success"></i></div>
+                    <div class="vr"></div>
+                    <div>162 Ratings</div>
+                  </div>
+                </div>
+                <hr>
+                <div class="product-price d-flex align-items-center gap-3">
+                  <div class="h4 fw-bold">$458</div>
+                  <div class="h5 fw-light text-muted text-decoration-line-through">$2089</div>
+                  <div class="h4 fw-bold text-danger">(70% off)</div>
+                </div>
+                <p class="fw-bold mb-0 mt-1 text-success">inclusive of all taxes</p>
+
+                <div class="more-colors mt-3">
+                  <h6 class="fw-bold mb-3">More Colors</h6>
+                  <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <div class="color-box bg-red"></div>
+                    <div class="color-box bg-primary"></div>
+                    <div class="color-box bg-yellow"></div>
+                    <div class="color-box bg-purple"></div>
+                    <div class="color-box bg-green"></div>
+                  </div>
+                </div>
+
+                <div class="size-chart mt-3">
+                  <h6 class="fw-bold mb-3">Select Size</h6>
+                  <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <div class="">
+                      <button type="button" class="rounded-0">XS</button>
+                    </div>
+                    <div class="">
+                      <button type="button" class="rounded-0">S</button>
+                    </div>
+                    <div class="">
+                      <button type="button" class="rounded-0">M</button>
+                    </div>
+                    <div class="">
+                      <button type="button" class="rounded-0">L</button>
+                    </div>
+                    <div class="">
+                      <button type="button" class="rounded-0">XL</button>
+                    </div>
+                    <div class="">
+                      <button type="button" class="rounded-0">XXL</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="cart-buttons mt-3">
+                  <div class="buttons d-flex flex-column gap-3 mt-4">
+                    <a href="javascript:;" class="btn btn-lg btn-dark btn-ecomm px-5 py-3 flex-grow-1"><i
+                        class="bi bi-basket2 me-2"></i>Add to Bag</a>
+                    <a href="javascript:;" class="btn btn-lg btn-outline-dark btn-ecomm px-5 py-3"><i
+                        class="bi bi-suit-heart me-2"></i>Wishlist</a>
+                  </div>
+                </div>
+                <hr class="my-3">
+                <div class="product-share">
+                  <h6 class="fw-bold mb-3">Share This Product</h6>
+                  <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <div class="">
+                      <button type="button" class="btn-social bg-twitter"><i class="bi bi-twitter"></i></button>
+                    </div>
+                    <div class="">
+                      <button type="button" class="btn-social bg-facebook"><i class="bi bi-facebook"></i></button>
+                    </div>
+                    <div class="">
+                      <button type="button" class="btn-social bg-linkden"><i class="bi bi-linkedin"></i></button>
+                    </div>
+                    <div class="">
+                      <button type="button" class="btn-social bg-youtube"><i class="bi bi-youtube"></i></button>
+                    </div>
+                    <div class="">
+                      <button type="button" class="btn-social bg-pinterest"><i class="bi bi-pinterest"></i></button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <!--end row-->
+        </div>
+
+      </div>
+    </div>
+  </div>
     
     
    <script type="text/javascript">
@@ -921,9 +991,14 @@
    });
    </script>
 
-    <script src="@Url.Content("~/lib/jquery/dist/jquery.min.js")"></script>
-    <script src="@Url.Content("~/lib/bootstrap/dist/js/bootstrap.bundle.min.js")"></script>
-    <script src="@Url.Content("~/user_layout/js/vendor/jquery.js")"></script>
+  <script src="@Url.Content("~/user_layout/js/bootstrap.bundle.min.js")"></script>
+  <script src="@Url.Content("~/user_layout/js/jquery.min.js")"></script>
+  <script src="@Url.Content("~/user_layout/plugins/slick/slick.min.js")"></script>
+  <script src="@Url.Content("~/user_layout/js/main.js")"></script>
+  <script src="@Url.Content("~/user_layout/js/index.js")"></script>
+  <script src="@Url.Content("~/user_layout/js/loader.js")"></script>
+
+    @* <script src="@Url.Content("~/user_layout/js/vendor/jquery.js")"></script>
     <script src="@Url.Content("~/user_layout/js/vendor/waypoints.js")"></script>
     <script src="@Url.Content("~/user_layout/js/bootstrap-bundle.js")"></script>
     <script src="@Url.Content("~/user_layout/js/meanmenu.js")"></script>
@@ -944,7 +1019,7 @@
     <script src="@Url.Content("~/user_layout/js/main.js")"></script>
     <script src="@Url.Content("~/user_layout/js/adbutton.js")"></script>
     <script src="@Url.Content("~/user_layout/js/gps.js")"></script>
-    <script src="@Url.Content("~/user_layout/js/manual.js")"></script>
+    <script src="@Url.Content("~/user_layout/js/manual.js")"></script> *@
     <script src="@Url.Content("~/js/ui-modals.js")"></script>    
 
 
