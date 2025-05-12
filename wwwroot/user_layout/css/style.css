@@ -604,6 +604,13 @@ h6 {
 
 
 
+.clicked
+{
+  border-color:  red !important;
+  border-width: 2px !important;
+}
+
+
 .blog-cards .card,
 .cartegory-box .card {
   border-radius: 0;

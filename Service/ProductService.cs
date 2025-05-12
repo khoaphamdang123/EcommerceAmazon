@@ -171,7 +171,7 @@ public class ProductService:IProductRepository
     var products=new List<Product>();
     try
     {
-     products=await this._context.Products.Include(p=>p.Brand).Include(p=>p.Category).Include(c=>c.SubCat).Include(p=>p.ProductImages).OrderBy(p=>p.SortId).ToListAsync();          
+     products=await this._context.Products.Include(p=>p.Category).Include(p=>p.ProductImages).Include(p=>p.Variants).ThenInclude(p=>p.Color).Include(p=>p.Variants).ThenInclude(p=>p.Size).OrderBy(p=>p.SortId).ToListAsync();          
     // int sort_id=0;
     // int sort_prominent_id=0; 
     // foreach(var product in products)

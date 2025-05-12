@@ -138,6 +138,41 @@ public async Task<IActionResult> VariantProduct(int id)
   return Ok(json);
 
 }
+
+[Route("product_detail/{id}")]
+
+[HttpGet]
+
+public async Task<JsonResult> productDetailInfo(int id)
+{
+  try
+  {
+    Console.WriteLine("Get product detail id is:"+id);
+
+    var product = await this._product.findProductById(id);
+
+    if(product!=null)
+    {
+var settings = new JsonSerializerSettings
+{
+    PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+    Formatting = Formatting.Indented
+};
+ var product_json=JsonConvert.SerializeObject(product,settings);
+    
+    Console.WriteLine("Product json is:"+product_json);
+    
+    return Json(new {status=1,message="Get product detail success",product=JsonConvert.SerializeObject(product,settings)});      
+    }
+  }
+  catch(Exception er)
+  {
+    this._logger.LogError("Get Product detail exception:"+er.Message);
+    Console.WriteLine("Product detail exception:"+er.Message);
+  }
+  return Json(new {status=0,message="Get product detail fail"});
+}
+
 [Route("/firebase_token")]
 [HttpPost]
 public async Task<JsonResult> FirebaseToken(string token)

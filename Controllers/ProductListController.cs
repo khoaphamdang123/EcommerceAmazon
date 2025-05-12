@@ -710,7 +710,6 @@ public async Task<IActionResult> UploadVideo(IFormFile file)
 }
 
 
-
 [Route("product_list/product_info")]
 [HttpPost]
   public async Task<JsonResult> GetSampleInfo(AddProductModel product)
