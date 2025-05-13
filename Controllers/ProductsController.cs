@@ -258,12 +258,34 @@ public async Task<IActionResult> Products()
     
     ViewBag.filter_obj=prod_filter;
         
-    var brands=await this._category.getAllBrandList();
-    
-    ViewBag.brands=brands;
+    var categories=await this._category.getAllCategory();
+
+    Dictionary<string,int> count_product_by_cats=new Dictionary<string, int>();
+
+    foreach(var item in categories)
+    {
+        int count=await this._product.countProductByCategory(item.Id);
+        count_product_by_cats.Add(item.CategoryName,count);
+    }
+
+    ViewBag.category_dict=count_product_by_cats;
+
+    var colors=await this._product.getAllColor();
+
+    Dictionary<string,int> color_dict=new Dictionary<string, int>();
+
+    foreach(var item in colors)
+    {
+        int count=await this._product.getproductByColor(item.Id);
+
+        color_dict.Add(item.Colorname,count);
+    }
+
+
+    ViewBag.colors=color_dict;
     
     var prods=await this._product.pagingProduct(12,1);
-    
+
     ViewBag.products=prods;
 
     return View("~/Views/ClientSide/Products/Products.cshtml");    
@@ -412,58 +434,61 @@ public async Task<IActionResult> Products()
 
 
   [HttpGet]
-  public async Task<IActionResult> FilterProducts(int pageSize,string prices,string brands,string stars)
+  public async Task<IActionResult> FilterProducts(int pageSize,string prices,string category,string colors)
   {
  try{
 
   Console.WriteLine("pagesize:"+pageSize);
   
   string pricess = prices;
+
+  Console.WriteLine("Prices here is:"+prices);
+
+  Console.WriteLine("Category here is:"+category);
+
+  Console.WriteLine("Colors here is:"+colors);
   
  List<int> prices_list = new List<int>();
 
- List<string> brand_list= new List<string>();
+ List<string> category_list= new List<string>();
 
- List<string> star_list=new List<string>(); 
+ List<string> color_list=new List<string>(); 
 
-  if(!string.IsNullOrEmpty(prices))
+  if(!string.IsNullOrEmpty(prices) && prices!="-")
   {
   prices_list = prices.Split('-').Select(int.Parse).ToList();
   }
 
- if(!string.IsNullOrEmpty(brands))
+ if(!string.IsNullOrEmpty(category))
  {
-    brand_list=brands.Split(',').ToList();    
+    category_list=category.Split(',').ToList();    
  }
 
- if(!string.IsNullOrEmpty(stars))
+ if(!string.IsNullOrEmpty(colors))
  {
-    star_list = stars.Split(',').ToList();
+    color_list = colors.Split(',').ToList();
  }
 
- var products=await this._product.filterProductByPriceAndBrands(brand_list,prices_list,star_list);
+ Console.WriteLine("Come to here");
 
-  
-
+ var products=await this._product.filterProductByPriceAndBrands(category_list,prices_list,color_list);
+ 
   Console.WriteLine("Number of products here is:"+ products.ToList().Count);
 
     
-    
- Console.WriteLine("Number of products here is:"+ products.ToList().Count);  
+  Console.WriteLine("Number of products here is:"+ products.ToList().Count);  
 
- 
+
  var prods =await this._product.pagingProductByList(pageSize,1,products);
 
  Console.WriteLine("Number of prods:"+prods.item.Count);
 
  Console.WriteLine("Number of element here is:"+pricess);  
 
- Console.WriteLine("Number of brands here is:"+brands);
+ Console.WriteLine("gere");
 
-Console.WriteLine("gere");
+ return PartialView("~/Views/ClientSide/Products/_ProductsPartial.cshtml",prods);  
 
-return PartialView("~/Views/ClientSide/Products/_ProductsPartial.cshtml",prods); 
- 
 }
  catch(Exception er)
  {

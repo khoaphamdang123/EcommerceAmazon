@@ -158,7 +158,7 @@ var settings = new JsonSerializerSettings
     PreserveReferencesHandling = PreserveReferencesHandling.Objects,
     Formatting = Formatting.Indented
 };
- var product_json=JsonConvert.SerializeObject(product,settings);
+    var product_json=JsonConvert.SerializeObject(product,settings);
     
     Console.WriteLine("Product json is:"+product_json);
     

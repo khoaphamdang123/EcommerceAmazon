@@ -165,6 +165,57 @@ public class ProductService:IProductRepository
     return null;
   }
 
+  public async Task<int> getproductByColor(int id)
+    {
+   try
+   {
+    int colors = await this._context.Products.Include(p=>p.Variants).ThenInclude(c=>c.Color).CountAsync(c=>c.Variants.Any(x=>x.Color.Id==id));
+    return colors;
+   }
+   catch(Exception er) 
+   {
+    Console.WriteLine("Get all color exception:"+er.Message);
+   } 
+   return -1;
+    }
+
+  public async Task<List<Ecommerce_Product.Models.Color>> getAllColor()
+  {
+    try
+    {
+    var colors=await this._context.Colors.ToListAsync();
+    return colors;
+    }
+    catch(Exception er)
+    {
+      Console.WriteLine("Get all color exception:"+er.Message);
+    }
+
+    return null;
+
+  }
+
+
+
+
+    public async Task<int> countProductByCategory(int id)
+    {
+      try
+      {
+          var products = await this._context.Products.Include(c=>c.Category).CountAsync(c=>c.Category.Id==id);
+
+          return products;
+      }
+      catch(Exception er)
+      {
+        Console.WriteLine("Count Product By Category Exception:"+er.Message);
+      }
+
+      return -1;
+      
+    }
+
+
 
   public async Task<List<Product>> getAllProductList()
   { 
@@ -1577,9 +1628,10 @@ public async Task saveChanges()
 }
 
 
-public async Task<IEnumerable<Product>> filterProductByPriceAndBrands(List<string>brands,List<int>prices,List<string> stars)
+
+
+public async Task<IEnumerable<Product>> filterProductByPriceAndBrands(List<string>category,List<int>prices,List<string> color)
   {    
-   Console.WriteLine("Star count:"+stars.Count);
   
   var products = await this.getAllProductList();
   
@@ -1587,47 +1639,46 @@ public async Task<IEnumerable<Product>> filterProductByPriceAndBrands(List<strin
 
   int max_price=prices[1];
 
-  if(brands.Count==0 &&  prices.Count!=0)
+
+
+  if(category.Count==0 &&  prices.Count!=0)
   { 
 
-   products= products.Where(c=>Convert.ToInt32(c.Price)>=min_price && Convert.ToInt32(c.Price)<=max_price).OrderByDescending(c=>c.Id).ToList();   
+   products= products.Where(c=>double.Parse(c.Price.Replace(",","."),CultureInfo.InvariantCulture)>=min_price && double.Parse(c.Price.Replace(",","."),CultureInfo.InvariantCulture)<=max_price).OrderByDescending(c=>c.Id).ToList();   
   }
 
- else if(brands.Count!=0 && prices.Count!=0)
+ else if(category.Count!=0 && prices.Count!=0)
   {
     try
     {
-   products= products.Where(c=>brands.Contains(c.Brand?.BrandName.ToString()) && Convert.ToInt32(c.Price)>=min_price && Convert.ToInt32(c.Price)<=max_price).OrderByDescending(c=>c.Id).ToList();   
+   products= products.Where(c=>category.Contains(c.Category?.CategoryName.ToString()) &&double.Parse(c.Price.Replace(",","."),CultureInfo.InvariantCulture)>=min_price && double.Parse(c.Price.Replace(",","."),CultureInfo.InvariantCulture)<=max_price).OrderByDescending(c=>c.Id).ToList();   
     }
     catch(Exception er)
     {
         Console.WriteLine("Filter Product By Price And Brands Exception:"+er.Message);
     }
   }
+
   else
   {
     products=new List<Product>();
   }
 
-  if(products.Count!=0 && stars.Count!=0)
+
+
+   if(products.Count!=0 && color.Count!=0)
   { 
-   Console.Write("Star count here:"+stars.Count);
    
-   var count_reviews=await this.countAllReview(products.ToList());
 
-   var products_with_star=new List<Product>();
+  products = products.Where(p=>color.All(c=>p.Variants.Any(v=>v.Color?.Colorname==c))).ToList();
+   
 
-   foreach(var product in count_reviews)
-   {
-    if(stars.Contains(product.Value.ToString()))
-    {
-      products_with_star.Add(products.FirstOrDefault(c=>c.ProductName==product.Key));
-    }
-   }
-
-   return products_with_star;
+   return products;
 
   }
+
+
+ 
   
     // var product_first=products[0];
 

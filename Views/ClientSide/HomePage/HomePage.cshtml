@@ -124,7 +124,6 @@
             <div class="position-relative overflow-hidden">
               <div
                 class="product-options d-flex align-items-center justify-content-center gap-2 mx-auto position-absolute bottom-0 start-0 end-0">
-                <a href="javascript:;"><i class="bi bi-heart"></i></a>
                 <a href="javascript:;"><i class="bi bi-basket3"></i></a>
                 <a href="#" id="detail-product" data-bs-toggle="modal" data-bs-target="#QuickViewModal-@product.Id"><i
                     class="bi bi-zoom-in"></i></a>
@@ -448,7 +447,8 @@
                   <h6 class="fw-bold mb-3">More Colors</h6>
                   <div class="d-flex align-items-center gap-2 flex-wrap" id="product-detail-colors">
                     @foreach(var color in product.Variants.DistinctBy(x=>x.Color))
-                    { if(color.Color==null)
+                    { 
+                        if(color.Color==null)
                       {
                         continue;
                       }
@@ -584,7 +584,6 @@
                   <div class="position-relative overflow-hidden">
                     <div
                       class="product-options d-flex align-items-center justify-content-center gap-2 mx-auto position-absolute bottom-0 start-0 end-0">
-                      <a href="javascript:;"><i class="bi bi-heart"></i></a>
                       <a href="javascript:;"><i class="bi bi-basket3"></i></a>
                       <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#QuickViewModal-@product.Id"><i
                           class="bi bi-zoom-in"></i></a>
@@ -624,7 +623,7 @@
                   <div class="position-relative overflow-hidden">
                     <div
                       class="product-options d-flex align-items-center justify-content-center gap-2 mx-auto position-absolute bottom-0 start-0 end-0">
-                      <a href="javascript:;"><i class="bi bi-heart"></i></a>
+                      @* <a href="javascript:;"><i class="bi bi-heart"></i></a> *@
                       <a href="javascript:;"><i class="bi bi-basket3"></i></a>
                       <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#QuickViewModal-@product.Id"><i
                           class="bi bi-zoom-in"></i></a>
@@ -671,7 +670,7 @@
                   <div class="position-relative overflow-hidden">
                     <div
                       class="product-options d-flex align-items-center justify-content-center gap-2 mx-auto position-absolute bottom-0 start-0 end-0">
-                      <a href="javascript:;"><i class="bi bi-heart"></i></a>
+                      @* <a href="javascript:;"><i class="bi bi-heart"></i></a> *@
                       <a href="javascript:;"><i class="bi bi-basket3"></i></a>
                       <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#QuickViewModal-@product.Id"><i
                           class="bi bi-zoom-in"></i></a>

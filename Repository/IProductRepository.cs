@@ -54,6 +54,7 @@ public interface IProductRepository
 
   public Task<IEnumerable<Product>> filterProductByPriceAndBrands(List<string> brands,List<int> prices,List<string> stars);
 
+
   public Task<int> deleteProduct(int id);
 
   public Task<MemoryStream> exportToExcelProduct();
@@ -85,6 +86,12 @@ public interface IProductRepository
 
 
   public Task saveProminentProductRedis(List<Product> products);
+
+  public Task<int> countProductByCategory(int id);
+  
+  public Task<int> getproductByColor(int id);
+
+  public Task<List<Color>> getAllColor();
 
   public Task saveChanges();
   

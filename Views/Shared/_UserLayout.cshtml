@@ -115,10 +115,6 @@
         }
       }
     }
-
-    
-       
-       
        if(phones.Length>1)
        {
         phone1=phones[0];
@@ -132,7 +128,7 @@
        
        string address1=company_name[1];
         
-        var cart = ViewBag.cart as List<CartModel>;
+       var cart = ViewBag.cart as List<CartModel>;
      
         Console.WriteLine("Current category list size is:"+categories.Count);
 
@@ -315,7 +311,7 @@
         <div class="offcanvas-body primary-menu">
           <ul class="navbar-nav justify-content-start flex-grow-1 gap-1">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">Home</a>
+              <a class="nav-link" href="@Url.Action("HomePage","HomePage")">Home</a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="tv-shows.html"
@@ -379,11 +375,11 @@
               </div>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="javascript:;" data-bs-toggle="dropdown">
+              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="@Url.Action("Products","Products")" data-bs-toggle="dropdown">
                 Shop
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="cart.html">Shop Cart</a></li>
+                <li><a class="dropdown-item" href="@Url.Action("Products","Products")">Shop Cart</a></li>
                 <li><a class="dropdown-item" href="wishlist.html">Wishlist</a></li>
                 <li><a class="dropdown-item" href="product-details.html">Product Details</a></li>
                 <li><a class="dropdown-item" href="payment-method.html">Payment Method</a></li>
@@ -794,7 +790,7 @@
             </p>
           </div>
           <div class="ms-auto fs-5">
-            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>            
           </div>
         </div>
       </div>
