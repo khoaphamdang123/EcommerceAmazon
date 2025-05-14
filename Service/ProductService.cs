@@ -315,9 +315,11 @@ public string NormalizeString(string input)
 
  public async Task<Product> findProductByName(string name)
  {
-  name=name.Replace("-"," ").Replace("/"," ");
-
-  var product=await this._context.Products.Include(c=>c.Category).Include(c=>c.Brand).Include(i=>i.ProductImages).Include(c=>c.Variants).ThenInclude(v=>v.Color).Include(c=>c.Variants).ThenInclude(v=>v.Size).Include(c=>c.Variants).ThenInclude(c=>c.Version).Include(c=>c.Variants).ThenInclude(c=>c.Mirror).Include(c=>c.Videos).FirstOrDefaultAsync(p=>p.ProductName.Replace("-"," ").Replace("/"," ")==name);
+  //name=name.Replace("-"," ").Replace("/"," ");  
+  
+  Console.WriteLine("Product name here is:"+name);
+  
+  var product=await this._context.Products.Include(c=>c.Category).Include(c=>c.Brand).Include(i=>i.ProductImages).Include(c=>c.Variants).ThenInclude(v=>v.Color).Include(c=>c.Variants).ThenInclude(v=>v.Size).FirstOrDefaultAsync(p=>p.ProductName.Replace(" ", "-").Replace(".", "-").Replace("'","-") ==name); 
   
   return product;
  }
@@ -1629,7 +1631,6 @@ public async Task saveChanges()
 
 
 
-
 public async Task<IEnumerable<Product>> filterProductByPriceAndBrands(List<string>category,List<int>prices,List<string> color)
   {    
   
@@ -1640,13 +1641,10 @@ public async Task<IEnumerable<Product>> filterProductByPriceAndBrands(List<strin
   int max_price=prices[1];
 
 
-
   if(category.Count==0 &&  prices.Count!=0)
   { 
-
    products= products.Where(c=>double.Parse(c.Price.Replace(",","."),CultureInfo.InvariantCulture)>=min_price && double.Parse(c.Price.Replace(",","."),CultureInfo.InvariantCulture)<=max_price).OrderByDescending(c=>c.Id).ToList();   
   }
-
  else if(category.Count!=0 && prices.Count!=0)
   {
     try
@@ -1655,42 +1653,31 @@ public async Task<IEnumerable<Product>> filterProductByPriceAndBrands(List<strin
     }
     catch(Exception er)
     {
-        Console.WriteLine("Filter Product By Price And Brands Exception:"+er.Message);
+     Console.WriteLine("Filter Product By Price And Category Exception:"+er.Message);
     }
   }
-
   else
   {
     products=new List<Product>();
   }
 
 
-
    if(products.Count!=0 && color.Count!=0)
   { 
-   
-
   products = products.Where(p=>color.All(c=>p.Variants.Any(v=>v.Color?.Colorname==c))).ToList();
    
-
-   return products;
-
+  return products;
   }
 
+  return products;
 
- 
-  
-    // var product_first=products[0];
-
-    // Console.WriteLine("Product First:"+product_first.ProductName);
-    return products;
   }
 
   public async Task<PageList<Product>> pagingProductByList(int page_size,int page,IEnumerable<Product> products)
   {
        var paging_prods_list =PageList<Product>.CreateItem(products.AsQueryable(),page,page_size);
        
-       return paging_prods_list;                     
+       return paging_prods_list;                            
   }
 
   public async Task<int> updateProductStatus(int id,int status)
@@ -1700,6 +1687,7 @@ public async Task<IEnumerable<Product>> filterProductByPriceAndBrands(List<strin
     try
     {
     var product=await this._context.Products.FirstOrDefaultAsync(p=>p.Id==id);
+    
     if(product!=null)
     {  Console.WriteLine("Product name:"+product.ProductName);
       if(status==1)
@@ -1740,8 +1728,7 @@ public async Task<IEnumerable<Product>> filterProductByPriceAndBrands(List<strin
 
    var variant_list =PageList<Variant>.CreateItem(variants.AsQueryable(),page,page_size);
    
-   return variant_list;   
-
+   return variant_list;      
    }
    catch(Exception er)
    {

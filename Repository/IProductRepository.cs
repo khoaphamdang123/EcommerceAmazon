@@ -16,7 +16,7 @@ public interface IProductRepository
 
   public Task<IEnumerable<Product>> getProductBySubCategory(int id);
 
-  public Task<PageList<Product>> pagingProduct(int page_size,int page);
+  public Task<PageList<Product>> pagingProduct(int page_size,int page);  
 
   public Task<PageList<Product>> pagingProminentProduct(int page_size,int page);
 

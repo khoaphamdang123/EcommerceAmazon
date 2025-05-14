@@ -75,26 +75,26 @@ public async Task<IActionResult> ProductDetail(string product_name)
       
       List<Product> single_product = new List<Product>{product};      
       
-      var count_reviews=await this._product.countAllReview(single_product);            
+    //   var count_reviews=await this._product.countAllReview(single_product);            
       
-      ViewBag.count_reviews=count_reviews;
+    //   ViewBag.count_reviews=count_reviews;
       
-      Console.WriteLine("Product Id here is:"+product.Id);
+    //   Console.WriteLine("Product Id here is:"+product.Id);
       
-      int rating_star=await this._product.getSingleProductRating(product.Id);      
+    //   int rating_star=await this._product.getSingleProductRating(product.Id);      
       
-      ViewBag.rating_star=rating_star;
-      for(int i=1;i<=5;i++)
-    {
-      int count_star=await this._product.countProductRatingByStar(i,product.Id);
-      count_stars.Add(i.ToString(),count_star);
-    }
+    //   ViewBag.rating_star=rating_star;
+    //   for(int i=1;i<=5;i++)
+    // {
+    //   int count_star=await this._product.countProductRatingByStar(i,product.Id);
+    //   count_stars.Add(i.ToString(),count_star);
+    // }
 
-    ViewBag.count_stars=count_stars;
+    // ViewBag.count_stars=count_stars;
 
-    var review_list=await this._product.getProductReviewList(product.Id);
+    // var review_list=await this._product.getProductReviewList(product.Id);
 
-    ViewBag.review_list=review_list;    
+    // ViewBag.review_list=review_list;    
 
     Regex reg= new Regex(@"\s*(<[^>]+>)\s*");
       
@@ -153,6 +153,9 @@ public async Task<IActionResult> ProductDetail(string product_name)
   {
     Console.WriteLine("Product here is null");
   }
+    var product_by_category=await this._product.getProductByCategory(product.Category.CategoryName);
+
+    ViewBag.product_by_category=product_by_category;
     return View("~/Views/ClientSide/ProductDetail/ProductDetail.cshtml",product);
  }
  catch(Exception er)

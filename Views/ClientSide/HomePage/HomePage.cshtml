@@ -80,8 +80,8 @@
                   @* <h3 class="h3 fw-light text-white fw-bold">New Arrival</h3>
                   <h1 class="h1 text-white fw-bold">Women Fashion</h1>
                   <p class="text-white fw-bold"><i>Last call for upto 25%</i></p> *@
-                  <div class=""><a class="btn btn-dark btn-ecomm" href="shop-grid.html">Shop Now</a>
-                  </div>
+                  @* <div class=""><a class="btn btn-dark btn-ecomm" href="shop-grid.html">Shop Now</a>
+                  </div> *@
                 </div>
               </div>
               <div class="col">
@@ -116,6 +116,9 @@
         <div class="product-thumbs">
         @foreach(var product in products)
         { 
+
+        string regex_product=Regex.Replace(product.ProductName, @"[^\w\d+,]", "-");
+
         if(product.Status=="Hết hàng")
         {
             continue;
@@ -128,7 +131,7 @@
                 <a href="#" id="detail-product" data-bs-toggle="modal" data-bs-target="#QuickViewModal-@product.Id"><i
                     class="bi bi-zoom-in"></i></a>
               </div>
-              <a href="product-details.html">
+              <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
               @if(product.Backavatar.Contains("https") || product.Backavatar.Contains("http"))
               {
                 <img src="@product.Backavatar" class="card-img-top" alt="...">
@@ -141,7 +144,9 @@
             </div>
             <div class="card-body">
               <div class="product-info text-center">
+              <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
                 <h6 class="mb-1 fw-bold product-name">@product.ProductName</h6>
+                </a>
                 @* <div class="ratings mb-1 h6">
                   <i class="bi bi-star-fill text-warning"></i>
                   <i class="bi bi-star-fill text-warning"></i>
@@ -351,6 +356,9 @@
     
     @foreach(var product in products)
     {
+
+  string regex_product=Regex.Replace(product.ProductName, @"[^\w\d+,]", "-");
+
  <div class="modal fade" id="QuickViewModal-@product.Id" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content rounded-0">
@@ -426,8 +434,10 @@
             </div>
             <div class="col-12 col-xl-6">
               <div class="product-info">
+              <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
                 <h4 class="product-title fw-bold mb-1" id="product-detail-title">@product.ProductName</h4>
-                <p class="mb-0" id="product-detail-description">@product.Description</p>
+                </a>
+                <p class="mb-0" id="product-detail-description">@(Html.Raw(product.Description))</p>
                 @* <div class="product-rating">
                   <div class="hstack gap-2 border p-1 mt-3 width-content">
                     <div><span class="rating-number">4.8</span><i class="bi bi-star-fill ms-1 text-success"></i></div>
@@ -575,6 +585,8 @@
             <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 row-cols-xxl-5 g-4">
             @foreach(var product in products)
             {
+            string regex_product=Regex.Replace(product.ProductName, @"[^\w\d+,]", "-");
+
             if(product.Status=="Hết hàng")
             {
                 continue;
@@ -588,7 +600,7 @@
                       <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#QuickViewModal-@product.Id"><i
                           class="bi bi-zoom-in"></i></a>
                     </div>
-                    <a href="product-details.html">
+                    <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
    @if(product.Backavatar.Contains("https") || product.Backavatar.Contains("http"))
               {
                 <img src="@product.Backavatar" class="card-img-top" alt="...">
@@ -600,7 +612,9 @@
                   </div>
                   <div class="card-body">
                     <div class="product-info text-center">
+                      <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
                       <h6 class="mb-1 fw-bold product-name">@product.ProductName</h6>
+                      </a>
                     
                       <p class="mb-0 h6 fw-bold product-price">$@product.Price</p>
                     </div>
@@ -661,6 +675,9 @@
             <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 row-cols-xxl-5 g-4">
               @foreach(var product in products)
               {
+
+            string regex_product=Regex.Replace(product.ProductName, @"[^\w\d+,]", "-");
+
             if(product.Status=="Hết hàng")
             {
                 continue;
@@ -675,7 +692,7 @@
                       <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#QuickViewModal-@product.Id"><i
                           class="bi bi-zoom-in"></i></a>
                     </div>
-                    <a href="product-details.html">
+                    <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
    @if(product.Backavatar.Contains("https") || product.Backavatar.Contains("http"))
               {
                 <img src="@product.Backavatar" class="card-img-top" alt="...">
@@ -687,7 +704,9 @@
                   </div>
                   <div class="card-body">
                     <div class="product-info text-center">
+                    <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
                       <h6 class="mb-1 fw-bold product-name">@product.ProductName</h6>
+                      </a>
                       @* <div class="ratings mb-1 h6">
                         <i class="bi bi-star-fill text-warning"></i>
                         <i class="bi bi-star-fill text-warning"></i>

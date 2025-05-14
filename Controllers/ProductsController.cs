@@ -32,13 +32,13 @@ public async Task<IActionResult> ProductsByCategory(string category_name)
 {    Console.WriteLine("Category name here is:"+category_name);
      var products=await this._product.getProductByCategory(category_name);
      string select_size="12";
-     var product_list_banner=await this._banner.findBannerByName("product_list_banner");
-     var sub_product_list_banner=await this._banner.findBannerByName("sub_product_banner");
-    var list_product=product_list_banner.ToList();
-    var sub_list=sub_product_list_banner.ToList();
-    string product_banner=list_product[0].Image;
-    string sub_banner=sub_list[0].Image;
-    Dictionary<string,int> count_reviews=await this._product.countAllReview(products.ToList());
+    //  var product_list_banner=await this._banner.findBannerByName("product_list_banner");
+    //  var sub_product_list_banner=await this._banner.findBannerByName("sub_product_banner");
+    // var list_product=product_list_banner.ToList();
+    // var sub_list=sub_product_list_banner.ToList();
+    // string product_banner=list_product[0].Image;
+    // string sub_banner=sub_list[0].Image;
+    //Dictionary<string,int> count_reviews=await this._product.countAllReview(products.ToList());
 
 
   //  Dictionary<string,int> count_product_reviews=new Dictionary<string, int>();
@@ -47,22 +47,52 @@ public async Task<IActionResult> ProductsByCategory(string category_name)
   //     List<Product> prod=await this._product.getListProductRating(i);
   //     count_product_reviews.Add(i.ToString(),prod.Count);
   //    }
-    ViewBag.count_reviews=count_reviews;
+    //ViewBag.count_reviews=count_reviews;
     //ViewBag.count_product_reviews=count_product_reviews;
 
-    ViewBag.product_banner=product_banner;
-    ViewBag.sub_banner=sub_banner;
+    // ViewBag.product_banner=product_banner;
+    // ViewBag.sub_banner=sub_banner;
 
-          ViewBag.selected_size=select_size;
-          List<string> options=new List<string>(){"12","24","36","48"};
-          ViewBag.options=options;
-          FilterProduct prod_filter=new FilterProduct("","","","","","");
-          ViewBag.filter_obj=prod_filter;
-          var cats=await this._category.getAllCategory();
-          var brands=await this._category.getAllBrandList();
-          ViewBag.brands=brands;
-         var prods=await this._product.pagingProductByList(12,1,products);
-         ViewBag.products=prods;
+          // ViewBag.selected_size=select_size;
+          // List<string> options=new List<string>(){"12","24","36","48"};
+          // ViewBag.options=options;
+          // FilterProduct prod_filter=new FilterProduct("","","","","","");
+          // ViewBag.filter_obj=prod_filter;
+    var categories=await this._category.getAllCategory();
+
+    Dictionary<string,int> count_product_by_cats=new Dictionary<string, int>();
+
+    foreach(var item in categories)
+    {
+        int count=await this._product.countProductByCategory(item.Id);
+
+        count_product_by_cats.Add(item.CategoryName,count);
+    }
+
+    ViewBag.category_dict=count_product_by_cats;
+
+    var colors=await this._product.getAllColor();
+
+    Dictionary<string,int> color_dict=new Dictionary<string, int>();
+
+    foreach(var item in colors)
+    {
+        int count=await this._product.getproductByColor(item.Id);
+
+        color_dict.Add(item.Colorname,count);
+    }
+
+
+    ViewBag.colors=color_dict;
+    
+    var brands=await this._category.getAllBrandList();
+    
+    ViewBag.brands=brands;
+    
+    var prods=await this._product.pagingProductByList(30,1,products);
+    
+    ViewBag.products=prods;
+    
     return View("~/Views/ClientSide/Products/Products.cshtml");
 }
 
@@ -98,10 +128,35 @@ public async Task<IActionResult> ProductByBrand(string brand_name)
           ViewBag.options=options;
           FilterProduct prod_filter=new FilterProduct("","","","","","");
           ViewBag.filter_obj=prod_filter;
-          var cats=await this._category.getAllCategory();
+var categories=await this._category.getAllCategory();
+
+    Dictionary<string,int> count_product_by_cats=new Dictionary<string, int>();
+
+    foreach(var item in categories)
+    {
+        int count=await this._product.countProductByCategory(item.Id);
+        count_product_by_cats.Add(item.CategoryName,count);
+    }
+
+    ViewBag.category_dict=count_product_by_cats;
+
+    var colors=await this._product.getAllColor();
+
+    Dictionary<string,int> color_dict=new Dictionary<string, int>();
+
+    foreach(var item in colors)
+    {
+        int count=await this._product.getproductByColor(item.Id);
+
+        color_dict.Add(item.Colorname,count);
+    }
+
+
+           ViewBag.colors=color_dict;
+          
           var brands=await this._category.getAllBrandList();
           ViewBag.brands=brands;
-         var prods=await this._product.pagingProductByList(12,1,products);
+         var prods=await this._product.pagingProductByList(30,1,products);
          ViewBag.products=prods;
     return View("~/Views/ClientSide/Products/Products.cshtml");
 }
@@ -284,7 +339,7 @@ public async Task<IActionResult> Products()
 
     ViewBag.colors=color_dict;
     
-    var prods=await this._product.pagingProduct(12,1);
+    var prods=await this._product.pagingProduct(30,1);
 
     ViewBag.products=prods;
 
@@ -293,15 +348,27 @@ public async Task<IActionResult> Products()
 
 [Route("collections/paging")]
 [HttpGet]
-  public async Task<IActionResult> ProductsPaging([FromQuery]int page_size,int current_tab=0,[FromQuery] IEnumerable<Product> products=null,[FromQuery] int page=1,int type=1)
+  public async Task<IActionResult> ProductsPaging([FromQuery]int page_size,int current_tab=0,IEnumerable<Product> products=null,[FromQuery] int page=1,int type=1)
   {
     try{ 
         PageList<Product> prods=null;
-
         Console.WriteLine("TYPE HERE IS:"+type);
-        Console.WriteLine("Current tab here is:"+current_tab);  
+        Console.WriteLine("Current tab here is:"+current_tab); 
+
+        Console.WriteLine("Page size here is:"+page_size);
+
         if(products==null)
-        {          Console.WriteLine("Paging by product normal.");
+        {
+          Console.WriteLine("Products here is null");
+        }
+        else
+        {
+          Console.WriteLine("Products here is not null");
+        }
+
+        if(products==null)
+        { 
+          Console.WriteLine("Paging by product normal.");
 
           if(type==1)
           {
@@ -309,10 +376,11 @@ public async Task<IActionResult> Products()
           }
           else
           {
-            prods=await this._product.pagingProminentProduct(page_size,page);
+            prods = await this._product.pagingProminentProduct(page_size,page); 
           }
         }
-        else{
+        else
+        {
           Console.WriteLine("Paging by product list.");
           prods=await this._product.pagingProductByList(page_size,page,products);
         }
@@ -344,13 +412,11 @@ public async Task<IActionResult> Products()
 
    if(type!=1)
    {
-    ViewBag.type=2;
+    ViewBag.type=2;        
    }
     
-  //   ViewBag.count_product_reviews=count_product_reviews;
 
-    ViewBag.sub_banner=sub_banner;
-   // Console.WriteLine("still survice here");
+          ViewBag.sub_banner=sub_banner;
           ViewBag.selected_size=select_size;
           List<string> options=new List<string>(){"12","24","36","48"};
           ViewBag.options=options;
@@ -358,7 +424,31 @@ public async Task<IActionResult> Products()
           ViewBag.filter_obj=prod_filter;
           var cats=await this._category.getAllCategory();
           var brands=await this._category.getAllBrandList();
-          ViewBag.brands=brands;
+             
+    var categories=await this._category.getAllCategory();
+
+    Dictionary<string,int> count_product_by_cats=new Dictionary<string, int>();
+
+    foreach(var item in categories)
+    {
+        int count=await this._product.countProductByCategory(item.Id);
+        
+        count_product_by_cats.Add(item.CategoryName,count);
+    }
+
+    ViewBag.category_dict=count_product_by_cats;
+
+    var colors=await this._product.getAllColor();
+
+    Dictionary<string,int> color_dict=new Dictionary<string, int>();
+
+    foreach(var item in colors)
+    {
+        int count=await this._product.getproductByColor(item.Id);
+
+        color_dict.Add(item.Colorname,count);
+    }
+    ViewBag.colors=color_dict;
         ViewBag.products=prods;
         //Console.WriteLine("end here");
     return View("~/Views/ClientSide/Products/Products.cshtml");
@@ -399,7 +489,7 @@ public async Task<IActionResult> Products()
           ViewBag.filter_obj=prod_filter;
           var brands=await this._category.getAllBrandList();
           ViewBag.brands=brands;          
-         var prods=await this._product.pagingProductByList(12,1,products);
+         var prods=await this._product.pagingProductByList(30,1,products);
          ViewBag.products=prods;
     return View("~/Views/ClientSide/Products/Products.cshtml");
  }
