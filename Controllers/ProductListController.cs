@@ -79,6 +79,7 @@ if(string.IsNullOrEmpty(id_user))
   {
     try{
          var prods=await this._product.pagingProduct(page_size,page);
+         
          if(!string.IsNullOrEmpty(productname)||!string.IsNullOrEmpty(brand) || !string.IsNullOrEmpty(startdate) || !string.IsNullOrEmpty(enddate) || !string.IsNullOrEmpty(category) || !string.IsNullOrEmpty(status))
          {
             FilterProduct prod=new FilterProduct(productname,startdate,enddate,category,brand,status);

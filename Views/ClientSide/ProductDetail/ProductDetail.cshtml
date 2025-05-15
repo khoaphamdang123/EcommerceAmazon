@@ -48,6 +48,9 @@
     string price_json=JsonConvert.SerializeObject(prices);
 
 
+    string current_status=Model?.Status=="Còn hàng"?"bg-label-success":"bg-label-danger";
+
+
 
    List<string> size_value=sizes.Where(p=>p!="").Select(p=>p).Distinct().ToList();
 
@@ -234,7 +237,7 @@
                   </div> *@
                   <hr>
                   <div class="product-price d-flex align-items-center gap-3">
-                     <div class="h4 fw-bold">$@Model.Price</div>
+                     <div class="h4 fw-bold text-danger" id="product-price">$@Model.Price</div>
                      @* <div class="h5 fw-light text-muted text-decoration-line-through">$2089</div>
                      <div class="h4 fw-bold text-danger">(70% off)</div>   *@
                   </div>
@@ -279,7 +282,7 @@
                         continue;
                     }
                      <div class="">
-                       <button type="button">@size.Size?.Sizename</button>
+                       <button type="button" class="size-box">@size.Size?.Sizename</button>
                      </div>
                      @* <div class="">
                       <button type="button">S</button>
@@ -299,18 +302,23 @@
                     }
                    </div>
                   </div>
-                  <div class="cart-buttons mt-3">
-                    <div class="buttons d-flex flex-column flex-lg-row gap-3 mt-4">
-                      <a href="javascript:;" class="btn btn-lg btn-dark btn-ecomm px-5 py-3 col-lg-6"><i class="bi bi-basket2 me-2"></i>Add to Cart</a>
-                      @* <a href="javascript:;" class="btn btn-lg btn-outline-dark btn-ecomm px-5 py-3"><i class="bi bi-suit-heart me-2"></i>Wishlist</a> *@
-                    </div>
-                  </div>
+               <div class="cart-buttons mt-3">
+  <div class="buttons d-flex flex-column flex-lg-row gap-3 mt-4 align-items-center">
+    <div class="input-group w-auto">
+      <button class="btn btn-outline-dark btn-ecomm" type="button" id="decrease-num" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">-</button>
+      <input type="number" class="form-control text-center" id="quantity-value" style="width: 70px;" value="1" min="1">
+      <button class="btn btn-outline-dark btn-ecomm" type="button" id="increase-num" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">+</button>
+    </div>
+    <a href="javascript:;" class="btn btn-lg btn-dark btn-ecomm px-5 py-3 col-lg-6"><i class="bi bi-basket2 me-2"></i>Add to Cart</a>
+    @* <a href="javascript:;" class="btn btn-lg btn-outline-dark btn-ecomm px-5 py-3"><i class="bi bi-suit-heart me-2"></i>Wishlist</a> *@
+  </div>
+</div>
                   <hr class="my-3">
                   <div class="product-info">
                     <h6 class="fw-bold mb-3">Category</h6>
                     <p class="mb-3"><a href="@Url.Action("ProductsByCategory","Products",new{category_name=Model.Category.CategoryName})">@Model.Category.CategoryName</a></p>
                     <h6 class="fw-bold mb-3">Status</h6>
-                    <p class="mb-3">@(Model.Status=="Còn hàng"?"In stock":"Out of stock")</p>
+                    <p class="mb-3 badge px-2 @current_status">@(Model.Status=="Còn hàng"?"In stock":"Out of stock")</p>
                     <h6 class="fw-bold mb-3">Product Details</h6>
                      <p class="mb-1">@(Html.Raw(Model.Description))</p>
                      @* <p class="mb-1">All the Lorem Ipsum generators on the Internet tend to repeat</p>
@@ -487,19 +495,21 @@
       <div class="similar-products">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-4">
         @foreach(var product in product_by_category)
-        {         
+        {
+
         if(product.ProductName==Model.ProductName)
         {
-            continue;
+            continue;            
         }       
-        string regex_product=Regex.Replace(product.ProductName, @"[^\w\d+,]", "-");
 
-          <div class="col">
+        string regex_product=Regex.Replace(product.ProductName, @"[^\w\d+,]", "-");
+        
+        <div class="col">
             <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
             <div class="card rounded-0">
             @if(product.Backavatar.Contains("http") || product.Backavatar.Contains("https"))
                 {       
-                    <img src="@product.Backavatar" class="card-img-top rounded-0" alt="">
+               <img src="@product.Backavatar" class="card-img-top rounded-0" alt="">
                  }
                  else
                  {
@@ -672,11 +682,57 @@
 
  <script>
     document.addEventListener('DOMContentLoaded', function () {
+      
       var boxes = document.querySelectorAll(".color-box");
-      boxes.forEach(box => {
-      box.addEventListener('click', () => {
+
+      var size_boxes = document.querySelectorAll(".size-box");
+
+
+
+      const decrease_quantity_btn=document.querySelector("#decrease-num");
+      const increase_quantity_btn=document.querySelector("#increase-num");
+      const quantity_input=document.querySelector("#quantity-value");
+
+      decrease_quantity_btn.addEventListener("click",()=>{
+        const quantity_value=document.querySelector("#quantity-value");
+        const product_price = document.querySelector("#product-price");
+        product_price.textContent=`$${(parseInt(quantity_value.value)*(parseFloat(@Model.Price.Replace(",",".")).toFixed(2))).toFixed(2)}`;
+        product_price.textContent=product_price.textContent.replace('.',',');
+
+      });
+
+      increase_quantity_btn.addEventListener("click",()=>{
+        const quantity_value=document.querySelector("#quantity-value");
+        const product_price = document.querySelector("#product-price");
+        product_price.textContent=`$${(parseInt(quantity_value.value)*(parseFloat(@Model.Price.Replace(",",".")).toFixed(2))).toFixed(2)}`;
+        product_price.textContent=product_price.textContent.replace('.',',');
+      });
+
+      quantity_input.addEventListener("change",()=>{
+        const quantity_value=document.querySelector("#quantity-value");
+        const product_price = document.querySelector("#product-price");
+        product_price.textContent=`$${(parseInt(quantity_value.value)*(parseFloat(@Model.Price.Replace(",",".")).toFixed(2))).toFixed(2)}`;
+        product_price.textContent=product_price.textContent.replace('.',',');
+      });
+
+      boxes.forEach(box => 
+      {
+      box.addEventListener('click', () => 
+      {
         boxes.forEach(b => b.classList.remove('clicked'));
-        box.classList.add('clicked'); 
+        
+        box.classList.add('clicked');
+      });
+    });
+
+    
+      size_boxes.forEach(size => 
+      {
+      size.addEventListener('click', () => 
+      {
+        size_boxes.forEach(b => b.classList.remove('click-size'));
+        
+        size.classList.add('click-size');
       });
     });
     });

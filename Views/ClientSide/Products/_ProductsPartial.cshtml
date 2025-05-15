@@ -200,7 +200,7 @@
                     }
 
                     <div class="">
-                        <button type="button" class="rounded-0" style="white-space:normal;wordWrap:break-word;">@size.Size?.Sizename</button>
+                        <button type="button" class="rounded-0 size-box" style="white-space:normal;wordWrap:break-word;">@size.Size?.Sizename</button>
                     </div>
                     @* <div class="">
                       <button type="button" class="rounded-0">XS</button>
@@ -326,10 +326,17 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
       var boxes = document.querySelectorAll(".color-box");
+      var sizes = document.querySelectorAll(".size-box");
       boxes.forEach(box => {
       box.addEventListener('click', () => {
         boxes.forEach(b => b.classList.remove('clicked'));
         box.classList.add('clicked'); 
+      });
+    });
+      sizes.forEach(size => {
+      size.addEventListener('click', () => {
+        sizes.forEach(b => b.classList.remove('click-size'));
+        size.classList.add('click-size'); 
       });
     });
     });

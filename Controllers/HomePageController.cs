@@ -123,20 +123,27 @@ catch(Exception er)
 
     return View("~/Views/ClientSide/HomePage/HomePage.cshtml");
 }
+
+
+
 [HttpGet]
-[Route("products/{id}/variant")]
-public async Task<IActionResult> VariantProduct(int id)
+[Route("products/{id}s/variant")]
+public async Task<JsonResult> VariantProduct(int id)
 { Console.WriteLine("used to come to this place:"+id);
   
   var variants=await this._product.getVariantByProductId(id);
 
+  if(variants.Count>0)
+  {
   string json=JsonConvert.SerializeObject(variants,new JsonSerializerSettings
     {
         ReferenceLoopHandling=ReferenceLoopHandling.Ignore
     });
+  
+  return Json(new{status=1,message="Get list of variant successfully",variant=json});
+  }
 
-  return Ok(json);
-
+  return Json(new{status=0,message="Get list of variant failed"});
 }
 
 [Route("product_detail/{id}")]

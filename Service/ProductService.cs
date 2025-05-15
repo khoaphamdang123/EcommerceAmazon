@@ -319,7 +319,7 @@ public string NormalizeString(string input)
   
   Console.WriteLine("Product name here is:"+name);
   
-  var product=await this._context.Products.Include(c=>c.Category).Include(c=>c.Brand).Include(i=>i.ProductImages).Include(c=>c.Variants).ThenInclude(v=>v.Color).Include(c=>c.Variants).ThenInclude(v=>v.Size).FirstOrDefaultAsync(p=>p.ProductName.Replace(" ", "-").Replace(".", "-").Replace("'","-") ==name); 
+  var product=await this._context.Products.Include(c=>c.Category).Include(c=>c.Brand).Include(i=>i.ProductImages).Include(c=>c.Variants).ThenInclude(v=>v.Color).Include(c=>c.Variants).ThenInclude(v=>v.Size).FirstOrDefaultAsync(p=>p.ProductName.Replace(" ", "-").Replace(".", "-").Replace("'","-").Replace("&","-") ==name); 
   
   return product;
  }
@@ -531,7 +531,7 @@ public async Task<int> deleteProduct(int id)
 
   public async Task<List<Variant>> getVariantByProductId(int id)
   {
-    var products = await this._context.Products.Include(c=>c.Variants).ThenInclude(c=>c.Color).Include(c=>c.Variants).ThenInclude(c=>c.Size).Include(c=>c.Variants).ThenInclude(c=>c.Version).Include(c=>c.Variants).ThenInclude(c=>c.Mirror).FirstOrDefaultAsync(c=>c.Id==id);
+    var products = await this._context.Products.Include(c=>c.Variants).ThenInclude(c=>c.Color).Include(c=>c.Variants).ThenInclude(c=>c.Size).FirstOrDefaultAsync(c=>c.Id==id);
     
     return products.Variants.ToList();
   }
@@ -922,48 +922,65 @@ public async Task<int> addNewProductByLink(string link,string link_background,in
 
  List<Variant> variant=new List<Variant>();
 
- for(int i=0;i<sizes.Count;i++)
- {
-  string color=colors[i];
-  string size=sizes[i];
-  string price_value = product_price;
+ var existingColors = await _context.Colors
+    .Where(c => colors.Contains(c.Colorname))
+    .ToDictionaryAsync(c => c.Colorname, c => c);
+var existingSizes = await _context.Sizes
+    .Where(s => sizes.Contains(s.Sizename))
+    .ToDictionaryAsync(s => s.Sizename, s => s);
 
-  var check_color_exist = await this._context.Colors.FirstOrDefaultAsync(c=>c.Colorname==color);
-  var check_size_exist = await this._context.Sizes.FirstOrDefaultAsync(c=>c.Sizename==size);
-  Console.WriteLine("throught here");
-  if(check_color_exist==null)
-  {
-  if(!string.IsNullOrEmpty(color))
-  {
-    var new_color = new Models.Color{Colorname=color};
+var newColors = new List<Models.Color>();
+var newSizes = new List<Models.Size>();
+var variants = new List<Variant>();
 
-    await this._context.Colors.AddAsync(new_color);
-  }
-  }
- 
-   if(check_size_exist==null)
-  { if(!string.IsNullOrEmpty(size))
-  {
-    var new_size = new Ecommerce_Product.Models.Size{Sizename=size};
-    await this._context.Sizes.AddAsync(new_size);
-  }
-  }
+foreach (var size in sizes)
+{
+    if (string.IsNullOrEmpty(size)) continue;
 
-  await this.saveChanges();
- 
- Console.WriteLine("out of here");
- 
-  var new_color_ob=await this._context.Colors.FirstOrDefaultAsync(c=>c.Colorname==color);
+    foreach (var color in colors)
+    {
+        if (string.IsNullOrEmpty(color)) continue;
 
-  var new_size_ob = await this._context.Sizes.FirstOrDefaultAsync(c=>c.Sizename==size);
+        if (!existingColors.TryGetValue(color, out var colorObj))
+        {
+            colorObj = new Models.Color { Colorname = color };
+            newColors.Add(colorObj);
+            existingColors[color] = colorObj;
+        }
 
-  var new_varian_ob=new Variant{Colorid=new_color_ob!=null?new_color_ob.Id:null,Sizeid=new_size_ob!=null?new_size_ob.Id:null,Price=string.IsNullOrEmpty(price_value)?"":price_value};
- 
- if(new_color_ob!=null || new_size_ob!=null)
- {
-  variant.Add(new_varian_ob);
- } 
- }
+        if (!existingSizes.TryGetValue(size, out var sizeObj))
+        {
+            sizeObj = new Models.Size { Sizename = size };
+            newSizes.Add(sizeObj);
+            existingSizes[size] = sizeObj;
+        }
+
+        var variant_obj = new Variant
+        {
+            Colorid = colorObj?.Id,
+            Sizeid = sizeObj?.Id,
+            Price = string.IsNullOrEmpty(product_price) ? "" : product_price
+        };
+
+        if (colorObj != null || sizeObj != null)
+        {
+            variants.Add(variant_obj);
+        }
+    }
+}
+
+if (newColors.Any())
+{
+    await _context.Colors.AddRangeAsync(newColors);
+}
+if (newSizes.Any())
+{
+    await _context.Sizes.AddRangeAsync(newSizes);
+}
+
+await _context.SaveChangesAsync();
+
+variant.AddRange(variants);
 
  List<ProductImage> product_images=new List<ProductImage>();
 
@@ -973,7 +990,7 @@ public async Task<int> addNewProductByLink(string link,string link_background,in
   {
    string image_url=product_data.Images[i];
    var product_img=new ProductImage{Avatar=image_url};
-   product_images.Add(product_img);
+   product_images.Add(product_img);   
   }
  }
    
@@ -1643,13 +1660,13 @@ public async Task<IEnumerable<Product>> filterProductByPriceAndBrands(List<strin
 
   if(category.Count==0 &&  prices.Count!=0)
   { 
-   products= products.Where(c=>double.Parse(c.Price.Replace(",","."),CultureInfo.InvariantCulture)>=min_price && double.Parse(c.Price.Replace(",","."),CultureInfo.InvariantCulture)<=max_price).OrderByDescending(c=>c.Id).ToList();   
+   products= products.Where(c=>double.Parse(c.Price.Replace(",","."),CultureInfo.InvariantCulture)>=min_price && double.Parse(c.Price.Replace(",","."),CultureInfo.InvariantCulture)<=max_price).OrderBy(c=>c.SortId).ToList();   
   }
  else if(category.Count!=0 && prices.Count!=0)
   {
     try
     {
-   products= products.Where(c=>category.Contains(c.Category?.CategoryName.ToString()) &&double.Parse(c.Price.Replace(",","."),CultureInfo.InvariantCulture)>=min_price && double.Parse(c.Price.Replace(",","."),CultureInfo.InvariantCulture)<=max_price).OrderByDescending(c=>c.Id).ToList();   
+   products= products.Where(c=>category.Contains(c.Category?.CategoryName.ToString()) &&double.Parse(c.Price.Replace(",","."),CultureInfo.InvariantCulture)>=min_price && double.Parse(c.Price.Replace(",","."),CultureInfo.InvariantCulture)<=max_price).OrderBy(c=>c.SortId).ToList();   
     }
     catch(Exception er)
     {
@@ -1664,7 +1681,7 @@ public async Task<IEnumerable<Product>> filterProductByPriceAndBrands(List<strin
 
    if(products.Count!=0 && color.Count!=0)
   { 
-  products = products.Where(p=>color.All(c=>p.Variants.Any(v=>v.Color?.Colorname==c))).ToList();
+  products = products.Where(p=>color.All(c=>p.Variants.Any(v=>v.Color?.Colorname==c))).OrderBy(c=>c.SortId).ToList();
    
   return products;
   }
