@@ -21,34 +21,25 @@
                         <div class="toast-body" id="toast-message">
                         </div>
         </div>
-        <div class="page-banner-area page-banner-height-2" data-background="@Url.Content("~/user_layout/img/banner/page-banner-4.jpg")">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="page-banner-content text-center">
-                            <h4 class="breadcrumb-title">Giỏ hàng của bạn</h4>
-                            <div class="breadcrumb-two">
-                                <nav>
-                                   <nav class="breadcrumb-trail breadcrumbs">
-                                      <ul class="breadcrumb-menu">
-                                         <li class="breadcrumb-trail">
-                                            <a href="@Url.Action("HomePage","HomePage")"><span>Trang chủ</span></a>
-                                         </li>
-                                         <li class="trail-item">
-                                            <span>Giỏ hàng</span>                                            
-                                         </li>
-                                      </ul>
-                                   </nav> 
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+       <div class="page-content">
+
+       <div class="py-4 border-bottom"></div>
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0"> 
+          <li class="breadcrumb-item"><a href="@Url.Action("HomePage","HomePage")">Home</a></li>
+          <li class="breadcrumb-item"><a href="@Url.Action("Products","Products")">Shop</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Cart</li>
+        </ol>
+      </nav>
+    </div>
+   </div>
+       
       <div id="cart-section">
          @Html.Partial("~/Views/ClientSide/Cart/_CartPartial.cshtml",cart)
       </div>
+       
+       </div>
 @*   
         <section class="cart-area pt-120 pb-120">
             <div class="container">
@@ -129,9 +120,12 @@
    <script>
   
      var redirect_btn=document.getElementById("redirect-btn");
-   const redirectToHomePage=()=>
+    
+     var title_bag=document.getElementById("title-bag");
+
+     const redirectToHomePage=()=>
    { 
-       window.location.href="@Url.Action("HomePage","HomePage")";
+       window.location.href="@Url.Action("HomePage","HomePage")";       
    }
 
  document.addEventListener("DOMContentLoaded",()=>{
@@ -155,7 +149,7 @@
         var prev_quantity=quantity>0?quantity+1:1;
 
          const pricePerItem = parseInt(quantity_ob.getAttribute('data-price'));
-        const old_total=new_price*prev_quantity;
+         const old_total=new_price*prev_quantity;
          const subtotal=new_price*quantity;
          const new_subtotal=subtotal_amount_value-old_total+subtotal;
          const new_total=total_amount_value-old_total+subtotal;
@@ -260,7 +254,7 @@
     }
     
   function attachRemoveButtonListeners() {
-    document.querySelectorAll(".remove-btn").forEach((item) => {
+    document.querySelectorAll("#remove-btn").forEach((item) => {
         item.addEventListener("click", () => {
             var product_id = item.getAttribute("data-product-id");
             var cart_name="cart";
@@ -275,14 +269,24 @@
                 processData: false,
                 success: function(response) {
                     $("#cart-section").html(response);
+                    const numbers_bag = title_bag.textContent.match(/\d+/g)[0];
+                    const new_numbers_bag = parseInt(numbers_bag) - 1; 
+                    title_bag.innerHTML=`My Bag (${new_numbers_bag} items)`
                     attachRemoveButtonListeners();
                     attatchAddValue();
-                   var section_url="@Url.Action("SubCartPartialView","Cart")";
+                    var section_url="@Url.Action("SubCartPartialView","Cart")";
+
                    $.ajax({
                     url:section_url,
                     type:"POST",
-                    success: function(partialHtml) {
+                    success: function(partialHtml){
                         $('#sub-cart-section').html(partialHtml);
+                        @* var count_cart=document.getElementById("count-cart").textContent;
+                        alert(count_cart); *@
+                        var count_cart=$("#count-cart").text();
+                        count_cart=parseInt(count_cart)-1;
+                        sessionStorage.setItem("count-cart",count_cart);
+                        $("#count-cart").text(count_cart);
                     }
                 });  
                 },
@@ -300,7 +304,7 @@
     });
 }
 attachRemoveButtonListeners();
- const add_cart_btn=document.getElementById("update-cart");
+ @* const add_cart_btn=document.getElementById("update-cart");
     add_cart_btn.addEventListener("click",()=>{
         const quantity_values=document.querySelectorAll(".quantity-value");
         const product_ids_value=document.querySelectorAll("#product-id");
@@ -341,7 +345,8 @@ attachRemoveButtonListeners();
                 
                  toast.show();
                 var section_url="@Url.Action("SubCartPartialView","Cart")";
-                   $.ajax({
+                   $.ajax(
+                {
                     url:section_url,
                     type:"POST",
                     success: function(partialHtml) {
@@ -358,7 +363,7 @@ attachRemoveButtonListeners();
                 //toast.show(); 
             }
         });
-    });
+    }); *@
       });
 
    </script>

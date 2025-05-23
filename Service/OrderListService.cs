@@ -116,9 +116,9 @@ if (order != null)
 
       string size=product?.Size;
 
-      string version=product?.Version;
+      // string version=product?.Version;
 
-      string mirror=product?.Mirror;
+      // string mirror=product?.Mirror;
 
       Console.WriteLine("Product Color here is:"+color);
 
@@ -145,7 +145,7 @@ if (order != null)
           string variant_version=variant.Version?.Versionname??"";
           string variant_mirror=variant.Mirror?.Mirrorname??"";
 
-          if(variant_color==color && variant_size==size && variant_version==version && variant_mirror==mirror)
+          if(variant_color==color && variant_size==size)
           { 
             if(!variant_id.Contains(variant.Id))
             {

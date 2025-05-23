@@ -45,7 +45,7 @@
                       <div class="position-relative overflow-hidden">
                         <div class="product-options d-flex align-items-center justify-content-center gap-2 mx-auto position-absolute bottom-0 start-0 end-0">
                           <a href="javascript:;"><i class="bi bi-basket3"></i></a>
-                <a href="#" id="detail-product" data-bs-toggle="modal" data-bs-target="#QuickViewModal-@product.Id"><i
+                <a href="#" id="detail-product" class="quick-view-link" data-product-id="@product.Id" data-bs-toggle="modal" data-bs-target="#QuickViewModal-@product.Id"><i
                     class="bi bi-zoom-in"></i></a>                        
                     </div>
                         <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
@@ -163,7 +163,7 @@
                 </div> *@
                 <hr>
                 <div class="product-price d-flex align-items-center gap-3">
-                  <div class="h4 fw-bold" id="product-detail-price">$@product.Price</div>
+                  <div class="h4 fw-bold" id="product-detail-price-@product.Id">$@product.Price</div>
                   @* <div class="h5 fw-light text-muted text-decoration-line-through">$2089</div>
                   <div class="h4 fw-bold text-danger">(70% off)</div> *@
                 </div>
@@ -179,7 +179,7 @@
                         continue;
                       }
                       <div class="color-box color-border" style="background-color:@color.Color?.Colorname" 
-                      title="@color.Color?.Colorname"></div>
+                      title="@color.Color?.Colorname" data-color-id="@color.Color?.Id"></div>
                     @* <div class="color-box bg-red"></div>
                     <div class="color-box bg-primary"></div>
                     <div class="color-box bg-yellow"></div>
@@ -200,7 +200,7 @@
                     }
 
                     <div class="">
-                        <button type="button" class="rounded-0 size-box" style="white-space:normal;wordWrap:break-word;">@size.Size?.Sizename</button>
+                        <button type="button" class="rounded-0 size-box" style="white-space:normal;wordWrap:break-word;" data-size-id="@size.Size?.Id">@size.Size?.Sizename</button>
                     </div>
                     @* <div class="">
                       <button type="button" class="rounded-0">XS</button>
@@ -327,17 +327,128 @@
     document.addEventListener('DOMContentLoaded', function () {
       var boxes = document.querySelectorAll(".color-box");
       var sizes = document.querySelectorAll(".size-box");
-      boxes.forEach(box => {
+    var list_variant=[];
+     
+
+     boxes.forEach(box => {
       box.addEventListener('click', () => {
         boxes.forEach(b => b.classList.remove('clicked'));
-        box.classList.add('clicked'); 
+        box.classList.add('clicked');
+        var color_id=box.getAttribute("data-color-id");
+        for(let i =0;i<list_variant.length;i++)
+        {
+          let current_variant = list_variant[i];
+          
+          let current_variant_color=list_variant[i].Colorid;
+
+          let current_variant_size=list_variant[i].Sizeid;
+
+          let current_variant_price = list_variant[i].Price;
+
+          if(current_variant_color==color_id)
+          {
+            sizes.forEach(size=>{
+             var data_size_id=size.getAttribute("data-size-id");
+             if(data_size_id!=current_variant_size)
+             {
+              size.classList.add("disabled");
+
+              size.classList.remove("click-size");
+             }
+             else
+             {
+              size.classList.remove("disabled");
+              if(size.classList.contains("click-size"))
+              {
+                document.getElementById(`product-detail-price-${current_variant.Productid}`).innerHTML='$'+current_variant_price;
+              }
+             }
+            });
+          } 
+          
+        }
       });
     });
+
       sizes.forEach(size => {
-      size.addEventListener('click', () => {
+       size.addEventListener('click', () => {
         sizes.forEach(b => b.classList.remove('click-size'));
         size.classList.add('click-size'); 
+         var size_id=size.getAttribute("data-size-id");
+        for(let i =0;i<list_variant.length;i++)
+        {
+          let current_variant = list_variant[i];
+          
+          let current_variant_color=list_variant[i].Colorid;
+
+          let current_variant_size=list_variant[i].Sizeid;
+
+          let current_variant_price = list_variant[i].Price;
+
+          if(current_variant_size==size_id)
+          {
+            boxes.forEach(box=>{
+             var data_color_id=box.getAttribute("data-color-id");
+             if(data_color_id!=current_variant_color)
+             {
+              box.classList.add("disabled");
+              
+              box.classList.remove("clicked");
+             }
+             else
+             {
+              box.classList.remove("disabled");
+              if(box.classList.contains("clicked"))
+              {
+                document.getElementById(`product-detail-price-${current_variant.Productid}`).innerHTML='$'+current_variant_price;
+              }
+             }
+            });
+          } 
+          
+        }
       });
     });
+
+        document.querySelectorAll(".quick-view-link").forEach(link=>{
+   link.addEventListener("click",()=>{
+   const product_id=link.getAttribute("data-product-id");
+   var variant_url='@Url.Action("VariantProduct","HomePage",new{id="__product_id__"})';
+   variant_url=variant_url.replace("__product_id__",product_id);
+
+  boxes.forEach(box => 
+      {
+        box.classList.remove('clicked');
+        box.classList.remove('disabled');
+      });
+
+  sizes.forEach(size=>{
+   
+   size.classList.remove('click-size');
+   
+   size.classList.remove('disabled');
+  });
+
+
+   $.ajax({
+      url:variant_url,
+      type:'Get',
+      contentType:false,
+      processData:false,
+      success:function(response)
+      {
+        list_variant=JSON.parse(response.variant);
+      },
+      error:function(xhr,status)
+      {
+        alert(xhr.responseText);
+      }
+
+   }); 
+
+   });
+    });
+
+
     });
 </script>

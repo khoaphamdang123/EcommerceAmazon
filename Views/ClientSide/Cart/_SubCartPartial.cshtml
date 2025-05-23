@@ -3,7 +3,52 @@
 @{
   int total_value=0;
  }
-                        <div class="d-flex align-items-center justify-content-between gap-3">
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasRight"
+    aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header bg-section-2">
+      <h5 class="mb-0 fw-bold" id="offcanvasRightLabel"> @Model.Count items the cart</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="cart-list">
+     @foreach(var cart in Model)
+     {
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+               @if(cart.Product.Backavatar.Contains("https") || cart.Product.Backavatar.Contains("http"))
+              {
+                <img src="@cart.Product.Backavatar"  width="60" alt="...">
+              }
+              else
+              {
+                <img src="~/@cart.Product.Backavatar.Substring(cart.Product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" width="60" alt="...">
+            }
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">@cart.Product.ProductName</h6>
+            <p class="mb-0">Size: @cart.Size</p>
+            <p class="mb-0">Color: @cart.Color</p>
+            <p class="mb-0"><strong>@cart.Quantity x @cart.Price</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" id="remove-item-btn" data-product-id="@cart.Product.Id" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        }
+      </div>
+    </div>
+    <div class="offcanvas-footer p-3 border-top">
+      <div class="d-grid">
+        <button type="button" class="btn btn-lg btn-dark btn-ecomm px-5 py-3">Checkout</button>
+      </div>
+    </div>
+
+  </div>
+                        @* <div class="d-flex align-items-center justify-content-between gap-3">
                                 <div class="block-cart action">
                                     <a class="icon-link" href="@Url.Action("Cart","Cart")">
                                     <i class="flaticon-shopping-bag"></i>
@@ -22,7 +67,7 @@
                                     total_value+=current_price*item.Quantity;
                                 }   
 
-                                    @total_value VNĐ
+                                    @total_value VNĐ                                    
                                    
                                    </span>
                                     </a>
@@ -41,6 +86,7 @@
                      @Html.Partial("~/Views/ClientSide/Cart/_SubListPartial.cshtml",Model)
 
                         </div>
+                                                    
                                                     <a href="@Url.Action("Cart","Cart")" class="wc-cart mb-10">Xem giỏ hàng</a>
                                                     
                                                     <a href="@Url.Action("Checkout","Checkout")" class="wc-checkout">Đặt hàng</a>
@@ -63,16 +109,20 @@
                         <div class="contact-header">
                         <span><a href="@Url.Action("AboutUs","StaticPage")">Liên hệ</a></span>
                         </div>
-                        </div>
+                        </div> *@
 
 <script>
      function attachRemoveButtonListeners() {
 
-    document.querySelectorAll(".remove-btn").forEach((item) => 
-    {
+    document.querySelectorAll("#remove-item-btn").forEach((item) => 
+    {  
         item.addEventListener("click", () => {
+
+            
             var product_id = item.getAttribute("data-product-id");
+            
             var cart_name="view";
+            
             let formData = new FormData();
 
             formData.append("product_id", product_id);
@@ -85,11 +135,12 @@
                 data: formData,
                 contentType: false,
                 processData: false,
-                success: function(response) {
-                   
-                    $("#sub-list-section").html(response);
+                success: function(response) 
+                {
+                    $("#sub-cart-section").html(response);
                     attachRemoveButtonListeners();
-                    var updated_count=$("#update-count").data("count");                    
+                    var updated_count=$("#count-cart").text();
+                    updated_count=parseInt(updated_count)-1;              
                     $("#count-cart").text(updated_count);
                 },
                 error: function(xhr, status, error) 

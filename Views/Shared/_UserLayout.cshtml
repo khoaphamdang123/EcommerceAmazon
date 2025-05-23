@@ -336,27 +336,6 @@
                     </ul>
                   </div>
                   <!-- end col-3 -->
-                  @* <div class="col-12 col-xl-4">
-                    <h6 class="large-menu-title">Electronics</h6>
-                    <ul class="list-unstyled">
-                      <li><a href="javascript:;">Mobiles</a>
-                      </li>
-                      <li><a href="javascript:;">Laptops</a>
-                      </li>
-                      <li><a href="javascript:;">Macbook</a>
-                      </li>
-                      <li><a href="javascript:;">Televisions</a>
-                      </li>
-                      <li><a href="javascript:;">Lighting</a>
-                      </li>
-                      <li><a href="javascript:;">Smart Watch</a>
-                      </li>
-                      <li><a href="javascript:;">Galaxy Phones</a>
-                      </li>
-                      <li><a href="javascript:;">PC Monitors</a>
-                      </li>
-                    </ul>
-                  </div> *@
                   <!-- end col-3 -->
                   <div class="col-12 col-xl-4 d-none d-xl-block">
                     <div class="pramotion-banner1">
@@ -367,6 +346,9 @@
                 </div>
                 <!-- end row -->
               </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="@Url.Action("Cart","Cart")">Cart</a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="@Url.Action("Products","Products")" data-bs-toggle="dropdown">
@@ -435,9 +417,9 @@
         @* <li class="nav-item">
           <a class="nav-link" href="wishlist.html"><i class="bi bi-suit-heart"></i></a>
         </li> *@
-        <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight">
-          <a class="nav-link position-relative" href="javascript:;">
-            @* <div class="cart-badge"></div> *@
+        <li class="nav-item" id="cart-hover">
+          <a class="nav-link position-relative" href="@Url.Action("Cart","Cart")">  
+            <div class="cart-badge" id="count-cart">@cart.Count</div>
             <i class="bi bi-basket2"></i>
           </a>
         </li>
@@ -570,10 +552,11 @@
               @foreach(var cat in categories)
               {
                <li><a href="javascript:;">@cat.CategoryName</a></li>
-               }
+              }
              </ul>
           </div>
         </div>
+      
         <div class="col">
           <div class="footer-widget-8">
             <h5 class="mb-3 fw-bold">Company</h5>
@@ -619,10 +602,15 @@
 
 
   <!--start cart-->
-  <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasRight"
+
+     <div id="sub-cart-section"></div>
+      @Html.Partial("~/Views/ClientSide/Cart/_SubCartPartial.cshtml",cart)
+    </div>
+
+  @* <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasRight"
     aria-labelledby="offcanvasRightLabel">
     <div class="offcanvas-header bg-section-2">
-      <h5 class="mb-0 fw-bold" id="offcanvasRightLabel">8 items in the cart</h5>
+      <h5 class="mb-0 fw-bold" id="offcanvasRightLabel"> 8 items the cart</h5>
       <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
@@ -795,7 +783,7 @@
       </div>
     </div>
 
-  </div>
+  </div> *@
   <!--end cat-->
 
 
@@ -1039,6 +1027,32 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@4.0.7/js/froala_editor.pkgd.min.js"></script>
 
 
+<script>
+  $(document).ready(function()
+  {
+    @* let cart_count=sessionStorage.getItem('count-cart');
+
+    if(cart_count!=null)
+    {
+      $("#count-cart").text(cart_count);
+    }
+    else
+    { 
+      $("#count-cart").text("0");
+    } *@
+  
+    const cart = $("#cart-hover");
+    const offcanvasElement=$("#offcanvasRight")[0];
+    const bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
+    
+    cart.on('mouseenter',()=>{
+    bsOffcanvas.show();
+    });
+
+
+
+  });
+</script>
 
 
    @* <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

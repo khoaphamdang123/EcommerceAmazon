@@ -79,7 +79,7 @@ if(string.IsNullOrEmpty(id_user))
   {
     try{
          var prods=await this._product.pagingProduct(page_size,page);
-         
+
          if(!string.IsNullOrEmpty(productname)||!string.IsNullOrEmpty(brand) || !string.IsNullOrEmpty(startdate) || !string.IsNullOrEmpty(enddate) || !string.IsNullOrEmpty(category) || !string.IsNullOrEmpty(status))
          {
             FilterProduct prod=new FilterProduct(productname,startdate,enddate,category,brand,status);
@@ -99,12 +99,15 @@ if(string.IsNullOrEmpty(id_user))
           ViewBag.options=options;
 
           var cats=await this._category.getAllCategory();
+          
           var brands=await this._category.getAllBrandList();
+          
           ViewBag.CatList=cats;
+          
           ViewBag.BrandList = brands;
+          
           ViewBag.StatusList = new List<string>{"Hết hàng","Còn hàng"};
         
-          
           string select_size=page_size.ToString();
           
           ViewBag.select_size=select_size;
@@ -116,12 +119,14 @@ if(string.IsNullOrEmpty(id_user))
         {
             this._logger.LogTrace("Paging Product List Exception:"+er.Message);
         }
-    return View();
+
+    return View();      
   }
 
 //[Authorize(Roles ="Admin")]
 
    [Route("product_list")]
+   
    [HttpPost]
    public async Task<IActionResult> ProductList(FilterProduct products)
    {
@@ -137,39 +142,51 @@ if(string.IsNullOrEmpty(id_user))
 
    startdate=reformatted[1]+"/"+reformatted[2]+"/"+reformatted[0];   
  }
-     if(!string.IsNullOrEmpty(enddate))
+    if(!string.IsNullOrEmpty(enddate))
 { 
    string[] reformatted=enddate.Trim().Split('-');
 
    enddate=reformatted[1]+"/"+reformatted[2]+"/"+reformatted[0];
- }      string select_size="7"; 
+ }      
+          string select_size="7"; 
           ViewBag.select_size=select_size;
-          List<string> options=new List<string>(){"50","100","150","200"};
+          List<string> options=new List<string>(){"50","100","150","200"};          
           ViewBag.options=options;
-         var cats=await this._category.getAllCategory();
-          var brands=await this._category.getAllBrandList();
-          ViewBag.CatList=cats;
-          ViewBag.BrandList = brands;
-          ViewBag.StatusList = new List<string>{"Hết hàng","Còn hàng"};
-       var product_list=await this._product.filterProduct(products);
-       var product_paging=PageList<Product>.CreateItem(product_list.AsQueryable(),1,7);
-       ViewBag.filter_obj=products;  
-    return View("~/Views/ProductList/ProductList.cshtml",product_paging);
+
+
+        var cats=await this._category.getAllCategory();
+        
+        var brands=await this._category.getAllBrandList();
+        
+        ViewBag.CatList=cats;
+        
+        ViewBag.BrandList = brands;
+        
+        ViewBag.StatusList = new List<string>{"Hết hàng","Còn hàng"};
+        
+        var product_list=await this._product.filterProduct(products);
+        
+        var product_paging=PageList<Product>.CreateItem(product_list.AsQueryable(),1,7);
+        
+        ViewBag.filter_obj=products;  
+    
+        return View("~/Views/ProductList/ProductList.cshtml",product_paging);        
     }
     catch(Exception er)
     {
     this._logger.LogTrace("Filter Product List Exception:"+er.Message); 
     }
-    return View();
+    return View();    
    }
   
   [Route("product_list/delete")]
+  
   [HttpGet]
   public async Task<IActionResult> DeleteProduct(int id)
   {
     try
     {
-      int res=await this._product.deleteProduct(id);
+      int res=await this._product.deleteProduct(id);      
       
       if(res==0)
       {
@@ -186,9 +203,9 @@ if(string.IsNullOrEmpty(id_user))
     }
     catch(Exception er)
     {
-       this._logger.LogTrace("Remove Product Exception:"+er.Message); 
+       this._logger.LogTrace("Remove Product Exception:"+er.Message);        
     }
-    return RedirectToAction("ProductList","ProductList");
+    return RedirectToAction("ProductList","ProductList");    
   }
  [Route("product_list/export")]
  [HttpGet]
@@ -197,13 +214,14 @@ if(string.IsNullOrEmpty(id_user))
     try
     {
      var content= await this._product.exportToExcelProduct();
-  return File(content,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","Products.xlsx");
+
+     return File(content,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","Products.xlsx");
     }
     catch(Exception er)
     {
     this._logger.LogTrace("Export Product Excel Exception:"+er.Message); 
     }
-    return RedirectToAction("ProductList","ProductList");
+    return RedirectToAction("ProductList","ProductList");    
   }
 
 [Route("product_list/filter")]
@@ -224,7 +242,7 @@ public async Task<IActionResult> ProductsByName(string product_name)
           ViewBag.BrandList = brands;
           ViewBag.StatusList = new List<string>{"Hết hàng","Còn hàng"};
           var prods=await this._product.pagingProductByList(products.ToList().Count,1,products);
-          return View("~/Views/ProductList/ProductList.cshtml",prods);
+          return View("~/Views/ProductList/ProductList.cshtml",prods);          
 }
 
   [Route("prominent_product_list/sort")]
@@ -235,13 +253,13 @@ public async Task<IActionResult> ProductsByName(string product_name)
     {
         var prods=await this._product.getAllProminentProductList();
         
-        return View(prods);
+        return View(prods);        
     }
     catch(Exception er)
     {
         this._logger.LogTrace("Get Prominent Product List Exception:"+er.Message);
     }
-    return View();    
+    return View();        
   }
 
   [Route("prominent_product_list/sort")]
@@ -297,17 +315,20 @@ public async Task<IActionResult> ProductsByName(string product_name)
   [Route("product_list/sort")]
   public async Task<JsonResult> SortProduct(List<string> product_list)
   {
-  Console.WriteLine("Product Json did come to here");
+  Console.WriteLine("Product Json did come to here");  
   try
    {
     List<Product> products=new List<Product>();
+
     foreach(var product_id in product_list)
     {
-      var product=await this._product.findProductById(Convert.ToInt32(product_id));
+      var product=await this._product.findProductById(Convert.ToInt32(product_id));      
+
       if(product!=null)
       {
         products.Add(product);
       }
+
     }
 
    await this._product.SaveProduct(products);
@@ -315,17 +336,23 @@ public async Task<IActionResult> ProductsByName(string product_name)
    }
    catch(Exception er)
    {
+    
     this._logger.LogTrace("Sort Product Exception:"+er.Message);
+    
     return Json(new{status=0,message=er.Message});
-   }
+   
+   }   
+
    return Json(new{status=1,message="Sắp xếp thành công"});
+
   }
 
   [Route("product_list/add")]
+  
   [HttpGet]
   public async Task<IActionResult> AddProductList()
   { 
-    var category_list=await this._category.getAllCategory();
+    var category_list=await _category.getAllCategory();
     
     // var brand_list = await this._category.getAllBrandList();
 
@@ -346,6 +373,7 @@ public async Task<IActionResult> ProductsByName(string product_name)
     // ViewBag.SubCatList=sub_cat_list;
     
     return View();
+        
   }
  
 
@@ -371,8 +399,11 @@ public async Task<IActionResult> ProductsByName(string product_name)
     for(int i=0; i<link_product.Count;i++)
     {    
     string link_product_ob=link_product[i].Trim();
+    
     string link_background_ob=link_background_product[i].Trim();
-    int created_res = await this._product.addNewProductByLink(link_product_ob,link_background_ob,category);
+
+    int created_res = await this._product.addNewProductByLink(link_product_ob,link_background_ob,category);    
+    
     if(created_res==0)
     {  
         failed_product+=link_product_ob+",";
@@ -381,6 +412,7 @@ public async Task<IActionResult> ProductsByName(string product_name)
     {
         existed_product+=link_product_ob+",";
     }
+
     }
 
     if(string.IsNullOrEmpty(failed_product) && string.IsNullOrEmpty(existed_product))
@@ -443,8 +475,7 @@ public async Task<IActionResult> ProductsByName(string product_name)
     //     };
     // }
     
-    return Json(response_data);
-    
+    return Json(response_data);    
 }
 
 
@@ -543,11 +574,16 @@ public async Task<IActionResult> ProductsByName(string product_name)
   public async Task<IActionResult> VariantList(int id)
   {
       string select_size="7";
-          ViewBag.select_size=select_size;
-          List<string> options=new List<string>(){"7","10","20","50"};
-          ViewBag.options=options;
-         var variant_list=await this._product.pagingVariant(id,7,1);
-         return View(variant_list);
+      
+      ViewBag.select_size=select_size;
+      
+      List<string> options=new List<string>(){"7","10","20","50"};
+      
+      ViewBag.options=options;
+      
+      var variant_list=await this._product.pagingVariant(id,7,1);
+      
+      return View(variant_list);
   }
   
 
@@ -666,14 +702,14 @@ public async Task<JsonResult> UpdateProductStatus(int id,int status)
 
   Console.WriteLine("Product status is:"+status);
 
-  int res=await this._product.updateProductStatus(id,status);
+    int res=await this._product.updateProductStatus(id,status);
 
     if(res==0)
     {
        return new JsonResult(new{status=0,message="Cập nhật trạng thái sản phẩm thất bại"});
     }
    
-    return new JsonResult(new{status=1,message="Cập nhật trạng thái sản phẩm thành công"});    
+    return new JsonResult(new{status=1,message="Cập nhật trạng thái sản phẩm thành công"});
 }
 
 
@@ -702,6 +738,7 @@ public async Task<IActionResult> UploadVideo(IFormFile file)
     using(var stream = new FileStream(filePath, FileMode.Create))
     {
         await file.CopyToAsync(stream);
+              
     }
     var videoUrl = $"{Request.Scheme}://{Request.Host}/UploadVideos/{fileName}";
 

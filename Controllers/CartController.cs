@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Ecommerce_Product.Models;
 using Microsoft.AspNetCore.Authorization;
 using Ecommerce_Product.Repository;
+using System.Text.RegularExpressions; 
 using System.IO;
 
 
@@ -74,7 +75,7 @@ public class CartController : BaseController
 
   [Route("cart/add_cart")]
   [HttpPost]
-  public async Task<JsonResult> addItemToCart(string product_name,int quantity,string size="",string color="",string version="",string mirror="",string price="")
+  public async Task<JsonResult> addItemToCart(string product_name,int quantity,string size="",string color="",string price="")
   { 
     
     Console.WriteLine("Did come to this add cart");
@@ -85,28 +86,27 @@ public class CartController : BaseController
     
     Console.WriteLine("Price here is:"+price);
     try
-    { 
-    var product=await this._product.findProductByName(product_name);
-
-
-      CartModel cart = new CartModel{Product=product,Quantity=quantity,Size=size,Color=color,Version=version,Mirror=mirror,Price=price};
-        
-      add_res=await this._cart.addProductToCart(cart);
-
-    }
-    catch(Exception er)
     {
-        this._logger.LogError("Add Item To Cart Exception:"+er.Message);                
+    string regex_product=Regex.Replace(product_name, @"[^\w\d+,]", "-");
+
+      var product = await this._product.findProductByName(regex_product);
+
+      CartModel cart = new CartModel{ Product = product, Quantity = quantity, Size = size, Color = color, Price = price };
+
+      add_res = await this._cart.addProductToCart(cart);
+    }
+    catch (Exception er)
+    {
+      this._logger.LogError("Add Item To Cart Exception:" + er.Message);
     }
        if(add_res==1 || add_res==-1)
         {   List<CartModel> cart=this._cart.getCart();
-          Console.WriteLine("RESULT TRUE");
     
-            return Json(new {status=1,message="Thêm sản phẩm vào giỏ hàng thành công.",data=cart});
+            return Json(new {status=1,message="Add product to cart successfully",data=cart});
         }
         else
         {
-            return Json(new {status=add_res,message="Thêm sản phẩm vào giỏ hàng thất bại.",data=""});
+            return Json(new {status=add_res,message="Add product to cart failed.",data=""});
         }
   }
 
@@ -114,8 +114,9 @@ public class CartController : BaseController
   [HttpPost]
   public async Task<IActionResult> SubCartPartialView()
   {
-    var cart=this._cart.getCart();
-    return PartialView("~/Views/ClientSide/Cart/_SubCartPartial.cshtml",cart);
+    var cart = this._cart.getCart();
+
+    return PartialView("~/Views/ClientSide/Cart/_SubCartPartial.cshtml", cart);
   }
   
 
@@ -165,7 +166,7 @@ public class CartController : BaseController
     int update_value=await this._cart.updateCart(product_ids[i],quantities[i]);
     if(update_value==0)
     {
-      return Json(new {status=0,message="Cập nhật giỏ hàng thất bại."});
+      return Json(new {status=0,message="Update Cart Failed."});
     }
     }
     update_res=1;
@@ -173,9 +174,9 @@ public class CartController : BaseController
   catch(Exception er)
   {
     this._logger.LogError("Update Cart Exception:"+er.Message);
-    return Json(new {status=0,message=$"Cập nhật giỏ hàng thất bại:{er.Message}"}); 
+    return Json(new {status=0,message=$"Update Cart Failed:{er.Message}"}); 
   }
-  return Json(new {status=1,message="Cập nhật giỏ hàng thành công."});
+  return Json(new {status=1,message="Update Cart Successfully."});  
   }
  
  [Route("cart/remove_item")]
@@ -190,7 +191,7 @@ url="~/Views/ClientSide/Cart/_CartPartial.cshtml";
     }
     else
     {
-  url="~/Views/ClientSide/Cart/_SubListPartial.cshtml";
+  url="~/Views/ClientSide/Cart/_SubCartPartial.cshtml";
     }
     try
     {
@@ -204,7 +205,7 @@ url="~/Views/ClientSide/Cart/_CartPartial.cshtml";
     { 
  var cart=this._cart.getCart();
 
- return PartialView(url,cart);
+ return PartialView(url, cart);
  
   }
     else

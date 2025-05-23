@@ -252,7 +252,7 @@
                         continue;
                       }
                       <div class="color-box color-border" style="background-color:@color.Color?.Colorname" 
-                      title="@color.Color?.Colorname"></div>
+                      title="@color.Color?.Colorname" data-color-id="@color.Color?.Id"></div>
                       @* <div class="">
                         <a href="javascript:;">
                           <img src="assets/images/featured-products/02.webp" width="65" alt="">
@@ -282,7 +282,7 @@
                         continue;
                     }
                      <div class="">
-                       <button type="button" class="size-box">@size.Size?.Sizename</button>
+                       <button type="button" class="size-box" data-size-id="@size.Size?.Id">@size.Size?.Sizename</button>
                      </div>
                      @* <div class="">
                       <button type="button">S</button>
@@ -685,7 +685,7 @@
       
       var boxes = document.querySelectorAll(".color-box");
 
-      var size_boxes = document.querySelectorAll(".size-box");
+      var sizes = document.querySelectorAll(".size-box");
 
 
 
@@ -715,26 +715,98 @@
         product_price.textContent=product_price.textContent.replace('.',',');
       });
 
-      boxes.forEach(box => 
-      {
-      box.addEventListener('click', () => 
-      {
+    var list_variant=[];
+     
+     boxes.forEach(box => {
+      box.addEventListener('click', () => {
         boxes.forEach(b => b.classList.remove('clicked'));
-        
         box.classList.add('clicked');
+        var color_id=box.getAttribute("data-color-id");
+        for(let i =0;i<list_variant.length;i++)
+        {
+          let current_variant = list_variant[i];
+          
+          let current_variant_color=list_variant[i].Colorid;
+
+          let current_variant_size=list_variant[i].Sizeid;
+
+          if(current_variant_color==color_id)
+          {
+            sizes.forEach(size=>{
+             var data_size_id=size.getAttribute("data-size-id");
+             if(data_size_id!=current_variant_size)
+             {
+              size.classList.add("disabled");
+
+              size.classList.remove("click-size");
+             }
+             else
+             {
+              size.classList.remove("disabled");
+             }
+            });
+          } 
+          
+        }
       });
     });
 
-    
-      size_boxes.forEach(size => 
-      {
-      size.addEventListener('click', () => 
-      {
-        size_boxes.forEach(b => b.classList.remove('click-size'));
-        
-        size.classList.add('click-size');
+      sizes.forEach(size => {
+       size.addEventListener('click', () => {
+        sizes.forEach(b => b.classList.remove('click-size'));
+        size.classList.add('click-size'); 
+         var size_id=size.getAttribute("data-size-id");
+        for(let i =0;i<list_variant.length;i++)
+        {
+          let current_variant = list_variant[i];
+          
+          let current_variant_color=list_variant[i].Colorid;
+
+          let current_variant_size=list_variant[i].Sizeid;
+
+          if(current_variant_size==size_id)
+          {
+            boxes.forEach(box=>{
+             var data_color_id=box.getAttribute("data-color-id");
+             if(data_color_id!=current_variant_color)
+             {
+              box.classList.add("disabled");
+              
+              box.classList.remove("clicked");
+             }
+             else
+             {
+              box.classList.remove("disabled");
+             }
+            });
+          } 
+          
+        }
       });
     });
+ 
+const product_id=@Model.Id;
+
+var variant_url='@Url.Action("VariantProduct","HomePage",new{id="__product_id__"})';
+
+ variant_url=variant_url.replace("__product_id__",product_id);
+
+   $.ajax({
+      url:variant_url,
+      type:'Get',
+      contentType:false,
+      processData:false,
+      success:function(response)
+      { 
+        list_variant=JSON.parse(response.variant);
+      },
+      error:function(xhr,status)
+      {
+        alert(xhr.responseText);
+      }
+
+   }); 
+
     });
 </script>
 

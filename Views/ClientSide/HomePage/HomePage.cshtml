@@ -127,8 +127,8 @@
             <div class="position-relative overflow-hidden">
               <div
                 class="product-options d-flex align-items-center justify-content-center gap-2 mx-auto position-absolute bottom-0 start-0 end-0">
-                <a href="javascript:;"><i class="bi bi-basket3"></i></a>
-                <a href="#" class="quick-view-link" data-product-id="@product.Id" id="detail-product" data-bs-toggle="modal" data-bs-target="#QuickViewModal-@product.Id"><i
+                <a href="#" id="info-product" data-product-id="@product.Id" data-product-name="@regex_product" title="View Detail"><i class="bi-info-circle"></i></a>
+                <a href="#" class="quick-view-link" data-product-id="@product.Id" id="detail-product" data-bs-toggle="modal" title="Add Cart" data-bs-target="#QuickViewModal-@product.Id"><i
                     class="bi bi-zoom-in"></i></a>
               </div>
               <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
@@ -138,7 +138,7 @@
               }
               else
               {
-                <img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="...">
+                <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="...">
             }
               </a>
             </div>
@@ -447,7 +447,7 @@
                 </div> *@
                 <hr>
                 <div class="product-price d-flex align-items-center gap-3">
-                  <div class="h4 fw-bold" id="product-detail-price">$@product.Price</div>
+                  <div class="h4 fw-bold" id="product-detail-price-@product.Id">$@product.Price</div>
                   @* <div class="h5 fw-light text-muted text-decoration-line-through">$2089</div>
                   <div class="h4 fw-bold text-danger">(70% off)</div> *@
                 </div>
@@ -463,7 +463,7 @@
                         continue;
                       }
                       <div class="color-box color-border" style="background-color:@color.Color?.Colorname" 
-                      title="@color.Color?.Colorname" data-color-id="@color.Color?.Id"></div>
+                      title="@color.Color?.Colorname" data-color-id="@color.Color?.Id" data-color-name="@color.Color?.Colorname"></div>
                     @* <div class="color-box bg-red"></div>
                     <div class="color-box bg-primary"></div>
                     <div class="color-box bg-yellow"></div>
@@ -484,7 +484,7 @@
                     }
 
                     <div class="">
-                        <button class="color-size" type="button" class="rounded-0" style="white-space:normal;wordWrap:break-word;" data-size-id="@size.Size?.Id">@size.Size?.Sizename</button>
+                        <button class="color-size" type="button" class="rounded-0" style="white-space:normal;wordWrap:break-word;" data-size-name="@size.Size?.Sizename" data-size-id="@size.Size?.Id">@size.Size?.Sizename</button>
                     </div>
                     @* <div class="">
                       <button type="button" class="rounded-0">XS</button>
@@ -509,7 +509,7 @@
                 </div>
                 <div class="cart-buttons mt-3">
                   <div class="buttons d-flex flex-column gap-3 mt-4">
-                    <a href="javascript:;" class="btn btn-lg btn-dark btn-ecomm px-5 py-3 flex-grow-1"><i
+                    <a href="javascript:;" id="add-cart-detail" data-product-id="@product.Id" data-product-name="@product.ProductName" class="btn btn-lg btn-dark btn-ecomm px-5 py-3 flex-grow-1"><i
                         class="bi bi-basket2 me-2"></i>Add to Cart</a>
                     @* <a href="javascript:;" class="btn btn-lg btn-outline-dark btn-ecomm px-5 py-3"><i
                         class="bi bi-suit-heart me-2"></i>Wishlist</a> *@
@@ -589,15 +589,15 @@
 
             if(product.Status=="Hết hàng")
             {
-                continue;
+                continue;                                
             }
               <div class="col">
                 <div class="card">
                   <div class="position-relative overflow-hidden">
                     <div
                       class="product-options d-flex align-items-center justify-content-center gap-2 mx-auto position-absolute bottom-0 start-0 end-0">
-                      <a href="javascript:;"><i class="bi bi-basket3"></i></a>
-                      <a href="javascript:;"  class="quick-view-link" data-product-id="@product.Id"  data-bs-toggle="modal" data-bs-target="#QuickViewModal-@product.Id"><i
+                      <a href="javascript:;" id="info-product" title="View Detail" data-product-id="@product.Id" data-product-name="@regex_product"><i class="bi-info-circle"></i></a>
+                      <a href="javascript:;"  class="quick-view-link" title="Add Cart" data-product-id="@product.Id"  data-bs-toggle="modal" data-bs-target="#QuickViewModal-@product.Id"><i
                           class="bi bi-zoom-in"></i></a>
                     </div>
                     <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
@@ -607,7 +607,7 @@
               }
               else
               {
-                <img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="...">
+                <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="...">
             }                    </a>
                   </div>
                   <div class="card-body">
@@ -628,6 +628,8 @@
             <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 row-cols-xxl-5 g-4">
               @foreach(var product in products)
               {
+            string regex_product=Regex.Replace(product.ProductName, @"[^\w\d+,]", "-");
+
             if(product.Status=="Hết hàng")
             {
                 continue;
@@ -638,8 +640,8 @@
                     <div
                       class="product-options d-flex align-items-center justify-content-center gap-2 mx-auto position-absolute bottom-0 start-0 end-0">
                       @* <a href="javascript:;"><i class="bi bi-heart"></i></a> *@
-                      <a href="javascript:;"><i class="bi bi-basket3"></i></a>
-                      <a href="javascript:;"  class="quick-view-link" data-product-id="@product.Id"  data-bs-toggle="modal" data-bs-target="#QuickViewModal-@product.Id"><i
+                      <a href="javascript:;" id="info-product" title="View Detail" data-product-id="@product.Id" data-product-name="@regex_product"><i class="bi-info-circle"></i></a>
+                      <a href="javascript:;"  class="quick-view-link" title="Add Cart" data-product-id="@product.Id"  data-bs-toggle="modal" data-bs-target="#QuickViewModal-@product.Id"><i
                           class="bi bi-zoom-in"></i></a>
                     </div>
                     <a href="product-details.html">
@@ -649,7 +651,7 @@
               }
               else
               {
-                <img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="...">
+                <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="...">
             }                    </a>
                   </div>
                   <div class="card-body">
@@ -688,8 +690,8 @@
                     <div
                       class="product-options d-flex align-items-center justify-content-center gap-2 mx-auto position-absolute bottom-0 start-0 end-0">
                       @* <a href="javascript:;"><i class="bi bi-heart"></i></a> *@
-                      <a href="javascript:;"><i class="bi bi-basket3"></i></a>
-                      <a class="quick-view-link" data-product-id="@product.Id" href="javascript:;" data-bs-toggle="modal" data-bs-target="#QuickViewModal-@product.Id"><i
+                      <a href="javascript:;" id="info-product" title="View Detail" data-product-id="@product.Id" data-product-name="@regex_product"><i class="bi-info-circle"></i></a>
+                      <a class="quick-view-link" data-product-id="@product.Id" href="javascript:;" title="Add Cart" data-bs-toggle="modal" data-bs-target="#QuickViewModal-@product.Id"><i
                           class="bi bi-zoom-in"></i></a>
                     </div>
                     <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
@@ -699,7 +701,7 @@
               }
               else
               {
-                <img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="...">
+                <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="...">
             }                    </a>
                   </div>
                   <div class="card-body">
@@ -1139,10 +1141,14 @@
 
           let current_variant_size=list_variant[i].Sizeid;
 
+          let current_variant_price = list_variant[i].Price;
+
           if(current_variant_color==color_id)
           {
             sizes.forEach(size=>{
+             
              var data_size_id=size.getAttribute("data-size-id");
+
              if(data_size_id!=current_variant_size)
              {
               size.classList.add("disabled");
@@ -1152,6 +1158,10 @@
              else
              {
               size.classList.remove("disabled");
+              if(size.classList.contains("click-size"))
+              {
+                document.getElementById(`product-detail-price-${current_variant.Productid}`).innerHTML='$'+current_variant_price;
+              }
              }
             });
           } 
@@ -1161,10 +1171,14 @@
     });
 
       sizes.forEach(size => {
-       size.addEventListener('click', () => {
+       size.addEventListener('click', () => 
+       {
         sizes.forEach(b => b.classList.remove('click-size'));
+        
         size.classList.add('click-size'); 
-         var size_id=size.getAttribute("data-size-id");
+        
+        var size_id=size.getAttribute("data-size-id");
+        
         for(let i =0;i<list_variant.length;i++)
         {
           let current_variant = list_variant[i];
@@ -1186,10 +1200,13 @@
              else
              {
               box.classList.remove("disabled");
+              if(box.classList.contains("clicked"))
+              {
+                document.getElementById(`product-detail-price-${current_variant.Productid}`).innerHTML='$'+current_variant.Price;
+              }
              }
             });
-          } 
-          
+          }        
         }
       });
     });
@@ -1203,11 +1220,14 @@
   boxes.forEach(box => 
       {
         box.classList.remove('clicked');
+        
         box.classList.remove('disabled');
       });
 
-  sizes.forEach(size=>{
+  sizes.forEach(size=>
+  { 
    size.classList.remove('click-size');
+   
    size.classList.remove('disabled');
   });
 
@@ -1232,6 +1252,131 @@
     });
 
     
+    var info_products=document.querySelectorAll("#info-product");
+
+    info_products.forEach((product,index)=>
+    {
+       product.addEventListener("click",()=>{
+       var product_name=product.getAttribute("data-product-name");
+       var url= '@Url.Action("ProductDetail","ProductDetail",new{product_name="__product_name__"})';
+       url=url.replace("__product_name__",product_name);
+       window.location.href=url;              
+       });
+    });
+
+    var add_cart_details=document.querySelectorAll("#add-cart-detail");
+
+    add_cart_details.forEach((cart,index)=>{
+     cart.addEventListener("click",()=>{
+     var product_id=cart.getAttribute("data-product-id");
+     var product_name=cart.getAttribute("data-product-name");
+     var product_price = document.getElementById(`product-detail-price-${product_id}`).innerHTML;
+     var size_value='';
+     var color_value ='';
+
+     boxes.forEach(box=>{
+       if(box.classList.contains("clicked"))
+       {
+        color_value=box.getAttribute("data-color-name");
+       }
+     });
+
+     sizes.forEach(size=>{
+       if(size.classList.contains("click-size"))
+       {
+        size_value=size.getAttribute("data-size-name");
+       }
+     });
+
+
+     if(color_value=='' || size_value=='')
+     {
+       document.getElementById("toast-title").innerHTML="Add To Cart";
+                
+                document.getElementById("toast-message").innerHTML="Please select color and size";
+                
+                var toastEl = document.querySelector('.toast');
+
+                toastEl.classList.add('bg-danger');
+               
+                var toast = new bootstrap.Toast(toastEl);
+                
+                toast.show();
+          return;
+     }
+     
+     let formData =new FormData();
+
+     formData.append("product_id",product_id);
+
+     formData.append("product_name",product_name);
+
+     formData.append("price",product_price);
+
+     formData.append("color",color_value);
+
+     formData.append("size",size_value);
+
+     formData.append("quantity",1);
+
+      $.ajax({
+            url:"@Url.Action("addItemToCart","Cart")",
+            type:"POST",
+            data:formData,
+            contentType: false,
+            processData: false,
+            success:function(response)
+            {   
+                const status=response.status;
+                const message = response.message;
+                const data=response.data;
+            if(data!="")
+             {  
+                $("#count-cart").text(data.length);
+
+                sessionStorage.setItem("count-cart",data.length);
+               
+                var section_url="@Url.Action("SubCartPartialView","Cart")";
+                   $.ajax({
+                    url:section_url,
+                    type:"POST",
+                    success: function(partialHtml) {
+                        $('#sub-cart-section').html(partialHtml); 
+                    }
+                });
+            }
+                document.getElementById("toast-title").innerHTML="Add To Cart";
+
+                document.getElementById("toast-message").innerHTML=message;
+
+                var toastEl = document.querySelector('.toast');
+
+
+                if(status==1)
+                {
+                 toastEl.classList.add('bg-success');
+                }
+            else
+            {
+                toastEl.classList.add('bg-danger');
+            }
+                var toast = new bootstrap.Toast(toastEl);
+                
+                 toast.show();
+            },
+            error:function(xhr, status, error)
+            { 
+                document.getElementById("toast-title").innerHTML="Add To Cart";
+                document.getElementById("toast-message").innerHTML=xhr.responseText;
+                var toastEl = document.querySelector('.toast');
+                toastEl.classList.add('bg-danger');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            }
+        });
+     });
+    });
+
 
     });
 
