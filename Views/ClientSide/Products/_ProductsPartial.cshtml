@@ -44,7 +44,7 @@
                     <div class="card border shadow-none">
                       <div class="position-relative overflow-hidden">
                         <div class="product-options d-flex align-items-center justify-content-center gap-2 mx-auto position-absolute bottom-0 start-0 end-0">
-                          <a href="javascript:;"><i class="bi bi-basket3"></i></a>
+                      <a href="javascript:;" id="info-product" title="View Detail" data-product-id="@product.Id" data-product-name="@regex_product"><i class="bi-info-circle"></i></a>
                 <a href="#" id="detail-product" class="quick-view-link" data-product-id="@product.Id" data-bs-toggle="modal" data-bs-target="#QuickViewModal-@product.Id"><i
                     class="bi bi-zoom-in"></i></a>                        
                     </div>
@@ -179,7 +179,7 @@
                         continue;
                       }
                       <div class="color-box color-border" style="background-color:@color.Color?.Colorname" 
-                      title="@color.Color?.Colorname" data-color-id="@color.Color?.Id"></div>
+                      title="@color.Color?.Colorname"  data-color-id="@color.Color?.Id" data-color-name="@color.Color?.Colorname"></div>
                     @* <div class="color-box bg-red"></div>
                     <div class="color-box bg-primary"></div>
                     <div class="color-box bg-yellow"></div>
@@ -200,7 +200,7 @@
                     }
 
                     <div class="">
-                        <button type="button" class="rounded-0 size-box" style="white-space:normal;wordWrap:break-word;" data-size-id="@size.Size?.Id">@size.Size?.Sizename</button>
+                       <button type="button" class="rounded-0 size-box" style="white-space:normal;wordWrap:break-word;"data-size-name="@size.Size?.Sizename" data-size-id="@size.Size?.Id">@size.Size?.Sizename</button>
                     </div>
                     @* <div class="">
                       <button type="button" class="rounded-0">XS</button>
@@ -225,7 +225,7 @@
                 </div>
                 <div class="cart-buttons mt-3">
                   <div class="buttons d-flex flex-column gap-3 mt-4">
-                    <a href="javascript:;" class="btn btn-lg btn-dark btn-ecomm px-5 py-3 flex-grow-1"><i
+                    <a href="javascript:;" id="add-cart-detail" data-product-id="@product.Id" data-product-name="@product.ProductName" class="btn btn-lg btn-dark btn-ecomm px-5 py-3 flex-grow-1"><i
                         class="bi bi-basket2 me-2"></i>Add to Cart</a>
                   </div>
                 </div>
@@ -325,12 +325,15 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+      
       var boxes = document.querySelectorAll(".color-box");
+      
       var sizes = document.querySelectorAll(".size-box");
-    var list_variant=[];
-     
-
-     boxes.forEach(box => {
+      
+      var list_variant=[];
+    
+     boxes.forEach(box => 
+     {
       box.addEventListener('click', () => {
         boxes.forEach(b => b.classList.remove('clicked'));
         box.classList.add('clicked');
@@ -347,8 +350,11 @@
 
           if(current_variant_color==color_id)
           {
-            sizes.forEach(size=>{
+            sizes.forEach(size=>
+            {
+             
              var data_size_id=size.getAttribute("data-size-id");
+
              if(data_size_id!=current_variant_size)
              {
               size.classList.add("disabled");
@@ -410,7 +416,7 @@
       });
     });
 
-        document.querySelectorAll(".quick-view-link").forEach(link=>{
+ document.querySelectorAll(".quick-view-link").forEach(link=>{
    link.addEventListener("click",()=>{
    const product_id=link.getAttribute("data-product-id");
    var variant_url='@Url.Action("VariantProduct","HomePage",new{id="__product_id__"})';
@@ -449,6 +455,129 @@
    });
     });
 
+    var info_products=document.querySelectorAll("#info-product");
 
+    info_products.forEach((product,index)=>
+    {
+       product.addEventListener("click",()=>{
+       var product_name=product.getAttribute("data-product-name");
+       var url= '@Url.Action("ProductDetail","ProductDetail",new{product_name="__product_name__"})';
+       url=url.replace("__product_name__",product_name);
+       window.location.href=url;              
+       });
+    });
+
+    var add_cart_details=document.querySelectorAll("#add-cart-detail");
+
+    add_cart_details.forEach((cart,index)=>{
+     cart.addEventListener("click",()=>{
+     var product_id=cart.getAttribute("data-product-id");
+     var product_name=cart.getAttribute("data-product-name");
+     var product_price = document.getElementById(`product-detail-price-${product_id}`).innerHTML;
+     var size_value='';
+     var color_value ='';
+
+     boxes.forEach(box=>{
+       if(box.classList.contains("clicked"))
+       {
+        color_value=box.getAttribute("data-color-name");
+       }
+     });
+
+     sizes.forEach(size=>{
+       if(size.classList.contains("click-size"))
+       {
+        size_value=size.getAttribute("data-size-name");
+       }
+     });
+
+
+     if(color_value=='' || size_value=='')
+     {
+       document.getElementById("toast-title").innerHTML="Add To Cart";
+                
+                document.getElementById("toast-message").innerHTML="Please select color and size";
+                
+                var toastEl = document.querySelector('.toast');
+
+                toastEl.classList.add('bg-danger');
+               
+                var toast = new bootstrap.Toast(toastEl);
+                
+                toast.show();
+          return;
+     }
+     
+     let formData =new FormData();
+
+     formData.append("product_id",product_id);
+
+     formData.append("product_name",product_name);
+
+     formData.append("price",product_price);
+
+     formData.append("color",color_value);
+
+     formData.append("size",size_value);
+
+     formData.append("quantity",1);
+
+      $.ajax({
+            url:"@Url.Action("addItemToCart","Cart")",
+            type:"POST",
+            data:formData,
+            contentType: false,
+            processData: false,
+            success:function(response)
+            {   
+                const status=response.status;
+                const message = response.message;
+                const data=response.data;
+            if(data!="")
+             {  
+                $("#count-cart").text(data.length);
+
+                sessionStorage.setItem("count-cart",data.length);
+               
+                var section_url="@Url.Action("SubCartPartialView","Cart")";
+                   $.ajax({
+                    url:section_url,
+                    type:"POST",
+                    success: function(partialHtml) {
+                        $('#sub-cart-section').html(partialHtml); 
+                    }
+                });
+            }
+                
+                document.getElementById("toast-title").innerHTML="Add To Cart";
+              
+                document.getElementById("toast-message").innerHTML=message;
+
+                var toastEl = document.querySelector('.toast');
+
+                if(status==1)
+                {
+                 toastEl.classList.add('bg-success');
+                }
+            else
+            {
+                toastEl.classList.add('bg-danger');
+            }
+                var toast = new bootstrap.Toast(toastEl);
+                
+                 toast.show();
+            },
+            error:function(xhr, status, error)
+            { 
+                document.getElementById("toast-title").innerHTML="Add To Cart";
+                document.getElementById("toast-message").innerHTML=xhr.responseText;
+                var toastEl = document.querySelector('.toast');
+                toastEl.classList.add('bg-danger');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();                
+            }
+        });
+     });
+    });
     });
 </script>

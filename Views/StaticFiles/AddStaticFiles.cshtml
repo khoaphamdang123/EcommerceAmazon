@@ -140,9 +140,10 @@
 
  document.addEventListener("DOMContentLoaded",()=>{
  
-  new FroalaEditor('#content',{
+  new FroalaEditor('#content',
+{
   heightMin: 300,
-  imageUploadToS3: false,
+ imageUploadToS3: false,
     imageUploadURL: '/image/upload',
     imageOutputSize: true,
     videoUpload:true,
@@ -238,6 +239,7 @@
     colorsBackground: ['#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFFF00'],
     colorsText: ['#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00'] 
   });
+
 
  document.getElementById("formAccountSettings").addEventListener("submit",()=>{
   var is_valid=true;

@@ -85,12 +85,16 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KHS83JFC5Y"></script>
 
 <script>
+  
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
+
+  function gtag()
+  {
+    dataLayer.push(arguments);
+  }
   gtag('js', new Date());
   gtag('config', 'G-KHS83JFC5Y');
 </script>
-
 </head>
 <body>
     @* <header>
@@ -295,7 +299,7 @@
               </ul>
             </li>      
 
-               @* <li class="menu-item @(view_controller=="StaticFiles"?"active open":"")">
+               <li class="menu-item @(view_controller=="StaticFiles"?"active open":"")">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-file"></i>
                 <div data-i18n="Account Settings">Trang tĩnh</div>
@@ -312,7 +316,7 @@
                   </a>
                 </li>
               </ul>
-            </li>  *@
+            </li> 
 
             <li class="menu-item @(view_controller=="PaymentList"?"active open":"")">
               <a href="javascript:void(0);" class="menu-link menu-toggle">

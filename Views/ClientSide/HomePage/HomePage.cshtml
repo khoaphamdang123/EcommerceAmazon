@@ -37,7 +37,7 @@
        style="cursor: pointer; position: fixed; top: 20px; right: 20px; z-index: 5000;"
        data-delay="3000"
        data-bs-autohide="true" 
-       data-bs-delay="3000"
+       data-bs-delay="3000"       
              >
                         <div class="toast-header">
                           <i class="bx bx-bell me-2"></i>
@@ -452,7 +452,6 @@
                   <div class="h4 fw-bold text-danger">(70% off)</div> *@
                 </div>
                 <p class="fw-bold mb-0 mt-1 text-success">inclusive of all taxes</p>
-
                 <div class="more-colors mt-3">
                   <h6 class="fw-bold mb-3">More Colors</h6>
                   <div class="d-flex align-items-center gap-2 flex-wrap" id="product-detail-colors">
@@ -486,24 +485,6 @@
                     <div class="">
                         <button class="color-size" type="button" class="rounded-0" style="white-space:normal;wordWrap:break-word;" data-size-name="@size.Size?.Sizename" data-size-id="@size.Size?.Id">@size.Size?.Sizename</button>
                     </div>
-                    @* <div class="">
-                      <button type="button" class="rounded-0">XS</button>
-                    </div>
-                    <div class="">
-                      <button type="button" class="rounded-0">S</button>
-                    </div>
-                    <div class="">
-                      <button type="button" class="rounded-0">M</button>
-                    </div>
-                    <div class="">
-                      <button type="button" class="rounded-0">L</button>
-                    </div>
-                    <div class="">
-                      <button type="button" class="rounded-0">XL</button>
-                    </div>
-                    <div class="">
-                      <button type="button" class="rounded-0">XXL</button>
-                    </div> *@
                     }
                   </div>
                 </div>
@@ -735,7 +716,7 @@
       <div class="container">
         <div class="text-center pb-3">
           <h3 class="mb-0 h3 fw-bold">What We Offer!</h3>
-          <p class="mb-0 text-capitalize">The purpose of lorem ipsum</p>
+          @* <p class="mb-0 text-capitalize">The purpose of lorem ipsum</p> *@
         </div>
         <div class="row row-cols-1 row-cols-lg-4 g-4">
           <div class="col d-flex">
@@ -745,7 +726,7 @@
                   <i class="bi bi-truck"></i>
                 </div>
                 <h5 class="fw-bold">Free Delivery</h5>
-                <p class="mb-0">Nor again is there anyone who loves or pursues or desires to obtain pain of itself.</p>
+                @* <p class="mb-0">Nor again is there anyone who loves or pursues or desires to obtain pain of itself.</p> *@
               </div>
             </div>
           </div>
@@ -756,7 +737,7 @@
                   <i class="bi bi-credit-card"></i>
                 </div>
                 <h5 class="fw-bold">Secure Payment</h5>
-                <p class="mb-0">Nor again is there anyone who loves or pursues or desires to obtain pain of itself.</p>
+                @* <p class="mb-0">Nor again is there anyone who loves or pursues or desires to obtain pain of itself.</p> *@
               </div>
             </div>
           </div>
@@ -767,7 +748,7 @@
                   <i class="bi bi-minecart-loaded"></i>
                 </div>
                 <h5 class="fw-bold">Free Returns</h5>
-                <p class="mb-0">Nor again is there anyone who loves or pursues or desires to obtain pain of itself.</p>
+                @* <p class="mb-0">Nor again is there anyone who loves or pursues or desires to obtain pain of itself.</p> *@
               </div>
             </div>
           </div>
@@ -778,7 +759,7 @@
                   <i class="bi bi-headset"></i>
                 </div>
                 <h5 class="fw-bold">24/7 Support</h5>
-                <p class="mb-0">Nor again is there anyone who loves or pursues or desires to obtain pain of itself.</p>
+                @* <p class="mb-0">Nor again is there anyone who loves or pursues or desires to obtain pain of itself.</p> *@
               </div>
             </div>
           </div>
@@ -1221,7 +1202,7 @@
       {
         box.classList.remove('clicked');
         
-        box.classList.remove('disabled');
+        box.classList.remove('disabled');        
       });
 
   sizes.forEach(size=>
@@ -1351,11 +1332,11 @@
 
                 var toastEl = document.querySelector('.toast');
 
-
                 if(status==1)
                 {
                  toastEl.classList.add('bg-success');
                 }
+                
             else
             {
                 toastEl.classList.add('bg-danger');
@@ -1370,7 +1351,7 @@
                 document.getElementById("toast-message").innerHTML=xhr.responseText;
                 var toastEl = document.querySelector('.toast');
                 toastEl.classList.add('bg-danger');
-                var toast = new bootstrap.Toast(toastEl);
+                var toast = new bootstrap.Toast(toastEl);                
                 toast.show();
             }
         });

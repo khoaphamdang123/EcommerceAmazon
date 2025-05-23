@@ -237,7 +237,7 @@
                   </div> *@
                   <hr>
                   <div class="product-price d-flex align-items-center gap-3">
-                     <div class="h4 fw-bold text-danger" id="product-price">$@Model.Price</div>
+                     <div class="h4 fw-bold text-danger" id="product-detail-price-@Model.Id">$@Model.Price</div>
                      @* <div class="h5 fw-light text-muted text-decoration-line-through">$2089</div>
                      <div class="h4 fw-bold text-danger">(70% off)</div>   *@
                   </div>
@@ -249,10 +249,10 @@
                     {
                      if(color.Color==null)
                       {
-                        continue;
+                        continue;                                                                        
                       }
                       <div class="color-box color-border" style="background-color:@color.Color?.Colorname" 
-                      title="@color.Color?.Colorname" data-color-id="@color.Color?.Id"></div>
+                      title="@color.Color?.Colorname"  data-color-id="@color.Color?.Id" data-color-name="@color.Color?.Colorname"></div>
                       @* <div class="">
                         <a href="javascript:;">
                           <img src="assets/images/featured-products/02.webp" width="65" alt="">
@@ -282,7 +282,7 @@
                         continue;
                     }
                      <div class="">
-                       <button type="button" class="size-box" data-size-id="@size.Size?.Id">@size.Size?.Sizename</button>
+                       <button type="button" class="size-box" data-size-name="@size.Size?.Sizename" data-size-id="@size.Size?.Id">@size.Size?.Sizename</button>
                      </div>
                      @* <div class="">
                       <button type="button">S</button>
@@ -309,8 +309,8 @@
       <input type="number" class="form-control text-center" id="quantity-value" style="width: 70px;" value="1" min="1">
       <button class="btn btn-outline-dark btn-ecomm" type="button" id="increase-num" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">+</button>
     </div>
-    <a href="javascript:;" class="btn btn-lg btn-dark btn-ecomm px-5 py-3 col-lg-6"><i class="bi bi-basket2 me-2"></i>Add to Cart</a>
-    @* <a href="javascript:;" class="btn btn-lg btn-outline-dark btn-ecomm px-5 py-3"><i class="bi bi-suit-heart me-2"></i>Wishlist</a> *@
+    <a href="javascript:;" id="add-cart-detail" data-product-id="@Model.Id" data-product-name="@Model.ProductName" class="btn btn-lg btn-dark btn-ecomm px-5 py-3 flex-grow-1"><i
+                        class="bi bi-basket2 me-2"></i>Add to Cart</a>    @* <a href="javascript:;" class="btn btn-lg btn-outline-dark btn-ecomm px-5 py-3"><i class="bi bi-suit-heart me-2"></i>Wishlist</a> *@
   </div>
 </div>
                   <hr class="my-3">
@@ -802,12 +802,127 @@ var variant_url='@Url.Action("VariantProduct","HomePage",new{id="__product_id__"
       },
       error:function(xhr,status)
       {
-        alert(xhr.responseText);
+        alert(xhr.responseText);                
       }
 
-   }); 
+   });
 
+    var add_cart_details=document.querySelectorAll("#add-cart-detail");
+
+    add_cart_details.forEach((cart,index)=>{
+     cart.addEventListener("click",()=>{
+     var product_id=cart.getAttribute("data-product-id");
+     var product_name=cart.getAttribute("data-product-name");
+     var product_price = document.getElementById(`product-detail-price-${product_id}`).innerHTML;
+     var size_value='';
+     var color_value ='';
+
+     boxes.forEach(box=>{
+       if(box.classList.contains("clicked"))
+       {
+        color_value=box.getAttribute("data-color-name");
+       }
+     });
+
+     sizes.forEach(size=>{
+       if(size.classList.contains("click-size"))
+       {
+        size_value=size.getAttribute("data-size-name");
+       }
+     });
+
+
+     if(color_value=='' || size_value=='')
+     {
+       document.getElementById("toast-title").innerHTML="Add To Cart";
+                
+                document.getElementById("toast-message").innerHTML="Please select color and size";
+                
+                var toastEl = document.querySelector('.toast');
+
+                toastEl.classList.add('bg-danger');
+               
+                var toast = new bootstrap.Toast(toastEl);
+                
+                toast.show();
+          return;
+     }
+     
+     let formData =new FormData();
+
+     formData.append("product_id",product_id);
+
+     formData.append("product_name",product_name);
+
+     formData.append("price",product_price);
+
+     formData.append("color",color_value);
+
+     formData.append("size",size_value);
+
+     formData.append("quantity",1);
+
+      $.ajax({
+            url:"@Url.Action("addItemToCart","Cart")",
+            type:"POST",
+            data:formData,
+            contentType: false,
+            processData: false,
+            success:function(response)
+            {   
+                const status=response.status;
+                const message = response.message;
+                const data=response.data;
+            if(data!="")
+             {  
+                $("#count-cart").text(data.length);
+
+                sessionStorage.setItem("count-cart",data.length);
+               
+                var section_url="@Url.Action("SubCartPartialView","Cart")";
+                   $.ajax({
+                    url:section_url,
+                    type:"POST",
+                    success: function(partialHtml) {
+                        $('#sub-cart-section').html(partialHtml); 
+                    }
+                });
+            }
+                document.getElementById("toast-title").innerHTML="Add To Cart";
+
+                document.getElementById("toast-message").innerHTML=message;
+
+                var toastEl = document.querySelector('.toast');
+
+
+                if(status==1)
+                {
+                 toastEl.classList.add('bg-success');
+                }
+            else
+            {
+                toastEl.classList.add('bg-danger');
+            }
+                var toast = new bootstrap.Toast(toastEl);
+                
+                 toast.show();
+            },
+            error:function(xhr, status, error)
+            { 
+                document.getElementById("toast-title").innerHTML="Add To Cart";
+                document.getElementById("toast-message").innerHTML=xhr.responseText;
+                var toastEl = document.querySelector('.toast');
+                toastEl.classList.add('bg-danger');
+                var toast = new bootstrap.Toast(toastEl);                
+                toast.show();
+            }
+        });
+     });
     });
+
+    
+    });
+
 </script>
 
 

@@ -559,14 +559,11 @@
       
         <div class="col">
           <div class="footer-widget-8">
-            <h5 class="mb-3 fw-bold">Company</h5>
+            <h5 class="mb-3 fw-bold">Customer Services</h5>
              <ul class="widget-link list-unstyled">
-               <li><a href="javascript:;">About Us</a></li>
-               <li><a href="javascript:;">Contact Us</a></li>
-               <li><a href="javascript:;">FAQ</a></li>
-               <li><a href="javascript:;">Privacy</a></li>
-               <li><a href="javascript:;">Terms</a></li>
-               <li><a href="javascript:;">Complaints</a></li>
+               <li><a href="@Url.Action("StaticPage","StaticPage",new{page_name="about"})">About Us</a></li>
+               <li><a href="@Url.Action("StaticPage","StaticPage",new{page_name="privacy"})">Privacy</a></li>
+               <li><a href="@Url.Action("StaticPage","StaticPage",new{page_name="term"})">Terms</a></li>
              </ul>
           </div>
         </div>
@@ -1040,17 +1037,14 @@
     { 
       $("#count-cart").text("0");
     } *@
-  
-    const cart = $("#cart-hover");
-    const offcanvasElement=$("#offcanvasRight")[0];
-    const bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
-    
-    cart.on('mouseenter',()=>{
-    bsOffcanvas.show();
+
+
+  const cart = $("#cart-hover");        
+  cart.on('mouseenter',()=>{
+ const offcanvasElement=$("#offcanvasRight")[0];
+  const bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);    
+  bsOffcanvas.show();    
     });
-
-
-
   });
 </script>
 

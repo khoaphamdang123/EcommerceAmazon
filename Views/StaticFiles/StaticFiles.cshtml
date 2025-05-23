@@ -22,6 +22,7 @@
   {
    status_delete=Convert.ToInt32(TempData["Status_Delete"]);
   }
+
   var message_delete =TempData["Message_Delete"];
 
 }
@@ -196,7 +197,7 @@
                 </table>
                 </div>
     <div class="pagination-container mt-4">
-      <div class="page-total">Tổng số trang:@Model?.totalCount</div>
+      <div class="page-total">Tổng số trang tĩnh:@Model?.totalCount</div>
       <div class="page-list justify-content-center">
      @if(Model!=null && Model.hasPreviousPage)
      {

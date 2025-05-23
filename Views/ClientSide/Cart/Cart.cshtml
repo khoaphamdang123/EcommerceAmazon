@@ -39,7 +39,6 @@
          @Html.Partial("~/Views/ClientSide/Cart/_CartPartial.cshtml",cart)
       </div>
        
-       </div>
 @*   
         <section class="cart-area pt-120 pb-120">
             <div class="container">
@@ -275,13 +274,13 @@
                     attachRemoveButtonListeners();
                     attatchAddValue();
                     var section_url="@Url.Action("SubCartPartialView","Cart")";
-
                    $.ajax({
                     url:section_url,
                     type:"POST",
-                    success: function(partialHtml){
+                    success: function(partialHtml)
+                    {
                         $('#sub-cart-section').html(partialHtml);
-                        @* var count_cart=document.getElementById("count-cart").textContent;
+                          @* var count_cart=document.getElementById("count-cart").textContent;
                         alert(count_cart); *@
                         var count_cart=$("#count-cart").text();
                         count_cart=parseInt(count_cart)-1;

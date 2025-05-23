@@ -3,5 +3,10 @@
     string content=ViewBag.content;
     var categories=ViewBag.categories as List<Category>;
 }
-
-@Html.Raw(content)
+<div class="page-content">
+<div class="d-flex justify-content-center align-items-center min-vh-80">
+    <div class="text-center">
+        @Html.Raw(content)
+    </div>
+</div>
+</div>
