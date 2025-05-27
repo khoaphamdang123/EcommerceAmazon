@@ -202,10 +202,10 @@ public class BannerListService : IBannerListRepository
         }
       }
       this._context.Banners.Update(banner_ob);
-      await this.saveChanges();
+
+      await this.saveChanges();      
 
       this._logger.LogInformation("Banner updated success");
-
     }
 
     else
