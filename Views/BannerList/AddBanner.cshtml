@@ -183,13 +183,18 @@
   document.getElementById("upload").addEventListener("change",()=>
   {
     var image_input=document.getElementById("upload");
+    
     var image_hoder=document.getElementById("uploadedAvatar");
+    
     const file=image_input.files[0];
+    
     if(file)
     {
      const reader = new FileReader();
-     reader.onload=(e)=>{
-        image_hoder.src=e.target.result;
+
+     reader.onload=(e)=>
+     {
+        image_hoder.src=e.target.result;        
      }
      reader.readAsDataURL(file);
     }

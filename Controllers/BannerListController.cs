@@ -74,8 +74,16 @@ public class BannerListController : BaseAdminController
   public async Task<IActionResult> AddBanner(BannerModel banner)
   {
   try{
-
-    int created_res=await this._banner.addBanner(banner);
+      int created_res = 0;
+      try
+      {
+         created_res = await this._banner.addBanner(banner);
+      }
+      catch(Exception er)
+      {
+        Console.WriteLine("Add Banner Exception:"+er.Message);
+        this._logger.LogTrace("Add Banner Exception:"+er.Message);
+      }
     ViewBag.Status=created_res;
     if(created_res==0)
     {
@@ -113,9 +121,17 @@ public class BannerListController : BaseAdminController
     [HttpPost]
 
     public async Task<IActionResult> BannerInfo(int id,BannerModel banner)
-    {   
-    
-        int update_res=await this._banner.updateBanner(id,banner);
+    {
+    int update_res = 0;
+    try
+    {
+      update_res = await this._banner.updateBanner(id, banner);
+    }
+    catch (Exception er)
+    {
+        Console.WriteLine("Update Banner Exception:" + er.Message);
+        this._logger.LogTrace("Update Banner Exception:" + er.Message);
+    }
         ViewBag.Status=update_res;
         if(update_res==0)
         {

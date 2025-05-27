@@ -42,7 +42,7 @@ public class StaticFilesService:IStaticFilesRepository
    //var users=this._userManager.Users;   
    var paging_list_file=PageList<StaticFile>.CreateItem(list_file.AsQueryable(),page,page_size);
    
-   return paging_list_file;
+   return paging_list_file;   
   }
 
   public async Task<int> addPage(StaticFile file)
@@ -51,6 +51,7 @@ public class StaticFilesService:IStaticFilesRepository
     try
     {
   var check_page_exist=await this.findStaticFileByName(file.Filename);
+  
   if(check_page_exist!=null)
   {
     created_res=-1;

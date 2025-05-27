@@ -857,160 +857,161 @@ public async Task<int> addNewProductByLink(string link,string link_background,in
     Console.WriteLine("Request_url:"+request_url);
     DateTime startTime = DateTime.Now;
     var response = await client.GetAsync(request_url);
-    if(response.IsSuccessStatusCode)
-    { 
-    DateTime endTime = DateTime.Now;
+    
+    if (response.IsSuccessStatusCode)
+          {
+            DateTime endTime = DateTime.Now;
 
-    Console.WriteLine("Time taken to get response:"+(endTime-startTime).TotalSeconds);
+            Console.WriteLine("Time taken to get response:" + (endTime - startTime).TotalSeconds);
 
-      var data = await response.Content.ReadAsStringAsync();
+            var data = await response.Content.ReadAsStringAsync();
 
-      var product_data=JsonConvert.DeserializeObject<ProductAmazon>(data);
+            var product_data = JsonConvert.DeserializeObject<ProductAmazon>(data);
 
-      if(product_data!=null)
-      {
-       string product_name=product_data.Name;
+            if (product_data != null)
+            {
+              string product_name = product_data.Name;
 
-      var check_product_exist=await this._context.Products.FirstOrDefaultAsync(c=>c.ProductName==product_name);
+              var check_product_exist = await this._context.Products.FirstOrDefaultAsync(c => c.ProductName == product_name);
 
-      if(check_product_exist!=null)
-      {
-      return -1;
-      }
-       
-       string product_price=product_data.Pricing.Replace("$","").Replace(".",",").Trim();
-       
-       string full_description = product_data.Full_Description;
-       
-       string small_description = product_data.Small_Description;       
-       
-       string back_avatar= product_data.Images[0];
-       
-       string front_avatar=link_background;
-       
-       string manufacturer = product_data.Product_Information.Manufacturer;
-       
-       string package_dimensions = product_data.Product_Information.Package_Dimensions;
-       
-       string model = product_data.Product_Information.Item_Model_Number;
-       
-       string date_first_available = product_data.Product_Information.Date_First_Available;
-       
-       List<string> sizes=new List<string>();
-       
-       var size_list = product_data.Customization_Options.Size;
-       
-       foreach(var size in size_list)
-       {
-          sizes.Add(size.Value);
-       } 
+              if (check_product_exist != null)
+              {
+                return -1;
+              }
 
- string created_date=DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss");
- 
- string updated_date = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss");
+              string product_price = product_data.Pricing.Replace("$", "").Replace(".", ",").Trim();
 
- List<string> colors=new List<string>(){"Blue","Pink","Black","White"};
+              string full_description = product_data.Full_Description;
 
- if(colors.Count<sizes.Count)
- {
-  for(int i=colors.Count;i<sizes.Count;i++)
-  {
-   string color="";
-   colors.Add(color);  
-  }
- }
+              string small_description = product_data.Small_Description;
 
- List<Variant> variant=new List<Variant>();
+              string back_avatar = product_data.Images[0];
 
- var existingColors = await _context.Colors
-    .Where(c => colors.Contains(c.Colorname))
-    .ToDictionaryAsync(c => c.Colorname, c => c);
-var existingSizes = await _context.Sizes
-    .Where(s => sizes.Contains(s.Sizename))
-    .ToDictionaryAsync(s => s.Sizename, s => s);
+              string front_avatar = link_background;
 
-var newColors = new List<Models.Color>();
-var newSizes = new List<Models.Size>();
-var variants = new List<Variant>();
+              string manufacturer = product_data.Product_Information.Manufacturer;
 
-foreach (var size in sizes)
-{
-    if (string.IsNullOrEmpty(size)) continue;
+              string package_dimensions = product_data.Product_Information.Package_Dimensions;
 
-    foreach (var color in colors)
-    {
-        if (string.IsNullOrEmpty(color)) continue;
+              string model = product_data.Product_Information.Item_Model_Number;
 
-        if (!existingColors.TryGetValue(color, out var colorObj))
-        {
-            colorObj = new Models.Color { Colorname = color };
-            newColors.Add(colorObj);
-            existingColors[color] = colorObj;
-        }
+              string date_first_available = product_data.Product_Information.Date_First_Available;
 
-        if (!existingSizes.TryGetValue(size, out var sizeObj))
-        {
-            sizeObj = new Models.Size { Sizename = size };
-            newSizes.Add(sizeObj);
-            existingSizes[size] = sizeObj;
-        }
+              List<string> sizes = new List<string>();
 
-        var variant_obj = new Variant
-        {
-            Colorid = colorObj?.Id,
-            Sizeid = sizeObj?.Id,
-            Price = string.IsNullOrEmpty(product_price) ? "" : product_price
-        };
+              var size_list = product_data.Customization_Options.Size;
 
-        if (colorObj != null || sizeObj != null)
-        {
-            variants.Add(variant_obj);
-        }
-    }
-}
+              foreach (var size in size_list)
+              {
+                sizes.Add(size.Value);
+              }
 
-if (newColors.Any())
-{
-    await _context.Colors.AddRangeAsync(newColors);
-}
-if (newSizes.Any())
-{
-    await _context.Sizes.AddRangeAsync(newSizes);
-}
+              string created_date = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss");
 
-await _context.SaveChangesAsync();
+              string updated_date = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss");
 
-variant.AddRange(variants);
+              List<string> colors = new List<string>() { "Blue", "Pink", "Black", "White" };
 
- List<ProductImage> product_images=new List<ProductImage>();
+              if (colors.Count < sizes.Count)
+              {
+                for (int i = colors.Count; i < sizes.Count; i++)
+                {
+                  string color = "";
+                  colors.Add(color);
+                }
+              }
 
- if(product_data.Images!=null && product_data.Images.Count>1)
- {
-  for(int i=1;i<product_data.Images.Count;i++)
-  {
-   string image_url=product_data.Images[i];
-   var product_img=new ProductImage{Avatar=image_url};
-   product_images.Add(product_img);   
-  }
- }
-   
-   var latest_sort_id=await this._context.Products.MaxAsync(c=>c.SortId)??0;
+              List<Variant> variant = new List<Variant>();
 
- var new_sort_id=latest_sort_id+1;
+              var existingColors = await _context.Colors
+                 .Where(c => colors.Contains(c.Colorname))
+                 .ToDictionaryAsync(c => c.Colorname, c => c);
+              var existingSizes = await _context.Sizes
+                  .Where(s => sizes.Contains(s.Sizename))
+                  .ToDictionaryAsync(s => s.Sizename, s => s);
 
- var product= new Product{ProductName=product_name,CategoryId=category,Price=product_price,Quantity=100,Status="Còn hàng",Description=full_description,Frontavatar=front_avatar,Backavatar=back_avatar,SortId=new_sort_id,SortProminentId=new_sort_id,Small_Description=small_description,Model=model,Manufacturer=manufacturer,Asin=asin,Package_Dimensions=package_dimensions,Date_First_Available=date_first_available,CreatedDate=created_date,UpdatedDate=updated_date,ProductImages=product_images,Variants=variant};
+              var newColors = new List<Models.Color>();
+              var newSizes = new List<Models.Size>();
+              var variants = new List<Variant>();
 
-  await this._context.Products.AddAsync(product);
+              foreach (var size in sizes)
+              {
+                if (string.IsNullOrEmpty(size)) continue;
 
-  await this.saveChanges();
+                foreach (var color in colors)
+                {
+                  if (string.IsNullOrEmpty(color)) continue;
 
-  created_res=1;
-  }
- }
- else
- {
-  Console.WriteLine("Request API Failed:"+response.StatusCode);
- }
+                  if (!existingColors.TryGetValue(color, out var colorObj))
+                  {
+                    colorObj = new Models.Color { Colorname = color };
+                    newColors.Add(colorObj);
+                    existingColors[color] = colorObj;
+                  }
+
+                  if (!existingSizes.TryGetValue(size, out var sizeObj))
+                  {
+                    sizeObj = new Models.Size { Sizename = size };
+                    newSizes.Add(sizeObj);
+                    existingSizes[size] = sizeObj;
+                  }
+
+                  var variant_obj = new Variant
+                  {
+                    Colorid = colorObj?.Id,
+                    Sizeid = sizeObj?.Id,
+                    Price = string.IsNullOrEmpty(product_price) ? "" : product_price
+                  };
+
+                  if (colorObj != null || sizeObj != null)
+                  {
+                    variants.Add(variant_obj);
+                  }
+                }
+              }
+
+              if (newColors.Any())
+              {
+                await _context.Colors.AddRangeAsync(newColors);
+              }
+              if (newSizes.Any())
+              {
+                await _context.Sizes.AddRangeAsync(newSizes);
+              }
+
+              await _context.SaveChangesAsync();
+
+              variant.AddRange(variants);
+
+              List<ProductImage> product_images = new List<ProductImage>();
+
+              if (product_data.Images != null && product_data.Images.Count > 1)
+              {
+                for (int i = 1; i < product_data.Images.Count; i++)
+                {
+                  string image_url = product_data.Images[i];
+                  var product_img = new ProductImage { Avatar = image_url };
+                  product_images.Add(product_img);
+                }
+              }
+
+              var latest_sort_id = await this._context.Products.MaxAsync(c => c.SortId) ?? 0;
+
+              var new_sort_id = latest_sort_id + 1;              
+
+              var product = new Product { ProductName = product_name, CategoryId = category, Price = product_price, Quantity = 100, Status = "Còn hàng", Description = full_description, Frontavatar = front_avatar, Backavatar = back_avatar, SortId = new_sort_id, SortProminentId = new_sort_id, Small_Description = small_description, Model = model, Manufacturer = manufacturer, Asin = asin, Package_Dimensions = package_dimensions, Date_First_Available = date_first_available, CreatedDate = created_date, UpdatedDate = updated_date, ProductImages = product_images, Variants = variant };
+
+              await this._context.Products.AddAsync(product);
+
+              await this.saveChanges();
+
+              created_res = 1;
+            }
+          }
+          else
+          {
+            Console.WriteLine("Request API Failed:" + response.StatusCode);
+          }
 }
   }
 }
