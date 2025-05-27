@@ -132,6 +132,7 @@ public class BannerListController : BaseAdminController
         Console.WriteLine("Update Banner Exception:" + er.Message);
         this._logger.LogTrace("Update Banner Exception:" + er.Message);
     }
+
         ViewBag.Status=update_res;
         if(update_res==0)
         {
