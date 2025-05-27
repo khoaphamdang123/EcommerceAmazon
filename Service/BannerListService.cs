@@ -142,7 +142,7 @@ public class BannerListService : IBannerListRepository
     this._logger.LogInformation("Update Banner Id:" + id);
 
     this._logger.LogInformation("Update Banner Name:" + banner.BannerName);
-    
+
     if (banner_ob != null)
     {
       updated_res = 1;
@@ -174,22 +174,32 @@ public class BannerListService : IBannerListRepository
 
         this._logger.LogInformation("File path here is:" + file_path);
 
-
-        using (var fileStream = new FileStream(file_path, FileMode.Create))
+        try
         {
-          await avatar_obj.CopyToAsync(fileStream);
+
+          using (var fileStream = new FileStream(file_path, FileMode.Create))
+          {
+            await avatar_obj.CopyToAsync(fileStream);
+          }
+          avatar_url = file_path;
+
+          this._logger.LogInformation("Current Avatart URL is:" + avatar_url);
+
+
+          string curr_image = banner_ob.Image;
+
+          this._logger.LogInformation("Current Image is:" + curr_image);
+
+          if (!string.IsNullOrEmpty(curr_image))
+          {
+            await this._sp_services.removeFiles(curr_image);
+          }
+          banner_ob.Image = avatar_url;
         }
-        avatar_url = file_path;
-
-        string curr_image = banner_ob.Image;
-
-        this._logger.LogInformation("Current Image is:" + curr_image);
-
-        if (!string.IsNullOrEmpty(curr_image))
+        catch (Exception ex)
         {
-          await this._sp_services.removeFiles(curr_image);
+          this._logger.LogError("Update Banner Exception:" + ex.Message);
         }
-        banner_ob.Image = avatar_url;
       }
       this._context.Banners.Update(banner_ob);
       await this.saveChanges();
