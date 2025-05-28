@@ -229,32 +229,30 @@
              <h5 class="fw-bold mb-4">Order Summary</h5>
              <div class="hstack align-items-center justify-content-between">
                <p class="mb-0">Bag Total</p>
-               <p class="mb-0">$599.00</p>
+               <p class="mb-0">@total_amount</p>
              </div>
-             <hr>
+             @* <hr>
              <div class="hstack align-items-center justify-content-between">
               <p class="mb-0">Bag discount</p>
               <p class="mb-0 text-success">- $178.00</p>
-            </div>
+            </div> *@
             <hr>
             <div class="hstack align-items-center justify-content-between">
               <p class="mb-0">Delivery</p>
-              <p class="mb-0">$29.00</p>
+              <p class="mb-0">$@total_delivery</p>
             </div>
             <hr>
             <div class="hstack align-items-center justify-content-between fw-bold text-content">
               <p class="mb-0">Total Amount</p>
-              <p class="mb-0">$393.00</p>
+              <p class="mb-0">$@(total_amount+total_delivery)</p>
             </div>
              <div class="d-grid mt-4">
                 <button type="button" class="btn btn-dark btn-ecomm py-3 px-5">Continue</button>
              </div>
            </div>
          </div>
-
 		 </div>
-	 </div><!--end row-->
-       
+	 </div>
     </div>
   </section>
 
@@ -614,10 +612,10 @@
 <script src="https://www.paypal.com/sdk/js?client-id=@paypal_client_id" data-namespace="paypal_sdk"></script>
 
 
-
 <script>
   
     var payment_method='';
+    
 
     const getAccordionItem=()=>
     {
