@@ -159,7 +159,7 @@ public async Task<JsonResult> productDetailInfo(int id)
     var product = await this._product.findProductById(id);
 
     if(product!=null)
-    {
+{
 var settings = new JsonSerializerSettings
 {
     PreserveReferencesHandling = PreserveReferencesHandling.Objects,

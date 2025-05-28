@@ -7,7 +7,6 @@
     
     string product_count=Model.item.Count.ToString();
     
-
     Console.WriteLine("Count Product List:"+Model.item.Count);
     
     var count_reviews=ViewBag.count_reviews as Dictionary<string,int>;
@@ -37,6 +36,7 @@
                         
                   <div class="product-grid mt-4">
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                
                 @foreach(var product in Model.item)
                 {
                 string regex_product=Regex.Replace(product.ProductName, @"[^\w\d+,]", "-");
@@ -50,7 +50,8 @@
                     </div>
                         <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
                         @if(product.Backavatar!=null)
-                        { @if(product.Backavatar.Contains("https") || product.Backavatar.Contains("http"))
+                        { 
+                          @if(product.Backavatar.Contains("https") || product.Backavatar.Contains("http"))
                           {
                           <img src="@product.Backavatar" class="card-img-top" alt="...">
                           }
@@ -58,6 +59,7 @@
                           {
                             <img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="...">
                           }
+                                      
                           }
                         </a>
                       </div>
@@ -255,7 +257,7 @@
                         @if (Model.currentPage > 1)
                         {
                             <li class="page-item">
-                                <a class="page-link" href="@Url.Action("ProductsPaging", new {page_size=Model.pageSize, page = Model.currentPage-1,products=Model.item,type=type})" id="page-btn">
+                                <a class="page-link" href="@Url.Action("ProductsPaging", new {page_size=Model.pageSize, page = Model.currentPage-1,products=string.Join(",", Model.item.Select(p => p.Id)),type=type})" id="page-btn">
                                  Prev
                                 </a>
                             </li>
@@ -263,7 +265,7 @@
 
                         @if (Model.totalPage > 6 && Model.currentPage > 4)
                         {
-                            <li class="page-item"><a class="page-link" href="@Url.Action("ProductsPaging", new {page_size=Model.pageSize, page = 1,products=Model.item,type=type })" id="page-btn">1</a></li>
+                            <li class="page-item"><a class="page-link" href="@Url.Action("ProductsPaging", new {page_size=Model.pageSize, page = 1,products=string.Join(",", Model.item.Select(p => p.Id)),type=type })" id="page-btn">1</a></li>
                             <li class="page-item"><span class="page-link">...</span></li>
                         }
 
@@ -284,7 +286,7 @@
                             for (int i = startPage; i <= endPage; i++)
                             {
                                 <li  class="page-item">
-                                    <a class="page-link" href="@Url.Action("ProductsPaging", new {page_size=Model.pageSize, page = i,products=Model.item,type=type })" id="page-btn" class="@(Model.currentPage== i ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("ProductsPaging", new {page_size=Model.pageSize, page = i,products=string.Join(",", Model.item.Select(p => p.Id)),type=type })" id="page-btn" class="@(Model.currentPage== i ? "active" : "")">
                                         @i
                                     </a>
                                 </li>
@@ -294,14 +296,14 @@
                         @if (Model.totalPage > 6 && Model.currentPage< Model.totalPage - 3)
                         {
                             <li class="page-item"><span>...</span></li>
-                            <li><a class="page-link" href="@Url.Action("ProductsPaging", new {page_size=Model.pageSize, page = Model.totalPage,products=Model.item,type=type })"  id="page-btn">@Model.totalPage</a></li>
+                            <li><a class="page-link" href="@Url.Action("ProductsPaging", new {page_size=Model.pageSize, page = Model.totalPage,products=string.Join(",", Model.item.Select(p => p.Id)),type=type })"  id="page-btn">@Model.totalPage</a></li>
                         }
 
                         @* Next Button *@
                         @if (Model.currentPage < Model.totalPage)
                         {
                             <li class="page-item">
-                                <a class="page-link" href="@Url.Action("ProductsPaging", new {page_size=Model.pageSize, page = Model.currentPage+1,products=Model.item,type=type })"  id="page-btn">
+                                <a class="page-link" href="@Url.Action("ProductsPaging", new {page_size=Model.pageSize, page = Model.currentPage+1,products=string.Join(",", Model.item.Select(p => p.Id)),type=type })"  id="page-btn">
                                    Next
                                 </a>
                             </li>
@@ -309,8 +311,8 @@
                         @if (Model.currentPage == Model.totalPage)
                         {
                             <li class="disabled page-item">
-                                <a class="page-link" href="@Url.Action("ProductsPaging", new {page_size=Model.pageSize, page = Model.currentPage,products=Model.item,type=type })" id="page-btn">
-                                Next
+                                <a class="page-link" href="@Url.Action("ProductsPaging", new {page_size=Model.pageSize, page = Model.currentPage,products=string.Join(",", Model.item.Select(p => p.Id)),type=type })" id="page-btn">
+                                Next                                
                                 </a>
                             </li>
                         }
@@ -330,15 +332,18 @@
       
       var sizes = document.querySelectorAll(".size-box");
       
-      var list_variant=[];
+      var list_variant=[];      
 
-    
      boxes.forEach(box => 
      {
-      box.addEventListener('click', () => {
+      box.addEventListener('click', () => 
+      {
         boxes.forEach(b => b.classList.remove('clicked'));
+        
         box.classList.add('clicked');
+        
         var color_id=box.getAttribute("data-color-id");
+        
         for(let i =0;i<list_variant.length;i++)
         {
           let current_variant = list_variant[i];
@@ -376,7 +381,7 @@
         }
       });
     });
-
+ 
       sizes.forEach(size => {
        size.addEventListener('click', () => {
         sizes.forEach(b => b.classList.remove('click-size'));
@@ -405,10 +410,12 @@
              else
              {
               box.classList.remove("disabled");
+
               if(box.classList.contains("clicked"))
               {
-                document.getElementById(`product-detail-price-${current_variant.Productid}`).innerHTML='$'+current_variant_price;
+                document.getElementById(`product-detail-price-${current_variant.Productid}`).innerHTML='$'+current_variant_price;                
               }
+
              }
             });
           } 
@@ -545,11 +552,10 @@
                     url:section_url,
                     type:"POST",
                     success: function(partialHtml) {
-                        $('#sub-cart-section').html(partialHtml); 
+                        $('#sub-cart-section').html(partialHtml);                         
                     }
                 });
-            }
-                
+            }  
                 document.getElementById("toast-title").innerHTML="Add To Cart";
               
                 document.getElementById("toast-message").innerHTML=message;
@@ -558,10 +564,17 @@
 
                 if(status==1)
                 {
-                 toastEl.classList.add('bg-success');
+                 if(toastEl.classList.contains('bg-danger'))
+                 {
+                    toastEl.classList.remove('bg-danger');
+                 }
+                 toastEl.classList.add('bg-success');                                  
                 }
             else
-            {
+            {   if(toastEl.classList.contains('bg-success'))
+                {
+                    toastEl.classList.remove('bg-success');
+                }
                 toastEl.classList.add('bg-danger');
             }
                 var toast = new bootstrap.Toast(toastEl);

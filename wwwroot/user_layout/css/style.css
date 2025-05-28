@@ -928,15 +928,27 @@ h6 {
   border-color: #ffffff;
 }
 
-.bubscribe-button:focus {
+.bubscribe-button:focus 
+{
   border-color: rgba(255, 255, 255, 0.71);
   box-shadow: 0 0 0 .25rem rgba(255, 255, 255, 0.25)
 }
 
+.top-header {
+  display: block;
+  width: 100%;
+  height: auto;        
+  padding-bottom: 1rem; 
+  overflow: visible;  
+}
+
+.search-bar-wrapper {
+  width: 100%;
+  padding: 0 1rem;
+}
 
 
 
-/* breadcrumb */
 
 .breadcrumb li a {
   color: #636363;
@@ -946,8 +958,6 @@ h6 {
   color: #222121;
 }
 
-
-/* Footer */
 
 .footer-section .widget-link li {
   margin-bottom: 0.3rem;

@@ -365,7 +365,8 @@ public async Task<IEnumerable<Product>>getProductBySubCategory(int sub_cat)
 }
 
 public async Task<IEnumerable<Product>> filterProductByNameAndCategory(string product,string category)
-{ List<Product> products = await this.getAllProductList();
+{
+  List<Product> products = await this.getAllProductList();
    
   if(!string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(product))
 {

@@ -1334,11 +1334,20 @@
 
                 if(status==1)
                 {
+                if(toastEl.classList.contains('bg-danger'))
+                {
+                  toastEl.classList.remove('bg-danger');
+                }
                  toastEl.classList.add('bg-success');
                 }
                 
             else
-            {
+            { 
+              if(toastEl.classList.contains('bg-success'))
+                {
+                  toastEl.classList.remove('bg-success');                  
+                }
+                
                 toastEl.classList.add('bg-danger');
             }
                 var toast = new bootstrap.Toast(toastEl);

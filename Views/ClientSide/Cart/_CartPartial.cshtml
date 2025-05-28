@@ -1,5 +1,5 @@
 @model List<CartModel>
-
+@using System.Globalization;
 @{
     double total_amount=0;
     double total_delivery=Model.Count>0?5:0;
@@ -7,10 +7,9 @@
     {
         double discount=string.IsNullOrEmpty(item.Product.Discount.ToString()) ? 0 : Convert.ToInt32(item.Product.Discount);
         string price_value=!string.IsNullOrEmpty(item.Price) ? item.Price : item.Product.Price;
-        price_value=price_value.Replace("$","");
-        double current_price=(Convert.ToDouble(price_value)-(Convert.ToDouble(price_value)*(discount)/100));
+        price_value=price_value.Replace("$","").Replace(",",".");
+        double current_price=(double.Parse(price_value,CultureInfo.InvariantCulture)-(double.Parse(price_value,CultureInfo.InvariantCulture)*(discount)/100));
         total_amount+=current_price*item.Quantity;
-        
     }
 }
 
@@ -32,9 +31,9 @@
 			  <div class="card-body">
 			    <div class="d-flex flex-column flex-lg-row gap-3">
 				   <div class="product-img">
- @if(cart.Product.Backavatar.Contains("https") || cart.Product.Backavatar.Contains("http"))
+      @if(cart.Product.Backavatar.Contains("https") || cart.Product.Backavatar.Contains("http"))
               {
-                <img src="@cart.Product.Backavatar"  width="150" alt="...">
+                <img src="@cart.Product.Backavatar" width="150" alt="...">
               }
               else
               {
@@ -48,9 +47,9 @@
                 <div class="h6 fw-bold text-danger">(70% off)</div> *@
               </div>
 					  	 <div class="mt-3 hstack gap-2">
-                 <button type="button" class="btn btn-sm btn-light border rounded-0" data-bs-toggle="modal" data-bs-target="#SizeModal">Size : @cart.Size</button>
+                 <button type="button"  class="btn btn-sm btn-light border rounded-0" data-bs-toggle="modal" data-bs-target="#SizeModal">Size : @cart.Size</button>
                   <button type="button" class="btn btn-sm btn-light border rounded-0" data-bs-toggle="modal" data-bs-target="#SizeModal">Color : @cart.Color</button>
-                 <button type="button" class="btn btn-sm btn-light border rounded-0" data-bs-toggle="modal" data-bs-target="#QtyModal">Quantity : @cart.Quantity</button>
+                 <button type="button"  class="btn btn-sm btn-light border rounded-0" data-bs-toggle="modal" data-bs-target="#QtyModal">Quantity : @cart.Quantity</button>
 						</div>
 				   </div>
            <div class="d-none d-lg-block vr"></div>

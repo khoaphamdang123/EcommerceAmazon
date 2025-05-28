@@ -21,6 +21,8 @@
     List<string> sizes=new List<string>();
     
     List<string> colors = new List<string>();
+
+    int count_product_similar=0;
 @*     
     List<string> versions=new List<string>();
     
@@ -496,7 +498,13 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-4">
         @foreach(var product in product_by_category)
         {
-
+         count_product_similar++;
+        
+        if(count_product_similar>6)
+         {
+            break;            
+         }
+        
         if(product.ProductName==Model.ProductName)
         {
             continue;            
@@ -897,10 +905,17 @@ var variant_url='@Url.Action("VariantProduct","HomePage",new{id="__product_id__"
 
                 if(status==1)
                 {
+                if(toastEl.classList.contains('bg-danger'))
+                {
+                  toastEl.classList.remove('bg-danger');
+                }
                  toastEl.classList.add('bg-success');
                 }
             else
-            {
+            {   if(toastEl.classList.contains('bg-success'))
+                {
+                  toastEl.classList.remove('bg-success');
+                }
                 toastEl.classList.add('bg-danger');
             }
                 var toast = new bootstrap.Toast(toastEl);
