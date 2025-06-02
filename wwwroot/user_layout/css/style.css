@@ -664,6 +664,72 @@ h6 {
 }
 
 
+
+.steps {
+	display: flex;
+	width: 100%;
+}
+.steps-light .step-item {
+	color: #888a8c
+}
+.step-item {
+	flex-basis: 0;
+	flex-grow: 1;
+	transition: color 0.25s ease-in-out;
+	text-align: center;
+	text-decoration: none !important;
+}
+
+.steps-light .step-item.active .step-count, .steps-light .step-item.active .step-progress {
+	  color: #ffffff;
+    background-color: #30384a;    
+}
+
+.step-item:first-child .step-progress 
+{
+	border-radius: .125rem;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.steps-light .step-count, .steps-light .step-progress 
+{
+	color: #2e323e;
+    background-color: #eaf0f5;
+}
+.step-progress {
+	position: relative;
+	width: 100%;
+	height: .25rem;
+}
+.step-count {
+	position: absolute;
+	top: -.75rem;
+	left: 50%;
+	width: 1.625rem;
+	height: 1.625rem;
+	margin-left: -.8125rem;
+	border-radius: 50%;
+	font-size: .875rem;
+	line-height: 1.625rem;
+}
+.step-label 
+{
+	padding-top: 1.5625rem;
+}
+.step-label>i 
+{
+	margin-top: -.25rem;
+	margin-right: .425rem;
+	font-size: 1.5em;
+	vertical-align: middle;
+}
+.steps-light .step-item.active.current 
+{
+	color: #30384a;
+}
+
+
 .bs-toast[class^=bg-],.bs-toast[class*=" bg-"] {
   --bs-toast-header-color: var(--bs-white);
   --bs-toast-color: var(--bs-white)

@@ -35,12 +35,11 @@ public class CheckoutController : BaseController
     private readonly ISettingRepository _setting;
 
     private readonly SmtpService _smtpService;
-
-
+  
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     private readonly IPaymentRepository _payment;
-
+  
     private readonly IConfiguration _configuration;
 
     private readonly PaypalService _paypalService;
@@ -85,102 +84,205 @@ public class CheckoutController : BaseController
  {   var cart=this._cart.getCart();
     try
     {
-     if(cart==null || cart.Count==0)
-     {
-       return RedirectToAction("Cart","Cart");
-     }
-     string username=HttpContext.Session.GetString("UserName");
-
-     var payment_methods=await this._payment.getAllPayment();
-     
-    ViewBag.payment_methods=payment_methods;
-
-   int setting_status=await this._setting.getStatusByName("recaptcha");
-
-       if(setting_status==1)
-       {
-        ViewBag.SiteKey=this._recaptcha_response.SiteKey;
-       }
-       
-        bool is_saved_account=false;
-        
-        if(Request.Cookies["UserAccount"]!=null)
-        {
-            is_saved_account=true;
-            string account=Request.Cookies["UserAccount"];
-            Console.WriteLine("Account here is:"+account);
-            ViewBag.Account=account;
-            ViewBag.SavedAccount=is_saved_account;
-        }
-     var company = await this._user.findUserByName("company");
-
-        ViewBag.company=company;
-
-     Console.WriteLine("qr here");
-
-      Console.WriteLine("QR ENV:"+Environment.GetEnvironmentVariable("qr_code"));
-     if(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("qr_code")))
-     {
-    string[] email_list=company.Email.Split('#');
-    string email=email_list[0];    
-    string extra_info=email_list[1];
-    string bank_name="";
-    string account_num="";
-    string account_name="";
-    string qr_code="";    
-
-    if(!string.IsNullOrEmpty(extra_info))
-    {
-      string[] info_values=extra_info.Split('\n');
-      foreach(var info in info_values)
+      if (cart == null || cart.Count == 0)
       {
-        if(info.Contains("bank_name"))
-        {
-          bank_name=info.Split('~')[1].Trim();
-        }
-        else if(info.Contains("account_name"))
-        {
-          account_name=info.Split('~')[1].Trim();
-        }
-        else if(info.Contains("account_num"))
-        {
-       account_num=info.Split('~')[1].Trim();       
-        }
+        return RedirectToAction("Cart", "Cart");
       }
-    }
-    qr_code=this._sp.generateQRCode(bank_name,account_num,account_name);
-    Console.WriteLine("QRCODE:"+qr_code);
-    if(!string.IsNullOrEmpty(qr_code) && qr_code!="ERROR")
-    { this._logger.LogInformation("QR Code In Checkout did come here:"+qr_code);
-    Console.WriteLine("QR Code In Checkout did come here:"+qr_code);
-     Environment.SetEnvironmentVariable("qr_code",qr_code);
-    }
-  }
+      // string username = HttpContext.Session.GetString("UserName");
+
+      //  var payment_methods=await this._payment.getAllPayment();
+
+      // ViewBag.payment_methods=payment_methods;
+
+      //  int setting_status=await this._setting.getStatusByName("recaptcha");
+
+      //  if(setting_status==1)
+      //  {
+      //   ViewBag.SiteKey=this._recaptcha_response.SiteKey;
+      //  }
+
+      bool is_saved_account = false;
+
+      if (Request.Cookies["UserAccount"] != null)
+      {
+        is_saved_account = true;
+        string account = Request.Cookies["UserAccount"];
+        Console.WriteLine("Account here is:" + account);
+        ViewBag.Account = account;
+        ViewBag.SavedAccount = is_saved_account;
+      }
+      //  var company = await this._user.findUserByName("company");
+
+      //     ViewBag.company=company;
+
+      //  Console.WriteLine("qr here");
+
+      //  Console.WriteLine("QR ENV:"+Environment.GetEnvironmentVariable("qr_code"));
+
+      //   if(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("qr_code")))
+      //   {
+      //     string[] email_list = company.Email.Split('#');
+      //     string email = email_list[0];
+      //     string extra_info = email_list[1];
+      //     string bank_name = "";
+      //     string account_num = "";
+      //     string account_name = "";
+      //     string qr_code = "";
+
+      //     if (!string.IsNullOrEmpty(extra_info))
+      //     {
+      //       string[] info_values = extra_info.Split('\n');
+      //       foreach (var info in info_values)
+      //       {
+      //         if (info.Contains("bank_name"))
+      //         {
+      //           bank_name = info.Split('~')[1].Trim();
+      //         }
+      //         else if (info.Contains("account_name"))
+      //         {
+      //           account_name = info.Split('~')[1].Trim();
+      //         }
+      //         else if (info.Contains("account_num"))
+      //         {
+      //           account_num = info.Split('~')[1].Trim();
+      //         }
+      //       }
+      //     }
+      //     qr_code = this._sp.generateQRCode(bank_name, account_num, account_name);
+      //     Console.WriteLine("QRCODE:" + qr_code);
+      //     if (!string.IsNullOrEmpty(qr_code) && qr_code != "ERROR")
+      //     {
+      //       this._logger.LogInformation("QR Code In Checkout did come here:" + qr_code);
+      //       Console.WriteLine("QR Code In Checkout did come here:" + qr_code);
+      //       Environment.SetEnvironmentVariable("qr_code", qr_code);
+      //     }
+      //   }
+
     
-     if(string.IsNullOrEmpty(username))
-     {
-        return View("~/Views/ClientSide/Checkout/Checkout.cshtml",cart);
-     }
+      
 
-     var user=await this._user.findUserByName(username);
+    //   var user = await this._user.findUserByName(username);
 
-     ViewBag.user=user;    
+    //   ViewBag.user = user;    
+     
+    //   var company = await this._user.findUserByName("company");
+
+    //   ViewBag.company=company;
+
+    //  Console.WriteLine("qr here");
+
+    //  Console.WriteLine("QR ENV:"+Environment.GetEnvironmentVariable("qr_code"));
+
+    //   if(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("qr_code")))
+    //   {
+    //     string[] email_list = company.Email.Split('#');
+    //     string email = email_list[0];
+    //     string extra_info = email_list[1];
+    //     string bank_name = "";
+    //     string account_num = "";
+    //     string account_name = "";
+    //     string qr_code = "";
+
+    //     if (!string.IsNullOrEmpty(extra_info))
+    //     {
+    //       string[] info_values = extra_info.Split('\n');
+    //       foreach (var info in info_values)
+    //       {
+    //         if (info.Contains("bank_name"))
+    //         {
+    //           bank_name = info.Split('~')[1].Trim();
+    //         }
+    //         else if (info.Contains("account_name"))
+    //         {
+    //           account_name = info.Split('~')[1].Trim();
+    //         }
+    //         else if (info.Contains("account_num"))
+    //         {
+    //           account_num = info.Split('~')[1].Trim();
+    //         }
+    //       }
+    //     }
+    //     qr_code = this._sp.generateQRCode(bank_name, account_num, account_name);
+    //     Console.WriteLine("QRCODE:" + qr_code);
+    //     if (!string.IsNullOrEmpty(qr_code) && qr_code != "ERROR")
+    //     {
+    //       this._logger.LogInformation("QR Code In Checkout did come here:" + qr_code);
+    //       Console.WriteLine("QR Code In Checkout did come here:" + qr_code);
+    //       Environment.SetEnvironmentVariable("qr_code", qr_code);
+    //     }
+    //   }
     }
-    catch(Exception er)
-    {   
-        Console.WriteLine("Checkout Order Exception:"+er.Message);
+    catch (Exception er)
+    {
+      Console.WriteLine("Checkout Order Exception:" + er.Message);
 
-        this._logger.LogError("Checkout Cart Exception:"+er.Message);
+      this._logger.LogError("Checkout Cart Exception:" + er.Message);
     }
     return View("~/Views/ClientSide/Checkout/Checkout.cshtml",cart);    
  }
+
+
   [Route("checkout/partial_view")]
   [HttpPost]
   public async Task<IActionResult> UserLoginPartialView()
   {
     return PartialView("~/Views/Shared/_LoginUser.cshtml");    
   }
-  
+
+  [Route("checkout/{id}/payment")]
+  [HttpGet]
+  public async Task<IActionResult> CheckoutPayment(string id)
+  {
+    var cart = this._cart.getCart();
+
+    try
+    {
+
+      if (cart == null || cart.Count == 0)
+      {
+        return RedirectToAction("Cart", "Cart");
+      }
+      //  string username=HttpContext.Session.GetString("UserName");
+
+      var payment_methods = await this._payment.getAllPayment();
+
+      ViewBag.payment_methods = payment_methods;
+    }
+    catch (Exception er)
+    {
+      Console.WriteLine("Checkout Payment Exception:" + er.Message);
+      this._logger.LogError("Checkout Payment Exception:" + er.Message);
+    }
+    return View("~/Views/ClientSide/Checkout/CheckoutPayment.cshtml", cart);
+  } 
+
+  [Route("checkout/{id}/review")]
+  [HttpGet]
+  public async Task<IActionResult> CheckoutReview(string id)
+  {    
+     var cart=this._cart.getCart();
+
+    try
+    {
+
+     if(cart==null || cart.Count==0)
+     {
+       return RedirectToAction("Cart","Cart");
+     }
+    //  string username=HttpContext.Session.GetString("UserName");
+
+     var payment_methods=await this._payment.getAllPayment();
+     
+    ViewBag.payment_methods=payment_methods;
+    }
+    catch (Exception er)
+    {
+      Console.WriteLine("Checkout Review Exception:" + er.Message);
+
+      this._logger.LogError("Checkout Review Exception:" + er.Message);
+    }
+    return View("~/Views/ClientSide/Checkout/CheckoutReview.cshtml",cart);
+} 
 
 [Route("checkout/createOrder")]
 [HttpPost]

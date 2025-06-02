@@ -134,11 +134,11 @@
               <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
               @if(product.Backavatar.Contains("https") || product.Backavatar.Contains("http"))
               {
-                <img src="@product.Backavatar" class="card-img-top" alt="...">
+                <img src="@product.Backavatar" class="card-img-top" alt="..." style="width:250px!important;height:250px!important;">
               }
               else
               {
-                <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="...">
+                <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="..." style="width:250px!important;height:250px!important;">
             }
               </a>
             </div>
@@ -584,11 +584,11 @@
                     <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
    @if(product.Backavatar.Contains("https") || product.Backavatar.Contains("http"))
               {
-                <img src="@product.Backavatar" class="card-img-top" alt="...">
+                <img src="@product.Backavatar" class="card-img-top" alt="..." style="width:250px!important;height:250px!important;">
               }
               else
               {
-                <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="...">
+                <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="..." style="width:250px!important;height:250px!important;">
             }                    </a>
                   </div>
                   <div class="card-body">
@@ -628,11 +628,11 @@
                     <a href="product-details.html">
    @if(product.Backavatar.Contains("https") || product.Backavatar.Contains("http"))
               {
-                <img src="@product.Backavatar" class="card-img-top" alt="...">
+                <img src="@product.Backavatar" class="card-img-top" alt="..." style="width:250px!important;height:250px!important;">
               }
               else
               {
-                <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="...">
+                <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="..." style="width:250px!important;height:250px!important;">
             }                    </a>
                   </div>
                   <div class="card-body">
@@ -678,11 +678,11 @@
                     <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
    @if(product.Backavatar.Contains("https") || product.Backavatar.Contains("http"))
               {
-                <img src="@product.Backavatar" class="card-img-top" alt="...">
+                <img src="@product.Backavatar" class="card-img-top" alt="..." style="width:250px!important;height:250px!important;">
               }
               else
               {
-                <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="...">
+                <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="..." style="width:250px!important;height:250px!important;">
             }                    </a>
                   </div>
                   <div class="card-body">
@@ -1100,6 +1100,18 @@
 
   <script>
    
+function checkout()
+{
+const checkoutButton = document.getElementById("checkout");
+
+
+if(checkoutButton)
+ {
+  checkoutButton.addEventListener("click", () => {
+    window.location.href = "@Url.Action("Checkout", "Checkout")";    
+  });
+ }
+}
    document.addEventListener("DOMContentLoaded", function () 
    {
      var boxes = document.querySelectorAll(".color-box");
@@ -1322,7 +1334,8 @@
                     url:section_url,
                     type:"POST",
                     success: function(partialHtml) {
-                        $('#sub-cart-section').html(partialHtml); 
+                      $('#sub-cart-section').html(partialHtml);   
+                      checkout();
                     }
                 });
             }

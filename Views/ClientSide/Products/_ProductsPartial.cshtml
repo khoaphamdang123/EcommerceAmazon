@@ -57,7 +57,7 @@
                           }
                           else
                           {
-                            <img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="...">
+                            <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="...">
                           }
                                       
                           }
@@ -235,7 +235,6 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -326,6 +325,19 @@
                   <li class="page-item"><a class="page-link" href="javascript:;">3</a></li> *@
 
 <script>
+
+  function checkout()
+{
+const checkoutButton = document.getElementById("checkout");
+
+
+if(checkoutButton)
+ {
+  checkoutButton.addEventListener("click", () => {
+    window.location.href = "@Url.Action("Checkout", "Checkout")";    
+  });
+ }
+}
     document.addEventListener('DOMContentLoaded', function () {
       
       var boxes = document.querySelectorAll(".color-box");
@@ -492,7 +504,8 @@
        }
      });
 
-     sizes.forEach(size=>{
+     sizes.forEach(size=>
+     {
        if(size.classList.contains("click-size"))
        {
         size_value=size.getAttribute("data-size-name");
@@ -502,7 +515,7 @@
 
      if(color_value=='' || size_value=='')
      {
-       document.getElementById("toast-title").innerHTML="Add To Cart";
+                document.getElementById("toast-title").innerHTML="Add To Cart";
                 
                 document.getElementById("toast-message").innerHTML="Please select color and size";
                 
@@ -513,7 +526,8 @@
                 var toast = new bootstrap.Toast(toastEl);
                 
                 toast.show();
-          return;
+                
+                return;
      }
      
      let formData =new FormData();
@@ -528,7 +542,7 @@
 
      formData.append("size",size_value);
 
-     formData.append("quantity",1);
+     formData.append("quantity",1);          
 
       $.ajax({
             url:"@Url.Action("addItemToCart","Cart")",
@@ -539,8 +553,11 @@
             success:function(response)
             {   
                 const status=response.status;
+                
                 const message = response.message;
+                
                 const data=response.data;
+
             if(data!="")
              {  
                 $("#count-cart").text(data.length);
@@ -548,11 +565,13 @@
                 sessionStorage.setItem("count-cart",data.length);
                
                 var section_url="@Url.Action("SubCartPartialView","Cart")";
+
                    $.ajax({
                     url:section_url,
                     type:"POST",
                     success: function(partialHtml) {
-                        $('#sub-cart-section').html(partialHtml);                         
+                        $('#sub-cart-section').html(partialHtml);
+                        checkout();                                                 
                     }
                 });
             }  

@@ -1,8 +1,8 @@
  
  @model List<CartModel>
  @using System.Globalization;
- @using System.Text.RegularExpressions;
  @inject IHttpContextAccessor HttpContextAccessor
+ @using System.Text.RegularExpressions;
  @{
     Layout="_UserLayout";
     @* var user=ViewBag.user as ApplicationUser;
@@ -18,58 +18,10 @@
     string paypal_client_id=Environment.GetEnvironmentVariable("PAYPAL_CLIENT_ID");
      string username="";
      string password="";
- @* if(account!=null)
-  {  string[] account_part=account.Split('\n');s
-     username=account_part[0];
-     password=account_part[1];
-  } *@
-    
-    @* string[] email_list=company_user.Email.Split('#');
-    
-    string email=email_list[0];
-    
-    string extra_info=email_list[1];
-    
-    string bank_name="";
-    
-    string account_num="";
-    
-    string account_name="";
-    
-    string bank_value="";
+ 
 
-    string qr_code=Environment.GetEnvironmentVariable("qr_code");    
-
-    if(!string.IsNullOrEmpty(extra_info))
-    {
-      string[] info_values=extra_info.Split('\n');
-
-      foreach(var info in info_values)
-      {
-        if(info.Contains("bank_name"))
-        {
-          bank_value=info.Split('~')[1].Trim();
-        }
-        else if(info.Contains("account_name"))
-        {
-          account_name=info.Split('~')[1].Trim();
-        }
-        else if(info.Contains("account_num"))
-        {
-       account_num=info.Split('~')[1].Trim();
-        }
-      }
-    } *@
-    @* if(!string.IsNullOrEmpty(bank_value))
-    {
-      var bank_detail=bank_value.Split('*');
-      bank_name=bank_detail[0];
-    } *@
-
-    double total_amount=0;
-    
+      double total_amount=0;
     double total_delivery=Model.Count>0?5:0;
-    
     foreach(var item in Model)
     {
         double discount=string.IsNullOrEmpty(item.Product.Discount.ToString()) ? 0 : Convert.ToInt32(item.Product.Discount);
@@ -107,20 +59,17 @@
                         </div>
                       </div>
         <script>
-
             document.addEventListener('DOMContentLoaded', function() 
             {
                 var toastEl = document.querySelector('.toast');
-                var toast = new bootstrap.Toast(toastEl);                
+                var toast = new bootstrap.Toast(toastEl);
                 toast.show();                
             });
-                        
-        </script>         
+        </script>        
         }
 
 @Html.AntiForgeryToken()        
   
-
   <div
        class="bs-toast toast fade hide toast-placement-ex top-5 end-0"
        role="alert"
@@ -139,8 +88,9 @@
                         <div class="toast-body" id="toast-message">
                         </div>
     </div>
-        
-  <div class="page-content">
+    
+    
+    <div class="page-content">
    <div class="py-5 border-bottom">
     <div class="container">
       <nav aria-label="breadcrumb">
@@ -157,7 +107,7 @@
 						<div class="shop-cart">
 							<div class="row">
 								<div class="col-12 col-xl-8">
-									<div class="checkout-details">
+									<div class="checkout-payment">
 										<div class="card bg-transparent rounded-0 shadow-none">
 											<div class="card-body">
 												<div class="steps steps-light">
@@ -166,22 +116,18 @@
 														</div>
 														<div class="step-label"><i class='bx bx-cart'></i>Cart</div>
 													</a>
-
-													<a class="step-item active current" href="@Url.Action("Checkout","Checkout")">
+													<a class="step-item active" href="@Url.Action("Checkout","Checkout")">
 														<div class="step-progress"><span class="step-count">2</span>
 														</div>
-														<div class="step-label"><i class='bx bx-user-circle'></i>Details</div>
+														<div class="step-label"><i class='bx bx-user-circle'></i>Details</div>                                                        
 													</a>
-													@* <a class="step-item" href="checkout-shipping.html">
-														<div class="step-progress"><span class="step-count">3</span>
-														</div>
-														<div class="step-label"><i class='bx bx-cube'></i>Shipping</div>
-													</a> *@
-													<a class="step-item" href="@Url.Action("CheckoutPayment","Checkout",new{id=HttpContextAccessor.HttpContext.Session.GetString("UserId")})">
+												
+													<a class="step-item active current" href="@Url.Action("CheckoutPayment","Checkout",new{id=HttpContextAccessor.HttpContext.Session.GetString("UserId")})">
 														<div class="step-progress"><span class="step-count">3</span>
 														</div>
 														<div class="step-label"><i class='bx bx-credit-card'></i>Payment</div>
 													</a>
+
 													<a class="step-item" href="@Url.Action("CheckoutReview","Checkout",new{id=HttpContextAccessor.HttpContext.Session.GetString("UserId")})">
 														<div class="step-progress"><span class="step-count">4</span>
 														</div>
@@ -190,84 +136,140 @@
 												</div>
 											</div>
 										</div>
-										<div class="card rounded-0">
+										<div class="card rounded-0 shadow-none border">
+											<div class="card-header border-bottom">
+												<h2 class="h5 my-2">Choose Payment Method</h2>
+											</div>
 											<div class="card-body">
-												@* <div class="d-flex align-items-center mb-3">
-													<div class="">
-														<img src="assets/images/avatars/avatar-1.png" width="90" alt="" class="rounded-circle p-1 border">
+												<ul class="nav nav-pills mb-3 border p-3" role="tablist">
+													<li class="nav-item" role="presentation">
+														<a class="nav-link active rounded-0" data-bs-toggle="pill" href="#credit-card" role="tab" aria-selected="true">
+															<div class="d-flex align-items-center">
+																<div class="tab-icon"><i class='bx bx-credit-card font-18 me-1'></i>
+																</div>
+																<div class="tab-title">Credit Card</div>
+															</div>
+														</a>
+													</li>
+													<li class="nav-item" role="presentation">
+														<a class="nav-link rounded-0" data-bs-toggle="pill" href="#paypal-payment" role="tab" aria-selected="false">
+															<div class="d-flex align-items-center">
+																<div class="tab-icon"><i class='bx bxl-paypal font-18 me-1'></i>
+																</div>
+																<div class="tab-title">Paypal</div>
+															</div>
+														</a>
+													</li>
+													<li class="nav-item" role="presentation">
+														<a class="nav-link rounded-0" data-bs-toggle="pill" href="#net-banking" role="tab" aria-selected="false">
+															<div class="d-flex align-items-center">
+																<div class="tab-icon"><i class='bx bx-mobile font-18 me-1'></i>
+																</div>
+																<div class="tab-title">Net Banking</div>
+															</div>
+														</a>
+													</li>
+												</ul>
+												<div class="tab-content" id="pills-tabContent">
+													<div class="tab-pane fade show active" id="credit-card" role="tabpanel">
+														<div class="p-3 border">
+															<form>
+																<div class="mb-3">
+																	<label class="form-label">Card Owner</label>
+																	<input type="text" class="form-control rounded-0" placeholder="Card Owner name">
+																</div>
+																<div class="mb-3">
+																	<label class="form-label">Card number</label>
+																	<div class="input-group">
+																		<input type="text" class="form-control rounded-0" placeholder="Valid Owner number">	<span class="input-group-text rounded-0"><img src="assets/images/icons/mastercard.png" width="35" alt=""></span>
+																		<span class="input-group-text rounded-0"><img src="assets/images/icons/visa.png" width="35" alt=""></span>
+																		<span class="input-group-text rounded-0"><img src="assets/images/icons/american-express.png" width="35" alt=""></span>
+																	</div>
+																</div>
+																<div class="row">
+																	<div class="col-12 col-lg-8">
+																		<div class="mb-3">
+																			<label class="form-label">Expiration Date</label>
+																			<div class="input-group">
+																				<input type="text" class="form-control rounded-0" placeholder="MM">
+																				<input type="text" class="form-control rounded-0" placeholder="YY">
+																			</div>
+																		</div>
+																	</div>
+																	<div class="col-12 col-lg-4">
+																		<div class="mb-3">
+																			<label class="form-label">CVV</label>
+																			<input type="text" class="form-control rounded-0" placeholder="Three digit CCV number">
+																		</div>
+																	</div>
+																</div>
+																<div class="row">
+																	<div class="col-md-12">
+																		<div class="d-grid">	
+																			<a href="javascript:;" class="btn btn-dark btn-ecomm rounded-0">Confirm Payment</a>
+																		</div>
+																	</div>
+																</div>
+															</form>
+														</div>
 													</div>
-													<div class="ms-2">
-														<h6 class="mb-0">Jhon Michle</h6>
-														<p class="mb-0">michle@example.com</p>
+													<div class="tab-pane fade" id="paypal-payment" role="tabpanel">
+														<div class="p-3 border">
+															<div class="mb-3">
+																<p>Select your Paypal Account type</p>
+																<div class="form-check form-check-inline">
+																	<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+																	<label class="form-check-label" for="inlineRadio1">Domestic</label>
+																</div>
+																<div class="form-check form-check-inline">
+																	<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+																	<label class="form-check-label" for="inlineRadio2">International</label>
+																</div>
+															</div>
+															<div class="mb-3">
+																<div class="d-block">	<a href="javscript:;" class="btn btn-light rounded-0"><i class='bx bxl-paypal'></i>Login to my Paypal</a>
+																</div>
+															</div>
+															<div class="mb-3">
+																<p class="mb-0">Note: After clicking on the button, you will be directed to a secure gateway for payment. After completing the payment process, you will be redirected back to the website to view details of your order.</p>
+															</div>
+														</div>
 													</div>
-													<div class="ms-auto">	<a href="javascript:;" class="btn btn-light btn-ecomm"><i class='bx bx-edit'></i> Edit Profile</a>
-													</div>
-												</div> *@
-												<div class="border p-3">
-													<h2 class="h5 mb-0">Shipping Address</h2>
-													<div class="my-3 border-bottom"></div>
-													<div class="form-body">
-														<form class="row g-3">
-															<div class="col-md-6">
-																<label class="form-label">First Name</label>
-																<input type="text" class="form-control rounded-0">
-															</div>
-															<div class="col-md-6">
-																<label class="form-label">Last Name</label>
-																<input type="text" class="form-control rounded-0">
-															</div>
-															<div class="col-md-6">
-																<label class="form-label">E-mail</label>
-																<input type="text" class="form-control rounded-0">
-															</div>
-															<div class="col-md-6">
-																<label class="form-label">Phone Number</label>
-																<input type="text" class="form-control rounded-0">
-															</div>
-														
-															@* <div class="col-md-6">
-																<label class="form-label">State/Province</label>
-																<select class="form-select rounded-0">
-																	<option>United Kingdom</option>
-																	<option>California</option>
+													<div class="tab-pane fade" id="net-banking" role="tabpanel">
+														<div class="p-3 border">
+															<div class="mb-3">
+																<p>Select your Bank</p>
+																<select class="form-select rounded-0" aria-label="Default select example">
+																	<option selected>--Please Select Your Bank--</option>
+																	<option value="1">Bank Name 1</option>
+																	<option value="2">Bank Name 2</option>
+																	<option value="3">Bank Name 3</option>
 																</select>
-															</div> *@
-															<div class="col-md-6">
-																<label class="form-label">Zip/Postal Code</label>
-																<input type="text" class="form-control rounded-0">
 															</div>
-															@* <div class="col-md-6">
-																<label class="form-label">Country</label>
-																<select class="form-select rounded-0">
-																	<option>United States</option>
-																	<option>India</option>
-																	<option>China</option>
-																	<option>Turkey</option>
-																</select>
-															</div> *@
-															<div class="col-md-6">
-																<label class="form-label">Billing Address </label>
-																<textarea class="form-control rounded-0"></textarea>
-															</div>
-															@* <div class="col-md-12">
-																<h6 class="mb-0 h5">Billing Address</h6>
-																<div class="my-3 border-bottom"></div>
-																<div class="form-check">
-																	<input class="form-check-input" type="checkbox" id="gridCheck" checked>
-																	<label class="form-check-label" for="gridCheck">Same as shipping address</label>
-																</div>
-															</div> *@
-															<div class="col-md-6">
-																<div class="d-grid">	
-                                                                <a href="@Url.Action("Cart","Cart")" class="btn btn-light btn-ecomm"><i class='bx bx-chevron-left'></i>Back to Cart</a>
+															<div class="mb-3">
+																<div class="d-block"> <a href="javscript:;" class="btn btn-light rounded-0"><i class='bx bxl-paypal'></i>Login to my Paypal</a>
 																</div>
 															</div>
-															<div class="col-md-6">
-																<div class="d-grid">	
-                                                                  <a href="javascript:;" class="btn btn-dark btn-ecomm">Proceed to Checkout<i class='bx bx-chevron-right'></i></a>
-																</div>
+															<div class="mb-3">
+																<p class="mb-0">Note: After clicking on the button, you will be directed to a secure gateway for payment. After completing the payment process, you will be redirected back to the website to view details of your order.</p>
 															</div>
-														</form>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="card rounded-0 shadow-none border">
+											<div class="card-body">
+												<div class="row">
+													<div class="col-md-6">
+														<div class="d-grid">
+															<a href="javascript:;" class="btn btn-light btn-ecomm"><i class="bx bx-chevron-left"></i>Back to Shipping</a>
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="d-grid">
+															<a href="javascript:;" class="btn btn-outline-dark btn-ecomm">Review Your Order<i class="bx bx-chevron-right"></i></a>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -297,15 +299,14 @@
 														<div class="my-3 border-top"></div>
 														<div class="d-flex align-items-center">
 															<a class="d-block flex-shrink-0" href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
-                         @if(item.Product.Backavatar.Contains("https") || item.Product.Backavatar.Contains("http"))
+                        @if(item.Product.Backavatar.Contains("https") || item.Product.Backavatar.Contains("http"))
                           {
-                          <img src="@item.Product.Backavatar"  style="width:75px !important;" class="card-img-top" alt="...">
+                          <img src="@item.Product.Backavatar" style="width:75px!important;" class="card-img-top" alt="...">
                           }
                           else
                           {
                             <img src="~/@item.Product.Backavatar.Substring(item.Product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" style="width:75px!important;" class="card-img-top" alt="...">
-                          }															
-                        </a>
+                          }															</a>
 															<div class="ps-2">
 																<h6 class="mb-1"><a href="javascript:;" class="text-dark">@item.Product.ProductName</a></h6>
 																<div class="widget-product-meta"><span class="me-2">@item.Price</span><span class="">x @item.Quantity</span>
@@ -354,6 +355,7 @@
 														</p>
 														<p class="mb-2">Shipping: <span class="float-end">$@total_delivery</span>
 														</p>
+													
 														<div class="my-3 border-top"></div>
 														<h5 class="mb-0">Order Total: <span class="float-end">$@(total_amount+total_delivery)</span></h5>
 													</div>

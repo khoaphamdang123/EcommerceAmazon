@@ -190,6 +190,11 @@
 
   <link href="@Url.Content("~/user_layout/css/dark-theme.css")" rel="stylesheet">
 
+  <link href="@Url.Content("~/user_layout/css/pace.min.css")" rel="stylesheet" />
+  
+  <link href="@Url.Content("~/user_layout/plugins/OwlCarousel/css/owl.carousel.min.css")"/>
+
+ <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 
 
 @* <link rel="stylesheet" href="@Url.Content("~/css/demo.css")"> *@
@@ -921,9 +926,6 @@
     const main_body=document.getElementById('main-container');
     
     const headerHeight = header.offsetHeight;
-
-
-
     
     window.addEventListener('scroll',()=>{
         if(window.scrollY > (headerHeight+5)){
@@ -946,6 +948,8 @@
   <script src="@Url.Content("~/user_layout/js/main.js")"></script>
   <script src="@Url.Content("~/user_layout/js/index.js")"></script>
   <script src="@Url.Content("~/user_layout/js/loader.js")"></script>
+  <script src="@Url.Content("~/user_layout/js/pace.min.js")"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/@@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
 
 
@@ -1017,8 +1021,24 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@4.0.7/js/froala_editor.pkgd.min.js"></script>
 
 <script>
+
+function checkout()
+{
+ const checkoutButton = document.getElementById("checkout");
+
+ if(checkoutButton)
+ {
+  checkoutButton.addEventListener("click", () => {
+    window.location.href = "@Url.Action("Checkout", "Checkout")";    
+  });
+ }
+}
+
+
   $(document).ready(function()
   {
+
+    checkout();
     @* let cart_count=sessionStorage.getItem('count-cart');
 
     if(cart_count!=null)
@@ -1040,13 +1060,15 @@
       });
     }
 
-  const cart = $("#cart-hover");        
+  const cart = $("#cart-hover");
+
   cart.on('mouseenter',()=>{
  const offcanvasElement=$("#offcanvasRight")[0];
   const bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);    
   bsOffcanvas.show();    
     });
   });
+  
 </script>
 
 

@@ -124,17 +124,17 @@ public class CartController : BaseController
     {
         ViewData.Model = model;
         
-        using (var writer = new StringWriter())
+        using(var writer = new StringWriter())
         {   
             var viewResult = this._viewEngine.FindView(ControllerContext, viewName, false);
-            
-
-            if (viewResult.View == null)
+          
+            if(viewResult.View == null)
             {
                 throw new FileNotFoundException($"Partial view '{viewName}' not found.");
             }
 
-            var viewContext = new ViewContext(
+            var viewContext = new ViewContext
+            (
                 ControllerContext,
                 viewResult.View,
                 ViewData,
@@ -152,22 +152,28 @@ public class CartController : BaseController
   [HttpPost]
 
   public async Task<JsonResult> updateCart(List<int> product_ids,List<int> quantities)
-  { int update_res=0;
-  Console.WriteLine("product ids:"+product_ids.Count); 
+  {
+  int update_res=0;
+
+  Console.WriteLine("product ids:"+product_ids.Count);
+
   Console.WriteLine("quantities:"+quantities.Count); 
   try
   {
-    for(int i=0;i<quantities.Count;i++)
-    {
-    if(quantities[i]<1)
-    {
-      quantities[i]=1;
-    }
-    int update_value=await this._cart.updateCart(product_ids[i],quantities[i]);
-    if(update_value==0)
-    {
-      return Json(new {status=0,message="Update Cart Failed."});
-    }
+      for (int i = 0; i < quantities.Count; i++)
+      {
+        if (quantities[i] < 1)
+        {
+          quantities[i] = 1;
+        }
+
+        int update_value = await this._cart.updateCart(product_ids[i], quantities[i]);
+
+        if (update_value == 0)
+        {
+          return Json(new { status = 0, message = "Update Cart Failed." });
+        }
+    
     }
     update_res=1;
   }
@@ -191,7 +197,7 @@ url="~/Views/ClientSide/Cart/_CartPartial.cshtml";
     }
     else
     {
-  url="~/Views/ClientSide/Cart/_SubCartPartial.cshtml";
+  url="~/Views/ClientSide/Cart/_SubListPartial.cshtml";
     }
     try
     {
@@ -201,16 +207,16 @@ url="~/Views/ClientSide/Cart/_CartPartial.cshtml";
     {
         this._logger.LogError("Remove Item From Cart Exception:"+er.Message);
     }
-    if(remove_res==1)
-    { 
- var cart=this._cart.getCart();
+    
+    if (remove_res == 1)
+    {
+      var cart = this._cart.getCart();
 
- return PartialView(url, cart);
- 
-  }
+      return PartialView(url, cart);
+    }
     else
     {
- return PartialView(url);
+      return PartialView(url);
     }
   }
 }

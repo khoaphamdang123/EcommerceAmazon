@@ -90,7 +90,7 @@
               <p class="mb-0">$@(total_amount+total_delivery)</p>
             </div>
              <div class="d-grid mt-4">
-                <button type="button" class="btn btn-dark btn-ecomm py-3 px-5">Place Order</button>
+                <button type="button" id="checkout" class="btn btn-dark btn-ecomm py-3 px-5">Place Order</button>
              </div>
            </div>
          </div>
@@ -208,14 +208,45 @@
          </section> *@
 <script>
    
-   var cart_data=@Html.Raw(Json.Serialize(Model));
-   document.addEventListener("DOMContentLoaded", function() {
+    var cart_data=@Html.Raw(Json.Serialize(Model));
+    
+    document.addEventListener("DOMContentLoaded", function() {
+    
     var continue_shoppingBtn = document.getElementById("continue-shopping");
+    
+    var checkoutBtn = document.getElementById("checkout");
+    
+    if(checkoutBtn)
+    { 
+      if(cart_data.length==0)
+      {
+         checkoutBtn.classList.add("disabled");
+         
+         checkoutBtn.setAttribute("disabled","disabled");
+      }
+      else
+      {
+         checkoutBtn.classList.remove("disabled");
+         
+         checkoutBtn.removeAttribute("disabled");
+      }
+
+
+      checkoutBtn.addEventListener("click", function() 
+      {  if(cart_data.length==0)
+      {
+         window.location.href="@Url.Action("HomePage","HomePage")";
+         return;
+      }
+         window.location.href="@Url.Action("Checkout","Checkout")";         
+      });
+    }
+
     var url="@Url.Action("HomePage","HomePage")";
       continue_shoppingBtn.addEventListener("click", function() 
       {
          window.location.href=url;
-         });
+      });
    });        
    @* $(document).ready(()=>
    {

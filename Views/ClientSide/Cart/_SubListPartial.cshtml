@@ -1,244 +1,126 @@
   @model List<CartModel>
     @{
         int total_value=0;
+          
+        int total_item=Model.Count;
+
         Console.WriteLine("model count here:"+Model.Count);
     }
   @if(Model!=null)
   {
-   <ul>
-                                    
-                                          @foreach(var item in Model)
-                                        {   
-                                          int discount=string.IsNullOrEmpty(item.Product.Discount.ToString()) ? 0 : Convert.ToInt32(item.Product.Discount);
-                                          string price_value=!string.IsNullOrEmpty(item.Price) ? item.Price : item.Product.Price;
-                                         int current_price=(Convert.ToInt32(price_value)-(Convert.ToInt32(price_value)*(discount)/100));
-                                          total_value+=current_price*item.Quantity;
-
-                                         <!--start cart-->
-  <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasRight"
-    aria-labelledby="offcanvasRightLabel">
-    <div class="offcanvas-header bg-section-2">
-      <h5 class="mb-0 fw-bold" id="offcanvasRightLabel"> 8 items the cart</h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-      <div class="cart-list">
-
+    <div class="cart-list">
+     @foreach(var cart in Model)
+     {
         <div class="d-flex align-items-center gap-3">
           <div class="bottom-product-img">
             <a href="product-details.html">
-              <img src="assets/images/new-arrival/01.webp" width="60" alt="">
+               @if(cart.Product.Backavatar.Contains("https") || cart.Product.Backavatar.Contains("http"))
+              {
+                <img src="@cart.Product.Backavatar"  width="60" alt="...">
+              }
+              else
+              {
+                <img src="~/@cart.Product.Backavatar.Substring(cart.Product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" width="60" alt="...">
+            }
             </a>
           </div>
           <div class="">
-            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
-            <p class="mb-0"><strong>1 X $59.00</strong>
+            <h6 class="mb-0 fw-light mb-1">@cart.Product.ProductName</h6>
+            <p class="mb-0">Size: @cart.Size</p>
+            <p class="mb-0">Color: @cart.Color</p>
+            <p class="mb-0"><strong>@cart.Quantity x @cart.Price</strong>
             </p>
           </div>
           <div class="ms-auto fs-5">
-            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+            <a href="javascript:" id="remove-item-btn" data-product-id="@cart.Product.Id" class="link-dark"><i class="bi bi-trash"></i></a>
           </div>
         </div>
         <hr>
-        <div class="d-flex align-items-center gap-3">
-          <div class="bottom-product-img">
-            <a href="product-details.html">
-              <img src="assets/images/new-arrival/02.webp" width="60" alt="">
-            </a>
-          </div>
-          <div class="">
-            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
-            <p class="mb-0"><strong>1 X $59.00</strong>
-            </p>
-          </div>
-          <div class="ms-auto fs-5">
-            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
-          </div>
-        </div>
-        <hr>
-        <div class="d-flex align-items-center gap-3">
-          <div class="bottom-product-img">
-            <a href="product-details.html">
-              <img src="assets/images/new-arrival/03.webp" width="60" alt="">
-            </a>
-          </div>
-          <div class="">
-            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
-            <p class="mb-0"><strong>1 X $59.00</strong>
-            </p>
-          </div>
-          <div class="ms-auto fs-5">
-            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
-          </div>
-        </div>
-        <hr>
-        <div class="d-flex align-items-center gap-3">
-          <div class="bottom-product-img">
-            <a href="product-details.html">
-              <img src="assets/images/new-arrival/04.webp" width="60" alt="">
-            </a>
-          </div>
-          <div class="">
-            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
-            <p class="mb-0"><strong>1 X $59.00</strong>
-            </p>
-          </div>
-          <div class="ms-auto fs-5">
-            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
-          </div>
-        </div>
-        <hr>
-        <div class="d-flex align-items-center gap-3">
-          <div class="bottom-product-img">
-            <a href="product-details.html">
-              <img src="assets/images/new-arrival/05.webp" width="60" alt="">
-            </a>
-          </div>
-          <div class="">
-            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
-            <p class="mb-0"><strong>1 X $59.00</strong>
-            </p>
-          </div>
-          <div class="ms-auto fs-5">
-            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
-          </div>
-        </div>
-        <hr>
-        <div class="d-flex align-items-center gap-3">
-          <div class="bottom-product-img">
-            <a href="product-details.html">
-              <img src="assets/images/new-arrival/06.webp" width="60" alt="">
-            </a>
-          </div>
-          <div class="">
-            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
-            <p class="mb-0"><strong>1 X $59.00</strong>
-            </p>
-          </div>
-          <div class="ms-auto fs-5">
-            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
-          </div>
-        </div>
-        <hr>
-        <div class="d-flex align-items-center gap-3">
-          <div class="bottom-product-img">
-            <a href="product-details.html">
-              <img src="assets/images/new-arrival/07.webp" width="60" alt="">
-            </a>
-          </div>
-          <div class="">
-            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
-            <p class="mb-0"><strong>1 X $59.00</strong>
-            </p>
-          </div>
-          <div class="ms-auto fs-5">
-            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
-          </div>
-        </div>
-        <hr>
-        <div class="d-flex align-items-center gap-3">
-          <div class="bottom-product-img">
-            <a href="product-details.html">
-              <img src="assets/images/new-arrival/08.webp" width="60" alt="">
-            </a>
-          </div>
-          <div class="">
-            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
-            <p class="mb-0"><strong>1 X $59.00</strong>
-            </p>
-          </div>
-          <div class="ms-auto fs-5">
-            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
-          </div>
-        </div>
-        <hr>
-        <div class="d-flex align-items-center gap-3">
-          <div class="bottom-product-img">
-            <a href="product-details.html">
-              <img src="assets/images/new-arrival/09.webp" width="60" alt="">
-            </a>
-          </div>
-          <div class="">
-            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
-            <p class="mb-0"><strong>1 X $59.00</strong>
-            </p>
-          </div>
-          <div class="ms-auto fs-5">
-            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
-          </div>
-        </div>
-        <hr>
-        <div class="d-flex align-items-center gap-3">
-          <div class="bottom-product-img">
-            <a href="product-details.html">
-              <img src="assets/images/new-arrival/10.webp" width="60" alt="">
-            </a>
-          </div>
-          <div class="">
-            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
-            <p class="mb-0"><strong>1 X $59.00</strong>
-            </p>
-          </div>
-          <div class="ms-auto fs-5">
-            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>            
-          </div>
-        </div>
+        }
       </div>
-    </div>
-
-  </div>
-                                                @* <li>
-                                                  <div class="cart__item d-flex justify-content-between align-items-center">
-                                                    <div class="cart__inner d-flex">
-                                                      <div class="cart__thumb">
-                                                        <a href="product-details.html">
-                                 <img src="~/@item.Product.Frontavatar.Substring(item.Product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="User Front Avatar">
-                                                        </a> 
-                                                      </div>
-                                              
-                                                      <div class="cart__details">
-                                                        <h6><a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=item.Product.ProductName})">@item.Product.ProductName</a></h6>
-                                                      <div class="cart__qty">
-                                                            <span>Số lượng:@item.Quantity</span>
-                                                        </div>
-                                                        <div class="cart__price">
-                                                          <span>(@(current_price*item.Quantity)đ)</span>
-                                                          
-                                                        </div>
-                                                      </div>
-                                                      
-                                                    </div>
-                                                    <div class="cart__del">
-                                                      <a href="javascript:void(0);" type="button" class="remove-btn" data-product-id="@item.Product.Id"><i class="fa fa-times"></i></a>
-                                                    </div>
-                                                  </div>
-                                                </li> *@
-                                        
-                                                }
-                                                <li>
-                                                  <div class="cart__sub d-flex justify-content-between align-items-center">
-                                                    <h6>Tổng tiền</h6>
-                                                    <span class="cart__sub-total">@total_value VNĐ</span>
-
-                                                  </div>
-                                                </li>
-                                           
-                                            </ul>
-                                }
-                        
-                               else
-                                { 
-                                    <div class="cart">
-                                    <div class="cart__mini">
-                                   <div class="empty-cart">
-                                     <img src="~/user_layout/img/banner/shopping-bag.png" alt="empty-cart" class="empty-cart-image"/>
-                                    <p class="empty-cart-text">Chưa có sản phẩm nào trong giỏ hàng...</p>
-                                    <a href="@Url.Action("HomePage","HomePage")" class="cart-btn" type="button">Tiếp tục mua sắm</a>
-                                   </div>
-                                   </div>
-                                   </div>
-                                }
+   }
                           
 <script>
-         var cart=@Html.Raw(Json.Serialize(Model));
+  var cart=@Html.Raw(Json.Serialize(Model));
+
+function checkout()
+{
+const checkoutButton = document.getElementById("checkout");
+
+if(checkoutButton)
+ {
+  if (cart.length === 0) {
+    checkoutButton.disabled = true;
+    checkoutButton.classList.add("disabled");
+  } else 
+  {
+    checkoutButton.disabled = false;
+    checkoutButton.classList.remove("disabled");
+  }
+
+if(checkoutButton)
+ {
+  checkoutButton.addEventListener("click", () => 
+  {
+   if (cart.length === 0) 
+   {
+      window.location.href = "@Url.Action("HomePage", "HomePage")";
+      return; 
+    }
+    window.location.href = "@Url.Action("Checkout", "Checkout")";    
+  });
+ }
+}
+        
+  function attachRemoveButtonListeners() 
+{
+   
+    document.querySelectorAll("#remove-item-btn").forEach((item) => 
+    {  
+        item.addEventListener("click", () => {
+            
+            var product_id = item.getAttribute("data-product-id");
+            
+            var cart_name="view";
+            
+            let formData = new FormData();
+
+            formData.append("product_id", product_id);
+
+            formData.append("view_name",cart_name);
+                        
+            $.ajax({
+                url: "@Url.Action("removeItemFromCart","Cart")",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) 
+                {
+                    $("#sub-cart-item").html(response);
+
+                    $("#offcanvasRightLabel").text("@(total_item-1) items the cart");
+                  
+                    attachRemoveButtonListeners();
+                    
+                    checkout();
+                    @* var updated_count=$("#count-cart").text();
+                    updated_count=parseInt(updated_count)-1;               *@
+                    $("#count-cart").text(@total_item-1);
+                },
+                error: function(xhr, status, error) 
+                {
+                    @* document.getElementById("toast-title").innerHTML = "Thông báo";
+                    document.getElementById("toast-message").innerHTML = xhr.responseText;
+                    var toastEl = document.querySelector('.toast');
+                    toastEl.classList.add('bg-danger');
+                    var toast = new bootstrap.Toast(toastEl); *@
+                    //toast.show(); 
+                }
+            });
+        });
+    });
+}
+
+attachRemoveButtonListeners();
 </script>
