@@ -18,6 +18,14 @@
     string paypal_client_id=Environment.GetEnvironmentVariable("PAYPAL_CLIENT_ID");
      string username="";
      string password="";
+
+     var payment_methods=ViewBag.payment_methods as List<Payment>;
+
+   string card_number=HttpContextAccessor.HttpContext.Session.GetString("CardNumber");
+   string card_owner=HttpContextAccessor.HttpContext.Session.GetString("CardOwner"); 
+   string mm=HttpContextAccessor.HttpContext.Session.GetString("MM");
+   string yy=HttpContextAccessor.HttpContext.Session.GetString("YY");
+   string cvv=HttpContextAccessor.HttpContext.Session.GetString("CVV");
  
 
       double total_amount=0;
@@ -142,7 +150,11 @@
 											</div>
 											<div class="card-body">
 												<ul class="nav nav-pills mb-3 border p-3" role="tablist">
-													<li class="nav-item" role="presentation">
+                                                @foreach(var payment in payment_methods)
+                                                {
+                                             if(payment.Paymentname=="Master Card")
+                                                {
+												<li class="nav-item" role="presentation">
 														<a class="nav-link active rounded-0" data-bs-toggle="pill" href="#credit-card" role="tab" aria-selected="true">
 															<div class="d-flex align-items-center">
 																<div class="tab-icon"><i class='bx bx-credit-card font-18 me-1'></i>
@@ -151,6 +163,9 @@
 															</div>
 														</a>
 													</li>
+                                                 }
+                                                @if(payment.Paymentname=="Paypal")
+                                                {
 													<li class="nav-item" role="presentation">
 														<a class="nav-link rounded-0" data-bs-toggle="pill" href="#paypal-payment" role="tab" aria-selected="false">
 															<div class="d-flex align-items-center">
@@ -160,7 +175,8 @@
 															</div>
 														</a>
 													</li>
-													<li class="nav-item" role="presentation">
+                                                    }
+													@* <li class="nav-item" role="presentation">
 														<a class="nav-link rounded-0" data-bs-toggle="pill" href="#net-banking" role="tab" aria-selected="false">
 															<div class="d-flex align-items-center">
 																<div class="tab-icon"><i class='bx bx-mobile font-18 me-1'></i>
@@ -168,22 +184,29 @@
 																<div class="tab-title">Net Banking</div>
 															</div>
 														</a>
-													</li>
+													</li> *@
+                                                    }
 												</ul>
 												<div class="tab-content" id="pills-tabContent">
 													<div class="tab-pane fade show active" id="credit-card" role="tabpanel">
 														<div class="p-3 border">
-															<form>
+															<form method="post" id="payment-method-form" asp-action="CheckoutReviewForm" asp-controller="Checkout">
 																<div class="mb-3">
 																	<label class="form-label">Card Owner</label>
-																	<input type="text" class="form-control rounded-0" placeholder="Card Owner name">
+																	<input type="text" class="form-control rounded-0" required name="card_owner" value="@card_owner" placeholder="Card Owner name">
+                                                                   <div class="invalid-feedback">
+                                                                Please enter card owner.
+		                                                         </div>
 																</div>
 																<div class="mb-3">
 																	<label class="form-label">Card number</label>
 																	<div class="input-group">
-																		<input type="text" class="form-control rounded-0" placeholder="Valid Owner number">	<span class="input-group-text rounded-0"><img src="assets/images/icons/mastercard.png" width="35" alt=""></span>
+																		<input type="text" class="form-control rounded-0" value="@card_number"  required name="card_number" placeholder="Valid Owner number">	<span class="input-group-text rounded-0"><img src="assets/images/icons/mastercard.png" width="35" alt=""></span>
 																		<span class="input-group-text rounded-0"><img src="assets/images/icons/visa.png" width="35" alt=""></span>
 																		<span class="input-group-text rounded-0"><img src="assets/images/icons/american-express.png" width="35" alt=""></span>
+                                                                       <div class="invalid-feedback">
+                                                                Please enter card number.
+		                                                         </div>
 																	</div>
 																</div>
 																<div class="row">
@@ -191,22 +214,30 @@
 																		<div class="mb-3">
 																			<label class="form-label">Expiration Date</label>
 																			<div class="input-group">
-																				<input type="text" class="form-control rounded-0" placeholder="MM">
-																				<input type="text" class="form-control rounded-0" placeholder="YY">
+																				<input type="text" class="form-control rounded-0" value="@mm" name="mm" required placeholder="MM">
+																				<input type="text" class="form-control rounded-0" value="@yy" name="yy" required placeholder="YY">
+                                                                               <div class="invalid-feedback">
+                                                                Please enter card expiration date.
+		                                                         </div>
 																			</div>
 																		</div>
 																	</div>
 																	<div class="col-12 col-lg-4">
 																		<div class="mb-3">
 																			<label class="form-label">CVV</label>
-																			<input type="text" class="form-control rounded-0" placeholder="Three digit CCV number">
+																			<input type="text" class="form-control rounded-0" value="@cvv" name="cvv" required placeholder="Three digit CCV number">
+                                                                           <div class="invalid-feedback">
+                                                                Please enter card cvv.
+		                                                         </div>
 																		</div>
 																	</div>
 																</div>
+                                                                
 																<div class="row">
 																	<div class="col-md-12">
 																		<div class="d-grid">	
-																			<a href="javascript:;" class="btn btn-dark btn-ecomm rounded-0">Confirm Payment</a>
+                                                                            <input type="hidden" name="payment_method" value="Card">
+																			<a href="#" id="confirm-btn-card" class="btn btn-dark btn-ecomm rounded-0">Confirm Payment</a>
 																		</div>
 																	</div>
 																</div>
@@ -215,24 +246,33 @@
 													</div>
 													<div class="tab-pane fade" id="paypal-payment" role="tabpanel">
 														<div class="p-3 border">
+                                                            <form  method="post" id="payment-paypal-form" asp-action="CheckoutReviewForm" asp-controller="Checkout">
 															<div class="mb-3">
-																<p>Select your Paypal Account type</p>
-																<div class="form-check form-check-inline">
+																@* <div class="form-check form-check-inline">
 																	<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
 																	<label class="form-check-label" for="inlineRadio1">Domestic</label>
-																</div>
+																</div> *@
 																<div class="form-check form-check-inline">
-																	<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+																	<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" checked value="option2">
 																	<label class="form-check-label" for="inlineRadio2">International</label>
 																</div>
 															</div>
-															<div class="mb-3">
+                                                        	<div class="row">
+																	<div class="col-md-12">
+																		<div class="d-grid">	
+                                                                           <input type="hidden" name="payment_method" value="Paypal">
+																			<a href="#" id="confirm-btn-paypal" class="btn btn-dark btn-ecomm rounded-0">Confirm Payment</a>
+																		</div>
+																	</div>
+																</div>
+                                                                </form>
+															@* <div class="mb-3">
 																<div class="d-block">	<a href="javscript:;" class="btn btn-light rounded-0"><i class='bx bxl-paypal'></i>Login to my Paypal</a>
 																</div>
-															</div>
-															<div class="mb-3">
+															</div> *@
+															@* <div class="mb-3">
 																<p class="mb-0">Note: After clicking on the button, you will be directed to a secure gateway for payment. After completing the payment process, you will be redirected back to the website to view details of your order.</p>
-															</div>
+															</div> *@
 														</div>
 													</div>
 													<div class="tab-pane fade" id="net-banking" role="tabpanel">
@@ -351,11 +391,10 @@
 												</div>
 												<div class="card rounded-0 border bg-transparent mb-0 shadow-none">
 													<div class="card-body">
-														<p class="mb-2">Subtotal: <span class="float-end">$@total_amount</span>
-														</p>
+													<p class="mb-2">Subtotal: <span class="float-end">$@total_amount</span>
+													</p>
 														<p class="mb-2">Shipping: <span class="float-end">$@total_delivery</span>
-														</p>
-													
+													</p>
 														<div class="my-3 border-top"></div>
 														<h5 class="mb-0">Order Total: <span class="float-end">$@(total_amount+total_delivery)</span></h5>
 													</div>
@@ -726,354 +765,52 @@
 
 
 <script>
-  
-    var payment_method='';
-    
 
-    const getAccordionItem=()=>
-    {
-     const openItem=document.querySelector('.accordion-collapse.show');
-
-     if(openItem)
-     {
-  payment_method=openItem.id;
-     }
-    };
-     
-    const convertPaymentMethod=(payment_method)=>
-    {
-        switch(payment_method)
-        {
-            case "deliver":
-            return "Delivery";
-            case "bankOne":
-            return "Bank";
-            case "paypal":
-            return "Paypal";
-            case "visa":
-            return "Master Card";
-            default:
-            return "";
-        }
-    };
-    
-    document.addEventListener("DOMContentLoaded",()=>
-    {
-    
-    var is_paypal_enable=document.getElementById("paypal-button-container");
-
-    function getToken()
-    {   alert( document.querySelector('input[name="__RequestVerificationToken"]').value);
-        return document.querySelector('input[name="__RequestVerificationToken"]').value;
-    }
-
-  if(is_paypal_enable!=null)
+  document.addEventListener("DOMContentLoaded",()=>
   {
-    const total_price = '@total_value';
+  var confirmCardBtn = document.getElementById("confirm-btn-card");
+  var confirmPaypalBtn = document.getElementById("confirm-btn-paypal");
+
+  confirmCardBtn.addEventListener("click", (e) => {
+   e.preventDefault();
+
+    let isValid = true;
+
+    var formCard = document.getElementById("payment-method-form");
+    
+    var input =document.querySelectorAll("input[required]");
+
+    input.forEach((item)=>
+    {
+        if(item.value.trim() === "")
+        {
+            item.classList.add("is-invalid");
+
+            isValid=false;
+        }
+        else
+        {
+            item.classList.remove("is-invalid");
+        }
+    });
+    
+    if(isValid)
+    {
+        formCard.submit();
+    }
+  });
      
-    paypal_sdk.Buttons({
-           style:
-           {
-            layout:'vertical',
-            color:'gold',
-            tagline:'false',
-            size:'responsive',
-            shape:'rect'
-           },
-            createOrder: function(data, actions) 
-            { 
-    const user_name=document.getElementById("user-name");
-    const address=document.getElementById("address");
-    const phone=document.getElementById("phone");
-    const email=document.getElementById("email");
-    var is_valid=false;        
-     if(user_name.value=="")
-    {    is_valid=true;
-         
-         document.getElementById("name-error").innerHTML="*Tên không được để trống";
-    }
-    if(address.value=="")
-    { 
-      is_valid=true;
-      
-      document.getElementById("address-error").innerHTML="*Địa chỉ không được để trống";
-    }
-    if(phone.value=="")
-    { 
-        is_valid=true;
-        
-        document.getElementById("phone-error").innerHTML="*Số điện thoại không được để trống";
-        
-    }
+confirmPaypalBtn.addEventListener("click",(e)=>
+{ 
+  e.preventDefault();
+  
+  var formPaypal=document.getElementById("payment-paypal-form");
+  
+  formPaypal.submit();
+});
 
-    if(email.value=="")
-    { is_valid=true;
-        document.getElementById("email-error").innerHTML="*Email không được để trống";
-    }
+});
 
-    if(is_valid)
-    {
-        return;
-    }  
 
-    payment_method=convertPaymentMethod(payment_method);
-          
-    const checkout_obj=
-    {
-    username:user_name.value,
-    address1:address.value,
-    phonenumber:phone.value,
-    email:email.value,
-    paymentmethod:payment_method
-    };
-
-              return fetch('/checkout/createOrder',{
-                method:'POST',
-                headers: 
-                {
-                 'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({total_price:total_price,checkout:checkout_obj})
-              })
-            .then(function(res)
-            {   
-                return res.json();
-            }).then(function(data)
-            {    
-                  return data.orderId;                  
-            })
-            },
-          onApprove: function(data, actions) 
-          {
-            return fetch('/checkout/capture?token='+data.orderID)
-            .then(function(res) 
-            {   
-                return res.json();                
-            })
-            .then(function(details) 
-            {  
-                if(details.status===1) 
-                {  
-                   var checkout=details.checkout;
-                   
-                   var note=document.getElementById("checkout-mess");
-                    
-                   if(note!=null)
-                    {
-                        note.value="Đã thanh toán thành công qua Paypal";
-                    }
-    
-    var checkout_form=document.getElementById("checkout-form");
-    var payment_input=document.createElement("input");
-    payment_input.type="text";
-    payment_input.name="paymentmethod";
-    payment_input.value=payment_method;
-    payment_input.style.display="none";
-    checkout_form.appendChild(payment_input);
-    checkout_form.submit();        
-                } 
-                else 
-                {
-                    alert('Payment failed: ' + details.message);
-                }
-            });
-        },
-            // Handle errors
-            onError: function(err) {
-                console.error('An error occurred during the transaction', err);                
-                @* alert('An error occurred. Please try again.'); *@
-            }
-        }).render('#paypal-button-container');        
-    }
-    getAccordionItem();        
-    var form=document.getElementById("signinForm");        
-    var checkout_form=document.getElementById("checkout-form");
-    var checkout_order_btn=document.getElementById("checkout-order-btn"); 
-    var username=document.getElementById("username");
-    var password= document.getElementById("password");    
-    checkout_order_btn.addEventListener("click",()=>{
-    var is_valid=true;
-    const user_name=document.getElementById("user-name");
-    const address=document.getElementById("address");
-    const phone=document.getElementById("phone");
-    const email=document.getElementById("email");
-
-    if(user_name.value=="")
-    {
-        is_valid=false;
-        document.getElementById("name-error").innerHTML="*Tên không được để trống";
-    }
-
-    if(address.value=="")
-    {
-        is_valid=false;
-
-        document.getElementById("address-error").innerHTML="*Địa chỉ không được để trống";
-    }
-
-    if(phone.value=="")
-    {
-        is_valid=false;
-
-        document.getElementById("phone-error").innerHTML="*Số điện thoại không được để trống";
-    }
-    if(email.value=="")
-    {
-        is_valid=false;
-
-        document.getElementById("email-error").innerHTML="*Email không được để trống";
-    }
-    if(!is_valid)
-    {  
-        event.preventDefault();
-        
-        return;
-    }
-
-    payment_method=convertPaymentMethod(payment_method);
-
-    var payment_input=document.createElement("input");
-    
-    payment_input.type="text";
-    
-    payment_input.name="paymentmethod";
-    
-    payment_input.value=payment_method;
-    
-    payment_input.style.display="none";
-    
-    checkout_form.appendChild(payment_input);
-    
-    checkout_form.submit();    
-    });
-
-      const accordion = document.getElementById('checkoutAccordion');
-
-      accordion.addEventListener('show.bs.collapse', (event) => 
-        {
-            payment_method=event.target.id;
-        });
-
-    form.addEventListener("submit",()=>
-    {
-      event.preventDefault();
-      var is_valid=true;
-     var username_val=username.value;
-     var password_val=password.value;
-        if(username_val=="")
-        {
-        is_valid=false;
-        
-        document.getElementById("username-error").innerHTML="Tên đăng nhập không được để trống";
-        
-        }
-        if(password_val=="")
-        {
-        
-        is_valid=false;
-
-        document.getElementById("password-error").innerHTML="Mật khẩu không được để trống";           
-        }
-        if(is_valid==false)
-        {
-            return;
-        }
-
-      let formDataVal=new FormData(form);
-    
-      var url='@Url.Action("LoginHandle","MyAccount")';
-      
-      $.ajax({  
-                url: url,
-                type: 'POST',
-                data: formDataVal,
-                contentType: false,
-                processData: false, 
-                success:function(response)
-                { 
-                  var status=response.status;
-                  
-                  var message=response.message;
-                  
-                  var title=response.title;
-                  
-                  var sitekey=response.siteKey;
-         
-                    if(sitekey!=null && siteKey!=undefined)
-                    { 
-                       var siteKey= document.getElementById("sitekey");
-                        
-                        siteKey.setAttribute("data-sitekey",sitekey);
-                        
-                        grecaptcha.reset();
-                    }
-                 document.getElementById("toast-title").innerHTML=title;
-
-                 document.getElementById("toast-message").innerHTML=message;
-     
-                 var toastEl = document.querySelector('.toast');
-
-                  if(status==-1 || status==0)
-                { 
-                   toastEl.classList.add('bg-danger');
-                }
-                else
-                { 
-                   toastEl.classList.add('bg-success');
-
-                   var coupon_hide=document.querySelector(".coupon-accordion");
-
-                   coupon_hide.style.display="none";
-                  
-                  var user_response=response.user;
-
-                  //alert(JSON.stringify(user_response));
-                 if(user_response!=null)
-                 {
-                   var order_username=document.getElementById("user-name");
-
-                   var email=document.getElementById("email");
-
-                   var phone=document.getElementById("phone");
-
-                   var address=document.getElementById("address");
-
-                    order_username.value=user_response.userName;
-
-                    email.value=user_response.email;
-
-                    phone.value=user_response.phoneNumber;
-
-                    address.value=user_response.address1;
-                    
-                   var section_url="@Url.Action("UserLoginPartialView","Checkout")";
-                   $.ajax({
-                    url:section_url,
-                    type:"POST",
-                    success: function(partialHtml) 
-                    {
-                        $('#user_avatar').html(partialHtml);
-                    }
-                });  
-
-                    }
-                }
-                
-                var toast = new bootstrap.Toast(toastEl);
-                
-                toast.show();
-
-                },
-                error: function (xhr, status, error) 
-                {
-                document.getElementById("toast-title-error").innerHTML="Lỗi xử lý";
-                document.getElementById("toast-message-error").innerHTML=error;
-                var toastEl = document.querySelector('.toast');
-                var toast = new bootstrap.Toast(toastEl);
-                toast.show();                            
-              }
-            });
-    });
-    });
 </script>
       

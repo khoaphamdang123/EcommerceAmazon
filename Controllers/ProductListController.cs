@@ -72,58 +72,53 @@ if(string.IsNullOrEmpty(id_user))
   }
 
 
-//[Authorize(Roles ="Admin")]
+  //[Authorize(Roles ="Admin")]
   [Route("product_list/paging")]
-   [HttpGet]
-  public async Task<IActionResult> ProductListPaging([FromQuery]int page_size,[FromQuery] int page=1,string productname="",string brand="",string category="",string startdate="",string enddate="",string status="",int sub_cat=-1)
+  [HttpGet]
+  public async Task<IActionResult> ProductListPaging([FromQuery] int page_size, [FromQuery] int page = 1, string productname = "", string brand = "", string category = "", string startdate = "", string enddate = "", string status = "", int sub_cat = -1)
   {
-    try{
-         var prods=await this._product.pagingProduct(page_size,page);
+    try
+    {
+      var prods = await this._product.pagingProduct(page_size, page);
 
-         if(!string.IsNullOrEmpty(productname)||!string.IsNullOrEmpty(brand) || !string.IsNullOrEmpty(startdate) || !string.IsNullOrEmpty(enddate) || !string.IsNullOrEmpty(category) || !string.IsNullOrEmpty(status))
-         {
-            FilterProduct prod=new FilterProduct(productname,startdate,enddate,category,brand,status);
-            var filter_prods=await this._product.filterProduct(prod);
-            prods=PageList<Product>.CreateItem(filter_prods.AsQueryable(),page,page_size);
-            ViewBag.filter_obj=prod; 
-            Console.WriteLine("Paging did come here");
-         }
-         if(sub_cat!=-1)
-         {
-            var filter_prods=await this._product.getProductBySubCategory(sub_cat);
-            prods =PageList<Product>.CreateItem(filter_prods.AsQueryable(),page,page_size);
-            ViewBag.SubCat=sub_cat;
-         }
-          List<string> options=new List<string>(){"50","100","150","200"};
-          
-          ViewBag.options=options;
+      if (!string.IsNullOrEmpty(productname) || !string.IsNullOrEmpty(brand) || !string.IsNullOrEmpty(startdate) || !string.IsNullOrEmpty(enddate) || !string.IsNullOrEmpty(category) || !string.IsNullOrEmpty(status))
+      {
+        FilterProduct prod = new FilterProduct(productname, startdate, enddate, category, brand, status);
+        var filter_prods = await this._product.filterProduct(prod);
+        prods = PageList<Product>.CreateItem(filter_prods.AsQueryable(), page, page_size);
+        ViewBag.filter_obj = prod;
+        Console.WriteLine("Paging did come here");
+      }
+      if (sub_cat != -1)
+      {
+        var filter_prods = await this._product.getProductBySubCategory(sub_cat);
+        prods = PageList<Product>.CreateItem(filter_prods.AsQueryable(), page, page_size);
+        ViewBag.SubCat = sub_cat;
+      }
+      List<string> options = new List<string>() { "50", "100", "150", "200" };
 
-          var cats=await this._category.getAllCategory();
-          
-          var brands=await this._category.getAllBrandList();
-          
-          ViewBag.CatList=cats;
-          
-          ViewBag.BrandList = brands;
-          
-          ViewBag.StatusList = new List<string>{"Hết hàng","Còn hàng"};
-        
-          string select_size=page_size.ToString();
-          
-          ViewBag.select_size=select_size;
-          
-          return View("~/Views/ProductList/ProductList.cshtml",prods);
-        }
-     
-        catch(Exception er)
-        {
-            this._logger.LogTrace("Paging Product List Exception:"+er.Message);
-        }
+      ViewBag.options = options;
 
+      var cats = await this._category.getAllCategory();
+
+      ViewBag.CatList = cats;
+
+      ViewBag.StatusList = new List<string> { "Hết hàng", "Còn hàng" };
+
+      string select_size = page_size.ToString();
+
+      ViewBag.select_size = select_size;
+
+      return View("~/Views/ProductList/ProductList.cshtml", prods);
+    }
+
+    catch (Exception er)
+    {
+      this._logger.LogTrace("Paging Product List Exception:" + er.Message);
+    }
     return View();      
   }
 
-//[Authorize(Roles ="Admin")]
 
    [Route("product_list")]
    

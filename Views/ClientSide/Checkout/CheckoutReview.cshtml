@@ -23,49 +23,14 @@
      username=account_part[0];
      password=account_part[1];
   }
-    
-    string[] email_list=company_user.Email.Split('#');
-    
-    string email=email_list[0];
-    
-    string extra_info=email_list[1];
-    
-    string bank_name="";
-    
-    string account_num="";
-    
-    string account_name="";
-    
-    string bank_value="";
 
-    string qr_code=Environment.GetEnvironmentVariable("qr_code");    
-
-    if(!string.IsNullOrEmpty(extra_info))
-    {
-      string[] info_values=extra_info.Split('\n');
-
-      foreach(var info in info_values)
-      {
-        if(info.Contains("bank_name"))
-        {
-          bank_value=info.Split('~')[1].Trim();
-        }
-        else if(info.Contains("account_name"))
-        {
-          account_name=info.Split('~')[1].Trim();
-        }
-        else if(info.Contains("account_num"))
-        {
-       account_num=info.Split('~')[1].Trim();
-        }
-      }
-    }
-    if(!string.IsNullOrEmpty(bank_value))
-    {
-      var bank_detail=bank_value.Split('*');
-      bank_name=bank_detail[0];
-    }
-
+      string user_name = HttpContextAccessor.HttpContext.Session.GetString("UserName");
+     string email= HttpContextAccessor.HttpContext.Session.GetString("Email");
+     string phone=  HttpContextAccessor.HttpContext.Session.GetString("PhoneNumber");
+     string address= HttpContextAccessor.HttpContext.Session.GetString("Address");
+     string zipcode = HttpContextAccessor.HttpContext.Session.GetString("ZipCode");
+    string payment_method=HttpContextAccessor.HttpContext.Session.GetString("PaymentMethod");
+    
       double total_amount=0;
     double total_delivery=Model.Count>0?5:0;
     foreach(var item in Model)
@@ -223,15 +188,28 @@
 													<div class="col-md-6">
 														<div class="shipping-aadress">
 															<h5 class="mb-3">Shipping to:</h5>
-															<p class="mb-1"><span class="text-dark">Customer:</span> Jhon Michle</p>
-															<p class="mb-1"><span class="text-dark">Address:</span> 47-A, Street Name, City, Australia</p>
-															<p class="mb-1"><span class="text-dark">Phone:</span> (123) 472-796</p>
+															<p class="mb-1"><span class="text-dark">Customer:</span>@user_name</p>
+															<p class="mb-1"><span class="text-dark">Address:</span> @address</p>
+															<p class="mb-1"><span class="text-dark">Phone:</span>@phone</p>
+                              <p class="mb-1"><span class="text-dark">Email:</span>@email</p>
+                              <p class="mb-1"><span class="text-dark">Zip Code:</span>@zipcode</p>
 														</div>
 													</div>
 													<div class="col-md-6">
 														<div class="payment-mode">
-															<h5 class="mb-3">Payment Mode:</h5>
-															<img src="assets/images/icons/visa.png" width="150" class="p-2 border bg-light rounded" alt="">
+															<h5 class="mb-3">Payment Method:</h5>
+                              @if(!string.IsNullOrEmpty(payment_method))
+                              {
+                                @if(payment_method=="Paypal")
+                                {
+                            <img src="~/UploadImageBanner/paypal.png" width="150" class="p-2 border bg-light rounded" alt="">
+                                }
+                                else @if(payment_method=="Credit Card")
+                                {
+                            <img src="~/UploadImageBanner/visa.png" width="150" class="p-2 border bg-light rounded" alt="">
+                                }
+                                
+                              }
 														</div>
 													</div>
 												</div>

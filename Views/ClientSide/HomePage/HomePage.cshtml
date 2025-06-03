@@ -659,12 +659,13 @@
               @foreach(var product in products)
               {
 
-            string regex_product=Regex.Replace(product.ProductName, @"[^\w\d+,]", "-");
+            string regex_product=Regex.Replace(product.ProductName, @"[^\w\d+,]", "-");            
 
             if(product.Status=="Hết hàng")
             {
-                continue;
+                continue;                                
             }
+
               <div class="col">
                 <div class="card">
                   <div class="position-relative overflow-hidden">
@@ -683,13 +684,14 @@
               else
               {
                 <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="..." style="width:250px!important;height:250px!important;">
-            }                    </a>
-                  </div>
+              }                    
+              </a>
+            </div>
                   <div class="card-body">
                     <div class="product-info text-center">
                     <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
-                      <h6 class="mb-1 fw-bold product-name">@product.ProductName</h6>
-                      </a>
+                      <h6 class="mb-1 fw-bold product-name">@product.ProductName</h6>                      
+                    </a>
                       @* <div class="ratings mb-1 h6">
                         <i class="bi bi-star-fill text-warning"></i>
                         <i class="bi bi-star-fill text-warning"></i>
@@ -697,7 +699,7 @@
                         <i class="bi bi-star-fill text-warning"></i>
                         <i class="bi bi-star-fill text-warning"></i>
                       </div> *@
-                      <p class="mb-0 h6 fw-bold product-price">$@product.Price</p>
+                      <p class="mb-0 h6 fw-bold product-price">$@product.Price</p>                      
                     </div>
                   </div>
                 </div>
@@ -723,7 +725,7 @@
             <div class="card depth border-0 rounded-0 border-bottom border-primary border-3 w-100">
               <div class="card-body text-center">
                 <div class="h1 fw-bold my-2 text-primary">
-                  <i class="bi bi-truck"></i>
+                  <i class="bi bi-truck"></i>                  
                 </div>
                 <h5 class="fw-bold">Free Delivery</h5>
                 @* <p class="mb-0">Nor again is there anyone who loves or pursues or desires to obtain pain of itself.</p> *@
@@ -736,8 +738,7 @@
                 <div class="h1 fw-bold my-2 text-danger">
                   <i class="bi bi-credit-card"></i>
                 </div>
-                <h5 class="fw-bold">Secure Payment</h5>
-                @* <p class="mb-0">Nor again is there anyone who loves or pursues or desires to obtain pain of itself.</p> *@
+                <h5 class="fw-bold">Secure Payment</h5>                
               </div>
             </div>
           </div>
@@ -759,7 +760,6 @@
                   <i class="bi bi-headset"></i>
                 </div>
                 <h5 class="fw-bold">24/7 Support</h5>
-                @* <p class="mb-0">Nor again is there anyone who loves or pursues or desires to obtain pain of itself.</p> *@
               </div>
             </div>
           </div>

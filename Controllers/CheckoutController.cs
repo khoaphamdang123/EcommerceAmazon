@@ -221,28 +221,69 @@ public class CheckoutController : BaseController
     return View("~/Views/ClientSide/Checkout/Checkout.cshtml",cart);    
  }
 
-
   [Route("checkout/partial_view")]
   [HttpPost]
   public async Task<IActionResult> UserLoginPartialView()
   {
     return PartialView("~/Views/Shared/_LoginUser.cshtml");    
   }
+  
+
+  
+
+
+  [Route("checkout/payment")]
+  [HttpPost]
+  public async Task<IActionResult> CheckoutPaymentForm(string first_name, string last_name, string email, string zip_code, string phone_number, string address)
+  {
+    try
+    {
+      Console.WriteLine("Checkout Payment Form did come here");
+      Console.WriteLine("First name here is:" + first_name);
+      Console.WriteLine("Last name here is:" + last_name);
+      Console.WriteLine("Email here is:" + email);
+      Console.WriteLine("Zip code here is:" + zip_code);
+      Console.WriteLine("Phone number here is:" + phone_number);
+      Console.WriteLine("Address here is:" + address);
+      HttpContext.Session.SetString("UserName", first_name + " " + last_name);
+      HttpContext.Session.SetString("Email", email);
+      HttpContext.Session.SetString("PhoneNumber", phone_number);
+      HttpContext.Session.SetString("Address", address);
+      HttpContext.Session.SetString("ZipCode", zip_code);
+    }
+    catch (Exception er)
+    {
+      Console.WriteLine("Checkout Payment Form Exception:" + er.Message);
+      this._logger.LogError("Checkout Payment Form Exception:" + er.Message);
+    }
+    return RedirectToAction("CheckoutPayment", "Checkout", new { id = this.HttpContext.Session.GetString("UserId") });
+  }
 
   [Route("checkout/{id}/payment")]
   [HttpGet]
   public async Task<IActionResult> CheckoutPayment(string id)
   {
-    var cart = this._cart.getCart();
+
+    string username= HttpContext.Session.GetString("UserName");
+     string email= HttpContext.Session.GetString("Email");
+     string phone=  HttpContext.Session.GetString("PhoneNumber");
+     string address= HttpContext.Session.GetString("Address");
+    string zipcode =HttpContext.Session.GetString("ZipCode");
+
+    if(string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(phone) || string.IsNullOrEmpty(address) || string.IsNullOrEmpty(zipcode))
+    {
+      return RedirectToAction("CheckoutCart", "Checkout", new { id = this.HttpContext.Session.GetString("UserId") });
+    }
+
+    var cart = this._cart.getCart();    
+
 
     try
     {
-
       if (cart == null || cart.Count == 0)
       {
         return RedirectToAction("Cart", "Cart");
       }
-      //  string username=HttpContext.Session.GetString("UserName");
 
       var payment_methods = await this._payment.getAllPayment();
 
@@ -254,22 +295,76 @@ public class CheckoutController : BaseController
       this._logger.LogError("Checkout Payment Exception:" + er.Message);
     }
     return View("~/Views/ClientSide/Checkout/CheckoutPayment.cshtml", cart);
-  } 
+  }
+
+  [Route("checkout/review")]
+  [HttpPost]
+  public async Task<IActionResult> CheckoutReviewForm(string card_number, string card_owner, string mm, string yy, string cvv, string payment_method)
+  {
+    try
+    {
+      string payment_method_value = payment_method;
+      Console.WriteLine("Checkout Review Form did come here");
+      Console.WriteLine("Card Number here is:" + card_number);
+      Console.WriteLine("Card Owner here is:" + card_owner);
+      Console.WriteLine("MM here is:" + mm);
+      Console.WriteLine("YY here is:" + yy);
+      Console.WriteLine("CVV here is:" + cvv);
+      Console.WriteLine("Payment Method here is:" + payment_method_value);
+      HttpContext.Session.SetString("PaymentMethod", payment_method_value);
+
+      if (payment_method_value == "Credit Card")
+      {
+        HttpContext.Session.SetString("CardNumber", card_number);
+        HttpContext.Session.SetString("CardOwner", card_owner); 
+        HttpContext.Session.SetString("MM", mm);
+        HttpContext.Session.SetString("YY", yy);
+        HttpContext.Session.SetString("CVV", cvv);
+      }
+    }
+    catch (Exception er)
+    {
+      Console.WriteLine("Checkout Review Form Exception:" + er.Message);
+
+      this._logger.LogError("Checkout Review Form Exception:" + er.Message);
+    }
+
+    return RedirectToAction("CheckoutReview", "Checkout", new { id = this.HttpContext.Session.GetString("UserId") });
+
+  }
+
 
   [Route("checkout/{id}/review")]
   [HttpGet]
   public async Task<IActionResult> CheckoutReview(string id)
   {    
-     var cart=this._cart.getCart();
+    string payment_method= HttpContext.Session.GetString("PaymentMethod");
+
+    if (string.IsNullOrEmpty(payment_method))
+    {
+      return RedirectToAction("CheckoutPayment", "Checkout", new { id = this.HttpContext.Session.GetString("UserId") });
+    }
+
+     string username= HttpContext.Session.GetString("UserName");
+     string email= HttpContext.Session.GetString("Email");
+     string phone=  HttpContext.Session.GetString("PhoneNumber");
+     string address= HttpContext.Session.GetString("Address");
+     string zipcode =HttpContext.Session.GetString("ZipCode");
+
+    if(string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(phone) || string.IsNullOrEmpty(address) || string.IsNullOrEmpty(zipcode))
+    {
+      return RedirectToAction("CheckoutCart", "Checkout", new { id = this.HttpContext.Session.GetString("UserId") });
+    }
+
+
+    var cart=this._cart.getCart();
 
     try
     {
-
-     if(cart==null || cart.Count==0)
-     {
-       return RedirectToAction("Cart","Cart");
-     }
-    //  string username=HttpContext.Session.GetString("UserName");
+     if (cart == null || cart.Count == 0)
+      {
+        return RedirectToAction("Cart", "Cart");
+      }
 
      var payment_methods=await this._payment.getAllPayment();
      
