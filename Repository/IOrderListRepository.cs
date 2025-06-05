@@ -12,12 +12,11 @@ public interface IOrderRepository
   public Task<Order> findOrderById(int id);
 
   public Task<IEnumerable<Order>> filterOrderList(string status);
-
   public Task<PageList<Order>> pagingOrderList(int page_size,int page);
 
   public Task<Order> getLatestOrderByUsername(string user_id);
 
-  public Task<int> createOrder(AspNetUser user,List<CartModel> cart,Payment payment,string note);
+  public Task<int> createOrder(AspNetUser user,List<CartModel> cart,Payment payment,string zip_code,string note);
 
   public Task<Order> filterOrderDetail(int id);
 

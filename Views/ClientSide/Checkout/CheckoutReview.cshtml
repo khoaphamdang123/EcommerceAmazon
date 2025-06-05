@@ -46,6 +46,8 @@
         total_amount+=current_price*item.Quantity;           
     }
 
+    double total_payment=total_amount+total_delivery;
+
     Console.WriteLine("Sitekey here is:"+siteKey);     
  } 
 
@@ -202,13 +204,12 @@
                               {
                                 @if(payment_method=="Paypal")
                                 {
-                            <img src="~/UploadImageBanner/paypal.png" width="150" class="p-2 border bg-light rounded" alt="">
+                            <img src="~/UploadImageBanner/paypal.png" width="150" class="p-2 border bg-light rounded" alt="">                            
                                 }
                                 else @if(payment_method=="Credit Card")
                                 {
                             <img src="~/UploadImageBanner/visa.png" width="150" class="p-2 border bg-light rounded" alt="">
                                 }
-                                
                               }
 														</div>
 													</div>
@@ -223,8 +224,16 @@
 														</div>
 													</div>
 													<div class="col-md-6">
-														<div class="d-grid"><a href="checkout-complete.html" class="btn btn-outline-dark btn-ecomm">Complete Order<i class="bx bx-chevron-right"></i></a>
+                           @if(payment_method=="Paypal")
+                           {
+                           <div class="d-grid" id="checkout-complete"></div> 
+                           }
+                           else
+                           {
+														<div class="d-grid"><a href="checkout-complete.html" id="checkout-complete" class="btn btn-outline-dark btn-ecomm">Complete Order<i class="bx bx-chevron-right"></i></a>
+                            
 														</div>
+                            }
 													</div>
 												</div>
 											</div>
@@ -310,9 +319,8 @@
 														</p>
 														<p class="mb-2">Shipping: <span class="float-end">$@total_delivery</span>
 														</p>
-													
 														<div class="my-3 border-top"></div>
-														<h5 class="mb-0">Order Total: <span class="float-end">$@(total_amount+total_delivery)</span></h5>
+														<h5 class="mb-0">Order Total: <span class="float-end">$@(total_payment)</span></h5>
 													</div>
 												</div>
 											</div>
@@ -694,7 +702,9 @@ function updateQuantityFromCart()
         var url="@Url.Action("updateCart","Cart")";
         var quantity_values=document.querySelectorAll("#new-quantity-item");
         var formData = new FormData();
+        
         const quantities=Array.from(quantity_values).map((item)=>parseInt(item.value));
+        
         const product_ids=Array.from(update_item).map((item)=>parseInt(item.getAttribute("data-product-id")));
 
      quantities.forEach((item, index) => 
@@ -742,13 +752,14 @@ function removeItemFromCart()
     {
         remove_item.forEach((item)=>
         {
-         item.addEventListener('click',(e)=>{
+         item.addEventListener('click',(e)=>
+         {  
            e.preventDefault();
         
            var product_id=item.getAttribute("data-product-id");
 
-           var formData = new FormData();
-
+           var formData = new FormData();           
+ 
            formData.append("product_id", product_id);
 
            var url="@Url.Action("RemoveItemFromCart","Cart")";
@@ -761,50 +772,157 @@ function removeItemFromCart()
                 processData: false, 
                 success:function(response)
                 { 
-
                  $('#sub-cart-section').html(response);
 
-                 window.location.reload();
-                 @* document.getElementById("toast-title").innerHTML=title;
-
-                 document.getElementById("toast-message").innerHTML=message;
-     
-                 var toastEl = document.querySelector('.toast');
-
-                  if(status==-1 || status==0)
-                { 
-                   toastEl.classList.add('bg-danger');
-                }
-                else
-                { 
-                   toastEl.classList.add('bg-success');
-                }
-                
-                var toast = new bootstrap.Toast(toastEl);
-                
-                toast.show(); *@
+                 window.location.reload();                                                                                                                                                         
+              
                 },
                 error: function (xhr, status, error) 
                 {
                 document.getElementById("toast-title-error").innerHTML="Error Remove Cart";
+                
                 document.getElementById("toast-message-error").innerHTML=error;
+                
                 var toastEl = document.querySelector('.toast');
-                var toast = new bootstrap.Toast(toastEl);
-                toast.show();                            
+                                
+                var toast = new bootstrap.Toast(toastEl);                                                
+                
+                toast.show();                                
               }
             });
-           
-
          });
         });
     }
 }
 
+
+
 document.addEventListener("DOMContentLoaded", function() 
 {
-  removeItemFromCart();
-  updateQuantityFromCart();
-});
 
+
+  removeItemFromCart();
+  
+  updateQuantityFromCart();  
+  
+ function getToken()
+    {   
+        return document.querySelector('input[name="__RequestVerificationToken"]').value;
+    }
+
+  var payment_method="@payment_method";
+
+   const user_name="@user_name";
+    
+    const address="@address";
+    
+    const phone="@phone";
+
+    const email="@email";
+    
+    const zipcode="@zipcode";
+    
+    var total_price="@total_payment";
+
+    const checkout_obj=
+    {
+    username:user_name,
+    address1:address,
+    phonenumber:phone,
+    email:email,
+    zipcode:zipcode,
+    paymentmethod:payment_method
+    };
+
+  if(payment_method=="Paypal")
+  {
+     paypal_sdk.Buttons({
+           style:
+           {
+            layout:'vertical',
+            color:'gold',
+            tagline:'false',
+            size:'responsive',
+            shape:'rect'
+           },
+            createOrder: function(data, actions) 
+            { 
+    
+ 
+
+              return fetch('/checkout/createOrder',{
+                method:'POST',
+                headers: 
+                {
+                 'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({total_price:total_price,checkout:checkout_obj})
+              })
+            .then(function(res)
+            {   
+                
+                return res.json();                
+
+            }).then(function(data)
+            {    
+                  return data.orderId;                      
+            })
+
+            },
+          onApprove: function(data, actions) 
+          {
+            return fetch('/checkout/capture?token='+data.orderID)
+            .then(function(res) 
+            {   
+                return res.json();                
+            })
+            .then(function(details) 
+            {  
+                if(details.status===1) 
+                {  
+                   //var checkout = details.checkout;
+@*                    
+                   var note=document.getElementById("checkout-mess");
+                    
+                   if(note!=null)
+                    {
+                        note.value="Đã thanh toán thành công qua Paypal";
+                    } *@
+                    
+                    @* alert(JSON.stringify(checkout_obj)); *@
+
+    var checkout= {
+    username:user_name,
+    address1:address,
+    phonenumber:phone,
+    email:email,
+    zipcode:zipcode,
+    paymentmethod:payment_method
+    };
+                    return fetch('/checkout/submit',{
+                        method:'POST',
+                        headers: 
+                        {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': getToken()
+                        },
+                        body: JSON.stringify(checkout)
+                    });
+                
+                } 
+                else 
+                {
+                    alert('Payment failed: ' + details.message);
+                }
+            });
+        },
+            // Handle errors
+            onError: function(err) {
+                console.error('An error occurred during the transaction', err);                
+                @* alert('An error occurred. Please try again.'); *@
+            }
+        }).render('#checkout-complete');  
+      }     
+      });
 </script>
       

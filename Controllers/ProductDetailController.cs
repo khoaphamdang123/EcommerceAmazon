@@ -64,10 +64,10 @@ public async Task<IActionResult> ProductDetail(string product_name)
       {
         Console.WriteLine("Variant here is null");
       }
-      if(variants!=null)
-      {
-      ViewBag.variants=variants;
-      }
+        if (variants != null)
+        {
+          ViewBag.variants = variants;
+        }
       //  if(manual!=null)
       //  {
       //   ViewBag.manual_link=manual.ManualLink;

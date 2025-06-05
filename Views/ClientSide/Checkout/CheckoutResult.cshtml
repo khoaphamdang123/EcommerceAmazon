@@ -3,99 +3,46 @@
     Layout="_UserLayout";
  }
 
-  <div
-       class="bs-toast toast fade bg-success hide toast-placement-ex top-5 end-0"
-       role="alert"
-       aria-live="assertive"
-       aria-atomic="true"
-       data-bs-dismiss="toast"
-       style="cursor: pointer; position: fixed; top: 20px; right: 20px; z-index: 1050;"
-       data-delay="3000"
-       data-bs-autohide="true" 
-       data-bs-delay="3000"
-             >
-                        <div class="toast-header">
-                          <i class="bx bx-bell me-2"></i>
-                          <div class="me-auto fw-semibold" id="toast-title">
-                            Thông tin đơn hàng
-                          </div>
-                        </div>
-                        <div class="toast-body" id="toast-message">
-                            Chi tiết đơn hàng đã được gửi về email của bạn.                        
-                        </div>
-                      </div>
-  
- <div class="confirmation-container">
-        <div class="thank-you-message">
-            <h1><strong>Cảm ơn bạn đã mua hàng của chúng tôi!</strong></h1>
-            <p><strong>Đơn hàng của bạn đã được đặt thành công.</strong></p>
-        </div>
-
-        <div class="order-info">
-            <h2>Thông tin đơn hàng</h2>
-            <p><strong>Mã đơn hàng:</strong>&nbsp;@Model?.Order?.OrderId</p>          
-            <p><strong>Tên khách hàng:</strong>&nbsp;@Model.Order?.User.UserName</p>
-            <p><strong>Tổng tiền:</strong>&nbsp;@Model.Order?.Total</p>
-            <p><strong>Phí vận chuyển:</strong>&nbsp;Miễn phí</p>
-            <p><strong>Phương thức thanh toán:</strong>&nbsp;@Model.Order?.Payment.Paymentname</p>
-            <p><strong>Ghi chú đơn hàng:</strong>&nbsp; @Model.Order?.Note</p>
-        </div>
-
-        <div class="shipping-address">
-            <h2>Địa chỉ giao hàng</h2>
-            <p>@Model.Order.User?.UserName</p>
-            <p>@Model.Order?.Shippingaddress</p>
-        </div>
-        <div class="order-summary">
-            <h2>Chi tiết hóa đơn</h2>
-            <table class="table-content table-responsive">
-                <thead>
-                    <tr>
-                        <th>Sản phẩm</th>
-                        <th>Số lượng</th>
-                        <th>Kiểu dáng</th>
-                        <th>Giá</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach(var product in Model.Cart)
-                {
-                string variant_info="";
-                
-                string price_value=!string.IsNullOrEmpty(product.Price) ? product.Price : product.Product?.Price;
-                
-                int discount=string.IsNullOrEmpty(product.Product?.Discount.ToString()) ? 100 : Convert.ToInt32(product.Product?.Discount);                
-
-
-                                          if(!string.IsNullOrEmpty(product?.Size))
-                                          {
-                                             variant_info+="Kích thước: "+product?.Size+"\n";
-                                          }                                          
-                                          if(!string.IsNullOrEmpty(product?.Color))
-                                          {
-                                             variant_info+="Màu sắc: "+product?.Color+"\n";
-                                          }
-                                          @* if(!string.IsNullOrEmpty(product?.Version))
-                                          {
-                                             variant_info+="Phiên bản: "+product?.Version+"\n";
-                                          }
-                                          if(!string.IsNullOrEmpty(product?.Mirror))
-                                          {
-                                             variant_info+="Loại kính: "+product?.Mirror+"\n";
-                                          } *@
-                    Console.WriteLine("Variant info: "+variant_info);
-                    <tr>
-                        
-                        <td>@product.Product?.ProductName</td>
-                        <td>@product?.Quantity</td>
-                        <td>@variant_info</td>
-                        <td>@((Convert.ToInt32(price_value)-((Convert.ToInt32(price_value)*discount/100))*product.Quantity))</td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
- </div>
+	<div class="page-wrapper">
+			<div class="page-content">
+				<!--start breadcrumb-->
+				<section class="py-3 border-bottom border-top d-none d-md-flex bg-light">
+					<div class="container">
+						<div class="page-breadcrumb d-flex align-items-center">
+							<h3 class="breadcrumb-title pe-3">Checkout</h3>
+							<div class="ms-auto">
+								<nav aria-label="breadcrumb">
+									<ol class="breadcrumb mb-0 p-0">
+										<li class="breadcrumb-item"><a href="@Url.Action("Homepage","Homepage")"><i class="bx bx-home-alt"></i>Home</a>
+										</li>
+										<li class="breadcrumb-item"><a href="@Url.Action("Products","Products")">Shop</a>
+										</li>
+										<li class="breadcrumb-item active" aria-current="page">Order Complete</li>
+									</ol>
+								</nav>
+							</div>
+						</div>
+					</div>
+				</section>
+				<!--end breadcrumb-->
+				<!--start shop cart-->
+				<section class="py-4">
+					<div class="container">
+						<div class="card py-3 mt-sm-3">
+							<div class="card-body text-center">
+								<h2 class="h4 pb-3">Thank you for your order!</h2>
+								<p class="fs-sm mb-2">Your order has been placed and will be processed as soon as possible.</p>
+								<p class="fs-sm mb-2">Make sure you make note of your order number, which is <span class="fw-medium">@Model.Order.Id.</span>
+								</p>                                
+								<p class="fs-sm">You will be receiving an email shortly with confirmation of your order. <u>You can now:</u>
+								</p><a class="btn btn-light rounded-0 mt-3 me-3" href="@Url.Action("Products","Products")">Go back shopping</a><a class="btn btn-white rounded-0 mt-3" href="order-tracking.html"><i class='bx bx-map'></i>Track order</a>
+							</div>
+						</div>
+					</div>
+				</section>
+				<!--end shop cart-->
+			</div>
+		</div>
  <script>
     document.addEventListener("DOMContentLoaded",()=>
     {

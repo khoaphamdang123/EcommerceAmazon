@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Ecommerce_Product.Repository;
 using Ecommerce_Product.Support_Serive;
 using iText.Commons.Utils;
+using Newtonsoft.Json;
 
 namespace Ecommerce_Product.Controllers;
 [Authorize(Roles ="Admin")]
@@ -48,7 +49,7 @@ public class DashboardController : BaseAdminController
 
     Console.WriteLine("Still come to here");
     
-    int profit_in_day=this._dashboard.countProfitByDay(DateTime.Now.Day);
+    double profit_in_day=this._dashboard.countProfitByDay(DateTime.Now.Day);
 
     
     int order_in_day=this._dashboard.countOrderByDay(DateTime.Now.Day);
@@ -63,11 +64,11 @@ public class DashboardController : BaseAdminController
 
     Console.WriteLine("Still come to here4");
 
-    int total_profit_previous_1_year=this._dashboard.countProfitByYear(DateTime.Now.Year-1);
+    double total_profit_previous_1_year=this._dashboard.countProfitByYear(DateTime.Now.Year-1);
 
     Console.WriteLine("Still come to here5");
 
-    int total_profit_previous_2_year=this._dashboard.countProfitByYear(DateTime.Now.Year-2);
+    double total_profit_previous_2_year=this._dashboard.countProfitByYear(DateTime.Now.Year-2);
 
     Console.WriteLine("Still come to here6");
 
@@ -77,7 +78,7 @@ public class DashboardController : BaseAdminController
     
     Console.WriteLine("len of cat list:"+cat_list.Count().ToString());
     
-    Dictionary<Category,int> profit_by_cats=new Dictionary<Category,int>();
+    Dictionary<Category,double> profit_by_cats=new Dictionary<Category,double>();
     
     List<int> order_in_months=new List<int>();
     
@@ -90,12 +91,14 @@ public class DashboardController : BaseAdminController
 
     foreach(var item in cat_list)
     {
-     int profit=this._dashboard.countProfitByOrder(item.Id);
+     double profit=this._dashboard.countProfitByOrder(item.Id);
 
      profit_by_cats.Add(item,profit);
     }
     
     Console.WriteLine("Profit by cats here is:"+profit_by_cats.Count().ToString());
+
+    Console.WriteLine("Category here is:" + JsonConvert.SerializeObject(profit_by_cats));
 
 
     var latest_orders=await this._dashboard.getLatestOrder(5);

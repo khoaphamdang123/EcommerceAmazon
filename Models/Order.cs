@@ -17,6 +17,8 @@ public partial class Order
 
     public string Shippingaddress { get; set; } = null!;
 
+    public string ZipCode { get; set; } = null!;
+
     public int Paymentid { get; set; }
 
     public string? OrderId { get; set; }

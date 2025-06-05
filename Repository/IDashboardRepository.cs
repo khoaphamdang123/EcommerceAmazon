@@ -18,13 +18,13 @@ public interface IDashboardRepository
 
    public int countOrderByYear(int month);
 
-   public int countProfitByOrder(int cat_id);
+   public double countProfitByOrder(int cat_id);
 
-  public int countProfitByMonth(int month);
+  public double countProfitByMonth(int month);
 
-  public int countProfitByYear(int year);
+  public double countProfitByYear(int year);
 
-  public int countProfitByDay(int day);
+  public double countProfitByDay(int day);
 
 
    public Task saveChanges();

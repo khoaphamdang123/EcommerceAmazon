@@ -109,7 +109,7 @@ public class CheckoutController : BaseController
         string account = Request.Cookies["UserAccount"];
         Console.WriteLine("Account here is:" + account);
         ViewBag.Account = account;
-        ViewBag.SavedAccount = is_saved_account;
+        ViewBag.SavedAccount = is_saved_account;        
       }
       //  var company = await this._user.findUserByName("company");
 
@@ -160,7 +160,6 @@ public class CheckoutController : BaseController
 
     
       
-
     //   var user = await this._user.findUserByName(username);
 
     //   ViewBag.user = user;    
@@ -310,13 +309,16 @@ public class CheckoutController : BaseController
       Console.WriteLine("MM here is:" + mm);
       Console.WriteLine("YY here is:" + yy);
       Console.WriteLine("CVV here is:" + cvv);
+
+
       Console.WriteLine("Payment Method here is:" + payment_method_value);
+
       HttpContext.Session.SetString("PaymentMethod", payment_method_value);
 
       if (payment_method_value == "Credit Card")
       {
         HttpContext.Session.SetString("CardNumber", card_number);
-        HttpContext.Session.SetString("CardOwner", card_owner); 
+        HttpContext.Session.SetString("CardOwner", card_owner);
         HttpContext.Session.SetString("MM", mm);
         HttpContext.Session.SetString("YY", yy);
         HttpContext.Session.SetString("CVV", cvv);
@@ -329,7 +331,7 @@ public class CheckoutController : BaseController
       this._logger.LogError("Checkout Review Form Exception:" + er.Message);
     }
 
-    return RedirectToAction("CheckoutReview", "Checkout", new { id = this.HttpContext.Session.GetString("UserId") });
+    return RedirectToAction("CheckoutReview", "Checkout", new { id = this.HttpContext.Session.GetString("UserId")});
 
   }
 
@@ -452,166 +454,176 @@ return BadRequest(new {status=0,message="Tạo đơn hàng thất bại"});
 }
 
 
- [Route("checkout/submit")]
- [ValidateAntiForgeryToken]
- [HttpPost]
- public async Task<IActionResult> CheckoutOrder(CheckoutModel checkout)
- {
-  Console.WriteLine("Checkout Submit did come here");
-  try
-  {  
-    Console.WriteLine("User name here is:"+checkout.UserName);
-    
-    Console.WriteLine("PHONE here is:"+checkout.PhoneNumber);
-    
-    Console.WriteLine("Payment method here is:"+checkout.PaymentMethod);
-    
-    string username=checkout.UserName.Replace(" ","_");    
+  [Route("checkout/submit")]
+  [HttpPost]
+  [ValidateAntiForgeryToken]
 
-    string email=checkout.Email;    
+ public async Task<IActionResult> CheckoutOrder([FromBody] CheckoutModel checkout)
+  {
+    Console.WriteLine("Checkout Submit did come here");
 
-    string note = checkout.Note;
 
-    Console.WriteLine("Email here is:"+email);
-
-    string address1=checkout.Address1;
-
-    string phone=checkout.PhoneNumber;
-
-    string payment_method=checkout.PaymentMethod;
-
-    var check_user_exist=await this._user.checkUserExist(email,username);
-
-    var cart=this._cart.getCart();
-  
-    ApplicationUser user= new ApplicationUser();
-
-    if(check_user_exist && User.Identity.IsAuthenticated && User.IsInRole("User"))
+    try
     {
-      user=await this._user.findUserByName(username);
-    }
-    else
-    {
-      user=new ApplicationUser{UserName=username,Email=email,PhoneNumber=phone,Address2=address1};
-      
-      string role="Anonymous";
-            
-      var create_role=await this._user.createRole(role);
-           
-      var new_user=new Register{UserName=username,Email=email,Password="123456",Address2=address1,PhoneNumber=phone};
-      
-      var create_user=await this._user.createUser(new_user,role);
-      
-      user=await this._user.findUserByEmail(email);      
-    }
-    
-    var payment=await this._payment.findPaymentByName(payment_method);
+      Console.WriteLine("User name here is:" + checkout.UserName);
 
-    Console.WriteLine("User Id here is:"+user.Id);
-    
-    var asp_user = await this._user.getAspUser(user.Id);    
+      Console.WriteLine("PHONE here is:" + checkout.PhoneNumber);
 
-    var created_order=await this._order.createOrder(asp_user,cart,payment,note);
-      
-    if(created_order==1)
-    {  
-      Console.WriteLine("Order created successfully");
-      
-      var order=await this._order.getLatestOrderByUsername(asp_user.Id);
+      Console.WriteLine("Payment method here is:" + checkout.PaymentMethod);
 
-      Console.WriteLine("render view1");
+      string username = checkout.UserName.Replace(" ", "_");
 
-      var render_view = new RazorViewRenderer();
+      string email = checkout.Email;
 
-      Console.WriteLine("render view");
+      string note = checkout.Note;
 
-      var company_user = await this._user.findUserByName("company");       
-      string[] email_list=company_user.Email.Split('#');
-      string extra_info=email_list[1];
-      string bank_name="";
-      string account_num="";
-      string account_name="";
+      string zip_code = checkout.ZipCode;
 
-    if(!string.IsNullOrEmpty(extra_info))
-    {
-      string[] info_values=extra_info.Split('\n');
-      foreach(var info in info_values)
+      Console.WriteLine("Email here is:" + email);
+
+      string address1 = checkout.Address1;
+
+      string phone = checkout.PhoneNumber;
+
+      string payment_method = checkout.PaymentMethod;
+
+      var check_user_exist = await this._user.checkUserExist(email, username);
+
+      var cart = this._cart.getCart();
+
+      ApplicationUser user = new ApplicationUser();
+
+      // if(check_user_exist && User.Identity.IsAuthenticated && User.IsInRole("User"))
+      // {
+      //   user=await this._user.findUserByName(username);
+      // }
+
+      user = new ApplicationUser { UserName = username, Email = email, PhoneNumber = phone, Address2 = address1 };
+
+      string role = "Anonymous";
+
+      var create_role = await this._user.createRole(role);
+
+      var new_user = new Register { UserName = username, Email = email, Password = "123456", Address2 = address1, PhoneNumber = phone };
+
+      var create_user = await this._user.createUser(new_user, role);
+
+      user = await this._user.findUserByEmail(email);
+
+
+      var payment = await this._payment.findPaymentByName(payment_method);
+
+      Console.WriteLine("User Id here is:" + user.Id);
+
+      var asp_user = await this._user.getAspUser(user.Id);
+
+      var created_order = await this._order.createOrder(asp_user, cart, payment, zip_code, note);
+
+      if (created_order == 1)
       {
-        if(info.Contains("bank_name"))
+        Console.WriteLine("Order created successfully");
+
+        var order = await this._order.getLatestOrderByUsername(asp_user.Id);
+
+        Console.WriteLine("render view 1");
+
+        var render_view = new RazorViewRenderer();
+
+        Console.WriteLine("render view");
+
+        var company_user = await this._user.findUserByName("company");
+
+        string[] email_list = company_user.Email.Split('#');
+
+        string extra_info = email_list[1];
+
+        string bank_name = "";
+
+        string account_num = "";
+
+        string account_name = "";
+
+        if (!string.IsNullOrEmpty(extra_info))
         {
-          bank_name=info.Split('~')[1].Trim();
+          string[] info_values = extra_info.Split('\n');
+          foreach (var info in info_values)
+          {
+            if (info.Contains("bank_name"))
+            {
+              bank_name = info.Split('~')[1].Trim();
+            }
+            else if (info.Contains("account_name"))
+            {
+              account_name = info.Split('~')[1].Trim();
+            }
+            else if (info.Contains("account_num"))
+            {
+              account_num = info.Split('~')[1].Trim();
+            }
+          }
         }
-        else if(info.Contains("account_name"))
-        {
-          account_name=info.Split('~')[1].Trim();
-        }
-        else if(info.Contains("account_num"))
-        {
-       account_num=info.Split('~')[1].Trim();
-        }
+
+        // ReceiptModel receipt=new ReceiptModel{Order=order,BankName=bank_name,AccountName=account_name,AccountNumber=account_num};
+
+        //  string mail_path="MailTemplate/index.cshtml";
+
+        //  string render_string=await render_view.RenderViewToStringAsync(mail_path,receipt);
+
+        //  bool is_sent=await this._smtpService.sendEmailGeneral(2,render_string);
+
+        //  if(is_sent)
+        //  {
+        //   this._logger.LogInformation("Send order checkout successfully");
+        //  }
+        //  else
+        //  {
+        //   this._logger.LogInformation("Send order checkout failed");
+        //  }
+
+        //  Console.WriteLine("Render string here is:"+render_string);
+
+        CheckoutResultModel checkout_result = new CheckoutResultModel { Order = order, Cart = cart };
+
+        await this._cart.clearCart();
+
+        return View("~/Views/ClientSide/Checkout/CheckoutResult.cshtml", checkout_result);
       }
     }
+    catch (Exception er)
+    {
+      Console.WriteLine("Checkout Exception:" + er.Message);
+      this._logger.LogError("Checkout Exception:" + er.Message);
+    }
+    ViewBag.Status = 0;
 
-    ReceiptModel receipt=new ReceiptModel{Order=order,BankName=bank_name,AccountName=account_name,AccountNumber=account_num};
+    ViewBag.Message = "Đặt hàng thất bại";
 
-     string mail_path="MailTemplate/index.cshtml";
+    string username_value = HttpContext.Session.GetString("Username");
 
-     string render_string=await render_view.RenderViewToStringAsync(mail_path,receipt);
+    var payment_methods = await this._payment.getAllPayment();
 
-     bool is_sent=await this._smtpService.sendEmailGeneral(2,render_string);
+    ViewBag.payment_methods = payment_methods;
 
-     if(is_sent)
-     {
-      this._logger.LogInformation("Send order checkout successfully");
-     }
-     else
-     {
-      this._logger.LogInformation("Send order checkout failed");
-     }
+    int setting_status = await this._setting.getStatusByName("recaptcha");
 
-     Console.WriteLine("Render string here is:"+render_string);
-          
-     CheckoutResultModel checkout_result=new CheckoutResultModel{Order=order,Cart=cart};
-     
-     await this._cart.clearCart();
+    var cart_value = this._cart.getCart();
 
-     return View("~/Views/ClientSide/Checkout/CheckoutResult.cshtml",checkout_result);
-    }    
-  }
-  catch(Exception er)
-  {Console.WriteLine("Checkout Exception:"+er.Message);
-    this._logger.LogError("Checkout Exception:"+er.Message);    
-  }
-  ViewBag.Status=0;
+    if (setting_status == 1)
+    {
+      ViewBag.SiteKey = this._recaptcha_response.SiteKey;
+    }
 
-  ViewBag.Message="Đặt hàng thất bại";
-   
-  string username_value=HttpContext.Session.GetString("Username");
+    if (string.IsNullOrEmpty(username_value))
+    {
+      return View("~/Views/ClientSide/Checkout/Checkout.cshtml", cart_value);
+    }
 
-  var payment_methods=await this._payment.getAllPayment();
-     
-  ViewBag.payment_methods=payment_methods;
+    var user_value = await this._user.findUserByName(username_value);
 
-  int setting_status=await this._setting.getStatusByName("recaptcha");
+    ViewBag.user = user_value;
 
-  var cart_value=this._cart.getCart();
-
-       if(setting_status==1)
-       {
-        ViewBag.SiteKey=this._recaptcha_response.SiteKey;
-       }
-    
-     if(string.IsNullOrEmpty(username_value))
-     {
-        return View("~/Views/ClientSide/Checkout/Checkout.cshtml",cart_value);
-     }
-
-     var user_value=await this._user.findUserByName(username_value);
-
-     ViewBag.user=user_value;     
-
-     return View("~/Views/ClientSide/Checkout/Checkout.cshtml");    
- }  
+    return View("~/Views/ClientSide/Checkout/Checkout.cshtml");
+  }  
  [Route("checkout/capture")]
  [HttpGet]
  public async Task<IActionResult> CaptureOrder(string token)

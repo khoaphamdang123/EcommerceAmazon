@@ -2,6 +2,7 @@ using Ecommerce_Product.Repository;
 using Ecommerce_Product.Models;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
+using System.Globalization;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -78,7 +79,7 @@ if (order != null)
    return paging_list_order;
   }
 
-    public async Task<int> createOrder(AspNetUser user,List<CartModel> cart,Payment payment,string note)
+    public async Task<int> createOrder(AspNetUser user,List<CartModel> cart,Payment payment,string zip_code,string note)
     {
      int created_res=0;
      Console.WriteLine("Cart length here is:"+cart.Count);
@@ -86,19 +87,22 @@ if (order != null)
    try
    {
     Console.WriteLine("Did come to order create section");
+
     var order=new Order
     {
       Status="Processing",
       Total=(decimal)cart.Sum((s)=>{
         string price_value=string.IsNullOrEmpty(s.Price)?s.Product.Price:s.Price;
+        price_value=price_value.Replace("$","").Replace(",",".");
         int discount=string.IsNullOrEmpty(s.Product.Discount.ToString()) ? 0 : Convert.ToInt32(s.Product.Discount);
-        int current_price=Convert.ToInt32(price_value)-(Convert.ToInt32(price_value)*discount/100);
+        double current_price=double.Parse(price_value,CultureInfo.InvariantCulture)-(double.Parse(price_value,CultureInfo.InvariantCulture)*(discount)/100);
         return current_price*s.Quantity;
       }),
       Shippingaddress=string.IsNullOrEmpty(user.Address2)?user.Address1:user.Address2,
       Userid=user.Id,
       Paymentid=payment.Id,
-      Note=note,
+      ZipCode=zip_code,
+      Note =note,
       Createddate=DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss")
     };
 
@@ -141,10 +145,9 @@ if (order != null)
             continue;
           }
           string variant_color=variant.Color?.Colorname??"";
-          string variant_size=variant.Size?.Sizename??"";
-          string variant_version=variant.Version?.Versionname??"";
-          string variant_mirror=variant.Mirror?.Mirrorname??"";
 
+          string variant_size=variant.Size?.Sizename??"";
+      
           if(variant_color==color && variant_size==size)
           { 
             if(!variant_id.Contains(variant.Id))
@@ -157,8 +160,13 @@ if (order != null)
       {  
        
         string price_value=string.IsNullOrEmpty(product.Price)?product.Product.Price:product.Price;
-         int discount=string.IsNullOrEmpty(product.Product.Discount.ToString()) ? 0 : Convert.ToInt32(product.Product.Discount);
-           int current_price=Convert.ToInt32(price_value)-(Convert.ToInt32(price_value)*discount/100);
+
+        price_value=price_value.Replace("$","").Replace(",",".");
+
+        int discount=string.IsNullOrEmpty(product.Product.Discount.ToString()) ? 0 : Convert.ToInt32(product.Product.Discount);
+
+        double current_price=double.Parse(price_value.Replace(",","."),CultureInfo.InvariantCulture)-(double.Parse(price_value.Replace(",","."),CultureInfo.InvariantCulture)*discount/100);
+
         var order_detail=new OrderDetail
         {
           Quantity=product.Quantity,
@@ -171,10 +179,16 @@ if (order != null)
       }
       }
     else
-    {  string price_value=product.Product?.Price;
+    {
+       string price_value=product.Product?.Price;
+
+        price_value =price_value.Replace("$","").Replace(",",".");
+
     Console.WriteLine("Price Value here is:"+price_value); 
        int discount=string.IsNullOrEmpty(product.Product?.Discount.ToString()) ? 0 : Convert.ToInt32(product.Product.Discount);
-       int current_price=Convert.ToInt32(price_value)-(Convert.ToInt32(price_value)*discount/100);
+
+       double current_price=double.Parse(price_value.Replace(",","."),CultureInfo.InvariantCulture)-(double.Parse(price_value.Replace(",","."),CultureInfo.InvariantCulture)*discount/100);
+
       var order_detail=new OrderDetail
       {
         Quantity=product.Quantity,

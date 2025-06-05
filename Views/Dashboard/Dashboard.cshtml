@@ -9,7 +9,7 @@
     var order_in_month=ViewData["order_in_months"];
     var latest_orders = ViewData["latest_orders"] as List<Order>;    
     var total_profits=ViewData["total_profit"];
-    var profit_by_cats=ViewData["profit_by_cats"] as Dictionary<Category,int>;
+    var profit_by_cats=ViewData["profit_by_cats"] as Dictionary<Category,double>;
     var total_profit_previous_1_year=ViewData["total_profit_previous_1_year"];
     var total_profit_previous_2_year=ViewData["total_profit_previous_2_year"];
     int current_year=DateTime.Now.Year;

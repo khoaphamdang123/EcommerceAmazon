@@ -16,8 +16,9 @@
     var account= ViewBag.Account;
     var saved_account= ViewBag.SavedAccount;
     string paypal_client_id=Environment.GetEnvironmentVariable("PAYPAL_CLIENT_ID");
-     string username="";
-     string password="";
+    string username="";
+    string password="";
+
     
  @* if(account!=null)
   {  string[] account_part=account.Split('\n');s
@@ -77,9 +78,9 @@
      string phone=  HttpContextAccessor.HttpContext.Session.GetString("PhoneNumber");
      string address= HttpContextAccessor.HttpContext.Session.GetString("Address");
      string zipcode = HttpContextAccessor.HttpContext.Session.GetString("ZipCode");
-
      string last_name="";
      string first_name="";
+
 
      if(!string.IsNullOrEmpty(user))
      {

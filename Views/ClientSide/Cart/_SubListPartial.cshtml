@@ -41,7 +41,8 @@
    }
                           
 <script>
-  var cart=@Html.Raw(Json.Serialize(Model));
+  
+var cart=@Html.Raw(Json.Serialize(Model));
 
 function checkout()
 {
@@ -49,7 +50,8 @@ const checkoutButton = document.getElementById("checkout");
 
 if(checkoutButton)
  {
-  if (cart.length === 0) {
+  if (cart.length === 0) 
+  {
     checkoutButton.disabled = true;
     checkoutButton.classList.add("disabled");
   } else 
@@ -70,6 +72,7 @@ if(checkoutButton)
     window.location.href = "@Url.Action("Checkout", "Checkout")";    
   });
  }
+}
 }
         
   function attachRemoveButtonListeners() 
@@ -121,6 +124,5 @@ if(checkoutButton)
         });
     });
 }
-
 attachRemoveButtonListeners();
 </script>
