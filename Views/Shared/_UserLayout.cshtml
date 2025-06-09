@@ -924,19 +924,24 @@
 
     
     const main_body=document.getElementById('main-container');
+
     
     const headerHeight = header.offsetHeight;
-    
-    window.addEventListener('scroll',()=>{
-        if(window.scrollY > (headerHeight+5)){
+        
+  
+    window.addEventListener('scroll',()=>
+    {
+        if(window.scrollY > (headerHeight+5))
+        {
             header.classList.add('header-container');
             header.classList.add('fixed');
             main_body.classList.add('main-container');
-        }else
+        }
+        else
         {
             header.classList.remove('header-container');
             header.classList.remove('fixed');
-            main_body.classList.remove('main-container');
+            main_body.classList.remove('main-container');                        
         }
     });
    });
@@ -1068,7 +1073,7 @@ function checkout()
   bsOffcanvas.show();    
     });
   });
-  
+
 </script>
 
 

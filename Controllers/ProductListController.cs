@@ -61,7 +61,7 @@ if(string.IsNullOrEmpty(id_user))
           ViewBag.StatusList = new List<string>{"Hết hàng","Còn hàng"};
     try
     {  
-        var prods=await this._product.pagingProduct(7,1);
+        var prods=await this._product.pagingProduct(50,1);
         return View(prods);
     }
     catch(Exception er)
@@ -143,7 +143,7 @@ if(string.IsNullOrEmpty(id_user))
 
    enddate=reformatted[1]+"/"+reformatted[2]+"/"+reformatted[0];
  }      
-          string select_size="7"; 
+          string select_size="50"; 
           ViewBag.select_size=select_size;
           List<string> options=new List<string>(){"50","100","150","200"};          
           ViewBag.options=options;

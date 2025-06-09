@@ -77,11 +77,41 @@ public class CheckoutController : BaseController
 
  }
 
+ [Route("checkout/get_city")]
+ [HttpPost]
 
- [Route("checkout/{id}")]
+ public async Task<JsonResult> GetCityByCountry(string country)
+ {
+   try
+   {
+     Console.WriteLine("Get City By Country did come here");
+     Console.WriteLine("Country here is:" + country);
+     if (string.IsNullOrEmpty(country))
+     {
+       return Json(new { status = 0, message = "Country is empty" });
+     }
+
+     var state = JsonConvert.DeserializeObject<Dictionary<string, List<StateInfo>>>(HttpContext.Session.GetString("STATE"));
+     
+     if (state != null && state.ContainsKey(country))
+      {
+        return Json(new { status = 1, data = state[country] });
+      }
+   }
+   catch (Exception er)
+   {
+     Console.WriteLine("Get City By Country Exception:" + er.Message);
+     this._logger.LogError("Get City By Country Exception:" + er.Message);
+   }
+   return Json(new { status = 0, message = "Failed to get cities" });
+ }
+
+
+[Route("checkout/{id}")]
  [HttpGet]
  public async Task<IActionResult> CheckoutCart(string id)
  {   var cart=this._cart.getCart();
+ Console.WriteLine("Checkout Cart did come here");
     try
     {
       if (cart == null || cart.Count == 0)
@@ -102,114 +132,176 @@ public class CheckoutController : BaseController
       //  }
 
       bool is_saved_account = false;
-
-      if (Request.Cookies["UserAccount"] != null)
+      if (string.IsNullOrEmpty(HttpContext.Session.GetString("COUNTRY")))
       {
-        is_saved_account = true;
-        string account = Request.Cookies["UserAccount"];
-        Console.WriteLine("Account here is:" + account);
-        ViewBag.Account = account;
-        ViewBag.SavedAccount = is_saved_account;        
+        Console.WriteLine("Fetching countries data from API");
+        using (var client = new HttpClient())
+        {
+          string url = "https://countriesnow.space/api/v0.1/countries/states";
+          client.BaseAddress = new Uri(url);
+
+          client.DefaultRequestHeaders.Accept.Clear();
+
+          var response = await client.GetAsync(url);
+
+          if (response.IsSuccessStatusCode)
+          {
+            Console.WriteLine("Is Success Status Code");
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine("Content is compiled");
+
+            var list_data = JsonConvert.DeserializeObject<CountryInfoModel>(content);
+
+            Console.WriteLine("List data here");
+
+            if (list_data != null)
+            {
+              Console.WriteLine("Countries fetched successfully");
+
+              Dictionary<string, string> countries = new Dictionary<string, string>();
+
+              Dictionary<string, List<StateInfo>> city = new Dictionary<string, List<StateInfo>>();
+
+              foreach (var country in list_data?.Data)
+              {
+                countries.Add(country?.Name, country.Iso3);
+
+                if (country?.States != null && country.States.Count > 0)
+                {
+                  city.Add(country.Name, country.States);
+                }
+
+              }
+
+              HttpContext.Session.SetString("COUNTRY", JsonConvert.SerializeObject(countries));
+
+              HttpContext.Session.SetString("STATE", JsonConvert.SerializeObject(city));
+
+              Console.WriteLine("Countries listed here is:" + HttpContext.Session.GetString("COUNTRY"));
+            }
+            else
+            {
+              Console.WriteLine("Failed to fetch countries");
+
+              this._logger.LogError("Failed to fetch countries");
+            }
+          }
+        }
       }
-      //  var company = await this._user.findUserByName("company");
+        ViewBag.Countries = JsonConvert.DeserializeObject<Dictionary<string, string>>(HttpContext.Session.GetString("COUNTRY"));
 
-      //     ViewBag.company=company;
+        ViewBag.Cities = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(HttpContext.Session.GetString("CITY"));
 
-      //  Console.WriteLine("qr here");
+        if (Request.Cookies["UserAccount"] != null)
+        {
+          is_saved_account = true;
+          string account = Request.Cookies["UserAccount"];
+          Console.WriteLine("Account here is:" + account);
+          ViewBag.Account = account;
+          ViewBag.SavedAccount = is_saved_account;
+        }
+        //  var company = await this._user.findUserByName("company");
 
-      //  Console.WriteLine("QR ENV:"+Environment.GetEnvironmentVariable("qr_code"));
+        //     ViewBag.company=company;
 
-      //   if(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("qr_code")))
-      //   {
-      //     string[] email_list = company.Email.Split('#');
-      //     string email = email_list[0];
-      //     string extra_info = email_list[1];
-      //     string bank_name = "";
-      //     string account_num = "";
-      //     string account_name = "";
-      //     string qr_code = "";
+        //  Console.WriteLine("qr here");
 
-      //     if (!string.IsNullOrEmpty(extra_info))
-      //     {
-      //       string[] info_values = extra_info.Split('\n');
-      //       foreach (var info in info_values)
-      //       {
-      //         if (info.Contains("bank_name"))
-      //         {
-      //           bank_name = info.Split('~')[1].Trim();
-      //         }
-      //         else if (info.Contains("account_name"))
-      //         {
-      //           account_name = info.Split('~')[1].Trim();
-      //         }
-      //         else if (info.Contains("account_num"))
-      //         {
-      //           account_num = info.Split('~')[1].Trim();
-      //         }
-      //       }
-      //     }
-      //     qr_code = this._sp.generateQRCode(bank_name, account_num, account_name);
-      //     Console.WriteLine("QRCODE:" + qr_code);
-      //     if (!string.IsNullOrEmpty(qr_code) && qr_code != "ERROR")
-      //     {
-      //       this._logger.LogInformation("QR Code In Checkout did come here:" + qr_code);
-      //       Console.WriteLine("QR Code In Checkout did come here:" + qr_code);
-      //       Environment.SetEnvironmentVariable("qr_code", qr_code);
-      //     }
-      //   }
+        //  Console.WriteLine("QR ENV:"+Environment.GetEnvironmentVariable("qr_code"));
 
-    
+        //   if(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("qr_code")))
+        //   {
+        //     string[] email_list = company.Email.Split('#');
+        //     string email = email_list[0];
+        //     string extra_info = email_list[1];
+        //     string bank_name = "";
+        //     string account_num = "";
+        //     string account_name = "";
+        //     string qr_code = "";
+
+        //     if (!string.IsNullOrEmpty(extra_info))
+        //     {
+        //       string[] info_values = extra_info.Split('\n');
+        //       foreach (var info in info_values)
+        //       {
+        //         if (info.Contains("bank_name"))
+        //         {
+        //           bank_name = info.Split('~')[1].Trim();
+        //         }
+        //         else if (info.Contains("account_name"))
+        //         {
+        //           account_name = info.Split('~')[1].Trim();
+        //         }
+        //         else if (info.Contains("account_num"))
+        //         {
+        //           account_num = info.Split('~')[1].Trim();
+        //         }
+        //       }
+        //     }
+        //     qr_code = this._sp.generateQRCode(bank_name, account_num, account_name);
+        //     Console.WriteLine("QRCODE:" + qr_code);
+        //     if (!string.IsNullOrEmpty(qr_code) && qr_code != "ERROR")
+        //     {
+        //       this._logger.LogInformation("QR Code In Checkout did come here:" + qr_code);
+        //       Console.WriteLine("QR Code In Checkout did come here:" + qr_code);
+        //       Environment.SetEnvironmentVariable("qr_code", qr_code);
+        //     }
+        //   }
+
+
+
+        //   var user = await this._user.findUserByName(username);
+
+        //   ViewBag.user = user;    
+
+        //   var company = await this._user.findUserByName("company");
+
+        //   ViewBag.company=company;
+
+        //  Console.WriteLine("qr here");
+
+        //  Console.WriteLine("QR ENV:"+Environment.GetEnvironmentVariable("qr_code"));
+
+        //   if(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("qr_code")))
+        //   {
+        //     string[] email_list = company.Email.Split('#');
+        //     string email = email_list[0];
+        //     string extra_info = email_list[1];
+        //     string bank_name = "";
+        //     string account_num = "";
+        //     string account_name = "";
+        //     string qr_code = "";
+
+        //     if (!string.IsNullOrEmpty(extra_info))
+        //     {
+        //       string[] info_values = extra_info.Split('\n');
+        //       foreach (var info in info_values)
+        //       {
+        //         if (info.Contains("bank_name"))
+        //         {
+        //           bank_name = info.Split('~')[1].Trim();
+        //         }
+        //         else if (info.Contains("account_name"))
+        //         {
+        //           account_name = info.Split('~')[1].Trim();
+        //         }
+        //         else if (info.Contains("account_num"))
+        //         {
+        //           account_num = info.Split('~')[1].Trim();
+        //         }
+        //       }
+        //     }
+        //     qr_code = this._sp.generateQRCode(bank_name, account_num, account_name);
+        //     Console.WriteLine("QRCODE:" + qr_code);
+        //     if (!string.IsNullOrEmpty(qr_code) && qr_code != "ERROR")
+        //     {
+        //       this._logger.LogInformation("QR Code In Checkout did come here:" + qr_code);
+        //       Console.WriteLine("QR Code In Checkout did come here:" + qr_code);
+        //       Environment.SetEnvironmentVariable("qr_code", qr_code);
+        //     }
+        //   }
       
-    //   var user = await this._user.findUserByName(username);
-
-    //   ViewBag.user = user;    
-     
-    //   var company = await this._user.findUserByName("company");
-
-    //   ViewBag.company=company;
-
-    //  Console.WriteLine("qr here");
-
-    //  Console.WriteLine("QR ENV:"+Environment.GetEnvironmentVariable("qr_code"));
-
-    //   if(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("qr_code")))
-    //   {
-    //     string[] email_list = company.Email.Split('#');
-    //     string email = email_list[0];
-    //     string extra_info = email_list[1];
-    //     string bank_name = "";
-    //     string account_num = "";
-    //     string account_name = "";
-    //     string qr_code = "";
-
-    //     if (!string.IsNullOrEmpty(extra_info))
-    //     {
-    //       string[] info_values = extra_info.Split('\n');
-    //       foreach (var info in info_values)
-    //       {
-    //         if (info.Contains("bank_name"))
-    //         {
-    //           bank_name = info.Split('~')[1].Trim();
-    //         }
-    //         else if (info.Contains("account_name"))
-    //         {
-    //           account_name = info.Split('~')[1].Trim();
-    //         }
-    //         else if (info.Contains("account_num"))
-    //         {
-    //           account_num = info.Split('~')[1].Trim();
-    //         }
-    //       }
-    //     }
-    //     qr_code = this._sp.generateQRCode(bank_name, account_num, account_name);
-    //     Console.WriteLine("QRCODE:" + qr_code);
-    //     if (!string.IsNullOrEmpty(qr_code) && qr_code != "ERROR")
-    //     {
-    //       this._logger.LogInformation("QR Code In Checkout did come here:" + qr_code);
-    //       Console.WriteLine("QR Code In Checkout did come here:" + qr_code);
-    //       Environment.SetEnvironmentVariable("qr_code", qr_code);
-    //     }
-    //   }
     }
     catch (Exception er)
     {

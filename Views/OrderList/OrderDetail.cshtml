@@ -1,11 +1,12 @@
 @model Order
+@using System.Globalization;
 @{
    var deleted_page=ViewBag.Delete_Message;
    var delete_status=ViewBag.Status;
    var delete_multiple_status=ViewBag.Delete_Multiple_Status;
    var delete_multiple_message = ViewBag.Delete_Multiple_Message;
    string curr_status_class="";
-   int sum_order=0;
+   double sum_order=0;
    var order_count=ViewBag.OrderCount;
   Dictionary<string,string> order_status=new Dictionary<string, string>{
     {"Processing","Đang xử lý"},
@@ -192,7 +193,7 @@
           </thead>
           <tbody>
             @foreach(var item in Model?.OrderDetails)
-            {  int sum=(Convert.ToInt32(item.Price)*item.Quantity);
+            {  double sum=item.Price*item.Quantity;
                sum_order+=sum;
                string variant_info="";
                if(!string.IsNullOrEmpty(item.Variant?.Size?.Sizename))
@@ -246,8 +247,14 @@
                  <div class="d-flex align-items-center">
                  <div class="avatar-wrapper">   
                  <div class="avatar avatar-sm me-2">
-              <img src="~/@item.Product.Frontavatar.Substring(item.Product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="Product Avatar">
-                </div>
+  @if(item.Product.Backavatar.Contains("http") || item.Product.Backavatar.Contains("https"))
+                                {
+                                 <img src="@item.Product.Backavatar" alt="Product FrontAvatar">
+                                 }
+                                  else
+                                  {
+                            <img src="~/@item.Product.Backavatar.Substring(item.Product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="User Front Avatar">
+                                  }                </div>
                  </div>
                 <strong>@item.Product.ProductName</strong>
                 </div>
@@ -256,10 +263,10 @@
                     @variant_info
                 </td>
                 <td class="w-25">
-                    @item.Price VNĐ
+                    $@item.Price
                     </td>
                 <td class="w-25">@item.Quantity</td>
-                <td>@sum VNĐ</td>
+                <td>$@sum</td>
                 <td>
                 <div class="d-flex align-items-center justify-content-center">
              <a data-bs-toggle="modal" data-bs-target="#modalLong" class="btn btn-icon delete-record icon-style-delete mr-2" id="delete-record-btn" data-page="@item.Id" data-order="@Model?.Id">
@@ -328,7 +335,7 @@
         <div class="d-flex justify-content-end align-items-center m-3 mt-3">
             <div class="d-flex justify-content-start">
               <h6 class="w-px-100 mb-0">Tổng:</h6>
-              <h6 class="mb-0">@sum_order VND</h6>
+              <h6 class="mb-0">$@sum_order</h6>
             </div>
         </div>
       </div>
@@ -365,13 +372,13 @@
     </div>
 
     <div class="card mb-6">
-
       <div class="card-header d-flex justify-content-between">
         <h5 class="card-title m-0">Địa chỉ giao hàng</h5>
         @* <h6 class="m-0"><a href=" javascript:void(0)" data-bs-toggle="modal" data-bs-target="#addNewAddress">Edit</a></h6> *@
       </div>
       <div class="card-body">
-        <p class="mb-0">@Model?.Shippingaddress</p>
+        <p class="mb-2">Địa chỉ:<span>@Model?.Shippingaddress</span></p>
+        <p class="mb-1">Mã bưu chính:<span>@Model?.ZipCode</span>
       </div>
     </div>
   </div>

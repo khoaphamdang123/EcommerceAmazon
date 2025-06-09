@@ -13,6 +13,7 @@
    string env=Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
    Console.WriteLine("Product Info name:"+Model.ProductName);
+
    List<string> list_img_avatar = new List<string>();
     if (!string.IsNullOrEmpty(Model?.Backavatar))
         {
@@ -20,7 +21,7 @@
         }
         if (!string.IsNullOrEmpty(Model?.Frontavatar))
         {
-            list_img_avatar.Add(Model?.Frontavatar);
+            list_img_avatar.Add(Model?.Frontavatar);            
         }
     
    List<string> avatar_list=new List<string>{Model?.Frontavatar,Model?.Backavatar};
@@ -38,15 +39,16 @@
     });
 
    var saved_img_files=Model?.ProductImages;
+
    var saved_avatar_files=avatar_list;
+   
    bg_status=create_status==1||create_status==-1?"bg-danger":create_status==1?"bg-success":"";
 
     Console.WriteLine("Status here:"+create_status);
 
     Console.WriteLine("Status here:"+created_product);
 
-    Console.WriteLine("Gía sản phẩm:"+Model?.Price);
-
+    Console.WriteLine("Gía sản phẩm:"+Model?.Price);    
 }
 
    <div

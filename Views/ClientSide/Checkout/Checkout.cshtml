@@ -19,6 +19,10 @@
     string username="";
     string password="";
 
+    Dictionary<string,string> countries = ViewBag.Countries as Dictionary<string,string>;
+
+    Dictionary<string,List<string>> cities = ViewBag.Cities as Dictionary<string,List<string>>;
+
     
  @* if(account!=null)
   {  string[] account_part=account.Split('\n');s
@@ -132,7 +136,9 @@
             document.addEventListener('DOMContentLoaded', function() 
             {
                 var toastEl = document.querySelector('.toast');
+                
                 var toast = new bootstrap.Toast(toastEl);                
+                
                 toast.show();                
             });
 
@@ -252,6 +258,39 @@
 																<input type="text" class="form-control rounded-0" value="@phone" name="phone_number" required>
                                                              <div class="invalid-feedback">
                                                                 Please enter a valid phone number.
+		                                                    </div>
+															</div>
+
+                                                        	<div class="col-md-6">
+																<label class="form-label">Country</label>
+																@* <input type="text" class="form-control rounded-0" value="" name="country" required> *@
+                                                                <select class="form-select rounded-0" name="country" id="countryname" required>
+                                                                    <option value="">Select Country</option>
+                                                                    @foreach(var country in countries)
+                                                                    {
+                                                                        <option value="@country.Value">@country.Key</option>
+                                                                    }
+                                                                </select>
+                                                             <div class="invalid-feedback">
+                                                                Please select a valid country.
+		                                                    </div>
+															</div>
+                                                        
+                                                        	<div class="col-md-6">
+																<label class="form-label">City</label>
+                                                                <select class="form-select rounded-0" name="city" id="city" required>
+                                                                    <option value="">Select City</option>
+                                                                </select>
+                                                             <div class="invalid-feedback">
+                                                                Please enter a valid city name.
+		                                                    </div>
+															</div>
+
+                                                        	<div class="col-md-6">
+																<label class="form-label">State(Region)</label>
+																<input type="text" class="form-control rounded-0" value="" name="state" id="state" required>
+                                                             <div class="invalid-feedback">
+                                                                Please select a valid region.
 		                                                    </div>
 															</div>
 														
@@ -762,18 +801,26 @@
 
 <script>
     document.addEventListener("DOMContentLoaded",()=>{
+
+          //var selected_city= @cities;
+          
+          var selected_country = document.getElementById('countryname');
+
           var proceedBtn= document.getElementById("proceed-btn");
+          
           var form = document.getElementById("checkout-form");
+          
           if(proceedBtn)
           {
             let isValid = true;
 
             proceedBtn.addEventListener("click",(e)=>{
+                
                 const input=document.querySelectorAll("input[required]");
 
                 const text_area = document.getElementById("address");
 
-                input.forEach((i)=>{
+            input.forEach((i)=>{
                if(!i.value.trim())
                {
                  i.classList.add('is-invalid');
@@ -803,10 +850,58 @@
                 else
                 {
                     e.preventDefault();
+                
                 }
             });
                     
           }
+        selected_country.addEventListener('change',()=>
+        {  
+            const country = selected_country.selectedOptions[0].value;
+
+           
+            if(country!='')
+            {  
+             var countryname =selected_country.selectedOptions[0].text;
+             //alert("Selected country: " + countryname);
+             var formData = new FormData();
+
+             formData.append("country", countryname);
+
+                $.ajax({
+                url: "@Url.Action("GetCityByCountry","Checkout")",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) 
+                {
+                 var list_state = response.data;
+
+                 if(list_state!=null && list_state.length>0)
+                 { 
+                    while(document.getElementById("state").options.length > 1) 
+                    {
+                        document.getElementById("state").remove(1);
+                    }
+                   
+                    list_state.forEach((state) => 
+                    {
+                        var option = document.createElement("option");
+                        option.value = state.name;
+                        option.textContent = state.name;
+                        document.getElementById("state").appendChild(option);
+                    });
+                 }
+
+                },
+                error: function(xhr, status, error) 
+                {
+                 alert("Có lỗi xảy ra khi lấy danh sách thành phố: " + xhr.responseText);
+                }
+            });
+            }
+        });
     });
 </script>
       

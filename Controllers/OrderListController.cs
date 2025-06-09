@@ -40,9 +40,9 @@ if(string.IsNullOrEmpty(id_user))
 {
   return RedirectToAction("Index","LoginAdmin");
 }
-    string select_size="7";
+    string select_size="50";
           ViewBag.select_size=select_size;
-          List<string> options=new List<string>(){"7","10","20","50"};
+      List<string> options = new List<string>() { "50", "100", "150", "200" };
           ViewBag.options=options;
           int processing_count=this._order.countOrderStatus("Processing");
             int completed_count=this._order.countOrderStatus("Finished");
@@ -56,7 +56,7 @@ if(string.IsNullOrEmpty(id_user))
             ViewBag.refund_count=refund_count;
     try
     {  
-        var order=await this._order.pagingOrderList(7,1);
+        var order=await this._order.pagingOrderList(50,1);
         return View(order);
         
     }
@@ -82,7 +82,7 @@ if(string.IsNullOrEmpty(id_user))
          }
          string select_size=page_size.ToString();
           ViewBag.select_size=select_size;
-          List<string> options=new List<string>(){"7","10","20","50"};
+      List<string> options = new List<string>() { "50", "100", "150", "200" };
           ViewBag.options=options;
           
           int processing_count=this._order.countOrderStatus("Processing");
@@ -120,7 +120,7 @@ if(string.IsNullOrEmpty(id_user))
         var filtered_order_paging=PageList<Order>.CreateItem(order.AsQueryable(),1,7);
          string select_size="7";
           ViewBag.select_size=select_size;
-          List<string> options=new List<string>(){"7","10","20","50"};
+      List<string> options = new List<string>() { "50", "100", "150", "200" };
           ViewBag.options=options;
           ViewBag.filter_obj=status;
           int processing_count=this._order.countOrderStatus("Processing");
@@ -221,9 +221,9 @@ if(string.IsNullOrEmpty(id_user))
         this._logger.LogTrace("Delete Order Exception:"+er.Message);
     }
   
-    string select_size="7";
-          ViewBag.select_size=select_size;
-          List<string> options=new List<string>(){"7","10","20","50"};
+    string select_size="50";
+     ViewBag.select_size=select_size;
+      List<string> options = new List<string>() { "50", "100", "150", "200" };
           ViewBag.options=options;
           int processing_count=this._order.countOrderStatus("Processing");
             int completed_count=this._order.countOrderStatus("Finished");
@@ -234,7 +234,7 @@ if(string.IsNullOrEmpty(id_user))
             ViewBag.completed_count=completed_count;
             ViewBag.cancelled_count=cancelled_count;
             ViewBag.refund_count=refund_count;
-            var orders=await this._order.pagingOrderList(7,1);
+            var orders=await this._order.pagingOrderList(50,1);
 
     return View("~/Views/OrderList/OrderList.cshtml",orders);
   }

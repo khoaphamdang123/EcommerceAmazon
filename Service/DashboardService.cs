@@ -71,44 +71,48 @@ public decimal countToTalProfit()
 
   public double countProfitByOrder(int cat_id)
   {
-    var total_profit=this._context.OrderDetails.Include(c=>c.Product).Include(c=>c.Order).AsEnumerable().Where(s=>s.Product.CategoryId==cat_id).Sum(s=> {
-        string price_value=s.Product.Price.Replace("$","").Replace(",",".");
+    var total_profit = this._context.OrderDetails.Include(c => c.Product).Include(c => c.Order).AsEnumerable().Where(s => s.Product.CategoryId == cat_id).Sum(s =>
+    {
+      string price_value = s.Product.Price.Replace("$", "").Replace(",", ".");
+      if (double.TryParse(price_value, NumberStyles.Any, CultureInfo.InvariantCulture, out double price))
+      {
+        return s.Quantity * price;
+      }
+      return 0;
+    });
+
+    return total_profit;
+
+  }
+
+
+  public double countProfitByMonth(int month)
+  {
+    var total_profit = this._context.OrderDetails
+        .Include(c => c.Product)
+        .Include(c => c.Order).AsEnumerable()
+        .Where(s => !string.IsNullOrEmpty(s.Order.Createddate) && DateTime.ParseExact(s.Order.Createddate, "MM/dd/yyyy HH:mm:ss", null).Month == month)
+        .Sum(s =>
+        {
+          string price_value = s.Product.Price.Replace("$", "").Replace(",", ".");
           if (double.TryParse(price_value, NumberStyles.Any, CultureInfo.InvariantCulture, out double price))
           {
             return s.Quantity * price;
           }
           return 0;
         });
-    return total_profit;
-  }
-  
-
-public double countProfitByMonth(int month)
-{
-    var total_profit = this._context.OrderDetails
-        .Include(c => c.Product)
-        .Include(c => c.Order).AsEnumerable()
-        .Where(s =>!string.IsNullOrEmpty(s.Order.Createddate)&&DateTime.ParseExact(s.Order.Createddate, "MM/dd/yyyy HH:mm:ss", null).Month == month)
-        .Sum(s =>
-        {
-         string price_value=s.Product.Price.Replace("$","").Replace(",",".");
-          if (double.TryParse(price_value, NumberStyles.Any, CultureInfo.InvariantCulture, out double price))
-          {
-            return s.Quantity * price;
-          }
-          return 0;          
-        });
-    return total_profit;    
+    return total_profit; 
 }
 
   public double countProfitByYear(int year)
   {
-var total_profit = this._context.OrderDetails
+    var total_profit = this._context.OrderDetails
         .Include(c => c.Product)
         .Include(c => c.Order).AsEnumerable()
-        .Where(s =>!string.IsNullOrEmpty(s.Order.Createddate)&&DateTime.ParseExact(s.Order.Createddate, "MM/dd/yyyy HH:mm:ss", null).Year == year)
-        .Sum(s =>  {
-         string price_value=s.Product.Price.Replace("$","").Replace(",",".");
+        .Where(s => !string.IsNullOrEmpty(s.Order.Createddate) && DateTime.ParseExact(s.Order.Createddate, "MM/dd/yyyy HH:mm:ss", null).Year == year)
+        .Sum(s =>
+        {
+          string price_value = s.Product.Price.Replace("$", "").Replace(",", ".");
           if (double.TryParse(price_value, NumberStyles.Any, CultureInfo.InvariantCulture, out double price))
           {
             return s.Quantity * price;
@@ -120,19 +124,19 @@ var total_profit = this._context.OrderDetails
 
   public double countProfitByDay(int day)
   {
-var total_profit = this._context.OrderDetails
-        .Include(c => c.Product)
-        .Include(c => c.Order).AsEnumerable()
-        .Where(s =>!string.IsNullOrEmpty(s.Order.Createddate)&&DateTime.ParseExact(s.Order.Createddate, "MM/dd/yyyy HH:mm:ss", null).Day == day)
-        .Sum(s =>
-        {
-          string price_value=s.Product.Price.Replace("$","").Replace(",",".");
-          if (double.TryParse(price_value, NumberStyles.Any, CultureInfo.InvariantCulture, out double price))
-          {
-            return s.Quantity * price;
-          }
-          return 0;
-        });
+    var total_profit = this._context.OrderDetails
+            .Include(c => c.Product)
+            .Include(c => c.Order).AsEnumerable()
+            .Where(s => !string.IsNullOrEmpty(s.Order.Createddate) && DateTime.ParseExact(s.Order.Createddate, "MM/dd/yyyy HH:mm:ss", null).Day == day)
+            .Sum(s =>
+            {
+              string price_value = s.Product.Price.Replace("$", "").Replace(",", ".");
+              if (double.TryParse(price_value, NumberStyles.Any, CultureInfo.InvariantCulture, out double price))
+              {
+                return s.Quantity * price;
+              }
+              return 0;
+            });
     return total_profit;  
   }
 }

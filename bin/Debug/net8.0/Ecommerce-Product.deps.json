@@ -59,6 +59,7 @@
           "Serilog.Extensions.Logging": "8.0.0",
           "Serilog.Sinks.File": "6.0.0",
           "StackExchange.Redis": "2.8.24",
+          "Stripe.net": "48.2.0",
           "System.Management": "8.0.0",
           "FirebaseAdmin": "3.1.0",
           "itext": "8.0.5",
@@ -1983,6 +1984,21 @@
         },
         "compile": {
           "lib/net8.0/StackExchange.Redis.dll": {}
+        }
+      },
+      "Stripe.net/48.2.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.3",
+          "System.Configuration.ConfigurationManager": "8.0.0"
+        },
+        "runtime": {
+          "lib/net8.0/Stripe.net.dll": {
+            "assemblyVersion": "48.2.0.0",
+            "fileVersion": "48.2.0.0"
+          }
+        },
+        "compile": {
+          "lib/net8.0/Stripe.net.dll": {}
         }
       },
       "System.AppContext/4.3.0": {
@@ -5447,6 +5463,13 @@
       "sha512": "sha512-GWllmsFAtLyhm4C47cOCipGxyEi1NQWTFUHXnJ8hiHOsK/bH3T5eLkWPVW+LRL6jDiB3g3izW3YEHgLuPoJSyA==",
       "path": "stackexchange.redis/2.8.24",
       "hashPath": "stackexchange.redis.2.8.24.nupkg.sha512"
+    },
+    "Stripe.net/48.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-lvqg6A6hQ81mp2hsgh/VnOckJYKlJfJuHrXxZxN4Yxnqldoigk9MdRU997c+PnUK3ncQWU3wKxJs0canFRz5hg==",
+      "path": "stripe.net/48.2.0",
+      "hashPath": "stripe.net.48.2.0.nupkg.sha512"
     },
     "System.AppContext/4.3.0": {
       "type": "package",
