@@ -10,6 +10,7 @@ using Ecommerce_Product.Support_Serive;
 using PayPalCheckoutSdk.Orders;
 using Newtonsoft.Json;
 using PayPalCheckoutSdk.Payments;
+using Newtonsoft.Json.Linq;
 
 
 
@@ -18,100 +19,152 @@ namespace Ecommerce_Product.Controllers;
 
 public class CheckoutController : BaseController
 {
-    private readonly ILogger<CheckoutController> _logger;
+  private readonly ILogger<CheckoutController> _logger;
 
-    private readonly IProductRepository _product;
+  private readonly IProductRepository _product;
 
-    private readonly ICategoryListRepository _category;
+  private readonly ICategoryListRepository _category;
 
-    private readonly Support_Serive.Service _sp;
+  private readonly Support_Serive.Service _sp;
 
-    private readonly IUserListRepository _user;
-    
-    private readonly IOrderRepository _order;
+  private readonly IUserListRepository _user;
 
-    private readonly RecaptchaResponse _recaptcha_response;
+  private readonly IOrderRepository _order;
 
-    private readonly ISettingRepository _setting;
+  private readonly RecaptchaResponse _recaptcha_response;
 
-    private readonly SmtpService _smtpService;
-  
-    private readonly IHttpContextAccessor _httpContextAccessor;
+  private readonly ISettingRepository _setting;
 
-    private readonly IPaymentRepository _payment;
-  
-    private readonly IConfiguration _configuration;
+  private readonly SmtpService _smtpService;
 
-    private readonly PaypalService _paypalService;
+  private readonly IHttpContextAccessor _httpContextAccessor;
 
-   private readonly ICartRepository _cart;
-   public CheckoutController(ICartRepository cart,IProductRepository product,Support_Serive.Service sp,IBannerListRepository banner,SmtpService smtpService,IOrderRepository order,IOptions<RecaptchaResponse> recaptcha_response,ISettingRepository setting,IPaymentRepository payment,IUserListRepository user,ICategoryListRepository category,IConfiguration configuration,PaypalService paypalService,ILogger<CheckoutController> logger):base(category,user,banner)
+  private readonly IPaymentRepository _payment;
+
+  private readonly IConfiguration _configuration;
+
+  private readonly PaypalService _paypalService;
+
+  private readonly ICartRepository _cart;
+  public CheckoutController(ICartRepository cart, IProductRepository product, Support_Serive.Service sp, IBannerListRepository banner, SmtpService smtpService, IOrderRepository order, IOptions<RecaptchaResponse> recaptcha_response, ISettingRepository setting, IPaymentRepository payment, IUserListRepository user, ICategoryListRepository category, IConfiguration configuration, PaypalService paypalService, ILogger<CheckoutController> logger) : base(category, user, banner)
   {
-  this._cart=cart;
-  this._sp=sp;
-  this._smtpService=smtpService;
-  this._category=category;
-  this._setting=setting;
-  this._recaptcha_response=recaptcha_response.Value;
-  this._product=product;
-  this._order=order;
-  this._logger=logger; 
-  this._payment=payment;  
-  this._configuration=configuration;
-  this._paypalService=paypalService;  
-  this._user=user;
+    this._cart = cart;
+    this._sp = sp;
+    this._smtpService = smtpService;
+    this._category = category;
+    this._setting = setting;
+    this._recaptcha_response = recaptcha_response.Value;
+    this._product = product;
+    this._order = order;
+    this._logger = logger;
+    this._payment = payment;
+    this._configuration = configuration;
+    this._paypalService = paypalService;
+    this._user = user;
   }
 
 
- [Route("checkout")]
- [HttpGet]
- public IActionResult Checkout()
- {  
-  
-   if(string.IsNullOrEmpty(this.HttpContext.Session.GetString("UserId")))
-   {
-    this.HttpContext.Session.SetString("UserId",Guid.NewGuid().ToString());
-   }
+  [Route("checkout")]
+  [HttpGet]
+  public IActionResult Checkout()
+  {
 
-   return RedirectToAction("CheckoutCart","Checkout",new {id=this.HttpContext.Session.GetString("UserId")});
+    if (string.IsNullOrEmpty(this.HttpContext.Session.GetString("UserId")))
+    {
+      this.HttpContext.Session.SetString("UserId", Guid.NewGuid().ToString());
+    }
 
- }
+    return RedirectToAction("CheckoutCart", "Checkout", new { id = this.HttpContext.Session.GetString("UserId") });
 
- [Route("checkout/get_city")]
- [HttpPost]
+  }
 
- public async Task<JsonResult> GetCityByCountry(string country)
- {
-   try
-   {
-     Console.WriteLine("Get City By Country did come here");
-     Console.WriteLine("Country here is:" + country);
-     if (string.IsNullOrEmpty(country))
-     {
-       return Json(new { status = 0, message = "Country is empty" });
-     }
 
-     var state = JsonConvert.DeserializeObject<Dictionary<string, List<StateInfo>>>(HttpContext.Session.GetString("STATE"));
-     
-     if (state != null && state.ContainsKey(country))
+
+  [Route("checkout/get_city")]
+
+  [HttpPost]
+  public async Task<JsonResult> GetCityByState(string country, string state)
+  {
+    try
+    {
+      string url = "https://countriesnow.space/api/v0.1/countries/state/cities";
+
+      using (var client = new HttpClient())
+      {
+        client.BaseAddress = new Uri(url);
+        client.DefaultRequestHeaders.Accept.Clear();
+
+        var content = new StringContent(JsonConvert.SerializeObject(new { country = country, state = state }), System.Text.Encoding.UTF8, "application/json");
+
+        var response = await client.PostAsync(url, content);
+
+        if (response.IsSuccessStatusCode)
+        {
+          var result = await response.Content.ReadAsStringAsync();
+
+          var jObject = JObject.Parse(result);
+
+          var cityData = jObject.SelectToken("data");
+
+          var cityList = cityData.ToObject<List<string>>();
+
+          Console.WriteLine("City Data here is:" + cityData.ToList());
+
+          if (cityList != null && cityList.Count() > 0)
+          {
+            return Json(new { status = 1, data = cityList });
+          }
+        }
+      }
+    }
+    catch (Exception er)
+    {
+      Console.WriteLine("Get City By State Exception:" + er.Message);
+      this._logger.LogError("Get City By State Exception:" + er.Message);
+      return Json(new { status = 0, data = "" });
+
+    }
+    return Json(new { status = 0, data = "" });
+
+  }
+
+
+  [Route("checkout/get_state")]
+  [HttpPost]
+
+  public async Task<JsonResult> GetStateByCountry(string country)
+  {
+    try
+    {
+      Console.WriteLine("Get City By Country did come here");
+      Console.WriteLine("Country here is:" + country);
+      if (string.IsNullOrEmpty(country))
+      {
+        return Json(new { status = 0, message = "Country is empty" });
+      }
+
+      var state = JsonConvert.DeserializeObject<Dictionary<string, List<StateInfo>>>(HttpContext.Session.GetString("STATE"));
+
+      if (state != null && state.ContainsKey(country))
       {
         return Json(new { status = 1, data = state[country] });
       }
-   }
-   catch (Exception er)
-   {
-     Console.WriteLine("Get City By Country Exception:" + er.Message);
-     this._logger.LogError("Get City By Country Exception:" + er.Message);
-   }
-   return Json(new { status = 0, message = "Failed to get cities" });
- }
+    }
+    catch (Exception er)
+    {
+      Console.WriteLine("Get City By Country Exception:" + er.Message);
+      this._logger.LogError("Get City By Country Exception:" + er.Message);
+    }
+    return Json(new { status = 0, message = "Failed to get cities" });
+  }
 
 
-[Route("checkout/{id}")]
- [HttpGet]
- public async Task<IActionResult> CheckoutCart(string id)
- {   var cart=this._cart.getCart();
- Console.WriteLine("Checkout Cart did come here");
+  [Route("checkout/{id}")]
+  [HttpGet]
+  public async Task<IActionResult> CheckoutCart(string id)
+  {
+    var cart = this._cart.getCart();
+    Console.WriteLine("Checkout Cart did come here");
     try
     {
       if (cart == null || cart.Count == 0)
@@ -162,22 +215,25 @@ public class CheckoutController : BaseController
 
               Dictionary<string, string> countries = new Dictionary<string, string>();
 
-              Dictionary<string, List<StateInfo>> city = new Dictionary<string, List<StateInfo>>();
+              Dictionary<string, List<StateInfo>> state = new Dictionary<string, List<StateInfo>>();
 
               foreach (var country in list_data?.Data)
               {
+                if (countries.Keys.Contains(country?.Name))
+                {
+                  continue;
+                }
                 countries.Add(country?.Name, country.Iso3);
 
                 if (country?.States != null && country.States.Count > 0)
                 {
-                  city.Add(country.Name, country.States);
+                  state.Add(country.Name, country.States);
                 }
-
               }
 
               HttpContext.Session.SetString("COUNTRY", JsonConvert.SerializeObject(countries));
 
-              HttpContext.Session.SetString("STATE", JsonConvert.SerializeObject(city));
+              HttpContext.Session.SetString("STATE", JsonConvert.SerializeObject(state));
 
               Console.WriteLine("Countries listed here is:" + HttpContext.Session.GetString("COUNTRY"));
             }
@@ -190,118 +246,118 @@ public class CheckoutController : BaseController
           }
         }
       }
-        ViewBag.Countries = JsonConvert.DeserializeObject<Dictionary<string, string>>(HttpContext.Session.GetString("COUNTRY"));
+      ViewBag.Countries = JsonConvert.DeserializeObject<Dictionary<string, string>>(HttpContext.Session.GetString("COUNTRY"));
 
-        ViewBag.Cities = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(HttpContext.Session.GetString("CITY"));
+      ViewBag.Cities = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(HttpContext.Session.GetString("STATE"));
 
-        if (Request.Cookies["UserAccount"] != null)
-        {
-          is_saved_account = true;
-          string account = Request.Cookies["UserAccount"];
-          Console.WriteLine("Account here is:" + account);
-          ViewBag.Account = account;
-          ViewBag.SavedAccount = is_saved_account;
-        }
-        //  var company = await this._user.findUserByName("company");
+      if (Request.Cookies["UserAccount"] != null)
+      {
+        is_saved_account = true;
+        string account = Request.Cookies["UserAccount"];
+        Console.WriteLine("Account here is:" + account);
+        ViewBag.Account = account;
+        ViewBag.SavedAccount = is_saved_account;
+      }
+      //  var company = await this._user.findUserByName("company");
 
-        //     ViewBag.company=company;
+      //     ViewBag.company=company;
 
-        //  Console.WriteLine("qr here");
+      //  Console.WriteLine("qr here");
 
-        //  Console.WriteLine("QR ENV:"+Environment.GetEnvironmentVariable("qr_code"));
+      //  Console.WriteLine("QR ENV:"+Environment.GetEnvironmentVariable("qr_code"));
 
-        //   if(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("qr_code")))
-        //   {
-        //     string[] email_list = company.Email.Split('#');
-        //     string email = email_list[0];
-        //     string extra_info = email_list[1];
-        //     string bank_name = "";
-        //     string account_num = "";
-        //     string account_name = "";
-        //     string qr_code = "";
+      //   if(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("qr_code")))
+      //   {
+      //     string[] email_list = company.Email.Split('#');
+      //     string email = email_list[0];
+      //     string extra_info = email_list[1];
+      //     string bank_name = "";
+      //     string account_num = "";
+      //     string account_name = "";
+      //     string qr_code = "";
 
-        //     if (!string.IsNullOrEmpty(extra_info))
-        //     {
-        //       string[] info_values = extra_info.Split('\n');
-        //       foreach (var info in info_values)
-        //       {
-        //         if (info.Contains("bank_name"))
-        //         {
-        //           bank_name = info.Split('~')[1].Trim();
-        //         }
-        //         else if (info.Contains("account_name"))
-        //         {
-        //           account_name = info.Split('~')[1].Trim();
-        //         }
-        //         else if (info.Contains("account_num"))
-        //         {
-        //           account_num = info.Split('~')[1].Trim();
-        //         }
-        //       }
-        //     }
-        //     qr_code = this._sp.generateQRCode(bank_name, account_num, account_name);
-        //     Console.WriteLine("QRCODE:" + qr_code);
-        //     if (!string.IsNullOrEmpty(qr_code) && qr_code != "ERROR")
-        //     {
-        //       this._logger.LogInformation("QR Code In Checkout did come here:" + qr_code);
-        //       Console.WriteLine("QR Code In Checkout did come here:" + qr_code);
-        //       Environment.SetEnvironmentVariable("qr_code", qr_code);
-        //     }
-        //   }
+      //     if (!string.IsNullOrEmpty(extra_info))
+      //     {
+      //       string[] info_values = extra_info.Split('\n');
+      //       foreach (var info in info_values)
+      //       {
+      //         if (info.Contains("bank_name"))
+      //         {
+      //           bank_name = info.Split('~')[1].Trim();
+      //         }
+      //         else if (info.Contains("account_name"))
+      //         {
+      //           account_name = info.Split('~')[1].Trim();
+      //         }
+      //         else if (info.Contains("account_num"))
+      //         {
+      //           account_num = info.Split('~')[1].Trim();
+      //         }
+      //       }
+      //     }
+      //     qr_code = this._sp.generateQRCode(bank_name, account_num, account_name);
+      //     Console.WriteLine("QRCODE:" + qr_code);
+      //     if (!string.IsNullOrEmpty(qr_code) && qr_code != "ERROR")
+      //     {
+      //       this._logger.LogInformation("QR Code In Checkout did come here:" + qr_code);
+      //       Console.WriteLine("QR Code In Checkout did come here:" + qr_code);
+      //       Environment.SetEnvironmentVariable("qr_code", qr_code);
+      //     }
+      //   }
 
 
 
-        //   var user = await this._user.findUserByName(username);
+      //   var user = await this._user.findUserByName(username);
 
-        //   ViewBag.user = user;    
+      //   ViewBag.user = user;    
 
-        //   var company = await this._user.findUserByName("company");
+      //   var company = await this._user.findUserByName("company");
 
-        //   ViewBag.company=company;
+      //   ViewBag.company=company;
 
-        //  Console.WriteLine("qr here");
+      //  Console.WriteLine("qr here");
 
-        //  Console.WriteLine("QR ENV:"+Environment.GetEnvironmentVariable("qr_code"));
+      //  Console.WriteLine("QR ENV:"+Environment.GetEnvironmentVariable("qr_code"));
 
-        //   if(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("qr_code")))
-        //   {
-        //     string[] email_list = company.Email.Split('#');
-        //     string email = email_list[0];
-        //     string extra_info = email_list[1];
-        //     string bank_name = "";
-        //     string account_num = "";
-        //     string account_name = "";
-        //     string qr_code = "";
+      //   if(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("qr_code")))
+      //   {
+      //     string[] email_list = company.Email.Split('#');
+      //     string email = email_list[0];
+      //     string extra_info = email_list[1];
+      //     string bank_name = "";
+      //     string account_num = "";
+      //     string account_name = "";
+      //     string qr_code = "";
 
-        //     if (!string.IsNullOrEmpty(extra_info))
-        //     {
-        //       string[] info_values = extra_info.Split('\n');
-        //       foreach (var info in info_values)
-        //       {
-        //         if (info.Contains("bank_name"))
-        //         {
-        //           bank_name = info.Split('~')[1].Trim();
-        //         }
-        //         else if (info.Contains("account_name"))
-        //         {
-        //           account_name = info.Split('~')[1].Trim();
-        //         }
-        //         else if (info.Contains("account_num"))
-        //         {
-        //           account_num = info.Split('~')[1].Trim();
-        //         }
-        //       }
-        //     }
-        //     qr_code = this._sp.generateQRCode(bank_name, account_num, account_name);
-        //     Console.WriteLine("QRCODE:" + qr_code);
-        //     if (!string.IsNullOrEmpty(qr_code) && qr_code != "ERROR")
-        //     {
-        //       this._logger.LogInformation("QR Code In Checkout did come here:" + qr_code);
-        //       Console.WriteLine("QR Code In Checkout did come here:" + qr_code);
-        //       Environment.SetEnvironmentVariable("qr_code", qr_code);
-        //     }
-        //   }
-      
+      //     if (!string.IsNullOrEmpty(extra_info))
+      //     {
+      //       string[] info_values = extra_info.Split('\n');
+      //       foreach (var info in info_values)
+      //       {
+      //         if (info.Contains("bank_name"))
+      //         {
+      //           bank_name = info.Split('~')[1].Trim();
+      //         }
+      //         else if (info.Contains("account_name"))
+      //         {
+      //           account_name = info.Split('~')[1].Trim();
+      //         }
+      //         else if (info.Contains("account_num"))
+      //         {
+      //           account_num = info.Split('~')[1].Trim();
+      //         }
+      //       }
+      //     }
+      //     qr_code = this._sp.generateQRCode(bank_name, account_num, account_name);
+      //     Console.WriteLine("QRCODE:" + qr_code);
+      //     if (!string.IsNullOrEmpty(qr_code) && qr_code != "ERROR")
+      //     {
+      //       this._logger.LogInformation("QR Code In Checkout did come here:" + qr_code);
+      //       Console.WriteLine("QR Code In Checkout did come here:" + qr_code);
+      //       Environment.SetEnvironmentVariable("qr_code", qr_code);
+      //     }
+      //   }
+
     }
     catch (Exception er)
     {
@@ -309,23 +365,23 @@ public class CheckoutController : BaseController
 
       this._logger.LogError("Checkout Cart Exception:" + er.Message);
     }
-    return View("~/Views/ClientSide/Checkout/Checkout.cshtml",cart);    
- }
+    return View("~/Views/ClientSide/Checkout/Checkout.cshtml", cart);
+  }
 
   [Route("checkout/partial_view")]
   [HttpPost]
   public async Task<IActionResult> UserLoginPartialView()
   {
-    return PartialView("~/Views/Shared/_LoginUser.cshtml");    
+    return PartialView("~/Views/Shared/_LoginUser.cshtml");
   }
-  
 
-  
+
+
 
 
   [Route("checkout/payment")]
   [HttpPost]
-  public async Task<IActionResult> CheckoutPaymentForm(string first_name, string last_name, string email, string zip_code, string phone_number, string address)
+  public async Task<IActionResult> CheckoutPaymentForm(string first_name, string last_name, string email, string zip_code, string phone_number, string address, string country, string state, string city)
   {
     try
     {
@@ -336,11 +392,17 @@ public class CheckoutController : BaseController
       Console.WriteLine("Zip code here is:" + zip_code);
       Console.WriteLine("Phone number here is:" + phone_number);
       Console.WriteLine("Address here is:" + address);
+      Console.WriteLine("Country here is:" + country);
+      Console.WriteLine("State here is:" + state);
+      Console.WriteLine("City here is:" + city);
       HttpContext.Session.SetString("UserName", first_name + " " + last_name);
       HttpContext.Session.SetString("Email", email);
       HttpContext.Session.SetString("PhoneNumber", phone_number);
       HttpContext.Session.SetString("Address", address);
       HttpContext.Session.SetString("ZipCode", zip_code);
+      HttpContext.Session.SetString("Country", country);
+      HttpContext.Session.SetString("State", state);
+      HttpContext.Session.SetString("City", city);
     }
     catch (Exception er)
     {
@@ -355,22 +417,25 @@ public class CheckoutController : BaseController
   public async Task<IActionResult> CheckoutPayment(string id)
   {
 
-    string username= HttpContext.Session.GetString("UserName");
-     string email= HttpContext.Session.GetString("Email");
-     string phone=  HttpContext.Session.GetString("PhoneNumber");
-     string address= HttpContext.Session.GetString("Address");
-    string zipcode =HttpContext.Session.GetString("ZipCode");
+    string username = HttpContext.Session.GetString("UserName");
+    string email = HttpContext.Session.GetString("Email");
+    string phone = HttpContext.Session.GetString("PhoneNumber");
+    string address = HttpContext.Session.GetString("Address");
+    string zipcode = HttpContext.Session.GetString("ZipCode");
+    string country = HttpContext.Session.GetString("Country");
+    string state = HttpContext.Session.GetString("State");
+    string city = HttpContext.Session.GetString("City");
 
-    if(string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(phone) || string.IsNullOrEmpty(address) || string.IsNullOrEmpty(zipcode))
+    if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(phone) || string.IsNullOrEmpty(address) || string.IsNullOrEmpty(zipcode) || string.IsNullOrEmpty(country) || string.IsNullOrEmpty(state))
     {
       return RedirectToAction("CheckoutCart", "Checkout", new { id = this.HttpContext.Session.GetString("UserId") });
     }
 
-    var cart = this._cart.getCart();    
-
+    var cart = this._cart.getCart();
 
     try
     {
+
       if (cart == null || cart.Count == 0)
       {
         return RedirectToAction("Cart", "Cart");
@@ -423,7 +488,7 @@ public class CheckoutController : BaseController
       this._logger.LogError("Checkout Review Form Exception:" + er.Message);
     }
 
-    return RedirectToAction("CheckoutReview", "Checkout", new { id = this.HttpContext.Session.GetString("UserId")});
+    return RedirectToAction("CheckoutReview", "Checkout", new { id = this.HttpContext.Session.GetString("UserId") });
 
   }
 
@@ -431,38 +496,41 @@ public class CheckoutController : BaseController
   [Route("checkout/{id}/review")]
   [HttpGet]
   public async Task<IActionResult> CheckoutReview(string id)
-  {    
-    string payment_method= HttpContext.Session.GetString("PaymentMethod");
+  {
+    string payment_method = HttpContext.Session.GetString("PaymentMethod");
 
     if (string.IsNullOrEmpty(payment_method))
     {
       return RedirectToAction("CheckoutPayment", "Checkout", new { id = this.HttpContext.Session.GetString("UserId") });
     }
 
-     string username= HttpContext.Session.GetString("UserName");
-     string email= HttpContext.Session.GetString("Email");
-     string phone=  HttpContext.Session.GetString("PhoneNumber");
-     string address= HttpContext.Session.GetString("Address");
-     string zipcode =HttpContext.Session.GetString("ZipCode");
+    string username = HttpContext.Session.GetString("UserName");
+    string email = HttpContext.Session.GetString("Email");
+    string phone = HttpContext.Session.GetString("PhoneNumber");
+    string address = HttpContext.Session.GetString("Address");
+    string zipcode = HttpContext.Session.GetString("ZipCode");
+    string country = HttpContext.Session.GetString("Country");
+    string state = HttpContext.Session.GetString("State");
+    string city = HttpContext.Session.GetString("City");
 
-    if(string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(phone) || string.IsNullOrEmpty(address) || string.IsNullOrEmpty(zipcode))
+    if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(phone) || string.IsNullOrEmpty(address) || string.IsNullOrEmpty(zipcode) || string.IsNullOrEmpty(country) || string.IsNullOrEmpty(state))
     {
       return RedirectToAction("CheckoutCart", "Checkout", new { id = this.HttpContext.Session.GetString("UserId") });
     }
 
 
-    var cart=this._cart.getCart();
+    var cart = this._cart.getCart();
 
     try
     {
-     if (cart == null || cart.Count == 0)
+      if (cart == null || cart.Count == 0)
       {
         return RedirectToAction("Cart", "Cart");
       }
 
-     var payment_methods=await this._payment.getAllPayment();
-     
-    ViewBag.payment_methods=payment_methods;
+      var payment_methods = await this._payment.getAllPayment();
+
+      ViewBag.payment_methods = payment_methods;
     }
     catch (Exception er)
     {
@@ -470,34 +538,35 @@ public class CheckoutController : BaseController
 
       this._logger.LogError("Checkout Review Exception:" + er.Message);
     }
-    return View("~/Views/ClientSide/Checkout/CheckoutReview.cshtml",cart);
-} 
+    return View("~/Views/ClientSide/Checkout/CheckoutReview.cshtml", cart);
+  }
 
-[Route("checkout/createOrder")]
-[HttpPost]
-public async Task<IActionResult> CreateOrder([FromBody] CheckoutItemModel checkout_item)
-{ 
-try
-{
-Console.WriteLine("total price:"+checkout_item.Total_Price);
-    
-    var paypal_request = new OrdersCreateRequest(); 
-    
-    string total_price =  checkout_item.Total_Price;
+  [Route("checkout/createOrder")]
+  [HttpPost]
+  public async Task<IActionResult> CreateOrder([FromBody] CheckoutItemModel checkout_item)
+  {
+    try
+    {
+      Console.WriteLine("total price:" + checkout_item.Total_Price);
 
-    CheckoutModel checkout = checkout_item.Checkout;
+      var paypal_request = new OrdersCreateRequest();
 
-    checkout.Note="Đã thanh toán thành công qua Paypal";
+      string total_price = checkout_item.Total_Price;
 
-    Console.WriteLine("Checkout here is:"+JsonConvert.SerializeObject(checkout));
-    
-    paypal_request.Prefer("return=representation");        
+      CheckoutModel checkout = checkout_item.Checkout;
 
-    string usd_value=await this._sp.convertVNDToUSD(total_price);
-        
-    paypal_request.RequestBody(new OrderRequest{
-      CheckoutPaymentIntent="CAPTURE",
-      PurchaseUnits = new List<PurchaseUnitRequest>
+      checkout.Note = "Đã thanh toán thành công qua Paypal";
+
+      Console.WriteLine("Checkout here is:" + JsonConvert.SerializeObject(checkout));
+
+      paypal_request.Prefer("return=representation");
+
+      string usd_value = await this._sp.convertVNDToUSD(total_price);
+
+      paypal_request.RequestBody(new OrderRequest
+      {
+        CheckoutPaymentIntent = "CAPTURE",
+        PurchaseUnits = new List<PurchaseUnitRequest>
             {
                 new PurchaseUnitRequest
                 {
@@ -509,51 +578,49 @@ Console.WriteLine("total price:"+checkout_item.Total_Price);
                     Description = "Order Payment"
                 }
             }
-            // ApplicationContext = new ApplicationContext
-            // {
-            //     ReturnUrl = Url.Action("CaptureOrder", "Checkout", null, Request.Scheme),
-            //     CancelUrl = Url.Action("CancelOrder", "Checkout", null, Request.Scheme)
-            // }
-    });
+        // ApplicationContext = new ApplicationContext
+        // {
+        //     ReturnUrl = Url.Action("CaptureOrder", "Checkout", null, Request.Scheme),
+        //     CancelUrl = Url.Action("CancelOrder", "Checkout", null, Request.Scheme)
+        // }
+      });
 
-    var paypal_client=this._paypalService.getClient();
+      var paypal_client = this._paypalService.getClient();
 
-    var paypal_response=await paypal_client.Execute(paypal_request);
+      var paypal_response = await paypal_client.Execute(paypal_request);
 
-    Console.WriteLine("Paypal response here is:"+JsonConvert.SerializeObject(paypal_response));
+      Console.WriteLine("Paypal response here is:" + JsonConvert.SerializeObject(paypal_response));
 
-    
-    var paypal_result=paypal_response.Result<PayPalCheckoutSdk.Orders.Order>();
 
-    Console.WriteLine("Paypal Result:"+JsonConvert.SerializeObject(paypal_result));
+      var paypal_result = paypal_response.Result<PayPalCheckoutSdk.Orders.Order>();
 
-    // var approvalLink=paypal_result.Links.FirstOrDefault(x => x.Rel.Equals("approve", StringComparison.OrdinalIgnoreCase)).Href;
+      Console.WriteLine("Paypal Result:" + JsonConvert.SerializeObject(paypal_result));
 
-    // Console.WriteLine("Approval link here is:"+approvalLink);
-    
-    // return Redirect(approvalLink);
+      // var approvalLink=paypal_result.Links.FirstOrDefault(x => x.Rel.Equals("approve", StringComparison.OrdinalIgnoreCase)).Href;
 
-    HttpContext.Session.SetString(paypal_result.Id,JsonConvert.SerializeObject(checkout));
+      // Console.WriteLine("Approval link here is:"+approvalLink);
 
-    return  Json(new {orderId=paypal_result.Id});
-}
-catch(Exception er)
-{
-    Console.WriteLine("Create Order Exception:"+er.Message);
-    this._logger.LogError("Create Order Exception:"+er.Message);
-}
-return BadRequest(new {status=0,message="Tạo đơn hàng thất bại"});
-}
+      // return Redirect(approvalLink);
+
+      HttpContext.Session.SetString(paypal_result.Id, JsonConvert.SerializeObject(checkout));
+
+      return Json(new { orderId = paypal_result.Id });
+    }
+    catch (Exception er)
+    {
+      Console.WriteLine("Create Order Exception:" + er.Message);
+      this._logger.LogError("Create Order Exception:" + er.Message);
+    }
+    return BadRequest(new { status = 0, message = "Tạo đơn hàng thất bại" });
+  }
 
 
   [Route("checkout/submit")]
   [HttpPost]
   [ValidateAntiForgeryToken]
-
- public async Task<IActionResult> CheckoutOrder([FromBody] CheckoutModel checkout)
+  public async Task<IActionResult> CheckoutOrder([FromBody] CheckoutModel checkout)
   {
     Console.WriteLine("Checkout Submit did come here");
-
 
     try
     {
@@ -570,6 +637,12 @@ return BadRequest(new {status=0,message="Tạo đơn hàng thất bại"});
       string note = checkout.Note;
 
       string zip_code = checkout.ZipCode;
+
+      string city = checkout.City;
+
+      string state = checkout.State;
+
+      string country = checkout.Country;
 
       Console.WriteLine("Email here is:" + email);
 
@@ -609,7 +682,7 @@ return BadRequest(new {status=0,message="Tạo đơn hàng thất bại"});
 
       var asp_user = await this._user.getAspUser(user.Id);
 
-      var created_order = await this._order.createOrder(asp_user, cart, payment, zip_code, note);
+      var created_order = await this._order.createOrder(asp_user, cart, payment, zip_code, country, state, city, note);
 
       if (created_order == 1)
       {
@@ -678,7 +751,10 @@ return BadRequest(new {status=0,message="Tạo đơn hàng thất bại"});
 
         await this._cart.clearCart();
 
-        return View("~/Views/ClientSide/Checkout/CheckoutResult.cshtml", checkout_result);
+        Console.WriteLine("did come to here");
+
+        return View("~/Views/ClientSide/Checkout/CheckoutResult.cshtml");
+        
       }
     }
     catch (Exception er)
@@ -715,60 +791,63 @@ return BadRequest(new {status=0,message="Tạo đơn hàng thất bại"});
     ViewBag.user = user_value;
 
     return View("~/Views/ClientSide/Checkout/Checkout.cshtml");
-  }  
- [Route("checkout/capture")]
- [HttpGet]
- public async Task<IActionResult> CaptureOrder(string token)
- {
-  try
-  {
-    // Console.WriteLine("Did in the capture function");
-    //+ Console.WriteLine("Capture Request here is:"+JsonConvert.SerializeObject(checkout));
-   Console.WriteLine("Invoice Id heree is:"+token);    
 
-   var request = new OrdersCaptureRequest(token);
-
-   Console.WriteLine("Create OrderCapture successfully");
-   
-   request.RequestBody(new OrderActionRequest());
-   
-   var paypal_client= this._paypalService.getClient();
-   
-   var response=await paypal_client.Execute(request);
-    
-   var result= response.Result<PayPalCheckoutSdk.Orders.Order>();
-
-   Console.WriteLine("Create result successfully");
-
-    // if(result.Status=="COMPLETED")
-    // { 
-    //   return Json(new {status=1,message="Thanh toán thành công"});
-    // }
-    if(result.Status=="COMPLETED")
-    {
-    string checkout=this.HttpContext.Session.GetString(token);
-    Console.WriteLine("Checkout object here is:"+checkout);
-    return Json(new {status=1,message="Thanh toán thành công",checkout=JsonConvert.DeserializeObject<CheckoutModel>(checkout)});
-
-    }  
-    }
-  catch(Exception er)
-  {
-    this._logger.LogError("Capture Order Exception:"+er.Message);
-    Console.WriteLine("Capture Order Exception:"+er.Message);
   }
-  return BadRequest(new {status=0,message="Thanh toán thất bại"});  
- }
-
-   public IActionResult CancelOrder()
+  [Route("checkout/capture")]
+  [HttpGet]
+  public async Task<IActionResult> CaptureOrder(string token)
+  {
+    try
     {
-        return Content("Payment cancelled.");
+      // Console.WriteLine("Did in the capture function");
+      //+ Console.WriteLine("Capture Request here is:"+JsonConvert.SerializeObject(checkout));
+      Console.WriteLine("Invoice Id heree is:" + token);
+
+      var request = new OrdersCaptureRequest(token);
+
+      Console.WriteLine("Create OrderCapture successfully");
+
+      request.RequestBody(new OrderActionRequest());
+
+      var paypal_client = this._paypalService.getClient();
+
+      var response = await paypal_client.Execute(request);
+
+      var result = response.Result<PayPalCheckoutSdk.Orders.Order>();
+
+      Console.WriteLine("Create result successfully");
+
+      // if(result.Status=="COMPLETED")
+      // { 
+      //   return Json(new {status=1,message="Thanh toán thành công"});
+      // }
+      if (result.Status == "COMPLETED")
+      {
+        string checkout = this.HttpContext.Session.GetString(token);
+
+        Console.WriteLine("Checkout object here is:" + checkout);
+
+        return Json(new { status = 1, message = "Thanh toán thành công", checkout = JsonConvert.DeserializeObject<CheckoutModel>(checkout) });
+
+      }
     }
-   
-  [Route("checkout/done")]
+    catch (Exception er)
+    {
+      this._logger.LogError("Capture Order Exception:" + er.Message);
+      Console.WriteLine("Capture Order Exception:" + er.Message);
+    }
+    return BadRequest(new { status = 0, message = "Thanh toán thất bại" });
+  }
+
+  public IActionResult CancelOrder()
+  {
+    return Content("Payment cancelled.");
+  }
+  
+  [Route("checkout/{id}/done")]
   [HttpGet]
   public async Task<IActionResult> CheckoutResult()
   {
-    return View("~/Views/ClientSide/Checkout/CheckoutResult.cshtml");            
+    return View("~/Views/ClientSide/Checkout/CheckoutResult.cshtml");
   }
 }

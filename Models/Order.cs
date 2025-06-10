@@ -19,6 +19,12 @@ public partial class Order
 
     public string ZipCode { get; set; } = null!;
 
+    public string Country { get; set; } = null!;
+
+    public string State { get; set; } = null!;
+
+    public string City { get; set; } = null!;
+
     public int Paymentid { get; set; }
 
     public string? OrderId { get; set; }

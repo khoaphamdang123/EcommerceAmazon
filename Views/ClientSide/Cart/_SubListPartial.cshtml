@@ -16,12 +16,12 @@
             <a href="product-details.html">
                @if(cart.Product.Backavatar.Contains("https") || cart.Product.Backavatar.Contains("http"))
               {
-                <img src="@cart.Product.Backavatar"  width="60" alt="...">
+                <img src="@cart.Product.Backavatar" width="60" alt="...">
               }
               else
               {
-                <img src="~/@cart.Product.Backavatar.Substring(cart.Product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" width="60" alt="...">
-            }
+                <img src="~/@cart.Product.Backavatar.Substring(cart.Product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" width="60" alt="...">                
+              }
             </a>
           </div>
           <div class="">
@@ -77,7 +77,6 @@ if(checkoutButton)
         
   function attachRemoveButtonListeners() 
 {
-   
     document.querySelectorAll("#remove-item-btn").forEach((item) => 
     {  
         item.addEventListener("click", () => {
@@ -107,18 +106,12 @@ if(checkoutButton)
                     attachRemoveButtonListeners();
                     
                     checkout();
-                    @* var updated_count=$("#count-cart").text();
-                    updated_count=parseInt(updated_count)-1;               *@
+
                     $("#count-cart").text(@total_item-1);
                 },
                 error: function(xhr, status, error) 
-                {
-                    @* document.getElementById("toast-title").innerHTML = "Thông báo";
-                    document.getElementById("toast-message").innerHTML = xhr.responseText;
-                    var toastEl = document.querySelector('.toast');
-                    toastEl.classList.add('bg-danger');
-                    var toast = new bootstrap.Toast(toastEl); *@
-                    //toast.show(); 
+                { 
+                  alert("Error removing item from cart: " + xhr.responseText);
                 }
             });
         });

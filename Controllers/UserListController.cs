@@ -63,36 +63,37 @@ public class UserListController : BaseAdminController
         return View();
     }
 
-  
-[Authorize(Roles ="Admin")]
- [Route("user_list/page")]
-   [HttpGet]
-    public async Task<IActionResult> UserListPaging([FromQuery]int page_size,[FromQuery] int page=1,string username="",string email="",string phonenumber="",string datetime="",string endtime="")
-    {
-      Console.WriteLine("task here");
-       try
-        { 
-          var users=await this._userList.pagingUser(page_size,page);
 
-          if(!string.IsNullOrEmpty(username) || !string.IsNullOrEmpty(email) || !string.IsNullOrEmpty(phonenumber) || !string.IsNullOrEmpty(datetime) || string.IsNullOrEmpty(endtime))
-          {
-          FilterUser filter_obj=new FilterUser(username,email,phonenumber,datetime,endtime);
-          var filtered_user_list=await this._userList.filterUserList(filter_obj);
-          users=PageList<ApplicationUser>.CreateItem(filtered_user_list.AsQueryable(),page,page_size);
-          ViewBag.filter_user=filter_obj;
-          }
-          List<string> options=new List<string>(){"10","25","50","100"};
-          ViewBag.options=options;
-          string select_size=page_size.ToString();
-          ViewBag.select_size=select_size;
-          return View("~/Views/UserList/UserList.cshtml",users);
-        }
-        catch(Exception er)
-        {
-            this._logger.LogTrace("Get User List Exception:"+er.Message);
-        }
-  return RedirectToAction("UserList","UserList");
+  [Authorize(Roles = "Admin")]
+  [Route("user_list/page")]
+  [HttpGet]
+  public async Task<IActionResult> UserListPaging([FromQuery] int page_size, [FromQuery] int page = 1, string username = "", string email = "", string phonenumber = "", string datetime = "", string endtime = "")
+  {
+    Console.WriteLine("task here");
+    try
+    {
+      var users = await this._userList.pagingUser(page_size, page);
+
+      if (!string.IsNullOrEmpty(username) || !string.IsNullOrEmpty(email) || !string.IsNullOrEmpty(phonenumber) || !string.IsNullOrEmpty(datetime) || string.IsNullOrEmpty(endtime))
+      {
+        FilterUser filter_obj = new FilterUser(username, email, phonenumber, datetime, endtime);
+        var filtered_user_list = await this._userList.filterUserList(filter_obj);
+        users = PageList<ApplicationUser>.CreateItem(filtered_user_list.AsQueryable(), page, page_size);
+        ViewBag.filter_user = filter_obj;
+      }
+      List<string> options = new List<string>() { "10", "25", "50", "100" };
+      ViewBag.options = options;
+      string select_size = page_size.ToString();
+      ViewBag.select_size = select_size;
+      return View("~/Views/UserList/UserList.cshtml", users);
     }
+    catch (Exception er)
+    {
+      this._logger.LogTrace("Get User List Exception:" + er.Message);
+    }
+    return RedirectToAction("UserList", "UserList");
+
+ }
 
     
 

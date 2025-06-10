@@ -85,6 +85,12 @@
      string last_name="";
      string first_name="";
 
+     string country_name=HttpContextAccessor.HttpContext.Session.GetString("Country");
+    
+    string state = HttpContextAccessor.HttpContext.Session.GetString("State");
+    
+    string city = HttpContextAccessor.HttpContext.Session.GetString("City");
+
 
      if(!string.IsNullOrEmpty(user))
      {
@@ -199,11 +205,7 @@
 														</div>
 														<div class="step-label"><i class='bx bx-user-circle'></i>Details</div>
 													</a>
-													@* <a class="step-item" href="checkout-shipping.html">
-														<div class="step-progress"><span class="step-count">3</span>
-														</div>
-														<div class="step-label"><i class='bx bx-cube'></i>Shipping</div>
-													</a> *@
+											
 													<a class="step-item" href="@Url.Action("CheckoutPayment","Checkout",new{id=HttpContextAccessor.HttpContext.Session.GetString("UserId")})">
 														<div class="step-progress"><span class="step-count">3</span>
 														</div>
@@ -219,17 +221,6 @@
 										</div>
 										<div class="card rounded-0">
 											<div class="card-body">
-												@* <div class="d-flex align-items-center mb-3">
-													<div class="">
-														<img src="assets/images/avatars/avatar-1.png" width="90" alt="" class="rounded-circle p-1 border">
-													</div>
-													<div class="ms-2">
-														<h6 class="mb-0">Jhon Michle</h6>
-														<p class="mb-0">michle@example.com</p>
-													</div>
-													<div class="ms-auto">	<a href="javascript:;" class="btn btn-light btn-ecomm"><i class='bx bx-edit'></i> Edit Profile</a>
-													</div>
-												</div> *@
 												<div class="border p-3">
 													<h2 class="h5 mb-0">Shipping Address</h2>
 													<div class="my-3 border-bottom"></div>
@@ -237,25 +228,25 @@
 														<form class="row g-3" id="checkout-form" novalidate asp-action="CheckoutPaymentForm" asp-controller="Checkout">
 															<div class="col-md-6">
 																<label class="form-label">First Name</label>
-																<input type="text" class="form-control rounded-0" value="@first_name" name="first_name" required>
+																<input type="text" class="form-control rounded-0" value="@first_name" placeholder="Input Your Firstname" name="first_name" required>
                                                                <div class="invalid-feedback">
                                                                 Please enter a valid first name.
 		                                                    </div>
 															</div>
 															<div class="col-md-6">
 																<label class="form-label">Last Name</label>
-																<input type="text" class="form-control rounded-0" value="@last_name" name="last_name" required>
+																<input type="text" class="form-control rounded-0" value="@last_name" placeholder="Input Your Last Name" name="last_name" required>
                                                                <div class="invalid-feedback">
                                                                 Please enter a last name.
 		                                                    </div>
 															</div>
 															<div class="col-md-6">
 																<label class="form-label">E-mail</label>
-																<input type="text" class="form-control rounded-0" value="@email" name="email" required>
+																<input type="text" class="form-control rounded-0" value="@email" placeholder="Input Your Email" name="email" required>
 															</div>
 															<div class="col-md-6">
 																<label class="form-label">Phone Number</label>
-																<input type="text" class="form-control rounded-0" value="@phone" name="phone_number" required>
+																<input type="text" class="form-control rounded-0" value="@phone" placeholder="Input Your Phonenumber" name="phone_number" required>
                                                              <div class="invalid-feedback">
                                                                 Please enter a valid phone number.
 		                                                    </div>
@@ -263,16 +254,35 @@
 
                                                         	<div class="col-md-6">
 																<label class="form-label">Country</label>
-																@* <input type="text" class="form-control rounded-0" value="" name="country" required> *@
                                                                 <select class="form-select rounded-0" name="country" id="countryname" required>
                                                                     <option value="">Select Country</option>
                                                                     @foreach(var country in countries)
+                                                                    {   if(country.Value==country_name) 
+                                                                    {
+                                                                        <option value="@country.Value" selected>@country.Key</option>
+                                                                    }
+                                                                    else
                                                                     {
                                                                         <option value="@country.Value">@country.Key</option>
+                                                                    }
                                                                     }
                                                                 </select>
                                                              <div class="invalid-feedback">
                                                                 Please select a valid country.
+		                                                    </div>
+															</div>
+
+                                                            	<div class="col-md-6">
+																<label class="form-label">State</label>
+                                                                <select class="form-select rounded-0" name="state" id="state" required>
+                                                                    <option value="">Select State</option>
+                                                                    @if(!string.IsNullOrEmpty(state))
+                                                                    {
+                                                               <option value="@state" selected>@state</option>
+                                                                    }
+                                                                </select>
+                                                             <div class="invalid-feedback">
+                                                                Please enter a valid state name.
 		                                                    </div>
 															</div>
                                                         
@@ -280,59 +290,39 @@
 																<label class="form-label">City</label>
                                                                 <select class="form-select rounded-0" name="city" id="city" required>
                                                                     <option value="">Select City</option>
+                                                                    @if(!string.IsNullOrEmpty(city))
+                                                                    {
+                                                                        <option value="@city" selected>@city</option>
+                                                                    }
                                                                 </select>
                                                              <div class="invalid-feedback">
                                                                 Please enter a valid city name.
 		                                                    </div>
 															</div>
 
-                                                        	<div class="col-md-6">
-																<label class="form-label">State(Region)</label>
-																<input type="text" class="form-control rounded-0" value="" name="state" id="state" required>
-                                                             <div class="invalid-feedback">
-                                                                Please select a valid region.
-		                                                    </div>
-															</div>
-														
-															@* <div class="col-md-6">
-																<label class="form-label">State/Province</label>
-																<select class="form-select rounded-0">
-																	<option>United Kingdom</option>
-																	<option>California</option>
-																</select>
-															</div> *@
+                                                    
 															<div class="col-md-6">
 																<label class="form-label">Zip/Postal Code</label>
-																<input type="text" class="form-control rounded-0" value="@zipcode" name="zip_code" required>
+																<input type="text" class="form-control rounded-0" placeholder="Input Your Zip Code" value="@zipcode" name="zip_code" required>
                                                             <div class="invalid-feedback">
                                                                 Please enter a valid zip code.                                                                
 		                                                    </div>
 															</div>
-															@* <div class="col-md-6">
-																<label class="form-label">Country</label>
-																<select class="form-select rounded-0">
-																	<option>United States</option>
-																	<option>India</option>
-																	<option>China</option>
-																	<option>Turkey</option>
-																</select>
-															</div> *@
+														
 															<div class="col-md-6">
-																<label class="form-label">Billing Address </label>
-																<textarea class="form-control rounded-0" id="address" value="@address" name="address">@address</textarea>
+																
+                                                                <label class="form-label">Billing Address 1 </label>
+																
+                                                                <textarea class="form-control rounded-0" id="address" placeholder="Input Your Address" value="@address" name="address">@address</textarea>
+                                                               
                                                                <div class="invalid-feedback">
                                                                 Please enter a valid address.                                                                
-		                                                    </div>
+                                                            </div>
+                                                            </div>
+                                                            	<div class="col-md-6">
+																<label class="form-label">Billing Address 2 </label>
+																<textarea class="form-control rounded-0" id="address" placeholder="Input your backup address" value="@address" name="address">@address</textarea>
 															</div>
-															@* <div class="col-md-12">
-																<h6 class="mb-0 h5">Billing Address</h6>
-																<div class="my-3 border-bottom"></div>
-																<div class="form-check">
-																	<input class="form-check-input" type="checkbox" id="gridCheck" checked>
-																	<label class="form-check-label" for="gridCheck">Same as shipping address</label>
-																</div>
-															</div> *@
-
 															<div class="col-md-6">
 															  <div class="d-grid">	
                                                                 <a href="@Url.Action("Cart","Cart")" class="btn btn-light btn-ecomm"><i class='bx bx-chevron-left'></i>Back to Cart</a>
@@ -354,15 +344,7 @@
 									<div class="order-summary">
 										<div class="card rounded-0">
 											<div class="card-body">
-												@* <div class="card rounded-0 border bg-transparent shadow-none mb-3">
-													<div class="card-body">
-														<p class="fs-5">Apply Discount Code</p>
-														<div class="input-group">
-															<input type="text" class="form-control rounded-0" placeholder="Enter discount code">
-															<button class="btn btn-dark btn-ecomm" type="button">Apply</button>
-														</div>
-													</div>
-												</div> *@
+											
 												<div class="card rounded-0 border bg-transparent shadow-none">
 													<div class="card-body">
 														<p class="fs-5">Order summary</p>
@@ -370,9 +352,10 @@
                                                     {
                                                     string regex_product=Regex.Replace(item.Product.ProductName, @"[^\w\d+,]", "-");
 
-														<div class="my-3 border-top"></div>
-														<div class="d-flex align-items-center">
-															<a class="d-block flex-shrink-0" href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
+													<div class="my-3 border-top"></div>
+
+                        <div class="d-flex align-items-center">
+                          <a class="d-block flex-shrink-0" href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
                          @if(item.Product.Backavatar.Contains("https") || item.Product.Backavatar.Contains("http"))
                           {
                           <img src="@item.Product.Backavatar"  style="width:75px !important;" class="card-img-top" alt="...">
@@ -388,40 +371,7 @@
 																</div>
 															</div>
 														</div>
-                                                        }
-														@* <div class="my-3 border-top"></div>
-														<div class="d-flex align-items-center">
-															<a class="d-block flex-shrink-0" href="javascript:;">
-																<img src="assets/images/products/17.png" width="75" alt="Product">
-															</a>
-															<div class="ps-2">
-																<h6 class="mb-1"><a href="javascript:;" class="text-dark">Fancy Red Sneakers</a></h6>
-																<div class="widget-product-meta"><span class="me-2">$16.<small>00</small></span><span class="">x 2</span>
-																</div>
-															</div>
-														</div>
-														<div class="my-3 border-top"></div>
-														<div class="d-flex align-items-center">
-															<a class="d-block flex-shrink-0" href="javascript:;">
-																<img src="assets/images/products/04.png" width="75" alt="Product">
-															</a>
-															<div class="ps-2">
-																<h6 class="mb-1"><a href="javascript:;" class="text-dark">Yellow Shine Blazer</a></h6>
-																<div class="widget-product-meta"><span class="me-2">$22.<small>00</small></span><span class="">x 1</span>
-																</div>
-															</div>
-														</div>
-														<div class="my-3 border-top"></div>
-														<div class="d-flex align-items-center">
-															<a class="d-block flex-shrink-0" href="javascript:;">
-																<img src="assets/images/products/09.png" width="75" alt="Product">
-															</a>
-															<div class="ps-2">
-																<h6 class="mb-1"><a href="javascript:;" class="text-dark">Men Black Hat Cap</a></h6>
-																<div class="widget-product-meta"><span class="me-2">$14.<small>00</small></span><span class="">x 1</span>
-																</div>
-															</div>
-														</div> *@
+                                                        }													
 													</div>
 												</div>
 												<div class="card rounded-0 border bg-transparent mb-0 shadow-none">
@@ -445,356 +395,6 @@
 				</section>
     </div>
   
-  @* <div class="page-banner-area page-banner-height-2" data-background="@Url.Content("~/user_layout/img/banner/page-banner-4.jpg")">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="page-banner-content text-center">
-                            <h4 class="breadcrumb-title">Thanh toán</h4>
-                            <div class="breadcrumb-two">
-                                <nav>
-                                   <nav class="breadcrumb-trail breadcrumbs">
-                                      <ul class="breadcrumb-menu">
-                                         <li class="breadcrumb-trail">
-                                            <a href="@Url.Action("HomePage","HomePage")"><span>Trang chủ</span></a>
-                                         </li>
-                                         <li class="trail-item">
-                                            <span>Thanh toán</span>
-                                         </li>
-                                      </ul>
-                                   </nav> 
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> *@
-
-        @* <section class="coupon-area pt-120 pb-30">
-            <div class="container">
-            <div class="row">
-            <div class="col-md-6">
-                <div class="coupon-accordion">
-                  @if(!(User.Identity.IsAuthenticated && User.IsInRole("User")))
-                  {
-                        <!-- ACCORDION START -->
-                        <h3>Bạn đã có tài khoản?<span id="showlogin">Nhấn vào đây để đăng nhập
-                        </span></h3>
-                        <div id="checkout-login" class="coupon-content">
-                        <div class="coupon-info">
-                            <form id="signinForm" method="POST" asp-action="MyAccount" asp-controller="MyAccount">
-                                    <p class="form-row-first">
-                                    <label>Tên đăng nhập<span class="required">*</span></label>
-                                    <input type="text" name="username" id="username" value="@(!string.IsNullOrEmpty(username)?username:"")">
-                                    <span class="text-danger" id="username-error"></span><br>
-                                    </p>
-                                    <p class="form-row-last">
-                                    <label>Mật khẩu<span class="required">*</span></label>
-                                    <input type="password" name="password" id="password" value="@(!string.IsNullOrEmpty(password)?password:"")" autocomplete>
-                                <span class="text-danger" id="password-error"></span><br>
-                                    </p>
-                                    <p class="form-row">
-                                    <button class="tp-btn-h1" type="submit">Đăng nhập</button>
-                                    <label>
-                                    @if(saved_account!=null && saved_account)
-                                    {
-                                     <input type="checkbox" name="rememberme" value="true" checked>
-                                     }
-                                     else
-                                     {
-                                    <input type="checkbox" name="rememberme" value="true">
-                                     }
-                                     Nhớ mật khẩu
-                                    </label>
-                                    </p>
-                                    <p class="lost-password">
-                                    <a href="@Url.Action("ForgotPassword","MyAccount")">Quên mật khẩu?</a>
-                                    </p>
-                                    <div class="g-recaptcha mt-3" data-sitekey="@siteKey"></div>
-                            </form>
-                        </div>
-                        </div>
-                        }
-                </div>
-            </div>
-          
-            </div>
-        </div>
-        </section> *@
-        <!-- coupon-area-end -->
-
-        @* <!-- checkout-area-start -->
-        <section class="checkout-area pb-85">
-            <div class="container">
-                <form id="checkout-form" method="POST" asp-action="CheckoutOrder" asp-controller="Checkout">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="checkbox-form">
-                                <h3>Chi tiết thông tin</h3>
-                                <div class="row">                                
-                                    <div class="col-md-12">
-                                        <div class="checkout-form-list">
-                                            <label>Tên<span class="required">*</span></label>
-                                            <input type="text" placeholder="Nhập tên" name="username" id="user-name" value="@(user!=null?user.UserName:"")" @(user!=null?"readonly":"")>
-                                        <span class="text-danger" id="name-error"></span>
-                                        <br>
-                                        </div>
-                                    </div>
-                               
-                                    <div class="col-md-12">
-                                        <div class="checkout-form-list">
-                                            <label>Địa chỉ<span class="required">*</span></label>                                            
-                                            <input type="text" placeholder="Nhập địa chỉ giao hàng" id="address" name="address1" value="@(user!=null?!string.IsNullOrEmpty(user.Address2)?user.Address2:user.Address1:"")">
-                                            <span class="text-danger" id="address-error"></span><br>                                            
-                                        </div>
-                                    </div>
-                               
-                                    <div class="col-md-6">
-                                        <div class="checkout-form-list">
-                                            <label>Email<span class="required">*</span></label>
-                                            <input type="email" placeholder="Nhập Email của bạn" id="email" name="email" value="@(user!=null?user.Email:"")"  @(user!=null?"readonly":"")>      
-                                            <span class="text-danger" id="email-error"></span><br>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="basic-login">
-                                            <label>Số điện thoại<span class="required">*</span></label>
-                                            <input type="number" placeholder="Nhập số điện thoại của bạn" id="phone" name="phonenumber" value="@(user!=null?user.PhoneNumber:"")"  @(user!=null?"readonly":"")>
-                                        <span class="text-danger" id="phone-error"></span><br>
-                                        </div>
-                                    </div>
-                               
-                                </div>
-
-                                <div class="different-address">
-                                 
-                                    <div class="order-notes">
-                                        <div class="checkout-form-list">
-                                            <label>Ghi chú đơn hàng</label>
-                                            <textarea id="checkout-mess" name="note" cols="30" rows="10" placeholder="Các yêu cầu ghi chú khi giao hàng."></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="your-order mb-30 ">
-                                <h3>Đơn hàng của bạn</h3>
-                                <div class="your-order-table table-responsive">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th class="product-name">Sản phẩm</th>
-                                                <th class="product-total">Tổng cộng</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                          @foreach(var item in Model)
-                                          { 
-                                          int discount=string.IsNullOrEmpty(item.Product.Discount.ToString()) ? 100 : Convert.ToInt32(item.Product.Discount);
-                                          
-                                          string price_value=!string.IsNullOrEmpty(item.Price) ? item.Price : item.Product.Price;
-
-                                          total_value+=(Convert.ToInt32(price_value)-(Convert.ToInt32(price_value)*(discount)/100))*item.Quantity;
-                                           
-                                           string variant_info="";
-                                           
-                                           if(!string.IsNullOrEmpty(item.Size))
-                                           {
-                                            if(string.IsNullOrEmpty(variant_info))
-                                            {
-                                                variant_info+=item.Size;                                                                                                
-                                            }
-                                            else
-                                            {
-                                                variant_info+="/"+item.Size;
-                                            }
-                                           }
-                                            if(!string.IsNullOrEmpty(item.Color))
-                                           {
-                                            if(string.IsNullOrEmpty(variant_info))
-                                            {
-                                                variant_info+=item.Color;
-                                            }
-                                            else
-                                            {
-                                                variant_info+="/"+item.Color;
-                                            }
-                                           }
-                                        
-                                   
-                                        
-                                            <tr class="cart_item">
-                                                <td class="product-name">
-                                                 @(item.Product.ProductName) <strong class="product-quantity"> ×&nbsp;@(item.Quantity)</strong><br>
-                                                 <strong> @variant_info</strong>
-                                                </td>
-                                                <td class="product-total">
-                                                    <span class="amount">@((Convert.ToInt32(price_value)-(Convert.ToInt32(price_value)*(discount)/100))*item.Quantity)</span>
-                                                </td>
-                                            </tr>
-                                         
-                                            }
-                                        </tbody>
-                                        <tfoot>
-                                            <tr class="cart-subtotal">
-                                                <th>Tạm tính</th>
-                                                <td><span class="amount">@total_value VNĐ</span></td>
-                                            </tr>
-                                            <tr class="shipping">
-                                                <th>Giao hàng</th>
-                                                <td>
-                                                    <ul>
-                                                    
-                                                            <input type="radio" name="shipping" checked>
-                                                            <label>Miễn phí giao hàng:</label>
-                                                        </li>
-                                                    </ul>
-                                                </td>
-                                            </tr>
-                                            <tr class="order-total">
-                                                <th>Tổng tiền đơn hàng</th>
-                                                <td><strong><span class="amount">@total_value VNĐ</span></strong>
-                                                </td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </form>
-                                <div class="payment-method">
-                            <div class="accordion" id="checkoutAccordion">
-                                  
-                                  @foreach(var payment in payment_methods)
-                                 {    
-
-                                     if(payment.Paymentname=="Delivery" && payment.Status==1)
-                                    {
-                                            <div class="accordion-item">
-                                        <h2 class="accordion-header" id="delivery">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#deliver" aria-expanded="false" aria-controls="deliver">
-                                            Thanh toán khi nhận hàng
-                                            </button>
-                                        </h2>
-                                        <div id="deliver" class="accordion-collapse collapse" aria-labelledby="delivery" data-bs-parent="#checkoutAccordion">
-                                            <div class="accordion-body">
-                                            
-                                            <p><span style="color: red;">*</span>
-                                            Quý khách vui lòng kiểm tra kỹ thông tin đơn hàng trước khi nhận hàng.Đơn hàng của quý khách sẽ được giao đến địa chỉ đã đăng ký trong vòng 1-2 ngày làm việc kể từ khi đặt hàng.
-                                             </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    }
-
-                                    if(payment.Paymentname=="Bank" && payment.Status==1)
-                                    {
-                                     <div class="accordion-item">
-                                        <h2 class="accordion-header" id="checkoutOne">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#bankOne" aria-expanded="true" aria-controls="bankOne">
-                                            Thanh toán qua ngân hàng
-                                            </button>
-                                        </h2>
-                                        <div id="bankOne" class="accordion-collapse collapse show" aria-labelledby="checkoutOne" data-bs-parent="#checkoutAccordion">
-                                            <div class="accordion-body">
-                                             <p><span style="color: red;">*</span>Quý khách thanh toán qua tài khoản sau.Đơn hàng của quý khách sẽ không được giải quyết cho đến khi việc xác nhận chuyển khoản được thực hiện thành công.Sau 3 ngày kể từ lúc đặt hàng,nếu hệ thống kiểm tra và xác nhận đơn hàng vẫn chưa được 
-                                                chuyển khoản thì hệ thống sẽ tự động hủy đơn hàng.
-                                             </p>
-                                            <div class="qr-payment">
-      <div class="qr-info">
-        <h3>Thông tin ngân hàng:</h3>
-        <ul>
-          <li><strong>Số tiền cần chuyển:</strong>&nbsp;@total_value VNĐ</li>
-          <li><strong>Tên ngân hàng:</strong>&nbsp;@bank_name</li>
-          <li><strong>Tên chủ thể:</strong>&nbsp;@account_name</li>
-          <li><strong>Số tài khoản:</strong>&nbsp;@account_num</li>
-          <li><strong>Nội dung:</strong>&nbsp;"#(Mã đơn hàng) chuyển khoản" Vd:#100101 chuyển khoản</li>
-        </ul>
-      </div>
-      <div class="qr-code">
-        <img class="qr-img" src="@qr_code" alt="QR Code">
-      </div>
-    </div>                                           
-                                            </div>
-                                        </div>
-                                    </div>
-                                    }
-                                  
-                                    if(payment.Paymentname=="Paypal" && payment.Status==1)
-                                    {
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="paypalThree">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#paypal" aria-expanded="false" aria-controls="paypal">
-                                            Thanh toán qua Paypal
-                                            </button>
-                                        </h2>
-      <div id="paypal" class="accordion-collapse collapse" aria-labelledby="paypalThree" data-bs-parent="#checkoutAccordion">
-          <div class="accordion-body">
-      <div class="payment-method">
-     
-          <h3>Thanh toán sử dụng Paypal</h3>
-        <div class="credit-card-form">
-            <div id="paypal-button-container" class="text-center"></div>
-   
-        </div>
-      </div>
-                                            </div>
-                                        </div>
-                                    </div>
-        }
-                     if(payment.Paymentname=="Master Card" && payment.Status==1)
-                                    {
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="paypalThree">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#visa" aria-expanded="false" aria-controls="visa">
-                                            Thanh toán qua Visa Card                                            
-                                            </button>
-                                        </h2>
-                                        <div id="visa" class="accordion-collapse collapse" aria-labelledby="paypalThree" data-bs-parent="#checkoutAccordion">
-          <div class="accordion-body">
-      <div class="payment-method">
-        <div class="visa-logo">
-          <img src="@Url.Content("~/user_layout/img/banner/card.png")" alt="Visa Logo"> 
-        </div>
-          <h3>Thanh toán sử dụng Visa Card</h3>          
-        <div class="credit-card-form">
-          <div class="form-group">
-            <label for="card-holder"><strong>Tên chủ thể thẻ</strong></label>
-            <input type="text" id="card-holder" name="card-holder" placeholder="John Doe">
-          </div>
-          <div class="form-group">
-            <label for="card-number"><strong>Số tài khoản</strong></label>
-            <input type="text" id="card-number" name="card-number" placeholder="1234 5678 9012 3456">
-          </div>
-          <div class="form-group-grouped">
-            <div class="form-group">
-              <label for="expiry-date"><strong>Ngày hết hạn</strong></label>
-              <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YY">
-            </div>
-            <div class="form-group">
-              <label for="cvv"><strong>CVV</strong></label>
-              <input type="text" id="cvv" name="cvv" placeholder="123">
-            </div>
-          </div>
-        </div>
-      </div>
-      <button type="button" class="pay-button">Thanh toán</button>
-                                            </div>
-                                        </div>
-                                    </div>
-        }
-                                    }
-                                    </div>
-                                    <div class="order-button-payment mt-20">
-                                    <button type="button" id="checkout-order-btn" class="tp-btn-h1">Tiến hành đặt hàng</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
-        </section> *@
-
 
 <script src="https://www.paypal.com/sdk/js?client-id=@paypal_client_id" data-namespace="paypal_sdk"></script>
 
@@ -802,9 +402,12 @@
 <script>
     document.addEventListener("DOMContentLoaded",()=>{
 
-          //var selected_city= @cities;
           
           var selected_country = document.getElementById('countryname');
+
+          var selected_state = document.getElementById('state');
+
+          var selected_city = document.getElementById('city');
 
           var proceedBtn= document.getElementById("proceed-btn");
           
@@ -816,9 +419,9 @@
 
             proceedBtn.addEventListener("click",(e)=>{
                 
-                const input=document.querySelectorAll("input[required]");
+            const input=document.querySelectorAll("input[required]");
 
-                const text_area = document.getElementById("address");
+            const text_area = document.getElementById("address");
 
             input.forEach((i)=>{
                if(!i.value.trim())
@@ -843,6 +446,37 @@
                 text_area.classList.remove('is-invalid');
                }
 
+               if(selected_country.value=='')
+               {
+                selected_country.classList.add('is-invalid');
+                isValid = false;
+               }
+               else
+               {
+                selected_country.classList.remove('is-invalid');
+               }
+
+
+                if(selected_state.value=='')
+                {
+                    selected_state.classList.add('is-invalid');
+                    isValid = false;
+                }
+                else
+                {
+                    selected_state.classList.remove('is-invalid');
+                }
+
+                if(selected_city.value=='')
+                {
+                    selected_city.classList.add('is-invalid');
+                    isValid = false;
+                }
+                else
+                {
+                    selected_city.classList.remove('is-invalid');
+               }
+
                 if(isValid)
                 {
                     form.submit();
@@ -863,13 +497,12 @@
             if(country!='')
             {  
              var countryname =selected_country.selectedOptions[0].text;
-             //alert("Selected country: " + countryname);
              var formData = new FormData();
 
              formData.append("country", countryname);
 
                 $.ajax({
-                url: "@Url.Action("GetCityByCountry","Checkout")",
+                url: "@Url.Action("GetStateByCountry","Checkout")",
                 type: "POST",
                 data: formData,
                 contentType: false,
@@ -901,6 +534,57 @@
                 }
             });
             }
+        });
+
+        selected_state.addEventListener('change',()=>
+        {
+           var state = selected_state.selectedOptions[0].value;
+
+           var country = selected_country.selectedOptions[0].text;
+
+           if(country!='' && state!='')
+           {
+            var formData = new FormData();
+
+            formData.append("country", country);
+            
+            formData.append("state", state);
+
+            $.ajax(
+                {
+                url: "@Url.Action("GetCityByState","Checkout")",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) 
+                {   
+                    var list_city = response.data;
+
+                    if(list_city!=null && list_city.length>0)
+                    {
+                  while(document.getElementById("city").options.length > 1) 
+                    {
+                        document.getElementById("city").remove(1);
+                    }
+
+                   
+                    list_city.forEach((city) => 
+                    {
+                        var option = document.createElement("option");
+                        option.value = city;
+                        option.textContent = city;
+                        document.getElementById("city").appendChild(option);
+                    });                    
+                    }
+                  
+                },
+                error: function(xhr, status, error) 
+                {
+                 alert("Error whiler retrieving a list of city: " + xhr.responseText);
+                }
+            });
+           }
         });
     });
 </script>

@@ -407,6 +407,9 @@ public partial class EcommerceshopContext : DbContext
                 .HasColumnType("character varying")
                 .HasColumnName("userid");
             entity.Property(e => e.ZipCode).HasColumnName("zipcode").HasColumnType("character varying");
+            entity.Property(e => e.Country).HasColumnType("character varying").HasColumnName("country");
+            entity.Property(e => e.State).HasColumnType("character varying").HasColumnName("state");
+            entity.Property(e => e.City).HasColumnType("character varying").HasColumnName("city");
 
             entity.HasOne(d => d.Payment).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.Paymentid)

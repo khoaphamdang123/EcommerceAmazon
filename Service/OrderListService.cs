@@ -79,7 +79,7 @@ if (order != null)
    return paging_list_order;
   }
 
-    public async Task<int> createOrder(AspNetUser user,List<CartModel> cart,Payment payment,string zip_code,string note)
+    public async Task<int> createOrder(AspNetUser user,List<CartModel> cart,Payment payment,string country,string state,string city,string zip_code,string note)
     {
      int created_res=0;
      Console.WriteLine("Cart length here is:"+cart.Count);
@@ -102,6 +102,9 @@ if (order != null)
       Userid=user.Id,
       Paymentid=payment.Id,
       ZipCode=zip_code,
+      Country=country,
+      State=state,
+      City=city,
       Note =note,
       Createddate=DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss")
     };
@@ -112,92 +115,95 @@ if (order != null)
 
     Console.WriteLine("did come to here");
 
-    foreach(var product in cart)
-    {       
-      var product_ob=product.Product?.Variants;
+      foreach (var product in cart)
+      {
+        var product_ob = product.Product?.Variants;
 
-      string color=product?.Color;
+        string color = product?.Color;
 
-      string size=product?.Size;
+        string size = product?.Size;
 
-      // string version=product?.Version;
+        // string version=product?.Version;
 
-      // string mirror=product?.Mirror;
+        // string mirror=product?.Mirror;
 
-      Console.WriteLine("Product Color here is:"+color);
-
-
-      List<int> variant_id=new List<int>();
+        Console.WriteLine("Product Color here is:" + color);
 
 
+        List<int> variant_id = new List<int>();
 
 
-      if(product_ob!=null && product_ob.Count>0)
-      { 
-        Console.WriteLine("Product Object is not null here");
-        
-        Console.WriteLine("Product OBJECT size here is:"+product_ob.Count);
 
-        foreach(var variant in product_ob)
-        { Console.WriteLine("Product Color here is:"+variant.Color?.Colorname);
-          if(variant?.Color==null && variant?.Size==null && variant?.Version==null && variant?.Mirror==null)
+
+        if (product_ob != null && product_ob.Count > 0)
+        {
+          Console.WriteLine("Product Object is not null here");
+
+          Console.WriteLine("Product OBJECT size here is:" + product_ob.Count);
+
+          foreach (var variant in product_ob)
           {
-            continue;
-          }
-          string variant_color=variant.Color?.Colorname??"";
-
-          string variant_size=variant.Size?.Sizename??"";
-      
-          if(variant_color==color && variant_size==size)
-          { 
-            if(!variant_id.Contains(variant.Id))
+            Console.WriteLine("Product Color here is:" + variant.Color?.Colorname);
+            if (variant?.Color == null && variant?.Size == null && variant?.Version == null && variant?.Mirror == null)
             {
-            variant_id.Add(variant.Id);
+              continue;
+            }
+            string variant_color = variant.Color?.Colorname ?? "";
+
+            string variant_size = variant.Size?.Sizename ?? "";
+
+            if (variant_color == color && variant_size == size)
+            {
+              if (!variant_id.Contains(variant.Id))
+              {
+                variant_id.Add(variant.Id);
+              }
             }
           }
+          foreach (var id in variant_id)
+          {
+
+            string price_value = string.IsNullOrEmpty(product.Price) ? product.Product.Price : product.Price;
+
+            price_value = price_value.Replace("$", "").Replace(",", ".");
+
+            int discount = string.IsNullOrEmpty(product.Product.Discount.ToString()) ? 0 : Convert.ToInt32(product.Product.Discount);
+
+            double current_price = double.Parse(price_value.Replace(",", "."), CultureInfo.InvariantCulture) - (double.Parse(price_value.Replace(",", "."), CultureInfo.InvariantCulture) * discount / 100);
+
+            var order_detail = new OrderDetail
+            {
+              Quantity = product.Quantity,
+              Price = current_price,
+              Productid = product.Product.Id,
+              Orderid = order.Id,
+              VariantId = id
+            };
+            await this._context.OrderDetails.AddAsync(order_detail);
+          }
         }
-      foreach(var id in variant_id)
-      {  
-       
-        string price_value=string.IsNullOrEmpty(product.Price)?product.Product.Price:product.Price;
-
-        price_value=price_value.Replace("$","").Replace(",",".");
-
-        int discount=string.IsNullOrEmpty(product.Product.Discount.ToString()) ? 0 : Convert.ToInt32(product.Product.Discount);
-
-        double current_price=double.Parse(price_value.Replace(",","."),CultureInfo.InvariantCulture)-(double.Parse(price_value.Replace(",","."),CultureInfo.InvariantCulture)*discount/100);
-
-        var order_detail=new OrderDetail
+        else
         {
-          Quantity=product.Quantity,
-          Price=current_price,
-          Productid=product.Product.Id,
-          Orderid=order.Id,
-          VariantId=id
-        };
-        await this._context.OrderDetails.AddAsync(order_detail);        
-      }
-      }
-    else
-    {
-       string price_value=product.Product?.Price;
+          string price_value = product.Product?.Price;
 
-        price_value =price_value.Replace("$","").Replace(",",".");
+          price_value = price_value.Replace("$", "").Replace(",", ".");
 
-    Console.WriteLine("Price Value here is:"+price_value); 
-       int discount=string.IsNullOrEmpty(product.Product?.Discount.ToString()) ? 0 : Convert.ToInt32(product.Product.Discount);
+          Console.WriteLine("Price Value here is:" + price_value);
 
-       double current_price=double.Parse(price_value.Replace(",","."),CultureInfo.InvariantCulture)-(double.Parse(price_value.Replace(",","."),CultureInfo.InvariantCulture)*discount/100);
+          int discount = string.IsNullOrEmpty(product.Product?.Discount.ToString()) ? 0 : Convert.ToInt32(product.Product.Discount);
 
-      var order_detail=new OrderDetail
-      {
-        Quantity=product.Quantity,
-        Price=current_price,
-        Productid=product.Product.Id,
-        Orderid=order.Id
-      };
-      await this._context.OrderDetails.AddAsync(order_detail);
-    }
+          double current_price = double.Parse(price_value.Replace(",", "."), CultureInfo.InvariantCulture) - (double.Parse(price_value.Replace(",", "."), CultureInfo.InvariantCulture) * discount / 100);
+
+          var order_detail = new OrderDetail
+          {
+            Quantity = product.Quantity,
+            Price = current_price,
+            Productid = product.Product.Id,
+            Orderid = order.Id
+          };
+          await this._context.OrderDetails.AddAsync(order_detail);
+        }
+    
     }
 
     await this.saveChanges();

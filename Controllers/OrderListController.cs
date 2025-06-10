@@ -282,30 +282,31 @@ if(string.IsNullOrEmpty(id_user))
   }
 
   [Route("order/{id}/detail/delete")]
-  
+
   [HttpGet]
-  public async Task<IActionResult> DeleteOrderDetailByProducts(int id,int[] ids)
-  { Console.WriteLine("Did come here");
-  Console.WriteLine(ids.Length);
-    var order=await this._order.findOrderById(id);
+  public async Task<IActionResult> DeleteOrderDetailByProducts(int id, int[] ids)
+  {
+    Console.WriteLine("Did come here");
+    Console.WriteLine(ids.Length);
+    var order = await this._order.findOrderById(id);
     try
     {
-    foreach(var detail_id in ids)
-    {   Console.WriteLine("Detail Id here is:"+detail_id);
+      foreach (var detail_id in ids)
+      {
+        Console.WriteLine("Detail Id here is:" + detail_id);
         var orderDetail = await this._order.deleteProductOrderDetail(detail_id);
+      }
+      ViewBag.Delete_Multiple_Status = 1;
+      ViewBag.Delete_Multiple_Message = "Xóa các sản phẩm đã chọn trong đơn hàng thành công";
+      this._logger.LogInformation($"{this.HttpContext.Session.GetString("Username")} Delete Multiple Order Detail");
     }
-        ViewBag.Delete_Multiple_Status=1;
-    ViewBag.Delete_Multiple_Message="Xóa các sản phẩm đã chọn trong đơn hàng thành công";
-        this._logger.LogInformation($"{this.HttpContext.Session.GetString("Username")} Delete Multiple Order Detail");
-    }
- 
-    catch(Exception er)
+    catch (Exception er)
     {
-        this._logger.LogTrace("Delete Order Detail Exception:"+er.Message);
-        this._logger.LogInformation($"{this.HttpContext.Session.GetString("Username")} delete Order Detail Failed Exception:{er.Message}");
+      this._logger.LogTrace("Delete Order Detail Exception:" + er.Message);
+      this._logger.LogInformation($"{this.HttpContext.Session.GetString("Username")} delete Order Detail Failed Exception:{er.Message}");
     }
 
-    return View("~/Views/OrderList/OrderDetail.cshtml",order);
+    return View("~/Views/OrderList/OrderDetail.cshtml", order);        
   }
 
 

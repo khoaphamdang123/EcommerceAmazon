@@ -16,7 +16,7 @@ public interface IOrderRepository
 
   public Task<Order> getLatestOrderByUsername(string user_id);
 
-  public Task<int> createOrder(AspNetUser user,List<CartModel> cart,Payment payment,string zip_code,string note);
+  public Task<int> createOrder(AspNetUser user,List<CartModel> cart,Payment payment,string country,string state,string city,string zip_code,string note);
 
   public Task<Order> filterOrderDetail(int id);
 

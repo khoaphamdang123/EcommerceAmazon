@@ -14,6 +14,12 @@ namespace Ecommerce_Product.Models
    
    public string ZipCode { get; set; }
 
+   public string Country { get; set; }
+
+   public string State{ get; set; }
+
+   public string City{ get; set; }
+
    public string Note { get; set; }
 
  }

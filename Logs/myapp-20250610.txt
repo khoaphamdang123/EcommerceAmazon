@@ -1,0 +1,216 @@
+2025-06-10 10:47:34.613 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:47:40.911 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:48:37.303 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:48:53.249 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:48:53.324 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:48:54.046 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:49:15.258 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:49:15.905 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:49:16.005 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:52:03.409 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:52:38.747 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:52:49.207 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:52:53.732 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:52:54.191 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:52:54.202 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:52:54.369 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:52:54.498 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:52:54.658 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:52:54.714 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:52:55.131 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:52:59.001 +07:00 [ERR] Checkout Cart Exception:An item with the same key has already been added. Key: Congo
+2025-06-10 10:54:07.165 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:54:08.844 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:54:11.711 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:54:24.757 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:54:47.054 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:54:50.698 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:54:50.717 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:54:54.644 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:54:57.827 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:54:59.969 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:55:04.838 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:55:06.770 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:55:15.151 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:55:15.157 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:57:43.674 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:57:45.414 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:57:58.843 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:58:39.698 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:58:54.363 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:58:54.383 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:59:00.487 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:59:22.454 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:59:27.831 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:59:33.444 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 10:59:51.215 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:01:04.477 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:01:10.129 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:01:20.542 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:01:25.775 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:01:34.065 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:01:36.832 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:01:58.282 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:02:00.375 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:02:15.637 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:02:15.665 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:02:23.062 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:02:25.451 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:02:38.935 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:06:03.808 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:06:06.418 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:06:08.280 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:06:08.300 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:06:21.512 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:06:21.571 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:06:21.584 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:06:24.354 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:06:24.478 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:06:32.414 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:06:39.274 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:06:39.323 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:06:58.573 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:06:58.581 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:07:02.639 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:07:10.227 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:07:13.597 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:07:15.400 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:07:15.432 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:07:20.839 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:07:27.574 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:07:27.628 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:07:31.179 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:07:35.919 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:07:36.001 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:07:38.826 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:07:51.711 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:07:51.720 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:07:54.041 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:07:58.181 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:08:18.807 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:08:22.564 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:08:30.397 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:08:39.808 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:08:39.815 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:08:41.548 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:10:21.764 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:10:24.969 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:10:24.992 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:10:55.987 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:11:00.931 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:11:36.170 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:11:38.249 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:13:37.940 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:14:26.474 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:14:32.682 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:14:54.649 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:14:54.658 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:15:05.832 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:15:05.842 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:15:37.943 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:15:43.947 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:15:43.965 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:15:45.857 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:15:57.990 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:16:00.281 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:16:42.776 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:16:45.555 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:16:49.883 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:16:51.865 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:17:12.302 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:17:37.443 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:17:40.787 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:19:37.075 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:19:38.777 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:19:44.678 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:19:46.720 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:20:14.092 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:20:14.415 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:20:30.437 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:21:53.442 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:22:56.116 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:24:12.614 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:26:57.899 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:28:15.146 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:28:46.041 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:29:01.327 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:29:41.143 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:29:41.163 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:29:49.174 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:29:49.194 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:29:51.949 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:30:15.880 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:30:15.918 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:31:10.702 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:31:14.095 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:31:19.601 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:31:20.851 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:38:47.676 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:39:08.027 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:39:11.189 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:39:14.026 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:41:15.131 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:41:19.679 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:41:22.851 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:43:32.688 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:43:32.746 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:43:38.280 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:43:47.532 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:43:50.755 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:43:50.819 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:44:16.398 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:44:23.358 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 11:44:30.185 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:05:32.267 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:05:57.876 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:06:03.976 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:06:04.040 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:06:12.325 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:06:12.370 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:06:19.568 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:06:19.603 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:06:28.679 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:06:28.731 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:06:29.831 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:06:41.073 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:06:48.708 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:06:55.491 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:07:00.623 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:07:00.632 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:07:04.770 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:07:04.847 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:07:11.497 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:07:18.121 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:07:19.803 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:07:29.441 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:07:34.478 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 12:07:36.790 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 14:10:07.255 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 14:16:09.003 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 14:16:11.074 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 14:16:13.479 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 14:18:45.208 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 14:49:35.722 +07:00 [INF] Running in Login Action
+2025-06-10 14:49:57.087 +07:00 [INF] Running in Login Action
+2025-06-10 15:04:56.321 +07:00 [INF] Running in Login Action
+2025-06-10 15:50:18.746 +07:00 [INF] Running in Login Action
+2025-06-10 17:31:24.523 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 17:48:17.137 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 17:48:22.458 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 17:53:53.854 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 18:07:26.696 +07:00 [INF] Running in Login Action
+2025-06-10 18:09:33.706 +07:00 [INF] admin123 Delete Order Id:479
+2025-06-10 18:09:52.228 +07:00 [INF] admin123 Delete Order Id:479 Failed
+2025-06-10 18:09:59.363 +07:00 [INF] admin123 Delete Order Id:479 Failed
+2025-06-10 18:10:02.968 +07:00 [INF] admin123 Delete Order Id:479 Failed
+2025-06-10 18:10:40.706 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 18:11:14.926 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 18:11:34.401 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-10 18:12:21.854 +07:00 [INF] admin123 Delete Order Id:479 Failed
+2025-06-10 18:12:27.357 +07:00 [INF] admin123 Delete Order Id:479 Failed
+2025-06-10 18:12:29.502 +07:00 [INF] admin123 Delete Order Id:479 Failed
+2025-06-10 18:13:40.037 +07:00 [INF] admin123 Delete Order Id:479 Failed
+2025-06-10 18:15:27.188 +07:00 [INF]  Delete Order Id:479 Failed
+2025-06-10 18:15:30.958 +07:00 [INF]  Delete Order Id:479 Failed
+2025-06-10 18:15:34.051 +07:00 [INF] Running in Login Action
+2025-06-10 18:20:52.113 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
