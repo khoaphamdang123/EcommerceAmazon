@@ -12,8 +12,10 @@
         
       if(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("Logo")))
       {
+      
       string logo=Environment.GetEnvironmentVariable("Logo");
-       string logo_extension=logo.Substring(logo.IndexOf("wwwroot")+("wwwroot".Length+1));
+      
+      string logo_extension=logo.Substring(logo.IndexOf("wwwroot")+("wwwroot".Length+1));
        
        logo_path=logo_extension;
 
