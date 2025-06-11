@@ -367,15 +367,15 @@ public async Task<IEnumerable<Product>>getProductBySubCategory(int sub_cat)
 public async Task<IEnumerable<Product>> filterProductByNameAndCategory(string product,string category)
 {
   List<Product> products = await this.getAllProductList();
-   
-  if(!string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(product))
-{
-    products= products.Where(c=>c.Category.CategoryName==category && c.ProductName.ToLower().Contains(product.ToLower())).ToList();
+
+    if (!string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(product))
+    {
+      products = products.Where(c => c.Category.CategoryName == category && c.ProductName.ToLower().Contains(product.ToLower())).ToList();      
 }
-else if(string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(product))
-{
-      products= products.Where(c=>c.ProductName.ToLower().Contains(product.ToLower())).ToList();
-}
+    else if (string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(product))
+    {
+      products = products.Where(c => c.ProductName.ToLower().Contains(product.ToLower())).ToList();
+    }
 
    return products;         
 }

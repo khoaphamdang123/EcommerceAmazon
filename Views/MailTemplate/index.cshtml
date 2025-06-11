@@ -7,7 +7,9 @@
 
        string logo_path_temp="7e6df1cf-4caa-48a1-b115-66c650c5e069_channels4_profile.jpg";
 
-       Console.WriteLine("User name:"+Model.Order.User.UserName);
+       //Console.WriteLine("User name:"+Model.Order.User.UserName);
+
+       Console.WriteLine("Order template here");
     
        var company = Model.Company;
 
@@ -28,33 +30,36 @@
         double current_price=(double.Parse(price_value,CultureInfo.InvariantCulture)-(double.Parse(price_value,CultureInfo.InvariantCulture)*(discount)/100));
         
         total_amount+=current_price*item.Quantity;
-        
     }
 
-        if(company!=null)
+    if(company!=null)
     {
     Console.WriteLine("Company Email:"+company.Email);
     
      if(company.Email.Contains("#"))
      {
-    string[] email_list=company?.Email?.Split('#');
     
-     email=email_list[0];
-        }
+      string[] email_list=company?.Email?.Split('#');
+    
+      email=email_list[0];
+
+     }
 
       if(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("Logo")))
-      {
-      string logo=Environment.GetEnvironmentVariable("Logo");
-      string logo_extension=logo.Substring(logo.IndexOf("wwwroot")+("wwwroot".Length+1));
-       if(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")=="Development")
-       {
-        logo_path="http://localhost:5160/"+logo_extension;
-       }
-       else
-       {
-    logo_path="http://tshirtatlowprices.com"+logo_extension;        
-       }
+{
+    string logo=Environment.GetEnvironmentVariable("Logo");
+
+    string logo_extension=logo.Substring(logo.IndexOf("wwwroot")+("wwwroot".Length+1));
+       
+    if(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")=="Development")
+    {
+    logo_path="http://localhost:5160/"+logo_extension;
     }
+    else
+    {
+    logo_path="http://tshirtatlowprices.com"+logo_extension;            
+    }
+  }
 }
 }
 <!DOCTYPE html>

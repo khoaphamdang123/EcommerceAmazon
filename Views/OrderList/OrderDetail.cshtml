@@ -349,25 +349,25 @@
       <div class="card-body">
         <div class="d-flex justify-content-start align-items-center mb-3">
           <div class="avatar me-3">
-            <img src="@Model?.User.Avatar" alt="Avatar" class="rounded-circle">
+            <img src="https://demos.themeselection.com/sneat-bootstrap-html-admin-template-free/assets/img/avatars/1.png" alt="Avatar" class="rounded-circle">
           </div>
           <div class="d-flex flex-column">
             <a href="@Url.Action("GetUserByName","UserList",new{username=Model?.User.UserName})" class="text-body text-nowrap">
-              <h6 class="mb-2"><span>Tên khách hàng:</span>@Model?.User.UserName</h6>
+              <h6 class="mb-2"><span>Tên khách hàng:</span>@Model?.UserName</h6>
             </a>
-            <span>ID khách hàng:@Model?.User.Id</span>
+            @* <span>ID khách hàng:@Model?.User.Id</span> *@
             </div>
         </div>
         <div class="d-flex justify-content-start align-items-center mb-4">
           <span class="avatar rounded-circle bg-label-success me-3 d-flex align-items-center justify-content-center"><i class='bx bx-cart bx-lg'></i></span>
-          <h6 class="text-nowrap mb-0">@order_count Orders</h6>
+          @* <h6 class="text-nowrap mb-0">@order_count Orders</h6> *@
         </div>
         <div class="d-flex justify-content-between">
           <h6 class="mb-1">Thông tin liên hệ</h6>
           @* <h6 class="mb-1"><a href=" javascript:void(0)" data-bs-toggle="modal" data-bs-target="#editUser">Edit</a></h6> *@
         </div>
-        <p class="mb-1">Email: @Model?.User.Email</p>
-        <p class="mb-0">Mobile: @Model?.User.PhoneNumber</p>
+        <p class="mb-1">Email: @Model?.Email</p>
+        <p class="mb-0">Mobile: @Model?.PhoneNumber</p>
       </div>
     </div>
 

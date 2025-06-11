@@ -79,7 +79,7 @@ if (order != null)
    return paging_list_order;
   }
 
-    public async Task<int> createOrder(AspNetUser user,List<CartModel> cart,Payment payment,string country,string state,string city,string zip_code,string note)
+    public async Task<int> createOrder(UserOrderInfo user,List<CartModel> cart,Payment payment,string country,string state,string city,string zip_code,string note)
     {
      int created_res=0;
      Console.WriteLine("Cart length here is:"+cart.Count);
@@ -103,7 +103,7 @@ if (order != null)
         return current_price*s.Quantity;
       }),
       Shippingaddress=string.IsNullOrEmpty(user.Address1)?user.Address2:user.Address1,
-      Userid=user.Id,
+      Userid=null,
       Paymentid=payment.Id,
       ZipCode=zip_code,
       Country=country,

@@ -662,43 +662,51 @@ public class CheckoutController : BaseController
 
       var cart = this._cart.getCart();
 
-     
 
 
-      ApplicationUser user = new ApplicationUser();
+
+      //ApplicationUser user = new ApplicationUser();
 
       // if(check_user_exist && User.Identity.IsAuthenticated && User.IsInRole("User"))
       // {
       //   user=await this._user.findUserByName(username);
       // }
 
-      user = new ApplicationUser { UserName = username, Email = email, PhoneNumber = phone, Address2 = address1 };
+      //user = new ApplicationUser { UserName = username, Email = email, PhoneNumber = phone, Address2 = address1 };
 
-      string role = "Anonymous";
+      // string role = "Anonymous";
 
-      var create_role = await this._user.createRole(role);
+      // var create_role = await this._user.createRole(role);
 
-      var new_user = new Register { UserName = username, Email = email, Password = "123456", Address2 = address1, PhoneNumber = phone };
+      // user = await this._user.findUserByEmail(email);
 
-      var create_user = await this._user.createUser(new_user, role);
+      // var new_user = new Register { UserName = username, Email = email, Password = "123456", Address2 = address1, PhoneNumber = phone };
 
-      user = await this._user.findUserByEmail(email);
+      // var create_user = await this._user.createUser(new_user, role);
+      
+      UserOrderInfo user = new UserOrderInfo
+      {
+        UserName = username,
+        Email = email,
+        PhoneNumber = phone,
+        Address1 = address1,
+        Address2 = checkout.Address2
+      };
 
       var payment = await this._payment.findPaymentByName(payment_method);
 
-      Console.WriteLine("User Id here is:" + user.Id);
 
-      var asp_user = await this._user.getAspUser(user.Id);
+      //var asp_user = await this._user.getAspUser(user.Id);
 
-      var created_order = await this._order.createOrder(asp_user, cart, payment, zip_code, country, state, city, note);
+      var created_order = await this._order.createOrder(user, cart, payment, zip_code, country, state, city, note);
 
       if (created_order == 1)
       {
         Console.WriteLine("Order created successfully");
 
-        this.HttpContext.Session.SetString("OrderId", user.Id);
+        //this.HttpContext.Session.SetString("OrderId", user.Id);
 
-        var order = await this._order.getLatestOrderByUsername(asp_user.Id);
+        var order = await this._order.getLatestOrderByUsername("15");
 
         Console.WriteLine("render view 1");
 
@@ -766,7 +774,11 @@ public class CheckoutController : BaseController
 
          Console.WriteLine("Render string here is:"+render_string);
 
+
         CheckoutResultModel checkout_result = new CheckoutResultModel { Order = order, Cart = cart };
+
+
+        //Console.WriteLine("Delete user status here is:" + del_user);
 
         Console.WriteLine("did come to here");
 
@@ -776,6 +788,8 @@ public class CheckoutController : BaseController
     catch (Exception er)
     {
       Console.WriteLine("Checkout Exception:" + er.Message);
+
+      Console.WriteLine("Checkout Inner Exception:" + er.InnerException?.Message);
 
       this._logger.LogError("Checkout Exception:" + er.Message);
     }

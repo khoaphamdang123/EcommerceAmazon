@@ -29,10 +29,20 @@ public partial class Order
 
     public string? OrderId { get; set; }
 
+    public string? UserName{get;set;}
+   
+   public string? Address1{get;set;}
+   
+   public string? Address2{get;set;}
+
+   public string? Email { get; set; }
+   
+   public string? PhoneNumber{get;set;}
+
     /// <summary>
     /// Note for Order
     /// </summary>
-    public string? Note { get; set; }
+   public string? Note { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 

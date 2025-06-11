@@ -249,3 +249,12 @@ See CompilationErrors for detailed information
 2025-06-11 18:27:36.849 +07:00 [INF] admin123 Delete Order Id:485 Failed
 2025-06-11 18:27:40.590 +07:00 [INF] admin123 Delete Order Id:485 Failed
 2025-06-11 18:27:40.628 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:42:45.128 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 18:43:49.734 +07:00 [ERR] Checkout Exception:Object reference not set to an instance of an object.
+2025-06-11 18:54:16.335 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 18:54:50.112 +07:00 [INF] Send order checkout successfully
+2025-06-11 19:06:56.027 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 19:07:23.553 +07:00 [INF] Send order checkout successfully
+2025-06-11 19:11:45.170 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 19:12:08.747 +07:00 [INF] Send order checkout successfully
+2025-06-11 19:12:08.855 +07:00 [ERR] Checkout Exception:An error occurred while saving the entity changes. See the inner exception for details.

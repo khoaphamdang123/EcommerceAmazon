@@ -410,6 +410,11 @@ public partial class EcommerceshopContext : DbContext
             entity.Property(e => e.Country).HasColumnType("character varying").HasColumnName("country");
             entity.Property(e => e.State).HasColumnType("character varying").HasColumnName("state");
             entity.Property(e => e.City).HasColumnType("character varying").HasColumnName("city");
+            entity.Property(e => e.UserName).HasColumnType("character varying").HasColumnName("username");
+            entity.Property(e => e.Address1).HasColumnType("character varying").HasColumnName("address1");
+            entity.Property(e => e.Address2).HasColumnType("character varying").HasColumnName("address2");
+            entity.Property(e => e.Email).HasColumnType("character varying").HasColumnName("email");
+            entity.Property(e => e.PhoneNumber).HasColumnType("character varying").HasColumnName("phonenumber");
 
             entity.HasOne(d => d.Payment).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.Paymentid)
