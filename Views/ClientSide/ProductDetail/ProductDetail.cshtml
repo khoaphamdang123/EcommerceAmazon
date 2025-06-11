@@ -689,6 +689,19 @@
  </div>
 
  <script>
+
+function checkout()
+{
+const checkoutButton = document.getElementById("checkout");
+
+
+if(checkoutButton)
+ {
+  checkoutButton.addEventListener("click", () => {
+    window.location.href = "@Url.Action("Checkout", "Checkout")";    
+  });
+ }
+}
     document.addEventListener('DOMContentLoaded', function () {
       
       var boxes = document.querySelectorAll(".color-box");
@@ -893,6 +906,7 @@ var variant_url='@Url.Action("VariantProduct","HomePage",new{id="__product_id__"
                     type:"POST",
                     success: function(partialHtml) {
                         $('#sub-cart-section').html(partialHtml); 
+                        checkout();
                     }
                 });
             }

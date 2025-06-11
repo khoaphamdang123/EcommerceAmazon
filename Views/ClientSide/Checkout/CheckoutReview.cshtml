@@ -16,10 +16,11 @@
     var account= ViewBag.Account;
     var saved_account= ViewBag.SavedAccount;
     string paypal_client_id=Environment.GetEnvironmentVariable("PAYPAL_CLIENT_ID");
-     string username="";
-     string password="";
- if(account!=null)
-  {  string[] account_part=account.Split('\n');
+    string username="";
+    string password="";
+    if(account!=null)
+  {  
+     string[] account_part=account.Split('\n');
      username=account_part[0];
      password=account_part[1];
   }
@@ -31,6 +32,8 @@
     string phone=  HttpContextAccessor.HttpContext.Session.GetString("PhoneNumber");
     
     string address= HttpContextAccessor.HttpContext.Session.GetString("Address");
+
+    string address2= HttpContextAccessor.HttpContext.Session.GetString("Address2");
     
     string zipcode = HttpContextAccessor.HttpContext.Session.GetString("ZipCode");
     
@@ -156,8 +159,8 @@
 											<div class="card-body">
 												<h5 class="mb-0">Review Your Order</h5>
 												<div class="my-3 border-bottom"></div>
-                                            @foreach(var item in Model)
-                                            {
+                    @foreach(var item in Model)
+                      {
 												<div class="row align-items-center g-3">
 													<div class="col-12 col-lg-6">
 														<div class="d-lg-flex align-items-center gap-3">
@@ -205,6 +208,7 @@
 															<h5 class="mb-3">Shipping to:</h5>
 															<p class="mb-1"><span class="text-dark">Customer:</span>@user_name</p>
 															<p class="mb-1"><span class="text-dark">Address:</span> @address</p>
+                              <p class="mb-1"><span class="text-dark">Backup Address:</span> @address2</p>
 															<p class="mb-1"><span class="text-dark">Phone:</span>@phone</p>
                               <p class="mb-1"><span class="text-dark">Email:</span>@email</p>
                               <p class="mb-1"><span class="text-dark">Zip Code:</span>@zipcode</p>
@@ -434,6 +438,8 @@ document.addEventListener("DOMContentLoaded", function()
    const user_name="@user_name";
     
     const address="@address";
+
+    var sub_address="@address2";
     
     const phone="@phone";
 
@@ -513,9 +519,11 @@ document.addEventListener("DOMContentLoaded", function()
                     
                     @* alert(JSON.stringify(checkout_obj)); *@
 
-    var checkout= {
+    var checkout= 
+  {
     username:user_name,
     address1:address,
+    address2:sub_address,
     phonenumber:phone,
     email:email,
     zipcode:zipcode,
@@ -524,29 +532,35 @@ document.addEventListener("DOMContentLoaded", function()
     city:city,
     paymentmethod:payment_method
     };
-                    return fetch('/checkout/submit',{
+                    return fetch('/checkout/submit',
+                    {
                         method:'POST',
+                        
                         headers: 
                         {
                             'Content-Type': 'application/json',
                             'RequestVerificationToken': getToken()
                         },
                         body: JSON.stringify(checkout)
-                    });
+                    }).then((response)=>
+              {
+                var id='@HttpContextAccessor.HttpContext.Session.GetString("UserId")';
+
+                var checkout_result_url="@Url.Action("CheckoutResult","Checkout",new{id="__id__"})";
+                
+                checkout_result_url=checkout_result_url.replace("__id__",id);
+                
+                alert(checkout_result_url);
+                
+                window.location.href=checkout_result_url;
+            });
           
                 } 
                 else 
                 {
                     alert('Payment failed: ' + details.message);
                 }
-            }).then((response)=>{
-             
-                var checkout_result_url="@Url.Action("CheckoutResult","Checkout",new{id=HttpContextAccessor.HttpContext.Session.GetString("UserId")})";
-                
-                alert(checkout_result_url);
-                
-                window.location.href=checkout_result_url;
-            });
+            })
         },
             // Handle errors
             onError: function(err) {

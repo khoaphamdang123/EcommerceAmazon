@@ -148,7 +148,6 @@ if(string.IsNullOrEmpty(id_user))
           List<string> options=new List<string>(){"50","100","150","200"};          
           ViewBag.options=options;
 
-
         var cats=await this._category.getAllCategory();
         
         var brands=await this._category.getAllBrandList();

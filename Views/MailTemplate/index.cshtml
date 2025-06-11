@@ -1,250 +1,161 @@
-
-@using Ecommerce_Product.Models
-@using Newtonsoft.Json
-@using System.IO
-@model ReceiptModel
+@model CheckoutResultModel
+@using Ecommerce_Product.Models;
+@using Microsoft.AspNetCore.Identity;
+@using System.Globalization;
 @{
-     int total_value=0;
-     string directory = Directory.GetCurrentDirectory();
-     Console.WriteLine(JsonConvert.SerializeObject(Model,new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
-}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Email Template for Order Confirmation Email</title>
+       string logo_path="";
+
+       string logo_path_temp="7e6df1cf-4caa-48a1-b115-66c650c5e069_channels4_profile.jpg";
+
+       Console.WriteLine("User name:"+Model.Order.User.UserName);
+    
+       var company = Model.Company;
+
+       string email="";
+
+       double total_amount=0;
+    
+       double total_delivery=5;
+    
+    foreach(var item in Model.Cart)
+    {
+        double discount=string.IsNullOrEmpty(item.Product.Discount.ToString()) ? 0 : Convert.ToInt32(item.Product.Discount);
         
-        <!-- Start Common CSS -->
-        <style type="text/css">
-            #outlook a {padding:0;}
-            body{width:100% !important; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; margin:0; padding:0; font-family: Helvetica, arial, sans-serif;}
-            .ExternalClass {width:100%;}
-            .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;}
-            .backgroundTable {margin:0; padding:0; width:100% !important; line-height: 100% !important;}
-            .main-temp table { border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt; font-family: Helvetica, arial, sans-serif;}
-            .main-temp table td {border-collapse: collapse;}
-            
-        </style>
-        <!-- End Common CSS -->
-    </head>
-    <body>
-        <table width="100%" cellpadding="0" cellspacing="0" border="0" class="backgroundTable main-temp" style="background-color: #d5d5d5;">
-            <tbody>
-                <tr>
-                    <td>
-                        <table width="600" align="center" cellpadding="15" cellspacing="0" border="0" class="devicewidth" style="background-color: #ffffff;">
+        string price_value=!string.IsNullOrEmpty(item.Price) ? item.Price : item.Product.Price;
+        
+        price_value=price_value.Replace("$","").Replace(",",".");
+        
+        double current_price=(double.Parse(price_value,CultureInfo.InvariantCulture)-(double.Parse(price_value,CultureInfo.InvariantCulture)*(discount)/100));
+        
+        total_amount+=current_price*item.Quantity;
+        
+    }
+
+        if(company!=null)
+    {
+    Console.WriteLine("Company Email:"+company.Email);
+    
+     if(company.Email.Contains("#"))
+     {
+    string[] email_list=company?.Email?.Split('#');
+    
+     email=email_list[0];
+        }
+
+      if(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("Logo")))
+      {
+      string logo=Environment.GetEnvironmentVariable("Logo");
+      string logo_extension=logo.Substring(logo.IndexOf("wwwroot")+("wwwroot".Length+1));
+       if(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")=="Development")
+       {
+        logo_path="http://localhost:5160/"+logo_extension;
+       }
+       else
+       {
+    logo_path="http://tshirtatlowprices.com"+logo_extension;        
+       }
+    }
+}
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #f5f7fa; line-height: 1.6;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f7fa; padding: 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border: 1px solid #e0e4e8; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 600px;">
+                    <!-- Header with Logo -->
+                    <tr>
+                        <td style="padding: 30px; text-align: center; background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%); border-top-left-radius: 12px; border-top-right-radius: 12px;">
+                            <img src="@logo_path" alt="TshirtAtLowPrices" style="max-width: 150px; height: auto; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='scale(1)';">
+                        </td>
+                    </tr>
+                    <!-- Main Content -->
+                    <tr>
+                        <td style="padding: 40px;">
+                            <h1 style="font-size: 26px; color: #1a2b49; margin: 0 0 20px; font-weight: 600; text-align: center;">Thank You for Your Order!</h1>
+                            <p style="font-size: 16px; color: #4a5568; margin: 0 0 25px; text-align: center;">Dear @Model.Order.User.UserName,</p>
+                            <p style="font-size: 15px; color: #4a5568; margin: 0 0 25px;">We’re excited to confirm your order #@Model.Order.OrderId. Below, you’ll find the details of your purchase and shipping information.</p>
+
+                            <!-- Ordered Products -->
+                            <h2 style="font-size: 20px; color: #1a2b49; margin: 30px 0 15px; font-weight: 500; border-left: 4px solid #4a90e2; padding-left: 10px;">Order Details</h2>
+                            <table width="100%" cellpadding="12" cellspacing="0" style="border-collapse: collapse; margin-bottom: 25px; background-color: #f9fafb; border-radius: 8px;">
+                                <thead>
+                                    <tr style="background-color: #edf2f7;">
+                                        <th style="text-align: left; font-size: 14px; color: #1a2b49; font-weight: 600; border-bottom: 2px solid #e0e4e8; padding: 12px;">Product</th>
+                                        <th style="text-align: center; font-size: 14px; color: #1a2b49; font-weight: 600; border-bottom: 2px solid #e0e4e8; padding: 12px;">Quantity</th>
+                                        <th style="text-align: right; font-size: 14px; color: #1a2b49; font-weight: 600; border-bottom: 2px solid #e0e4e8; padding: 12px;">Price</th>
+                                    </tr>
+                                </thead>
                             <tbody>
-                                <!-- Start header Section -->
-                                <tr>
-                                    <td style="padding-top: 30px;">
-                                        <table width="560" align="center" cellpadding="0" cellspacing="0" border="0" class="devicewidthinner" style="border-bottom: 1px solid #eeeeee; text-align: center;">
-                                            <tbody>
-                                                <tr>
-                                                    <td style="padding-bottom: 10px;">
-                                                        <a href="https://thanhquang-gnss.com"><img src="@directory/wwwroot/user_layout/img/favicon.png" alt="Ecommerce-Shop"/></a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="font-size: 14px; line-height: 18px; color: #666666;">
-                                                        @(string.IsNullOrEmpty(Model.Order?.User?.Address2)?Model.Order.User?.Address1:Model.Order?.User?.Address2)                                                    
-                                                    </td>
-                                                </tr>
-                                               
-                                                <tr>
-                                                    <td style="font-size: 14px; line-height: 18px; color: #666666;">
-                                                        Phone: @Model?.Order.User?.PhoneNumber | Email: @Model..OrderUser?.Email
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="font-size: 14px; line-height: 18px; color: #666666; padding-bottom: 25px;">
-                                                        <strong>Order Number:</strong> @Model.Order?.OrderId | <strong>Order Date:</strong>@Model.Order?.Createddate
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <!-- End header Section -->
-                                
-                                <!-- Start address Section -->
-                                <tr>
-                                    <td style="padding-top: 0;">
-                                        <table width="560" align="center" cellpadding="0" cellspacing="0" border="0" class="devicewidthinner" style="border-bottom: 1px solid #bbbbbb;">
-                                            <tbody>
-                                                <tr>
-                                                    <td style="width: 55%; font-size: 16px; font-weight: bold; color: #666666; padding-bottom: 5px;">
-                                                        Địa chỉ giao hàng
-                                                    </td>
-                                                    <td style="width: 45%; font-size: 16px; font-weight: bold; color: #666666; padding-bottom: 5px;">
-                                                        Địa chỉ thanh toán
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width: 55%; font-size: 14px; line-height: 18px; color: #666666;">
-                                                        @Model.Order?.User?.UserName
-                                                    </td>
-                                                    <td style="width: 45%; font-size: 14px; line-height: 18px; color: #666666;">
-                                                        @Model.Order?.User?.UserName
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width: 55%; font-size: 14px; line-height: 18px; color: #666666;">
-                                                        @(string.IsNullOrEmpty(Model.Order.User?.Address2)?Model.Order.User?.Address1:Model.Order.User?.Address2)                                                    
-                                                        </td>
-                                                    <td style="width: 45%; font-size: 14px; line-height: 18px; color: #666666;">
-                                                        @(string.IsNullOrEmpty(Model.Order.User?.Address2)?Model.Order.User?.Address1:Model.Order.User?.Address2)                                                    
-                                                    </td>
-                                                </tr>
-                                                @* <tr>
-                                                    <td style="width: 55%; font-size: 14px; line-height: 18px; color: #666666; padding-bottom: 10px;">
-                                                        Michigan, 48335
-                                                    </td>
-                                                    <td style="width: 45%; font-size: 14px; line-height: 18px; color: #666666; padding-bottom: 10px;">
-                                                        Michigan, 48335
-                                                    </td>
-                                                </tr> *@
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <!-- End address Section -->
-                                
-                                <!-- Start product Section -->
-                             @foreach(var item in Model.Order.OrderDetails)
-                            {   total_value+=Convert.ToInt32(item?.Price)*item.Quantity;
-                              string img_path=$"{directory}\\wwwroot\\{(item?.Product?.Frontavatar.Substring(item.Product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1)))}";
+                                    @foreach (var item in Model.Cart)
+                                    {
+                                        <tr style="transition: background-color 0.2s ease;">
+                                        
+                                        <td style="max-width: 80px; height:auto;">
 
-                              byte[] imageBytes = File.ReadAllBytes(img_path);
+ @if(item.Product.Backavatar.Contains("https") || item.Product.Backavatar.Contains("http"))
+              {
+                <img src="@item.Product.Backavatar" alt="...">
+              }
+              else
+              {
+                <img src="~/@item.Product.Backavatar.Substring(item.Product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="...">
+              }		
 
-                              string base64String = Convert.ToBase64String(imageBytes);
+                                            </td>
+                                            <td style="font-size: 14px; color: #4a5568; border-bottom: 1px solid #e0e4e8; padding: 12px;">@item.Product.ProductName</td>
+                                            <td style="font-size: 14px; color: #4a5568; text-align: center; border-bottom: 1px solid #e0e4e8; padding: 12px;">@item.Quantity</td>
+                                            <td style="font-size: 14px; color: #4a5568; text-align: right; border-bottom: 1px solid #e0e4e8; padding: 12px;">@item.Price</td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td colspan="2" style="font-size: 15px; color: #1a2b49; font-weight: 600; text-align: right; padding: 12px;">Total:</td>
+                                        <td style="font-size: 15px; color: #1a2b49; font-weight: 600; text-align: right; padding: 12px;">$@total_amount</td>
+                                    </tr>
+                                </tbody>
+                            </table>
 
+                            <!-- Customer Profile -->
+                            <h2 style="font-size: 20px; color: #1a2b49; margin: 30px 0 15px; font-weight: 500; border-left: 4px solid #4a90e2; padding-left: 10px;">Customer Information</h2>
+                            <div style="background-color: #f9fafb; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                                <p style="font-size: 14px; color: #4a5568; margin: 0 0 8px;"><strong>Name:</strong> @Model.Order.User.UserName</p>
+                                <p style="font-size: 14px; color: #4a5568; margin: 0 0 8px;"><strong>Email:</strong> @Model.Order.User.Email</p>
+                                <p style="font-size: 14px; color: #4a5568; margin: 0 0 8px;"><strong>Phone:</strong> @Model.Order.User.PhoneNumber</p>
+                            </div>
 
+                            <!-- Shipping Address -->
+                            <h2 style="font-size: 20px; color: #1a2b49; margin: 30px 0 15px; font-weight: 500; border-left: 4px solid #4a90e2; padding-left: 10px;">Shipping Address</h2>
+                            <div style="background-color: #f9fafb; padding: 20px; border-radius: 8px;">
+                                <p style="font-size: 14px; color: #4a5568; margin: 0 0 8px;">@Model.Order.User.UserName</p>
+                                <p style="font-size: 14px; color: #4a5568; margin: 0 0 8px;">@Model.Order.Shippingaddress</p>
+                                <p style="font-size: 14px; color: #4a5568; margin: 0 0 8px;">@Model.Order.ZipCode</p>
+                                <p style="font-size: 14px; color: #4a5568; margin: 0 0 8px;">@Model.Order.Country</p>
+                                <p style="font-size: 14px; color: #4a5568; margin: 0 0 8px;">@Model.Order.State</p>
+                                <p style="font-size: 14px; color: #4a5568; margin: 0 0 8px;">@Model.Order.City</p>
+                            </div>
 
-                                <tr>
-                                    <td style="padding-top: 0;">
-                                        <table width="560" align="center" cellpadding="0" cellspacing="0" border="0" class="devicewidthinner" style="border-bottom: 1px solid #eeeeee;">
-                                            <tbody>
-                                                <tr>
-                                                    @* <td rowspan="4" style="padding-right: 10px; padding-bottom: 10px;">
-                                        <img style="height: 80px;" src="data:image/jpeg;base64,@base64String" alt="product">
-                                                    </td> *@
-                                                    <td colspan="2" style="font-size: 14px; font-weight: bold; color: #666666; padding-bottom: 5px;">
-                                                        @item?.Product?.ProductName
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="font-size: 14px; line-height: 18px; color: #757575; width: 440px;">
-                                                        @item?.Quantity
-                                                    </td>
-                                                    <td style="width: 130px;"></td>
-                                                </tr>
-                                                <tr>
-                                                    @* <td style="font-size: 14px; line-height: 18px; color: #757575;">
-                                                        Color: White & Blue
-                                                    </td> *@
-                                                    <td style="font-size: 14px; line-height: 18px; color: #757575; text-align: right;">
-                                                        @(item?.Price) VNĐ mỗi sản phẩm                                                        
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    @* <td style="font-size: 14px; line-height: 18px; color: #757575; padding-bottom: 10px;">
-                                                        Size: XL
-                                                    </td> *@
-                                                    <td style="font-size: 14px; line-height: 18px; color: #757575; text-align: right; padding-bottom: 10px;">
-                                                        <b style="color: #666666;">@(Convert.ToInt32(item?.Price)*item?.Quantity)VNĐ</b> tổng cộng
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                                }
-                           
-                                    <td style="padding-top: 0;">
-                                        <table width="560" align="center" cellpadding="0" cellspacing="0" border="0" class="devicewidthinner" style="border-bottom: 1px solid #bbbbbb; margin-top: -5px;">
-                                            <tbody>
-                                                <tr>
-                                                    <td rowspan="5" style="width: 55%;"></td>
-                                                    <td style="font-size: 14px; line-height: 18px; color: #666666;">
-                                                        Tạm tính:
-                                                    </td>
-                                                    <td style="font-size: 14px; line-height: 18px; color: #666666; width: 130px; text-align: right;">
-                                                        @total_value VNĐ
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="font-size: 14px; line-height: 18px; color: #666666; padding-bottom: 10px; border-bottom: 1px solid #eeeeee;">
-                                                        Phí giao hàng:
-                                                    </td>
-                                                    <td style="font-size: 14px; line-height: 18px; color: #666666; padding-bottom: 10px; border-bottom: 1px solid #eeeeee; text-align: right;">
-                                                    Miễn phí
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="font-size: 14px; font-weight: bold; line-height: 18px; color: #666666; padding-top: 10px;">
-                                                        Tổng giá
-                                                    </td>
-                                                    <td style="font-size: 14px; font-weight: bold; line-height: 18px; color: #666666; padding-top: 10px; text-align: right;">
-                                                        @total_value VNĐ
-                                                    </td>
-                                                </tr>
-                                             
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <!-- End calculation Section -->
-                                
-                                <!-- Start payment method Section -->
-                                <tr>
-                                    <td style="padding: 0 10px;">
-                                        <table width="560" align="center" cellpadding="0" cellspacing="0" border="0" class="devicewidthinner">
-                                            <tbody>
-                                                <tr>
-                                                    <td colspan="2" style="font-size: 16px; font-weight: bold; color: #666666; padding-bottom: 5px;">
-                                                        Phương thức thanh toán:@Model.Order?.Payment?.Paymentname
-                                                    </td>
-                                                </tr>
-                                              @if(Model.Order?.Payment?.Paymentname=="Bank")
-                                                {
-                                                <tr>
-                                                    <td style="width: 55%; font-size: 14px; line-height: 18px; color: #666666;">
-                                                        Tên ngân hàng:&nbsp;@Model.BankName
-                                                    </td>
-                                                    <td style="width: 45%; font-size: 14px; line-height: 18px; color: #666666;">
-                                                        Tên tài khoản: &nbsp;@Model.AccountName
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                 
-                                                    <td style="width: 45%; font-size: 14px; line-height: 18px; color: #666666;">
-                                                        Số tài khoản:&nbsp;@Model.AccountNumber
-                                                    </td>
-                                                </tr>
-                                                @* <tr>
-                                                    <td style="width: 55%; font-size: 14px; line-height: 18px; color: #666666; padding-bottom: 10px;">
-                                                        Bank Code:
-                                                    </td>
-                                                    <td style="width: 45%; font-size: 14px; line-height: 18px; color: #666666; padding-bottom: 10px;">
-                                                        SWIFT Code: 
-                                                    </td>
-                                                </tr> *@
-                                                @* <tr>
-                                                    <td colspan="2" style="width: 100%; text-align: center; font-style: italic; font-size: 13px; font-weight: 600; color: #666666; padding: 15px 0; border-top: 1px solid #eeeeee;">
-                                                        <b style="font-size: 14px;">Note:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                                    </td>
-                                                </tr> *@
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <!-- End payment method Section -->
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </body>
+                            <!-- Call to Action -->
+                            <p style="font-size: 15px; color: #4a5568; margin: 30px 0 20px; text-align: center;">Need assistance? Contact us at <a href="mailto:@email" style="color: #4a90e2; text-decoration: none; font-weight: 500;">@email</a>.</p>
+                            <div style="text-align: center;">
+                                <a href="#" style="display: inline-block; padding: 12px 24px; background-color: #4a90e2; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 15px; font-weight: 500; transition: background-color 0.3s ease;">Track Your Order</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 25px; text-align: center; background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%); border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+                            <p style="font-size: 13px; color: #ffffff; margin: 0 0 10px;">Thank you for shopping with TshirtAtLowPrices!</p>
+                            <p style="font-size: 12px; color: #d1e7ff; margin: 0;">© 2025 TshirtAtLowPrices. All rights reserved.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
 </html>

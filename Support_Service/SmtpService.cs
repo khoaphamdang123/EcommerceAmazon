@@ -148,7 +148,7 @@ if(type==1)
 }
 else if(type==2)
 {
-  subject="Đặt hàng thành công";
+  subject="Order Successfully";
 }
 else if(type==3)
 {

@@ -381,7 +381,7 @@ public class CheckoutController : BaseController
 
   [Route("checkout/payment")]
   [HttpPost]
-  public async Task<IActionResult> CheckoutPaymentForm(string first_name, string last_name, string email, string zip_code, string phone_number, string address, string country, string state, string city)
+  public async Task<IActionResult> CheckoutPaymentForm(string first_name, string last_name, string email, string zip_code, string phone_number, string address1,string address2, string country, string state, string city)
   {
     try
     {
@@ -391,14 +391,16 @@ public class CheckoutController : BaseController
       Console.WriteLine("Email here is:" + email);
       Console.WriteLine("Zip code here is:" + zip_code);
       Console.WriteLine("Phone number here is:" + phone_number);
-      Console.WriteLine("Address here is:" + address);
+      Console.WriteLine("Address here is:" + address1);
+      Console.WriteLine("Address2 here is:" + address2);
       Console.WriteLine("Country here is:" + country);
       Console.WriteLine("State here is:" + state);
       Console.WriteLine("City here is:" + city);
       HttpContext.Session.SetString("UserName", first_name + " " + last_name);
       HttpContext.Session.SetString("Email", email);
       HttpContext.Session.SetString("PhoneNumber", phone_number);
-      HttpContext.Session.SetString("Address", address);
+      HttpContext.Session.SetString("Address", address1);
+      HttpContext.Session.SetString("Address2", address2);
       HttpContext.Session.SetString("ZipCode", zip_code);
       HttpContext.Session.SetString("Country", country);
       HttpContext.Session.SetString("State", state);
@@ -530,7 +532,7 @@ public class CheckoutController : BaseController
 
       var payment_methods = await this._payment.getAllPayment();
 
-      ViewBag.payment_methods = payment_methods;
+      ViewBag.payment_methods = payment_methods;                  
     }
     catch (Exception er)
     {
@@ -630,6 +632,10 @@ public class CheckoutController : BaseController
 
       Console.WriteLine("Payment method here is:" + checkout.PaymentMethod);
 
+      Console.WriteLine("Address here is:" + checkout.Address1);
+
+      Console.WriteLine("City here is:" + checkout.Address2);
+
       string username = checkout.UserName.Replace(" ", "_");
 
       string email = checkout.Email;
@@ -656,6 +662,9 @@ public class CheckoutController : BaseController
 
       var cart = this._cart.getCart();
 
+     
+
+
       ApplicationUser user = new ApplicationUser();
 
       // if(check_user_exist && User.Identity.IsAuthenticated && User.IsInRole("User"))
@@ -675,7 +684,6 @@ public class CheckoutController : BaseController
 
       user = await this._user.findUserByEmail(email);
 
-
       var payment = await this._payment.findPaymentByName(payment_method);
 
       Console.WriteLine("User Id here is:" + user.Id);
@@ -688,6 +696,8 @@ public class CheckoutController : BaseController
       {
         Console.WriteLine("Order created successfully");
 
+        this.HttpContext.Session.SetString("OrderId", user.Id);
+
         var order = await this._order.getLatestOrderByUsername(asp_user.Id);
 
         Console.WriteLine("render view 1");
@@ -698,68 +708,75 @@ public class CheckoutController : BaseController
 
         var company_user = await this._user.findUserByName("company");
 
-        string[] email_list = company_user.Email.Split('#');
+        //string[] email_list = company_user.Email.Split('#');
 
-        string extra_info = email_list[1];
+        // string email_value = "";
 
-        string bank_name = "";
+        // if(email_list.Length > 0)
+        // {
+        //   email_value = email_list[0];
+        // }
 
-        string account_num = "";
+        // string extra_info = email_list[1];
 
-        string account_name = "";
+        // string bank_name = "";
 
-        if (!string.IsNullOrEmpty(extra_info))
-        {
-          string[] info_values = extra_info.Split('\n');
-          foreach (var info in info_values)
-          {
-            if (info.Contains("bank_name"))
-            {
-              bank_name = info.Split('~')[1].Trim();
-            }
-            else if (info.Contains("account_name"))
-            {
-              account_name = info.Split('~')[1].Trim();
-            }
-            else if (info.Contains("account_num"))
-            {
-              account_num = info.Split('~')[1].Trim();
-            }
-          }
-        }
+        // string account_num = "";
 
-        // ReceiptModel receipt=new ReceiptModel{Order=order,BankName=bank_name,AccountName=account_name,AccountNumber=account_num};
+        // string account_name = "";
 
-        //  string mail_path="MailTemplate/index.cshtml";
+        // if (!string.IsNullOrEmpty(extra_info))
+        // {
+        //   string[] info_values = extra_info.Split('\n');
+        //   foreach (var info in info_values)
+        //   {
+        //     if (info.Contains("bank_name"))
+        //     {
+        //       bank_name = info.Split('~')[1].Trim();
+        //     }
+        //     else if (info.Contains("account_name"))
+        //     {
+        //       account_name = info.Split('~')[1].Trim();
+        //     }
+        //     else if (info.Contains("account_num"))
+        //     {
+        //       account_num = info.Split('~')[1].Trim();
+        //     }
+        //   }
+        // }
 
-        //  string render_string=await render_view.RenderViewToStringAsync(mail_path,receipt);
+        //  ReceiptModel receipt=new ReceiptModel{Order=order,BankName=bank_name,AccountName=account_name,AccountNumber=account_num};
 
-        //  bool is_sent=await this._smtpService.sendEmailGeneral(2,render_string);
+        CheckoutResultModel receipt = new CheckoutResultModel{ Order = order,Company=company_user, Cart = cart };
 
-        //  if(is_sent)
-        //  {
-        //   this._logger.LogInformation("Send order checkout successfully");
-        //  }
-        //  else
-        //  {
-        //   this._logger.LogInformation("Send order checkout failed");
-        //  }
+          string mail_path="MailTemplate/index.cshtml";
 
-        //  Console.WriteLine("Render string here is:"+render_string);
+          string render_string=await render_view.RenderViewToStringAsync(mail_path,receipt);
+
+          bool is_sent=await this._smtpService.sendEmailGeneral(2,render_string);
+
+          if(is_sent)
+         {
+          this._logger.LogInformation("Send order checkout successfully");
+         }
+         else
+         {
+          this._logger.LogInformation("Send order checkout failed");
+         }
+
+         Console.WriteLine("Render string here is:"+render_string);
 
         CheckoutResultModel checkout_result = new CheckoutResultModel { Order = order, Cart = cart };
 
-        await this._cart.clearCart();
-
         Console.WriteLine("did come to here");
 
-        return View("~/Views/ClientSide/Checkout/CheckoutResult.cshtml");
-        
+        return View("~/Views/ClientSide/Checkout/CheckoutResult.cshtml",checkout_result);
       }
     }
     catch (Exception er)
     {
       Console.WriteLine("Checkout Exception:" + er.Message);
+
       this._logger.LogError("Checkout Exception:" + er.Message);
     }
     ViewBag.Status = 0;
@@ -843,11 +860,23 @@ public class CheckoutController : BaseController
   {
     return Content("Payment cancelled.");
   }
-  
+
   [Route("checkout/{id}/done")]
+
   [HttpGet]
   public async Task<IActionResult> CheckoutResult()
   {
-    return View("~/Views/ClientSide/Checkout/CheckoutResult.cshtml");
+    string asp_id = this.HttpContext.Session.GetString("OrderId");
+
+    var order = await this._order.getLatestOrderByUsername(asp_id);
+
+    var cart = this._cart.getCart();
+
+    CheckoutResultModel checkout_result = new CheckoutResultModel { Order = order, Cart = cart };
+
+    await this._cart.clearCart();
+
+    return View("~/Views/ClientSide/Checkout/CheckoutResult.cshtml", checkout_result);    
+    
   }
 }

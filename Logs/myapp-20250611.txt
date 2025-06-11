@@ -1,0 +1,251 @@
+2025-06-11 11:32:06.196 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:34:27.306 +07:00 [INF] Running in Login Action
+2025-06-11 11:42:34.400 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:43:02.419 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:44:19.432 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:45:29.239 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:45:31.527 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:45:31.658 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:45:31.730 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:46:09.922 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:46:25.078 +07:00 [ERR] Checkout Payment Form Exception:Value cannot be null. (Parameter 's')
+2025-06-11 11:46:25.097 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:47:23.592 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:47:23.611 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:47:34.444 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:47:34.484 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:47:37.243 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:48:26.005 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:51:46.100 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:52:33.291 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:52:45.949 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:52:48.083 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:53:46.062 +07:00 [ERR] Checkout Payment Form Exception:Value cannot be null. (Parameter 's')
+2025-06-11 11:53:46.076 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:54:43.960 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:55:26.474 +07:00 [ERR] Checkout Payment Form Exception:Value cannot be null. (Parameter 's')
+2025-06-11 11:55:26.496 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:55:53.596 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:55:57.617 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:56:04.969 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:56:05.005 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:56:10.796 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:56:13.260 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 11:56:27.616 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 12:05:30.115 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 12:44:19.660 +07:00 [ERR] Checkout Exception:Object reference not set to an instance of an object.
+2025-06-11 12:47:59.211 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 14:18:57.273 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 14:34:45.379 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 14:36:28.103 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:13:37.883 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:16:06.729 +07:00 [INF] Running in Login Action
+2025-06-11 16:16:22.841 +07:00 [INF] admin123 Delete Order Id:485
+2025-06-11 16:17:19.224 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:17:19.225 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:18:01.526 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:18:03.899 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:18:11.103 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:18:22.061 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:18:28.603 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:19:01.038 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:22:00.127 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:29:23.478 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:29:26.070 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:29:26.116 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:29:33.258 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:30:19.986 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:30:43.665 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:32:19.739 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:32:39.757 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:32:39.764 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:33:44.910 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:33:44.913 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:33:47.654 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:33:47.674 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:33:52.349 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:33:52.351 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:34:00.649 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:34:00.650 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:34:00.683 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:34:54.840 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:34:54.872 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:34:58.361 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:34:58.370 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:35:02.177 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:35:02.181 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:35:23.531 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:35:23.542 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:35:27.859 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:35:27.860 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:35:32.374 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:35:32.396 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:35:32.419 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:35:44.052 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:35:44.088 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:35:58.418 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:35:58.422 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:36:00.746 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:36:01.438 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:36:04.534 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:36:04.536 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:49:06.948 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:49:12.987 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:49:15.695 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:49:18.221 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:49:22.512 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:49:24.157 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:49:33.899 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:51:28.726 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:53:42.753 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:53:44.764 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:53:53.882 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:56:05.248 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:56:05.271 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:56:13.569 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:56:15.520 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 16:56:24.936 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:57:12.011 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 16:57:12.012 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:01:28.844 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 17:01:49.895 +07:00 [ERR] Checkout Exception:Failed to compile generated Razor template:
+- (18:69) The type or namespace name 'CheckoutResultModel' could not be found (are you missing a using directive or an assembly reference?)
+- (7:40) The type or namespace name 'ApplicationUser' could not be found (are you missing a using directive or an assembly reference?)
+- (73:122) 'Enumerable.Order<T>(IEnumerable<T>)' is a method, which is not valid in the given context
+- (74:134) 'Enumerable.Order<T>(IEnumerable<T>)' is a method, which is not valid in the given context
+- (118:123) 'Enumerable.Order<T>(IEnumerable<T>)' is a method, which is not valid in the given context
+- (119:124) 'Enumerable.Order<T>(IEnumerable<T>)' is a method, which is not valid in the given context
+- (120:124) 'Enumerable.Order<T>(IEnumerable<T>)' is a method, which is not valid in the given context
+- (126:100) 'Enumerable.Order<T>(IEnumerable<T>)' is a method, which is not valid in the given context
+- (127:100) 'Enumerable.Order<T>(IEnumerable<T>)' is a method, which is not valid in the given context
+- (128:100) 'Enumerable.Order<T>(IEnumerable<T>)' is a method, which is not valid in the given context
+- (129:100) 'Enumerable.Order<T>(IEnumerable<T>)' is a method, which is not valid in the given context
+- (130:100) 'Enumerable.Order<T>(IEnumerable<T>)' is a method, which is not valid in the given context
+- (131:100) 'Enumerable.Order<T>(IEnumerable<T>)' is a method, which is not valid in the given context
+
+See CompilationErrors for detailed information
+
+2025-06-11 17:08:27.817 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:08:29.175 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:08:31.871 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:08:35.389 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:09:03.855 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:09:08.716 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:10:02.151 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:10:07.034 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:10:19.323 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:10:30.899 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 17:10:51.011 +07:00 [ERR] Checkout Exception:Object reference not set to an instance of an object.
+2025-06-11 17:14:14.222 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:14:23.162 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 17:15:18.712 +07:00 [ERR] Checkout Exception:'System.Dynamic.ExpandoObject' does not contain a definition for 'Company'
+2025-06-11 17:18:45.741 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:18:48.576 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:18:51.196 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:18:51.209 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:18:57.678 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:19:20.780 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:19:24.988 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:19:48.543 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:20:18.146 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:20:42.797 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:20:48.295 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:20:50.355 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:21:49.578 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:21:54.508 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:21:56.222 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:22:05.834 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:22:11.762 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:22:14.779 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:22:37.245 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:22:40.856 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:22:44.463 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:22:46.152 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:22:55.926 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:22:57.156 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:23:01.227 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:23:17.148 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:23:17.184 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:23:22.873 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:23:36.107 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:23:40.166 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:23:42.722 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:23:44.962 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:24:08.799 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:24:39.229 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:24:50.300 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:24:53.595 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:24:53.595 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:24:53.652 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:25:01.239 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:25:27.398 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:26:42.516 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:26:54.133 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:27:38.497 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:37:57.551 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 17:38:32.122 +07:00 [ERR] Checkout Exception:Failed to generate Razor template. See "Diagnostics" property for more details
+- The code block is missing a closing "}" character.  Make sure you have a matching "}" character for all the "{" characters within this block, and that none of the "}" characters are being interpreted as markup.
+
+2025-06-11 17:40:36.052 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:40:38.352 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:40:38.362 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:40:47.161 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:40:56.206 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 17:41:18.512 +07:00 [ERR] Checkout Exception:Failed to compile generated Razor template:
+- (8:27) 'CheckoutResultModel' does not contain a definition for 'Company' and no accessible extension method 'Company' accepting a first argument of type 'CheckoutResultModel' could be found (are you missing a using directive or an assembly reference?)
+
+See CompilationErrors for detailed information
+
+2025-06-11 17:41:54.177 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:41:56.109 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:42:53.211 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:43:29.535 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:43:34.098 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:43:36.954 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:43:41.766 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:45:25.342 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:45:41.594 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 17:46:03.413 +07:00 [ERR] Checkout Exception:Failed to compile generated Razor template:
+- (8:27) 'CheckoutResultModel' does not contain a definition for 'Company' and no accessible extension method 'Company' accepting a first argument of type 'CheckoutResultModel' could be found (are you missing a using directive or an assembly reference?)
+
+See CompilationErrors for detailed information
+
+2025-06-11 17:49:45.098 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:49:50.504 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:49:57.912 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:50:09.830 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:50:12.218 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:50:12.827 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:53:48.010 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:53:48.012 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 17:55:22.418 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 17:55:43.897 +07:00 [ERR] Checkout Exception:Failed to compile generated Razor template:
+- (9:27) 'CheckoutResultModel' does not contain a definition for 'Company' and no accessible extension method 'Company' accepting a first argument of type 'CheckoutResultModel' could be found (are you missing a using directive or an assembly reference?)
+
+See CompilationErrors for detailed information
+
+2025-06-11 18:05:51.549 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:05:58.612 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:06:49.578 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:08:00.578 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:09:46.832 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:10:10.165 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:13:37.609 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:13:37.617 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:16:00.556 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:21:58.817 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:23:17.037 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:23:40.765 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:23:54.737 +07:00 [ERR] Checkout Cart Exception:Unexpected character encountered while parsing value: {. Path 'Afghanistan', line 1, position 17.
+2025-06-11 18:24:47.424 +07:00 [ERR] Checkout Exception:Failed to compile generated Razor template:
+- (11:27) 'CheckoutResultModel' does not contain a definition for 'Company' and no accessible extension method 'Company' accepting a first argument of type 'CheckoutResultModel' could be found (are you missing a using directive or an assembly reference?)
+
+See CompilationErrors for detailed information
+
+2025-06-11 18:26:50.322 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:26:52.900 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:26:59.340 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:27:10.407 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:27:36.849 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:27:40.590 +07:00 [INF] admin123 Delete Order Id:485 Failed
+2025-06-11 18:27:40.628 +07:00 [INF] admin123 Delete Order Id:485 Failed

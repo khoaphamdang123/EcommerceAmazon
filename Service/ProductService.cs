@@ -382,13 +382,15 @@ else if(string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(product))
 public async Task<IEnumerable<Product>> getProductByCategory(string cat)
 { 
   cat=cat.Replace("-"," ").Replace("/"," ");
-  var products=await this._context.Products.Include(c=>c.Category).Include(c=>c.Brand).Include(c=>c.SubCat).Include(c=>c.Variants).Include(c=>c.ProductImages).Where(c=>c.Category.CategoryName.Replace("-","").Replace("/","")==cat).ToListAsync();
+
+  var products=await this._context.Products.Include(c=>c.Category).Include(c=>c.Brand).Include(c=>c.SubCat).Include(c=>c.Variants).ThenInclude(c=>c.Size).Include(c=>c.ProductImages).Where(c=>c.Category.CategoryName.Replace("-","").Replace("/","")==cat).ToListAsync();
+
   return products;  
 }
 
   public async Task<IEnumerable<Product>> getProductByBrand(string brand)
   {
- var products=await this._context.Products.Include(c=>c.Category).Include(c=>c.Brand).Include(c=>c.SubCat).Include(c=>c.Variants).Include(c=>c.ProductImages).Where(c=>c.Brand.BrandName==brand).ToListAsync();
+ var products=await this._context.Products.Include(c=>c.Category).Include(c=>c.Brand).Include(c=>c.SubCat).Include(c=>c.Variants).ThenInclude(c=>c.Size).Include(c=>c.ProductImages).Where(c=>c.Brand.BrandName==brand).ToListAsync();
   
  return products;
   }

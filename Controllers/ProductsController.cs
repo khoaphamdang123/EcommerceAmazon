@@ -85,9 +85,9 @@ public async Task<IActionResult> ProductsByCategory(string category_name)
 
     ViewBag.colors=color_dict;
     
-    var brands=await this._category.getAllBrandList();
+    // var brands=await this._category.getAllBrandList();
     
-    ViewBag.brands=brands;
+    // ViewBag.brands=brands;
     
     var prods=await this._product.pagingProductByList(30,1,products);
     

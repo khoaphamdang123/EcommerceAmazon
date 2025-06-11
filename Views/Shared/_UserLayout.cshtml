@@ -16,14 +16,16 @@
       if(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("Logo")))
       {
       string logo=Environment.GetEnvironmentVariable("Logo");
-       string logo_extension=logo.Substring(logo.IndexOf("wwwroot")+("wwwroot".Length+1));
-       if(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")=="Development")
+      
+      string logo_extension=logo.Substring(logo.IndexOf("wwwroot")+("wwwroot".Length+1));
+      
+      if(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")=="Development")
        {
         logo_path="http://localhost:5160/"+logo_extension;
        }
        else
        {
-    logo_path="https://thanhquang-gnss.com/"+logo_extension;
+    logo_path="http://tshirtatlowprices.com"+logo_extension;
        }
        
     @* logo_path=logo_extension; *@
@@ -86,7 +88,9 @@
       {
         if(info.Contains("bank_name"))
         {
+          
           bank_name=info.Split('~')[1].Trim();
+          
           Environment.SetEnvironmentVariable("bank",bank_name);
         }
         else if(info.Contains("account_name"))
@@ -153,6 +157,7 @@
 
     <!-- Open Graph tags for social media -->
     <meta property="og:title" content="tshirtatlowprices" />
+    
     <meta property="og:description" content="Tshirt Shop sell tshirt and accessories at low prices" />
     
     <meta property="og:url" content="https://tshirtatlowprices.com"/>
@@ -168,7 +173,7 @@
      
      <link rel="canonical" href="https://tshirtatlowprices.com"/>
       
-      @* <link rel="shortcut icon" type="image/x-icon" href="@(logo_path)"/>       *@
+      <link rel="shortcut icon" type="image/x-icon" href="@(logo_path)"/>      
       
       @* <link rel="stylesheet" href="@Url.Content("~/css/site.css")" asp-append-version="true"> *@
 
@@ -529,7 +534,7 @@
        <div class="row row-cols-1 row-cols-lg-4 g-4">
         <div class="col">
           <div class="footer-widget-6">
-            <img src="assets/images/logo.webp" class="logo-img mb-3" alt="">
+            <img src="@logo_path" class="logo-img mb-3" alt="">
             <h5 class="mb-3 fw-bold">About Us</h5>
              <p class="mb-2">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
 

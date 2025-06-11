@@ -295,10 +295,10 @@
                         @if (Model.totalPage > 6 && Model.currentPage< Model.totalPage - 3)
                         {
                             <li class="page-item"><span>...</span></li>
+                            
                             <li><a class="page-link" href="@Url.Action("ProductsPaging", new {page_size=Model.pageSize, page = Model.totalPage,products=string.Join(",", Model.item.Select(p => p.Id)),type=type })"  id="page-btn">@Model.totalPage</a></li>
                         }
 
-                        @* Next Button *@
                         @if (Model.currentPage < Model.totalPage)
                         {
                             <li class="page-item">

@@ -88,6 +88,10 @@ if (order != null)
    {
     Console.WriteLine("Did come to order create section");
 
+    Console.WriteLine("User address1 here is:"+user.Address1);
+
+    Console.WriteLine("User address2 here is:"+user.Address2);
+
     var order=new Order
     {
       Status="Processing",
@@ -98,7 +102,7 @@ if (order != null)
         double current_price=double.Parse(price_value,CultureInfo.InvariantCulture)-(double.Parse(price_value,CultureInfo.InvariantCulture)*(discount)/100);
         return current_price*s.Quantity;
       }),
-      Shippingaddress=string.IsNullOrEmpty(user.Address2)?user.Address1:user.Address2,
+      Shippingaddress=string.IsNullOrEmpty(user.Address1)?user.Address2:user.Address1,
       Userid=user.Id,
       Paymentid=payment.Id,
       ZipCode=zip_code,
@@ -121,7 +125,7 @@ if (order != null)
 
         string color = product?.Color;
 
-        string size = product?.Size;
+        string size = product?.Size;        
 
         // string version=product?.Version;
 
@@ -129,10 +133,7 @@ if (order != null)
 
         Console.WriteLine("Product Color here is:" + color);
 
-
         List<int> variant_id = new List<int>();
-
-
 
 
         if (product_ob != null && product_ob.Count > 0)
@@ -215,6 +216,8 @@ if (order != null)
    catch(Exception er)
    {
       Console.WriteLine("Create Order Exception:"+er.Message);
+
+      Console.WriteLine("Create Order Exception Stack Trace:"+er.InnerException?.Message);
    }
   return created_res;  
   }

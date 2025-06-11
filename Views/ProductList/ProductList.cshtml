@@ -313,10 +313,10 @@
                               <div class="avatar-wrapper">
                                 <div class="avatar avatar-sm me-2 rounded-2">
                                 @if(product.Frontavatar.Contains("http") || product.Frontavatar.Contains("https"))
-                                {
+                                 {
                                  <img src="@product.Frontavatar" alt="Product FrontAvatar">
-                                 }
-                                  else
+                                  }
+                                else
                                   {
                             <img src="~/@product.Frontavatar.Substring(product.Frontavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="User Front Avatar">
                                   }
