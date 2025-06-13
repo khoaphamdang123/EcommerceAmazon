@@ -1336,7 +1336,7 @@ try
    
    string price=model.Price;
    
-   int parse_price = Convert.ToInt32(price.Replace(",","").Replace(".",""),CultureInfo.InvariantCulture);
+   double parse_price = double.Parse(price.Replace(",","").Replace(".",""),CultureInfo.InvariantCulture);
 
    if(parse_price<0)
    {
@@ -1383,7 +1383,7 @@ try
   List<string> sizes=model?.Size;
 
 
-  List<string> prices = model?.Prices;
+  List<string> prices = new List<string>();
 
 
   List<IFormFile> img_files=model?.ImageFiles;
@@ -1432,58 +1432,61 @@ if(colors!=null)
   //     Console.WriteLine("prices:"+prices.Count);
 
   string? color=colors[i];
-  string? size=sizes[i];
-  string? price_value=prices[i];
-  Regex reg=new Regex("[^0-9]");
+          for (int j = 0; j < sizes.Count; j++)
+          {
+            string? size = sizes[j];
+            string? price_value = model.Price;
+            Regex reg = new Regex("[^0-9]");
 
-  var check_color_exist=new Models.Color();
-  
-  var check_size_exist=new Models.Size();
+            var check_color_exist = new Models.Color();
 
- if(!string.IsNullOrEmpty(color))
- {
-   check_color_exist = await this._context.Colors.FirstOrDefaultAsync(c=>c.Colorname==color);
- }
+            var check_size_exist = new Models.Size();
 
-  Console.WriteLine("check color exist");
-  
-  if(!string.IsNullOrEmpty(size))
-  {
-   check_size_exist = await this._context.Sizes.FirstOrDefaultAsync(c=>c.Sizename==size);
-  }
- 
-  if(check_color_exist==null)
-  {
-    if(!string.IsNullOrEmpty(color))
-  {
-    var new_color = new Models.Color{Colorname=color};
+            if (!string.IsNullOrEmpty(color))
+            {
+              check_color_exist = await this._context.Colors.FirstOrDefaultAsync(c => c.Colorname == color);
+            }
 
-    await this._context.Colors.AddAsync(new_color);
-  }
-  }
-  
-   if(check_size_exist==null)
-  { 
-   if(!string.IsNullOrEmpty(size))
-  {
-    var new_size = new Models.Size{Sizename=size};
-    
-    await this._context.Sizes.AddAsync(new_size);    
-  }
-  }
+            Console.WriteLine("check color exist");
 
-  await this.saveChanges();  
- 
-  var new_color_ob=await this._context.Colors.FirstOrDefaultAsync(c=>c.Colorname==color);
+            if (!string.IsNullOrEmpty(size))
+            {
+              check_size_exist = await this._context.Sizes.FirstOrDefaultAsync(c => c.Sizename == size);
+            }
 
-  var new_size_ob = await this._context.Sizes.FirstOrDefaultAsync(c=>c.Sizename==size);
+            if (check_color_exist == null)
+            {
+              if (!string.IsNullOrEmpty(color))
+              {
+                var new_color = new Models.Color { Colorname = color };
 
-  var new_varian_ob=new Variant{Colorid=new_color_ob!=null?new_color_ob.Id:null,Sizeid=new_size_ob!=null?new_size_ob.Id:null,Price=string.IsNullOrEmpty(price_value)?"":price_value};
+                await this._context.Colors.AddAsync(new_color);
+              }
+            }
 
-  if(new_color_ob!=null || new_size_ob!=null)
-  {
-   variant.Add(new_varian_ob);
-  } 
+            if (check_size_exist == null)
+            {
+              if (!string.IsNullOrEmpty(size))
+              {
+                var new_size = new Models.Size { Sizename = size };
+
+                await this._context.Sizes.AddAsync(new_size);
+              }
+            }
+
+            await this.saveChanges();
+
+            var new_color_ob = await this._context.Colors.FirstOrDefaultAsync(c => c.Colorname == color);
+
+            var new_size_ob = await this._context.Sizes.FirstOrDefaultAsync(c => c.Sizename == size);
+
+            var new_varian_ob = new Variant { Colorid = new_color_ob != null ? new_color_ob.Id : null, Sizeid = new_size_ob != null ? new_size_ob.Id : null, Price = string.IsNullOrEmpty(price_value) ? "" : price_value };
+
+            if (new_color_ob != null || new_size_ob != null)
+            {
+              variant.Add(new_varian_ob);
+            }
+          }
  }
 }
 

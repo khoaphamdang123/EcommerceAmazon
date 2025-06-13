@@ -27,6 +27,10 @@
    List<string> avatar_list=new List<string>{Model?.Frontavatar,Model?.Backavatar};
 
   List<ProductImage> list_img = Model?.ProductImages.ToList();
+
+  List<string> existed_color= new List<string>();
+
+  List<string> existed_size= new List<string>();
   
   var list_img_json=Newtonsoft.Json.JsonConvert.SerializeObject(list_img,new Newtonsoft.Json.JsonSerializerSettings
     {
@@ -354,7 +358,11 @@
                     @if(Model?.Variants!=null)
                     { 
                         foreach(var variant in Model?.Variants)
+                        {  if(variant.Color!=null && existed_color.Contains(variant.Color.Colorname))
                         {
+                          continue;
+                        } 
+                        existed_color.Add(variant?.Color?.Colorname);
                             <div class="data-repeater-item position-relative">
                                 <button type="button" class="variant-delete-btn" onclick="variantRemoveBtn(this)">X</button>
                                 <div class="row g-6 mb-6">
@@ -397,7 +405,13 @@
                     @if(Model?.Variants!=null)
                     { 
                         foreach(var variant in Model?.Variants)
-                        {
+                        {  
+                            if(variant.Size!=null && existed_size.Contains(variant.Size.Sizename))
+                            {
+                              continue;
+                            }
+                            existed_size.Add(variant?.Size?.Sizename);
+                            
                             <div class="data-repeater-item position-relative">
                                 <button type="button" class="variant-delete-btn" onclick="variantRemoveBtn(this)">X</button>
                                 <div class="row g-6 mb-6">
@@ -876,9 +890,118 @@ document.addEventListener("DOMContentLoaded", function (event)
  let mirror_list = [];
 
    
- const add_variant=document.getElementById("add-variant"); 
+ //const add_variant=document.getElementById("add-variant"); 
 
-add_variant.addEventListener('click',()=>{
+ const add_color_variant = document.getElementById("add-color-variant");
+
+ const add_size_variant = document.getElementById("add-size-variant"); 
+
+ add_color_variant.addEventListener('click',()=>{
+    const groupList = document.getElementById('color-group-list');
+
+        if(groupList.childElementCount==0)
+        { 
+          const newRow=document.createElement('div');
+
+          newRow.classList.add('data-repeater-item');
+
+          newRow.classList.add('position-relative');
+          
+          newRow.innerHTML = `
+            <button type="button" class="variant-delete-btn" onclick="variantRemoveBtn(this)">X</button>
+            <div class="row g-6 mb-6">
+                <div class="col-4">
+                    <label class="form-label" for="color">Màu sắc</label>
+                    <input class="form-control" name="color" type="color" placeholder="Nhập màu sắc">
+                </div>
+            </div>
+        `;
+       
+       newRow.classList.add('hide');
+       
+        groupList.appendChild(newRow);
+       
+         setTimeout(()=>{
+            newRow.classList.remove('hide');
+            newRow.classList.add('show');
+        },10);
+        }
+      else
+      {
+        const lastRow = groupList.lastElementChild;
+        
+        const newRow = lastRow.cloneNode(true);
+
+        const inputs=lastRow.querySelectorAll('input');
+
+        newRow.querySelectorAll('input').forEach((input,index) => input.value=inputs[index].value);
+
+        newRow.classList.add('hide');
+        
+        
+        groupList.appendChild(newRow);
+       
+         setTimeout(()=>{
+            newRow.classList.remove('hide');
+            newRow.classList.add('show');
+        },10);
+        }
+});
+
+
+ add_size_variant.addEventListener('click',()=>{
+ const groupList = document.getElementById('size-group-list');
+
+        if(groupList.childElementCount==0)
+        { 
+          const newRow=document.createElement('div');
+
+          newRow.classList.add('data-repeater-item');
+
+          newRow.classList.add('position-relative');
+          
+          newRow.innerHTML = `
+            <button type="button" class="variant-delete-btn" onclick="variantRemoveBtn(this)">X</button>
+            <div class="row g-6 mb-6">
+                <div class="col-4">
+                    <label class="form-label" for="size">Kích thước</label>
+                    <input class="form-control" name="size" type="color" placeholder="Nhập kích thước">
+                </div>
+            </div>
+        `;
+       
+       newRow.classList.add('hide');
+       
+        groupList.appendChild(newRow);
+       
+         setTimeout(()=>{
+            newRow.classList.remove('hide');
+            newRow.classList.add('show');
+        },10);
+        }
+      else
+      {
+        const lastRow = groupList.lastElementChild;
+        
+        const newRow = lastRow.cloneNode(true);
+
+        const inputs=lastRow.querySelectorAll('input');
+
+        newRow.querySelectorAll('input').forEach((input,index) => input.value=inputs[index].value);
+
+        newRow.classList.add('hide');
+        
+        
+        groupList.appendChild(newRow);
+       
+         setTimeout(()=>{
+            newRow.classList.remove('hide');
+            newRow.classList.add('show');
+        },10);
+        }
+ });
+
+@* add_variant.addEventListener('click',()=>{
         
         const groupList = document.getElementById('group-list');
 
@@ -949,7 +1072,7 @@ add_variant.addEventListener('click',()=>{
             newRow.classList.add('show');
         },10);
         }
-});
+}); *@
 
  var is_all_form_valid=true;
  
@@ -1448,16 +1571,16 @@ const file=files[i];
   let formDataVal=new FormData(document.getElementById("formAccountSettings"));
 
    var colors=document.querySelectorAll("#color");
-   var weights=document.querySelectorAll("#weight");
+   @* var weights=document.querySelectorAll("#weight");
    var versions=document.querySelectorAll("#version");
-   var mirrors = document.querySelectorAll("#mirror");
+   var mirrors = document.querySelectorAll("#mirror"); *@
    var sizes= document.querySelectorAll("#size");
-   var prices = document.querySelectorAll("#prices");
+  
    colors.forEach((color)=>{
    formDataVal.append("color",color.value);
    }); 
 
-   weights.forEach((weight)=>{
+   @* weights.forEach((weight)=>{
     formDataVal.append("weight",weight.value);
    });
 
@@ -1467,15 +1590,15 @@ const file=files[i];
 
    mirrors.forEach((mirror)=>{
     formDataVal.append("mirror",mirror.value);
-});
+}); *@
 
    sizes.forEach((size)=>{
     formDataVal.append("size",size.value);
    });
 
-    prices.forEach((price)=>{
+    @* prices.forEach((price)=>{
       formDataVal.append("prices",price.value);
-    });
+    }); *@
 
   files_arr.forEach(file=>{
     formDataVal.append("imagefiles",file);
