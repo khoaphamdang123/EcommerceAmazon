@@ -39,11 +39,11 @@ public class DashboardController : BaseAdminController
     {
 
    string id_user=this.HttpContext.Session.GetString("AdminId");
-   
-   if(string.IsNullOrEmpty(id_user))
-   {
-        return RedirectToAction("Index","LoginAdmin");
-   }
+
+      if (string.IsNullOrEmpty(id_user))
+      {
+        return RedirectToAction("Index", "LoginAdmin");
+      }
 
     int total_orders=this._dashboard.countToTalOrder();    
 

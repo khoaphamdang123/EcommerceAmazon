@@ -13,11 +13,14 @@ public class BaseController : Controller
 
     private readonly IBannerListRepository _banner;
 
-    public BaseController(ICategoryListRepository category,IUserListRepository user,IBannerListRepository banner)
+    private readonly IStaticFilesRepository _staticFile;
+
+    public BaseController(ICategoryListRepository category, IUserListRepository user, IStaticFilesRepository staticFile, IBannerListRepository banner)
     {
         this._category = category;
         this._user = user;
-        this._banner=banner;
+        this._banner = banner;
+        this._staticFile = staticFile;
     }
 
     public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -25,14 +28,16 @@ public class BaseController : Controller
         var categories = await this._category.getAllCategory();
         
         var user = await this._user.findUserByName("company");
+        
+        var staticFiles = await this._staticFile.getAllStaticFile();
     
-      if(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("Logo")))
-      {
-        var logo= await this._banner.findBannerByName("logo");
+      if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("Logo")))
+        {
+            var logo = await this._banner.findBannerByName("logo");
 
-        Environment.SetEnvironmentVariable("Logo",logo.ToList()[0].Image);  
+            Environment.SetEnvironmentVariable("Logo", logo.ToList()[0].Image);
 
-     }
+        }
         
         ViewBag.Categories = categories;
         
@@ -41,6 +46,8 @@ public class BaseController : Controller
     var cart_json = this.HttpContext.Session.GetString("cart");
     
     var cart= cart_json != null ? JsonConvert.DeserializeObject<List<CartModel>>(cart_json) : new List<CartModel>();
+
+    ViewBag.static_file = staticFiles.ToList();
     
     ViewBag.cart = cart;
         

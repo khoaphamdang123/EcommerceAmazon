@@ -16,13 +16,17 @@ public class Service
 {
     private readonly ILogger<Service> _logger;
     private readonly SignInManager<ApplicationUser> _signInManager;
+    
+ private readonly IHttpContextAccessor _httpContextAccessor;
 
 
 
-    public Service(ILogger<Service> logger,SignInManager<ApplicationUser> signInManager)
+
+    public Service(ILogger<Service> logger, SignInManager<ApplicationUser> signInManager, IHttpContextAccessor httpContextAccessor)
     {
-        this._logger=logger;
-        this._signInManager=signInManager;
+        this._logger = logger;
+        this._signInManager = signInManager;
+        this._httpContextAccessor = httpContextAccessor;
     }
 
 
@@ -57,26 +61,37 @@ public async Task<string> convertVNDToUSD(string value)
     return ussd_value;
 }
 
-public string extractASIN(string link)
-{ try
-{
-   string pattern = @"/dp/([A-Z0-9]{10})";
 
-    Match match = Regex.Match(link, pattern);
-    
-    if (match.Success)
+  public string generateOrderId()
     {
-        string asin = match.Groups[1].Value;
-        
-        return asin;
+        string orderId = $"ORD-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid().ToString().Substring(0, 4)}";
+
+        this._httpContextAccessor.HttpContext?.Session.SetString("ORDID", orderId);
+
+        return orderId;
     }
-}
-catch(Exception er)
-{
-    Console.WriteLine("Extract ASIN Exception:"+er.Message);
-}
-    return null;
-}
+
+    public string extractASIN(string link)
+    {
+        try
+        {
+            string pattern = @"/dp/([A-Z0-9]{10})";
+
+            Match match = Regex.Match(link, pattern);
+
+            if (match.Success)
+            {
+                string asin = match.Groups[1].Value;
+
+                return asin;
+            }
+        }
+        catch (Exception er)
+        {
+            Console.WriteLine("Extract ASIN Exception:" + er.Message);
+        }
+        return null;
+    }
 
 public string generateQRCode(string data,string account_num,string account_name)
 {  

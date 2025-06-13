@@ -1,0 +1,47 @@
+2025-06-13 11:00:55.339 +07:00 [INF] Running in Login Action
+2025-06-13 11:01:00.344 +07:00 [INF] Running in Login Action
+2025-06-13 11:01:09.212 +07:00 [INF] Running in Login Action
+2025-06-13 11:06:21.336 +07:00 [INF] Running in Login Action
+2025-06-13 11:06:31.300 +07:00 [INF] Running in Login Action
+2025-06-13 11:08:11.402 +07:00 [INF] Running in Login Action
+2025-06-13 11:08:18.010 +07:00 [INF] Running in Login Action
+2025-06-13 11:08:53.297 +07:00 [INF] Running in Login Action
+2025-06-13 11:08:58.088 +07:00 [INF] Running in Login Action
+2025-06-13 11:09:02.885 +07:00 [INF] Running in Login Action
+2025-06-13 11:09:08.883 +07:00 [INF] Running in Login Action
+2025-06-13 11:12:18.081 +07:00 [INF] Running in Login Action
+2025-06-13 11:12:29.987 +07:00 [INF] Running in Login Action
+2025-06-13 11:16:46.777 +07:00 [INF] Running in Login Action
+2025-06-13 11:22:36.602 +07:00 [INF] admin123 Created Banner Successfully
+2025-06-13 12:15:29.429 +07:00 [INF] Update Banner Id:19
+2025-06-13 12:15:29.436 +07:00 [INF] Update Banner Name:Home
+2025-06-13 12:15:29.437 +07:00 [INF] Upload Path Banner:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner
+2025-06-13 12:15:29.438 +07:00 [INF] Upload Banner:come to here
+2025-06-13 12:15:29.438 +07:00 [INF] Banner is not null
+2025-06-13 12:15:29.439 +07:00 [INF] File path here is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\2de319db-e6bc-41a8-95da-1bb1c8e0ba3a_01.png
+2025-06-13 12:15:29.451 +07:00 [INF] Current Avatart URL is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\2de319db-e6bc-41a8-95da-1bb1c8e0ba3a_01.png
+2025-06-13 12:15:29.453 +07:00 [INF] Current Image is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\e3885d84-8d60-4ac7-8dbc-9a92b730fb04_s_1.webp
+2025-06-13 12:15:29.521 +07:00 [INF] Banner updated success
+2025-06-13 12:15:29.523 +07:00 [INF] admin123 Updated Banner Successfully
+2025-06-13 12:15:56.263 +07:00 [INF] Update Banner Id:17
+2025-06-13 12:15:56.263 +07:00 [INF] Update Banner Name:Home
+2025-06-13 12:15:56.263 +07:00 [INF] Upload Path Banner:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner
+2025-06-13 12:15:56.263 +07:00 [INF] Upload Banner:come to here
+2025-06-13 12:15:56.263 +07:00 [INF] Banner is not null
+2025-06-13 12:15:56.263 +07:00 [INF] File path here is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\767d351d-88cd-4bbd-bea0-eb85ab92658c_02.png
+2025-06-13 12:15:56.266 +07:00 [INF] Current Avatart URL is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\767d351d-88cd-4bbd-bea0-eb85ab92658c_02.png
+2025-06-13 12:15:56.266 +07:00 [INF] Current Image is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\b148e142-dea1-4243-a83c-0d4ddd969ebb_s_4.webp
+2025-06-13 12:15:56.271 +07:00 [INF] Banner updated success
+2025-06-13 12:15:56.271 +07:00 [INF] admin123 Updated Banner Successfully
+2025-06-13 12:16:08.275 +07:00 [INF] Update Banner Id:33
+2025-06-13 12:16:08.275 +07:00 [INF] Update Banner Name:Home
+2025-06-13 12:16:08.275 +07:00 [INF] Upload Path Banner:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner
+2025-06-13 12:16:08.275 +07:00 [INF] Upload Banner:come to here
+2025-06-13 12:16:08.275 +07:00 [INF] Banner is not null
+2025-06-13 12:16:08.275 +07:00 [INF] File path here is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\125bd351-d9df-44fc-9557-0195bded4c03_03.png
+2025-06-13 12:16:08.278 +07:00 [INF] Current Avatart URL is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\125bd351-d9df-44fc-9557-0195bded4c03_03.png
+2025-06-13 12:16:08.278 +07:00 [INF] Current Image is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\3968f985-58f1-48cc-be2e-445efa82b175_s_5.webp
+2025-06-13 12:16:08.283 +07:00 [INF] Banner updated success
+2025-06-13 12:16:08.283 +07:00 [INF] admin123 Updated Banner Successfully
+2025-06-13 15:06:49.999 +07:00 [INF] Running in Login Action
+2025-06-13 15:07:16.852 +07:00 [INF] Running in Login Action

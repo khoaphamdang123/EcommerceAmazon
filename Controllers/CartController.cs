@@ -28,9 +28,12 @@ public class CartController : BaseController
 
     private readonly IHttpContextAccessor _httpContextAccessor;
 
+    private readonly IStaticFilesRepository _staticFile;
+
+
 
    private readonly ICartRepository _cart;
-   public CartController(ICartRepository cart,IProductRepository product,IBannerListRepository banner,Support_Serive.Service sp,IUserListRepository user,ICompositeViewEngine viewEngine,ICategoryListRepository category,ILogger<CartController> logger):base(category,user,banner)
+   public CartController(ICartRepository cart,IProductRepository product,IBannerListRepository banner,Support_Serive.Service sp,IStaticFilesRepository staticFiles,IUserListRepository user,ICompositeViewEngine viewEngine,ICategoryListRepository category,ILogger<CartController> logger):base(category,user,staticFiles,banner)
    {
   this._cart=cart;
   this._sp=sp;

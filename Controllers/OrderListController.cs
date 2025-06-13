@@ -250,10 +250,11 @@ if(string.IsNullOrEmpty(id_user))
   }
 
   [Route("order/update_status")]
-  
+
   [HttpPost]
   public async Task<IActionResult> UpdateOrderStatus(int id,string status)
-  {Console.WriteLine("did come to update order status");
+  {
+  Console.WriteLine("did come to update order status");
     try
     {
     var updated_order=await this._order.updateOrderStatus(id,status);

@@ -341,90 +341,93 @@
                     <textarea id="Discount-Description" name="discountdescription" style="height: 300px;" value="@Model?.DiscountDescription">@Model?.DiscountDescription</textarea>
                     </div>
                 </div> *@
-            
-             <div class="card mb-4">
-                    <div class="card-header">
-                  <h5 class="mb-0 card-title">Mẫu khác</h5>
-                    </div>
-                    <hr class="my-0"/>
-                    <div class="card-body">
-                   <div class="group mb-4" id="group-list" data-repeater-list>
-                   @if(Model?.Variants!=null)
-                   { 
-                   foreach(var variant in Model?.Variants)
-                   {
-                    <div class="data-repeater-item position-relative">
-                      <button type="button" class="variant-delete-btn" onclick="variantRemoveBtn(this)">X</button>
-                        <div class="row g-6 mb-6">
-                        <div class="col-4">
-                          <label class="form-label" for="color">Màu sắc</label> 
-                          <input class="form-control" id="color" type="text" placeholder="Nhập màu sắc" value="@(variant.Color!=null?variant.Color.Colorname:"")">
-                        </div>
-                          @* <div class="col-4">
-                          <label class="form-label" for="weight">Khối lượng</label> 
-                          <input class="form-control" id="weight" type="text" placeholder="Nhập khối lượng" value="@(variant.Weight!=null?variant.Weight:"")">
-                        </div> *@
-                         <div class="col-4 mb-3">
-                          <label class="form-label" for="size">Kích thước</label>                           
-                          <input class="form-control" id="size" type="text" placeholder="Nhập kích thước" value="@(variant.Size!=null?variant.Size.Sizename:"")">
-                        </div>
-                            @* <div class="col-4 mb-2">
-                          <label class="form-label" for="version">Phiên bản</label> 
-                          <input class="form-control" id="version" type="text" placeholder="Nhập phiên bản" value="@(variant.Version!=null?variant.Version.Versionname:"")">
-                        </div> *@
-                        @* <div class="col-4 mb-3">
-                          <label class="form-label" for="mirror">Loại kính</label> 
-                          <input class="form-control" id="mirror" type="text" placeholder="Nhập loại kính" value="@(variant.Mirror!=null?variant.Mirror.Mirrorname:"")">
-                        </div> *@
-                          <div class="col-4 mb-3">
-                          
-                          <label class="form-label" for="mirror">Giá</label> 
-                          
-                          <input class="form-control" id="prices" type="text" placeholder="Nhập giá" value="@(variant.Price!=null?variant.Price:"")">
-                        </div>
-                        </div>
-                    </div>
+           <div class="row">
+    <!-- Card for Color -->
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0 card-title">Màu sắc</h5>
+            </div>
+            <hr class="my-0"/>
+            <div class="card-body">
+                <div class="group mb-4" id="color-group-list" data-repeater-list>
+                    @if(Model?.Variants!=null)
+                    { 
+                        foreach(var variant in Model?.Variants)
+                        {
+                            <div class="data-repeater-item position-relative">
+                                <button type="button" class="variant-delete-btn" onclick="variantRemoveBtn(this)">X</button>
+                                <div class="row g-6 mb-6">
+                                    <div class="col-12">
+                                        <label class="form-label" for="color">Màu sắc</label> 
+                                        <input class="form-control" id="color" type="color" value="@(variant.Color!=null?variant.Color.Colorname:"")">
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     }
-                    }
-                else{
+                    else
+                    {
                         <div class="data-repeater-item">
-                        <div class="row g-6 mb-6">
-                        <div class="col-4">
-                          <label class="form-label" for="color">Màu sắc</label> 
-                          <input class="form-control" id="color" type="text" placeholder="Nhập màu sắc">
+                            <div class="row g-6 mb-6">
+                                <div class="col-12">
+                                    <label class="form-label" for="color">Màu sắc</label> 
+                                    <input class="form-control" id="color" type="color">
+                                </div>
+                            </div>
                         </div>
-                          <div class="col-4">
-                          <label class="form-label" for="weight">Khối lượng</label> 
-                          <input class="form-control" id="weight" type="number" placeholder="Nhập khối lượng">
-                        </div>
-                         <div class="col-4 mb-3">
-                          <label class="form-label" for="size">Kích thước</label> 
-                          <input class="form-control" id="size" type="text" placeholder="Nhập kích thước">
-                        </div>
-                            <div class="col-4 mb-2">
-                          <label class="form-label" for="version">Phiên bản</label> 
-                          <input class="form-control" id="version" placeholder="Nhập phiên bản">
-                        </div>
-                        <div class="col-4 mb-3">
-                          <label class="form-label" for="mirror">Loại kính</label> 
-                          <input class="form-control" id="mirror" placeholder="Nhập loại kính">
-                        </div>
-                          
-                          <div class="col-4 mb-3">
-                          
-                          <label class="form-label" for="mirror">Giá</label> 
-                          
-                          <input class="form-control" type="text" id="prices" placeholder="Nhập giá">
-                        </div>
-                        </div>
-                    </div>
-                }
-                   </div>
-                   <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-primary" id="add-variant"><i class="bx bx-plus bx-sm me-2"></i>Thêm mẫu khác</button>
-                   </div>
-                    </div>
+                    }
                 </div>
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary" id="add-color-variant"><i class="bx bx-plus bx-sm me-2"></i>Thêm màu sắc</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card for Size -->
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0 card-title">Kích thước</h5>
+            </div>
+            <hr class="my-0"/>
+            <div class="card-body">
+                <div class="group mb-4" id="size-group-list" data-repeater-list>
+                    @if(Model?.Variants!=null)
+                    { 
+                        foreach(var variant in Model?.Variants)
+                        {
+                            <div class="data-repeater-item position-relative">
+                                <button type="button" class="variant-delete-btn" onclick="variantRemoveBtn(this)">X</button>
+                                <div class="row g-6 mb-6">
+                                    <div class="col-12">
+                                        <label class="form-label" for="size">Kích thước</label> 
+                                        <input class="form-control" id="size" type="text" placeholder="Nhập kích thước" value="@(variant.Size!=null?variant.Size.Sizename:"")">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="data-repeater-item">
+                            <div class="row g-6 mb-6">
+                                <div class="col-12">
+                                    <label class="form-label" for="size">Kích thước</label> 
+                                    <input class="form-control" id="size" type="text" placeholder="Nhập kích thước">
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary" id="add-size-variant"><i class="bx bx-plus bx-sm me-2"></i>Thêm kích thước</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>          
                 </form>
                 </div>
               </div>
@@ -437,7 +440,6 @@
       <!-- Overlay -->
       <div class="layout-overlay layout-menu-toggle"></div> 
 <script>
-
 
 function variantRemoveBtn(button)
 { 
@@ -622,7 +624,7 @@ document.addEventListener("DOMContentLoaded", function (event)
       "Cambria, Cochin, Georgia, Times, Times New Roman, serif": "Cambria",
       "Segoe UI, Tahoma, Geneva, Verdana, sans-serif": "Segoe UI",
       "Roboto, sans-serif": "Roboto",
-      "Montserrat, sans-serif": "Montserrat",
+      "Montserrat, sans-serif": "Montserrat", 
       "Lora, serif": "Lora",
       "Playfair Display, serif": "Playfair Display",
       "Raleway, sans-serif": "Raleway",

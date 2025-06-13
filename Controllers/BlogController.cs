@@ -15,12 +15,14 @@ public class BlogController:BaseController
 
 private readonly ICategoryListRepository _category;
 
-private readonly ILogger<BlogController> _logger;
+    private readonly ILogger<BlogController> _logger;
+
+private readonly IStaticFilesRepository _staticFile;
 
 
-private readonly IBlogRepository _blog;
+    private readonly IBlogRepository _blog;
 
-public BlogController(ICategoryListRepository category,IBlogRepository blog,IUserListRepository user,IBannerListRepository banner,ILogger<BlogController> logger):base(category,user,banner)
+public BlogController(ICategoryListRepository category,IBlogRepository blog,IUserListRepository user,IStaticFilesRepository staticFile,IBannerListRepository banner,ILogger<BlogController> logger):base(category,user,staticFile,banner)
 {
     this._blog=blog;
     this._category=category;

@@ -46,7 +46,9 @@ public class CheckoutController : BaseController
   private readonly PaypalService _paypalService;
 
   private readonly ICartRepository _cart;
-  public CheckoutController(ICartRepository cart, IProductRepository product, Support_Serive.Service sp, IBannerListRepository banner, SmtpService smtpService, IOrderRepository order, IOptions<RecaptchaResponse> recaptcha_response, ISettingRepository setting, IPaymentRepository payment, IUserListRepository user, ICategoryListRepository category, IConfiguration configuration, PaypalService paypalService, ILogger<CheckoutController> logger) : base(category, user, banner)
+
+  private readonly IStaticFilesRepository _staticFile;
+  public CheckoutController(ICartRepository cart, IProductRepository product, Support_Serive.Service sp, IBannerListRepository banner,IStaticFilesRepository staticFile,SmtpService smtpService, IOrderRepository order, IOptions<RecaptchaResponse> recaptcha_response, ISettingRepository setting, IPaymentRepository payment, IUserListRepository user, ICategoryListRepository category, IConfiguration configuration, PaypalService paypalService, ILogger<CheckoutController> logger) : base(category, user, staticFile,banner)
   {
     this._cart = cart;
     this._sp = sp;
@@ -613,7 +615,9 @@ public class CheckoutController : BaseController
       Console.WriteLine("Create Order Exception:" + er.Message);
       this._logger.LogError("Create Order Exception:" + er.Message);
     }
+
     return BadRequest(new { status = 0, message = "Tạo đơn hàng thất bại" });
+
   }
 
 
@@ -635,7 +639,7 @@ public class CheckoutController : BaseController
       Console.WriteLine("Address here is:" + checkout.Address1);
 
       Console.WriteLine("City here is:" + checkout.Address2);
-
+      
       string username = checkout.UserName.Replace(" ", "_");
 
       string email = checkout.Email;
@@ -661,10 +665,6 @@ public class CheckoutController : BaseController
       var check_user_exist = await this._user.checkUserExist(email, username);
 
       var cart = this._cart.getCart();
-
-
-
-
       //ApplicationUser user = new ApplicationUser();
 
       // if(check_user_exist && User.Identity.IsAuthenticated && User.IsInRole("User"))
@@ -704,11 +704,11 @@ public class CheckoutController : BaseController
       {
         Console.WriteLine("Order created successfully");
 
-        //this.HttpContext.Session.SetString("OrderId", user.Id);
+        Console.WriteLine("Order IDD here is:" + this.HttpContext.Session.GetString("ORDID"));
 
         var order = await this._order.getLatestOrderByUsername("15");
 
-        Console.WriteLine("render view 1");
+        Console.WriteLine("render view 1");        
 
         var render_view = new RazorViewRenderer();
 
@@ -774,11 +774,7 @@ public class CheckoutController : BaseController
 
          Console.WriteLine("Render string here is:"+render_string);
 
-
         CheckoutResultModel checkout_result = new CheckoutResultModel { Order = order, Cart = cart };
-
-
-        //Console.WriteLine("Delete user status here is:" + del_user);
 
         Console.WriteLine("did come to here");
 

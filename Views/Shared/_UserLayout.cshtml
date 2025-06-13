@@ -3,12 +3,18 @@
     @using System.Text.RegularExpressions;
     @{ 
         var view_controller=ViewContext.RouteData.Values["controller"]?.ToString();
+        
         var view_action = ViewContext.RouteData.Values["action"]?.ToString();
+        
         string username="";
+        
         string email="";
+        
         string password = "";
+        
         string avatar="";
-       string logo_path="";
+        
+        string logo_path="";
 
        string logo_path_temp="7e6df1cf-4caa-48a1-b115-66c650c5e069_channels4_profile.jpg";
     
@@ -53,6 +59,8 @@
     var categories = ViewBag.Categories as List<Category>;
     
     var company = ViewBag.Company as ApplicationUser;
+
+    var staticFiles = ViewBag.static_file as List<StaticFile>;
     
     string phone1="";
     
@@ -313,14 +321,14 @@
  
 <header class="top-header">
   <nav class="navbar navbar-expand-xl w-100 navbar-dark container gap-3">
-    <a class="navbar-brand d-none d-xl-inline" href="index.html"><img src="assets/images/logo.webp" class="logo-img" alt=""></a>
+    <a class="navbar-brand d-none d-xl-inline" href="@Url.Action("HomePage","HomePage")"><img src="@logo_path" class="logo-img" alt=""></a>
     <a class="mobile-menu-btn d-inline d-xl-none" href="javascript:;" data-bs-toggle="offcanvas"
       data-bs-target="#offcanvasNavbar">
       <i class="bi bi-list"></i>
     </a>
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar">
       <div class="offcanvas-header">
-        <div class="offcanvas-logo"><img src="assets/images/logo.webp" class="logo-img" alt=""></div>
+        <div class="offcanvas-logo"><img src="@logo_path" class="logo-img" alt=""></div>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
       <div class="offcanvas-body primary-menu">
@@ -329,7 +337,7 @@
             <a class="nav-link" href="@Url.Action("HomePage","HomePage")">Home</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="tv-shows.html"
+            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#"
               data-bs-toggle="dropdown">
               Categories
             </a>
@@ -557,9 +565,15 @@
           <div class="footer-widget-8">
             <h5 class="mb-3 fw-bold">Customer Services</h5>
              <ul class="widget-link list-unstyled">
-               <li><a href="@Url.Action("StaticPage","StaticPage",new{page_name="about"})">About Us</a></li>
-               <li><a href="@Url.Action("StaticPage","StaticPage",new{page_name="privacy"})">Privacy</a></li>
-               <li><a href="@Url.Action("StaticPage","StaticPage",new{page_name="term"})">Terms</a></li>
+             @if(staticFiles != null && staticFiles.Count > 0)
+             {
+              @foreach(StaticFile file in staticFiles)
+              {
+               <li><a href="@Url.Action("StaticPage","StaticPage",new{page_name=@file.Filename})">@file.Filename</a></li>
+               @* <li><a href="@Url.Action("StaticPage","StaticPage",new{page_name="privacy"})">Privacy</a></li>
+               <li><a href="@Url.Action("StaticPage","StaticPage",new{page_name="term"})">Terms</a></li> *@
+               }
+               }
              </ul>
           </div>
         </div>
@@ -932,8 +946,8 @@
 
     
     const headerHeight = header.offsetHeight;
-        
-  
+
+
     window.addEventListener('scroll',()=>
     {
         if(window.scrollY > (headerHeight+5))
@@ -1075,9 +1089,20 @@ function checkout()
   cart.on('mouseenter',()=>{
  const offcanvasElement=$("#offcanvasRight")[0];
   const bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);    
-  bsOffcanvas.show();    
-    });
+  bsOffcanvas.show();      
   });
+
+   cart.on('click',()=>{
+    alert("cart clicked");
+ const offcanvasElement=$("#offcanvasRight")[0];
+  const bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);    
+  bsOffcanvas.show();      
+    });
+
+  
+  });
+
+
 
 </script>
 

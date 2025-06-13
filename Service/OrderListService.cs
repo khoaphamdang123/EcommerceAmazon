@@ -78,46 +78,60 @@ if (order != null)
    
    return paging_list_order;
   }
+    
+    
+  
 
-    public async Task<int> createOrder(UserOrderInfo user,List<CartModel> cart,Payment payment,string country,string state,string city,string zip_code,string note)
+    public async Task<int> createOrder(UserOrderInfo user, List<CartModel> cart, Payment payment, string country, string state, string city, string zip_code, string note)
+  {
+    int created_res = 0;
+    Console.WriteLine("Cart length here is:" + cart.Count);
+    Console.WriteLine("Cart Product name here is:" + cart[0].Product.ProductName);
+    try
     {
-     int created_res=0;
-     Console.WriteLine("Cart length here is:"+cart.Count);
-     Console.WriteLine("Cart Product name here is:"+cart[0].Product.ProductName);
-   try
-   {
-    Console.WriteLine("Did come to order create section");
+      Console.WriteLine("Did come to order create section");
 
-    Console.WriteLine("User address1 here is:"+user.Address1);
+      Console.WriteLine("User address1 here is:" + user.Address1);
 
-    Console.WriteLine("User address2 here is:"+user.Address2);
+      Console.WriteLine("User address2 here is:" + user.Address2);
 
-    var order=new Order
-    {
-      Status="Processing",
-      Total=(decimal)cart.Sum((s)=>{
-        string price_value=string.IsNullOrEmpty(s.Price)?s.Product.Price:s.Price;
-        price_value=price_value.Replace("$","").Replace(",",".");
-        int discount=string.IsNullOrEmpty(s.Product.Discount.ToString()) ? 0 : Convert.ToInt32(s.Product.Discount);
-        double current_price=double.Parse(price_value,CultureInfo.InvariantCulture)-(double.Parse(price_value,CultureInfo.InvariantCulture)*(discount)/100);
-        return current_price*s.Quantity;
-      }),
-      Shippingaddress=string.IsNullOrEmpty(user.Address1)?user.Address2:user.Address1,
-      Userid=null,
-      Paymentid=payment.Id,
-      ZipCode=zip_code,
-      Country=country,
-      State=state,
-      City=city,
-      Note =note,
-      Createddate=DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss")
-    };
+      var order = new Order
+      {
+        Status = "Processing",
+        Total = (decimal)cart.Sum((s) =>
+        {
+          string price_value = string.IsNullOrEmpty(s.Price) ? s.Product.Price : s.Price;
+          price_value = price_value.Replace("$", "").Replace(",", ".");
+          int discount = string.IsNullOrEmpty(s.Product.Discount.ToString()) ? 0 : Convert.ToInt32(s.Product.Discount);
+          double current_price = double.Parse(price_value, CultureInfo.InvariantCulture) - (double.Parse(price_value, CultureInfo.InvariantCulture) * (discount) / 100);
+          return current_price * s.Quantity;
+        }),
+        Shippingaddress = string.IsNullOrEmpty(user.Address1) ? user.Address2 : user.Address1,
+        Userid = null,
+        Paymentid = payment.Id,
+        ZipCode = zip_code,
+        Country = country,
+        State = state,
+        City = city,
+        Note = note,
+        UserName = user.UserName,
+        Address1 = user.Address1,
+        Address2 = user.Address2,
+        Email = user.Email,
+        OrderId = this._sp_services.generateOrderId(),
+        PhoneNumber = user.PhoneNumber,
+        Createddate = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss")
+      };
 
-    await this._context.Orders.AddAsync(order);
 
-    await this.saveChanges();
 
-    Console.WriteLine("did come to here");
+      await this._context.Orders.AddAsync(order);
+
+
+      await this.saveChanges();
+
+
+      Console.WriteLine("did come to here");
 
       foreach (var product in cart)
       {
@@ -125,11 +139,7 @@ if (order != null)
 
         string color = product?.Color;
 
-        string size = product?.Size;        
-
-        // string version=product?.Version;
-
-        // string mirror=product?.Mirror;
+        string size = product?.Size;
 
         Console.WriteLine("Product Color here is:" + color);
 
@@ -204,22 +214,22 @@ if (order != null)
           };
           await this._context.OrderDetails.AddAsync(order_detail);
         }
-    
+
+      }
+
+      await this.saveChanges();
+
+      Console.WriteLine("Create Product Detail for the order");
+
+      created_res = 1;
     }
+    catch (Exception er)
+    {
+      Console.WriteLine("Create Order Exception:" + er.Message);
 
-    await this.saveChanges();
-
-    Console.WriteLine("Create Product Detail for the order");
- 
-    created_res=1;
-   }
-   catch(Exception er)
-   {
-      Console.WriteLine("Create Order Exception:"+er.Message);
-
-      Console.WriteLine("Create Order Exception Stack Trace:"+er.InnerException?.Message);
-   }
-  return created_res;  
+      Console.WriteLine("Create Order Exception Stack Trace:" + er.InnerException?.Message);
+    }
+    return created_res;
   }
 
 

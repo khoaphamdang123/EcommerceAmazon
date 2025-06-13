@@ -345,22 +345,18 @@ public async Task<PageList<Product>> pagingProminentProduct(int page_size,int pa
 public async Task<PageList<Product>> pagingProduct(int page_size,int page)
 {  
    
-  //  IEnumerable<Product> all_prod= await this.getProductList();
       IEnumerable<Product> all_prod= await getAllProductList();
 
-  //  List<Product> prods=all_prod.OrderByDescending(u=>u.Id).ToList(); 
+      var prod_list=PageList<Product>.CreateItem(all_prod.AsQueryable(),page,page_size);
    
-   
-
-   //var users=this._userManager.Users;   
-   var prod_list=PageList<Product>.CreateItem(all_prod.AsQueryable(),page,page_size);
-   
-   return prod_list;
+      return prod_list;
 }
 
 public async Task<IEnumerable<Product>>getProductBySubCategory(int sub_cat)
 {
+
   var products=await this._context.Products.Include(c=>c.Category).Include(c=>c.Brand).Include(c=>c.SubCat).Include(c=>c.Variants).Include(c=>c.ProductImages).Where(c=>c.SubCat.Id==sub_cat).ToListAsync();
+
   return products;  
 }
 

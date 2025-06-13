@@ -20,18 +20,20 @@ public class ManualController:BaseController
  
 
  private readonly Support_Serive.Service _sp_services;
+
+ private readonly IStaticFilesRepository _staticFile;
  
 
-public ManualController(IBannerListRepository banner,IManualRepository manual,IVideoRepository video,Support_Serive.Service sp_service,ISettingRepository setting,ICategoryListRepository category,IUserListRepository user ,ILogger<ManualController> logger):base(category,user,banner)
-{
-    this._banner=banner;
-    this._manual=manual;
-    this._video=video;
-    this._category=category;
-    this._setting=setting;
-    this._logger=logger;
-    this._sp_services=sp_service;
-}
+public ManualController(IBannerListRepository banner, IManualRepository manual, IVideoRepository video, IStaticFilesRepository staticFile, Support_Serive.Service sp_service, ISettingRepository setting, ICategoryListRepository category, IUserListRepository user, ILogger<ManualController> logger) : base(category, user, staticFile,banner)
+    {
+        this._banner = banner;
+        this._manual = manual;
+        this._video = video;
+        this._category = category;
+        this._setting = setting;
+        this._logger = logger;
+        this._sp_services = sp_service;
+    }
 
 // public IActionResult HomePage()
 // {
