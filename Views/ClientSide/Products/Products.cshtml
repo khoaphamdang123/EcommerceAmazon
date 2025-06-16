@@ -37,19 +37,19 @@
     //var count_product_reviews=ViewBag.count_product_reviews as Dictionary<string,int>;
     Console.WriteLine("Sub Product banner:"+sub_product_banner);
 }     
-  <div class="py-4 border-bottom">
+
+
+    <section class="section-padding">
+        <div class="border-bottom" style="margin-top: 75px;"></div>
     <div class="container">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb mb-0"> 
-          <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-          <li class="breadcrumb-item"><a href="javascript:;">Shop</a></li>
-          <li class="breadcrumb-item active" aria-current="page">All Item</li>
+          <li class="breadcrumb-item"><a href="@Url.Action("HomePage","HomePage")">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Shop</li>
         </ol>
       </nav>
     </div>
    </div>
-
-    <section class="section-padding"></section>
     <h5 class="mb-0 fw-bold d-none">Product List</h5>
     <div class="container">
       <div class="btn btn-dark btn-ecomm d-xl-none position-fixed top-50 start-0 translate-middle-y"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbarFilter"><span><i class="bi bi-funnel me-1"></i> Filters</span></div>

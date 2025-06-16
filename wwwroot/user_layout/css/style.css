@@ -1031,7 +1031,7 @@ h6 {
 
 .footer-section .widget-link li a {
   color: #636363;
-  font-size: 14px;
+  font-size: 18px;
   text-decoration: none;
 }
 
@@ -1062,6 +1062,8 @@ h6 {
 
 .footer-section .widget-link li a:hover {
   color: #262424;
+
+
   text-decoration: underline;
 }
 
