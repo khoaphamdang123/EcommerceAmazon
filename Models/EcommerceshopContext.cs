@@ -635,6 +635,9 @@ public partial class EcommerceshopContext : DbContext
             entity.Property(e => e.Content)
                 .HasColumnType("character varying")
                 .HasColumnName("content");
+            entity.Property(e => e.Section)
+                .HasColumnType("character varying")
+                .HasColumnName("section");
             entity.Property(e => e.Createddate)
                 .HasColumnType("character varying")
                 .HasColumnName("createddate");

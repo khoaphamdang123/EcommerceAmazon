@@ -33,20 +33,20 @@ public class CartController : BaseController
 
 
    private readonly ICartRepository _cart;
-   public CartController(ICartRepository cart,IProductRepository product,IBannerListRepository banner,Support_Serive.Service sp,IStaticFilesRepository staticFiles,IUserListRepository user,ICompositeViewEngine viewEngine,ICategoryListRepository category,ILogger<CartController> logger):base(category,user,staticFiles,banner)
-   {
-  this._cart=cart;
-  this._sp=sp;
-  this._viewEngine=viewEngine;
-  this._category=category;
-  this._product=product;
-  this._logger=logger;     
-   }
+  public CartController(ICartRepository cart, IProductRepository product, IBannerListRepository banner, Support_Serive.Service sp, IStaticFilesRepository staticFiles, IUserListRepository user, ICompositeViewEngine viewEngine, ICategoryListRepository category, ILogger<CartController> logger) : base(category, user, staticFiles, banner)
+  {
+    this._cart = cart;
+    this._sp = sp;
+    this._viewEngine = viewEngine;
+    this._category = category;
+    this._product = product;
+    this._logger = logger;
+  }
 
 
  [Route("cart")]
- [HttpGet]
 
+ [HttpGet]
  public async Task<IActionResult> Cart()
  {  
     var cart=this._cart.getCart();
@@ -56,7 +56,9 @@ public class CartController : BaseController
 
       this.HttpContext.Session.SetString("UserId",session_id);
     }
+
     ViewBag.cart = cart;
+
     return View("~/Views/ClientSide/Cart/Cart.cshtml");
  }
 

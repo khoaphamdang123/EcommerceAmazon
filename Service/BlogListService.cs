@@ -1,6 +1,7 @@
 using Ecommerce_Product.Repository;
 using Ecommerce_Product.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace Ecommerce_Product.Service;
 
@@ -43,10 +44,19 @@ public class BlogListService:IBlogRepository
     return blogs;
   }
 
+    public async Task<IEnumerable<Blog>> filterBlogByCreatedDate()
+    {   
+
+        var blogs = await this._context.Blogs.OrderByDescending(s => DateTime.ParseExact(s.Createddate,"MM/dd/yyyy HH:mm:ss",CultureInfo.InvariantCulture)).ToListAsync();
+
+        return blogs;
+    }
+
+
 
     public async Task<Blog> findBlogById(int id)
     {
-        var blog=await this._context.Blogs.FirstOrDefaultAsync(s=>s.Id==id);
+        var blog = await this._context.Blogs.FirstOrDefaultAsync(s => s.Id == id);
         return blog;
     }
 

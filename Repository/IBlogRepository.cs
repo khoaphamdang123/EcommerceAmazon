@@ -18,5 +18,7 @@ public interface IBlogRepository
 
   public Task<int> deleteBlog(int id);
 
+  public Task<IEnumerable<Blog>> filterBlogByCreatedDate();
+
   public Task saveChanges();
 }

@@ -16,6 +16,12 @@
     string company_name=company_info[0];
     string[] email_list=Model.Email.Split('#');
     string email=email_list[0];
+    string google_key="";
+    if(email_list.Length>2)
+    {
+      google_key=email_list[2];
+    }
+   
     string extra_info=email_list[1];
     string bank_name="";
     string account_num="";
@@ -238,6 +244,10 @@
                             <label for="telegram" class="form-label">Link Telegram</label>
                             <input type="text" class="form-control" id="telegram" name="telegram" placeholder="Nhập link telegram" value="@telegram"/>
                           </div>
+                          <div class="mb-3 col-md-6">
+                            <label for="google" class="form-label">Key Google</label>
+                            <input type="text" class="form-control" id="google" name="GoogleKey" placeholder="Nhập link Google" value="@google_key"/>
+                          </div>
                         </div>
                         <div class="mt-2">
                           <button type="submit" class="btn btn-primary me-2">Cập nhật Thông tin</button>
@@ -251,7 +261,7 @@
      
             <!-- / Footer -->
 
-            <div class="content-backdrop fade"></div>
+            @* <div class="content-backdrop fade"></div> *@
           </div>
           <!-- Content wrapper -->
         <!-- / Layout page -->
@@ -277,6 +287,7 @@
   var instagram=document.getElementById("instagram").value.trim();
   var telegram=document.getElementById("telegram").value.trim();
   var id=document.getElementById("id").value.trim();
+  var google_key=document.getElementById("google").value.trim();
   
   @* var confirmPassword = document.getElementById("confirmPassword").value.trim();
   var regex_pattern=/^(?=.*[A-Z])(?=.*\d)(?=.*[!@@#$%^&*(),.?":{}|<>]).{8,}$/; *@
@@ -311,7 +322,8 @@
   formdata.append("instagram",instagram);
   formdata.append("telegram",telegram);
   formdata.append("id",id);
-    
+  formdata.append("GoogleKey",google_key);
+
     $.ajax({
             url: "@Url.Action("updateUser","GeneralInfo")",
             type: "POST",

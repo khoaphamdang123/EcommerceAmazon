@@ -909,7 +909,7 @@ public async Task<int> addNewProductByLink(string link,string link_background,in
 
               string updated_date = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss");
 
-              List<string> colors = new List<string>() { "Blue", "Pink", "Black", "White" };
+              List<string> colors = new List<string>() { "#0000FF", "#FFC1CC", "#000000", "#FFFFFF" };
 
               if (colors.Count < sizes.Count)
               {

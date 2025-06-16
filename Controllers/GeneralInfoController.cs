@@ -25,33 +25,34 @@ public class GeneralInfoController : BaseAdminController
   [Route("general_info")]
   [HttpGet]
   public async Task<IActionResult> GeneralInfo()
-  {  
-   
-   ApplicationUser user=null;
+  {
+
+    ApplicationUser user = null;
 
 
-   try
-   {
-    user= await this._user.findUserByName("company");
-
-    string extra_info=user.NormalizedEmail;
-
-    Console.WriteLine("Extra Info:"+extra_info);
-    
-    var bank_list=this._sp.getListBank();
-
-    
-    if(bank_list!=null)
+    try
     {
-     var bank_data=bank_list.Data;
-    ViewBag.bank_list=bank_data;
+      user = await this._user.findUserByName("company");
+
+      string extra_info = user.NormalizedEmail;
+
+      Console.WriteLine("Extra Info:" + extra_info);
+
+      var bank_list = this._sp.getListBank();
+
+
+      if (bank_list != null)
+      {
+        var bank_data = bank_list.Data;
+
+        ViewBag.bank_list = bank_data;
+      }
     }
-   }
-   catch(Exception er)
-   {
-       this._logger.LogError("Get Manual File List Exception:"+er.Message);
-   }
-   return View(user);
+    catch (Exception er)
+    {
+      this._logger.LogError("Get Manual File List Exception:" + er.Message);
+    }
+    return View(user);
   }
 
   
@@ -77,8 +78,10 @@ public class GeneralInfoController : BaseAdminController
       Console.WriteLine("Facebook:"+facebook);
       
       Console.WriteLine("Account Name:"+account_name);
+      
+      Console.WriteLine("Google Key is:"+user.GoogleKey);
 
-       updated_res=await this._user.updateUser(user);
+       updated_res =await this._user.updateUser(user);
     }
     catch(Exception ex)
     {

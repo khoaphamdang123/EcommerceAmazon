@@ -12,13 +12,7 @@ public class CategoryListController : BaseAdminController
 {
     private readonly ILogger<CategoryListController> _logger;
 
-    // private readonly ICategoryRepository _categoryList;
-
-    // public CategoryListController(ILogger<CategoryListController> logger,ICategoryRepository categoryList)
-    // {
-    //     _logger = logger;
-    //    this._categoryList=categoryList; 
-    // }
+ 
 
    private readonly ICategoryListRepository _category;
    

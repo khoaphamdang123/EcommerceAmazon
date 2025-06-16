@@ -244,34 +244,35 @@ public async Task<bool> createRole(string role)
    string id=user_info.Id;
    string cur_avatar="";
    var user=await this._userManager.FindByIdAsync(id);
-   if(user!=null)
-   {
-     if(user_info.UserName=="company")
-     {
-      user.UserName=user_info.UserName.Replace(" ","").Trim();
-      
-      
-      user.PhoneNumber=user_info.PhoneNumber;
-      
-      user.Address1=user_info.Address1;
-      
-      user.Address2=user_info.Address2;
-
-      string extra_info="";
-
-      if(!string.IsNullOrEmpty(user_info.BankName))
+   
+   string google_key = user_info.GoogleKey;
+   if (user != null)
       {
-        Environment.SetEnvironmentVariable("bank",user_info.BankName);
-      }
+        if (user_info.UserName == "company")
+        {
+          user.UserName = user_info.UserName.Replace(" ", "").Trim();
+
+          user.PhoneNumber = user_info.PhoneNumber;
+
+          user.Address1 = user_info.Address1;
+
+          user.Address2 = user_info.Address2;
+
+          string extra_info = "";
+
+          if (!string.IsNullOrEmpty(user_info.BankName))
+          {
+            Environment.SetEnvironmentVariable("bank", user_info.BankName);
+          }
 
 
- string qr_code_img=this._support_service.generateQRCode(user_info.BankName,user_info.AccountNum,user_info.AccountName);
+          string qr_code_img = this._support_service.generateQRCode(user_info.BankName, user_info.AccountNum, user_info.AccountName);
 
- 
- 
-  Console.WriteLine("QR Code Image:"+qr_code_img);
-    
-     Dictionary<string,string> dict_info=new Dictionary<string,string>
+
+
+          Console.WriteLine("QR Code Image:" + qr_code_img);
+
+          Dictionary<string, string> dict_info = new Dictionary<string, string>
      {
       {"bank_name",user_info.BankName},
       {"account_num",user_info.AccountNum},
@@ -282,106 +283,112 @@ public async Task<bool> createRole(string role)
       {"instagram",user_info.Instagram},
       {"telegram",user_info.Telegram},
      };
-      
-     extra_info=string.Join(Environment.NewLine,dict_info.Select(x=>$"{x.Key}~{x.Value}"));
-     
-     user_info.Email=user_info.Email+"#"+extra_info;
-     
-     user.Email=user_info.Email;
-     
-     Console.WriteLine("Extra Info convert:"+extra_info);    
 
+          extra_info = string.Join(Environment.NewLine, dict_info.Select(x => $"{x.Key}~{x.Value}"));
 
-     var res_update_company=await this._userManager.UpdateAsync(user);
-      
-      if(!res_update_company.Succeeded)
-      {
-        Console.WriteLine("Error update user");
-        
-        foreach(var err in res_update_company.Errors)
+          user_info.Email = user_info.Email + "#" + extra_info + "#" + google_key;
+
+          user.Email = user_info.Email;
+
+          Console.WriteLine("Extra Info convert:" + extra_info);
+
+          var res_update_company = await this._userManager.UpdateAsync(user);
+
+          if (!res_update_company.Succeeded)
+          {
+            Console.WriteLine("Error update user");
+
+            foreach (var err in res_update_company.Errors)
+            {
+              Console.WriteLine("Error update user:" + err.Description);
+            }
+
+          }
+
+          if (qr_code_img == "ERROR")
+          {
+            return -1;
+          }
+
+          Environment.SetEnvironmentVariable("qr_code", qr_code_img);
+
+          res = 1;
+
+          return res;
+        }
+        user.UserName = user_info.UserName.Replace(" ", "").Trim();
+
+        user.Email = user_info.Email.Trim();
+
+        user.PhoneNumber = user_info.PhoneNumber.Trim();
+
+        user.Address1 = user_info.Address1;
+
+        user.Address2 = user_info.Address2;
+
+        user.Gender = user_info.Gender;        
+
+        cur_avatar = user.Avatar;
+
+        string folder_name = "UploadImageUser";
+
+        string upload_path = Path.Combine(this._webHostEnv.WebRootPath, folder_name);
+
+        if (!Directory.Exists(upload_path))
         {
-            Console.WriteLine("Error update user:"+err.Description);
+          Directory.CreateDirectory(upload_path);
         }
 
-      }
-  if(qr_code_img=="ERROR")
- {
-  return -1;
- } 
-   Environment.SetEnvironmentVariable("qr_code",qr_code_img);
-      res=1;
-      return res;
-     }
-      user.UserName=user_info.UserName.Replace(" ","").Trim();
-      
-      user.Email=user_info.Email.Trim();
-      
-      user.PhoneNumber=user_info.PhoneNumber.Trim();
-      
-      user.Address1=user_info.Address1;
-      
-      user.Address2=user_info.Address2;
-      
-      user.Gender=user_info.Gender;
-      
-      cur_avatar=user.Avatar;  
-    
-   string folder_name="UploadImageUser";
+        string avatar_url = "";
 
-   string upload_path=Path.Combine(this._webHostEnv.WebRootPath,folder_name);
+        var avatar = user_info.Avatar;
 
-   if(!Directory.Exists(upload_path))
-   {
-    Directory.CreateDirectory(upload_path);
-   }
-   string avatar_url="";
-  var avatar=user_info.Avatar;
-
-  if(avatar!=null)
-  {
-    string filename=Path.GetFileName(avatar.FileName);
-    if(filename.Contains("___"))
-    {
-    var arr_value=filename.Split("___");
-    filename=arr_value[arr_value.Length-1];
-    }
-    
-   string file_name=Guid.NewGuid()+"___"+filename;
-
-   Console.WriteLine("File name here is:"+file_name);
-  
-   string file_path=Path.Combine(upload_path,file_name);
-
-   using(var fileStream=new FileStream(file_path,FileMode.Create))
-   {
-    await avatar.CopyToAsync(fileStream);
-   } 
-   
-   avatar_url=file_path;
-   
-   user.Avatar=avatar_url;
-  }
-  else
-  {
-    user.Avatar="https://cdn-icons-png.flaticon.com/128/3135/3135715.png";
-  }
-  
-
-      var res_update=await this._userManager.UpdateAsync(user);
-      if(!res_update.Succeeded)
-      {
-        foreach(var err in res_update.Errors)
+        if (avatar != null)
         {
-            Console.WriteLine("Error update user:"+err.Description);
+          string filename = Path.GetFileName(avatar.FileName);
+
+          if (filename.Contains("___"))
+          {
+            var arr_value = filename.Split("___");
+            filename = arr_value[arr_value.Length - 1];
+          }
+
+          string file_name = Guid.NewGuid() + "___" + filename;
+
+          Console.WriteLine("File name here is:" + file_name);
+
+          string file_path = Path.Combine(upload_path, file_name);
+
+          using (var fileStream = new FileStream(file_path, FileMode.Create))
+          {
+            await avatar.CopyToAsync(fileStream);
+          }
+
+          avatar_url = file_path;
+
+          user.Avatar = avatar_url;
+        }
+        else
+        {
+          user.Avatar = "https://cdn-icons-png.flaticon.com/128/3135/3135715.png";
+        }
+
+
+        var res_update = await this._userManager.UpdateAsync(user);
+        if (!res_update.Succeeded)
+        {
+          foreach (var err in res_update.Errors)
+          {
+            Console.WriteLine("Error update user:" + err.Description);
+          }
+        }
+        else
+        {
+          res = 1;
+          if (!string.IsNullOrEmpty(cur_avatar))
+            await this._support_service.removeFiles(cur_avatar);
         }
       }
-      else
-      {
-        res=1;
-       if(!string.IsNullOrEmpty(cur_avatar))
-        await this._support_service.removeFiles(cur_avatar);
-      }
-   }
    }
    catch(Exception er)
    {

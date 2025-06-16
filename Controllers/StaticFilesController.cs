@@ -80,6 +80,7 @@ public class StaticFilesController : BaseAdminController
   {  try{
       string file_name=file.Filename;
       string content= file.Content;
+      string section=file.Section;
       int created_res=await this._static_files.addPage(file);
       if(created_res==0)
       {
@@ -94,6 +95,7 @@ public class StaticFilesController : BaseAdminController
       else
       {
         ViewBag.Status=1;
+        
         ViewBag.Created_Page="Thêm trang thành công";
       }
   }

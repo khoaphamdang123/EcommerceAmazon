@@ -52,16 +52,19 @@ public class StaticFilesService:IStaticFilesRepository
     {
   var check_page_exist=await this.findStaticFileByName(file.Filename);
   
-  if(check_page_exist!=null)
-  {
-    created_res=-1;
-    return created_res;
-  }
- string created_date=DateTime.UtcNow.ToString("MM/dd/yyyy hh:mm:ss");
- 
- string updated_date = DateTime.UtcNow.ToString("MM/dd/yyyy hh:mm:ss");    
- 
-var page=new StaticFile{Filename=file.Filename,Content=file.Content,Createddate=created_date,Updateddate=updated_date};
+  string section=file.Section;
+  
+  if (check_page_exist != null)
+      {
+        created_res = -1;
+
+        return created_res;
+      }
+  string created_date=DateTime.UtcNow.ToString("MM/dd/yyyy hh:mm:ss");
+
+  string updated_date = DateTime.UtcNow.ToString("MM/dd/yyyy hh:mm:ss");
+
+var page=new StaticFile{Filename=file.Filename,Content=file.Content,Section=section,Createddate=created_date,Updateddate=updated_date};
 await this._context.StaticFile.AddAsync(page);
 await this.saveChanges();
 created_res=1;
@@ -98,15 +101,18 @@ return created_res;
       {
         int updated_res=0;
         var page=await this.findStaticFileById(id);
-        if(page!=null)
-        {   updated_res=1;
-            page.Filename=file.Filename;
-            page.Content=file.Content;
-         string updated_date = DateTime.UtcNow.ToString("MM/dd/yyyy hh:mm:ss");    
-            page.Updateddate=updated_date;
-        this._context.StaticFile.Update(page);
-        await this.saveChanges();
-        }
+        string section=file.Section;
+        if (page != null)
+    {
+      updated_res = 1;
+      page.Filename = file.Filename;
+      page.Content = file.Content;
+      page.Section = section;
+      string updated_date = DateTime.UtcNow.ToString("MM/dd/yyyy hh:mm:ss");
+      page.Updateddate = updated_date;
+      this._context.StaticFile.Update(page);
+      await this.saveChanges();
+    }
     return updated_res;
       }
   

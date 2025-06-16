@@ -1,6 +1,7 @@
 @{
    var created_page=ViewBag.Created_Page;
    var create_status=ViewBag.Status;
+   List<string> sections = new List<string>{"Customer_Service", "Why_Buy_From_Us", "Get_In_Touch"};
 }
 
 @if(create_status==0 || create_status==-1)
@@ -96,6 +97,27 @@
                     <h5 class="card-header">Thông tin trang tĩnh</h5>
                     <div class="card-body">
                       <form id="formAccountSettings" method="post" asp-controller="StaticFiles" asp-action="AddStaticFiles">
+
+                            <div class="row mb-3">
+                          <div class="mb-3 col-md-6">
+                            <label for="section" class="form-label mb-2">Tên Mục:</label>
+                            <select
+                              class="form-select"
+                              type="text"
+                              id="section"
+                              name="section"
+                              autofocus
+                            />
+                            <option value="">-- Chọn mục --</option>
+                            @foreach (var section_val in sections)
+                            {
+                                <option value="@section_val">@section_val</option>
+                            }
+                            </select>
+                          <span id="section-name-error" class="text-danger"></span>
+                          </div>
+                     
+                        </div>
                         <div class="row mb-3">
                           <div class="mb-3 col-md-6">
                             <label for="username" class="form-label mb-2">Tên trang:</label>
@@ -246,10 +268,18 @@
   
   var file_name=document.getElementById("filename").value.trim();
 
+  var section=document.getElementById("section").value.trim();
+
   if(file_name==='')
   {
     is_valid=false;
     document.getElementById("file-name-error").innerHTML='Không được để trống thông tin này';
+  }
+
+  if(section==='')
+  {
+    is_valid=false;
+    document.getElementById("section-name-error").innerHTML='Không được để trống thông tin này';
   }
 
   if(!is_valid)
@@ -262,7 +292,9 @@
   document.getElementById('back-btn').addEventListener("click",()=>
   {
    let cat_id=document.getElementById("back-btn").getAttribute("data-cat-id");
+   
    var url='@Url.Action("StaticFiles","StaticFiles")';
+   
    window.location.href=url;   
   });
   });

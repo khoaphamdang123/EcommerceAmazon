@@ -170,23 +170,17 @@
                   <div class="h4 fw-bold text-danger">(70% off)</div> *@
                 </div>
                 <p class="fw-bold mb-0 mt-1 text-success">inclusive of all taxes</p>
-
                 <div class="more-colors mt-3">
                   <h6 class="fw-bold mb-3">More Colors</h6>
                   <div class="d-flex align-items-center gap-2 flex-wrap" id="product-detail-colors">
                     @foreach(var color in product.Variants.DistinctBy(x=>x.Color))
                     { 
-                        if(color.Color==null)
+                    if(color.Color==null)
                       {
-                        continue;
+                        continue;                                                
                       }
                       <div class="color-box color-border" style="background-color:@color.Color?.Colorname" 
                       title="@color.Color?.Colorname"  data-color-id="@color.Color?.Id" data-color-name="@color.Color?.Colorname"></div>
-                    @* <div class="color-box bg-red"></div>
-                    <div class="color-box bg-primary"></div>
-                    <div class="color-box bg-yellow"></div>
-                    <div class="color-box bg-purple"></div>
-                    <div class="color-box bg-green"></div> *@
                     }
                   </div>
                 </div>

@@ -1035,6 +1035,30 @@ h6 {
   text-decoration: none;
 }
 
+.footer_style {
+           display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+.footer-column h3 {
+            font-size: 18px!important;
+            font-weight: bold!important;
+            margin-bottom: 10px!important;
+        }
+        .footer-column ul {
+            list-style: none!important;
+            padding-left: 0!important;
+        }
+        .footer-column ul li {
+            margin-bottom: 5px!important;
+        }
+        .footer-column .logo {
+            max-width: 150px!important;
+            margin-bottom: 10px!important;
+        }
 
 .footer-section .widget-link li a:hover {
   color: #262424;
@@ -1072,6 +1096,21 @@ h6 {
   color: #ffffff;
   background-color: #212529;
 }
+
+.social-icons 
+{
+    margin-top: 10px!important;
+
+    margin-left: 30px!important;
+}
+        .social-icons a {
+            margin-right: 10px!important;
+            color: #000!important;
+            font-size: 20px!important;
+        }
+        .social-icons a:hover {
+            color: #007bff!important;
+        }
 
 
 
