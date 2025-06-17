@@ -1,10 +1,40 @@
+@using Ecommerce_Product.Models;
+@model UserInfo
+@{
+        string logo_path="";
 
+       string logo_path_temp="7e6df1cf-4caa-48a1-b115-66c650c5e069_channels4_profile.jpg";
+    
+        
+      if(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("Logo")))
+      {
+      string logo=Environment.GetEnvironmentVariable("Logo");
+      
+      string logo_extension=logo.Substring(logo.IndexOf("wwwroot")+("wwwroot".Length+1));
+      
+      if(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")=="Development")
+       {
+        logo_path="http://localhost:5160/"+logo_extension;
+       }
+       else
+       {
+    logo_path="http://tshirtatlowprices.com/"+logo_extension;
+       }
+       if(logo.Contains("https"))
+       {
+        logo_path=logo;                        
+       }
+    }
+    string youtube=Environment.GetEnvironmentVariable("YOUTUBE");
+    string facebook = Environment.GetEnvironmentVariable("FACEBOOK");
+    string instagram = Environment.GetEnvironmentVariable("INSTAGRAM");
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@Model.Subject</title>
+    <title>NewsLetter</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         body {
@@ -113,26 +143,16 @@
             <h1>NewsLetter</h1>
         </div>
         <div class="content">
-            <p class="lead">Dear @Model.FullName,</p>
-            <p>Here's the latest news from Your Company! Stay updated with our recent announcements and insights.</p>
-            @foreach (var news in Model.NewsItems)
-            {
-                <div class="news-item">
-                    <h3>@news.Title</h3>
-                    <p>@news.Summary</p>
-                    <a href="@news.ArticleUrl" class="btn-custom">Read More</a>
-                </div>
-            }
-            <p>To ensure our emails reach your inbox, please add <strong>no-reply@yourcompany.com</strong> to your contacts.</p>
+            <p class="lead">Dear @Model.UserName</p>
+             @Html.Raw(Model.ContentNewsLetter)
         </div>
         <div class="footer">
-            <p>© @DateTime.Now.Year Your Company Name. All rights reserved.</p>
-            <p>Don't want to receive these emails? <a href="@Model.UnsubscribeUrl">Unsubscribe here</a>.</p>
-            <p><a href="https://yourcompany.com">Visit our website</a> | <a href="https://yourcompany.com/privacy">Privacy Policy</a></p>
-            <div class="social-icons mt-3">
-                <a href="https://facebook.com/yourcompany"><img src="https://via.placeholder.com/24?text=FB" alt="Facebook"></a>
-                <a href="https://twitter.com/yourcompany"><img src="https://via.placeholder.com/24?text=TW" alt="Twitter"></a>
-                <a href="https://instagram.com/yourcompany"><img src="https://via.placeholder.com/24?text=IG" alt="Instagram"></a>
+            <p>© @DateTime.Now.Year TshirtAtLowPrices. All rights reserved.</p>
+            <p><a href="https://tshirtsatlowprices.com">Visit our website</a> | <a href="https://tshirtsatlowprices .com/privacy">Privacy Policy</a></p>
+            <div class="social-icons mt-4">
+            <a class="facebook-icon" href="@facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="@instagram" class="instagram-icon" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="@youtube"  class="youtube-icon" target="_blank"><i class="fab fa-youtube"></i></a>
             </div>
         </div>
     </div>

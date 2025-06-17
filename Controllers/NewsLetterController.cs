@@ -106,10 +106,9 @@ public class NewsLetterController : BaseAdminController
 
                     var render_view = new RazorViewRenderer();
 
-                    string mail_path = "MailTemplate/newsletter.cshtml";
+                    string mail_path = "MailTemplate/newslettercontent.cshtml";
 
                     UserInfo receipt = new UserInfo { UserName = email, Email = email, ContentNewsLetter = content };
-
 
                     string render_string = await render_view.RenderViewToStringAsync(mail_path, receipt);
 
