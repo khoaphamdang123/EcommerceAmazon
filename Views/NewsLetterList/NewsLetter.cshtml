@@ -1,9 +1,14 @@
 @model Setting
 @{
-    
+    var update_mess=ViewBag.Update_NewsLetter as string;
+    int status=-1;
+    if(ViewBag.Status!=null)
+    {
+        status=ViewBag.Status;
+    }
 }
 
-
+    
       <div
        class="bs-toast toast fade hide bg-danger toast-placement-ex top-5 end-0"
        role="alert"
@@ -117,7 +122,29 @@
 <script>
 
  document.addEventListener("DOMContentLoaded",()=>{
- 
+  
+  var status=@status;
+  if(status!=-1)
+  {
+    var toast_message= document.querySelector('.toast-body');
+    if(status==1)
+    {
+      toast_message.textContent='@update_mess';
+      var toastPrompt = document.querySelector('.toast');
+      toastPrompt.classList.add('bg-success');
+      toastPrompt.classList.remove('bg-danger');
+    }
+    else
+    {
+      toast_message.textContent='@update_mess';
+      var toastPrompt = document.querySelector('.toast');
+      toastPrompt.classList.add('bg-danger');
+      toastPrompt.classList.remove('bg-success');
+    }
+    var toast_show = new bootstrap.Toast(toastPrompt);
+    toast_show.show();
+  }
+  
   new FroalaEditor('#content',
 {
   heightMin: 300,

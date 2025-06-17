@@ -230,7 +230,6 @@ public async Task<JsonResult> VariantProduct(int id)
 
         Console.WriteLine("Send confirm newsletter failed");
 
-
         return Json(new { status = 0, message = "Send confirm newsletter failed" });
 
       }
@@ -263,28 +262,39 @@ public async Task<JsonResult> VariantProduct(int id)
       }
       string role = "Anonymous";
 
+      var check_user = await this._user.findUserByEmail(email);
+
+      if(check_user != null)
+      {
+        TempData["NewsLetterMessage"] = "This Email has been subscribed before";
+
+        TempData["NewsLetterStatus"] = -1;
+
+        return RedirectToAction("HomePage", "HomePage");
+      }
+
       var new_user = new Register { UserName = email, Email = email, Password = "123456", Address2 = email, PhoneNumber = "0123456789" };
 
       var create_user = await this._user.createUser(new_user, role);
 
       if (create_user == 1)
       {
-        ViewBag.NewsLetterMessage = "Subscribe newsletter successfully";
+        TempData["NewsLetterMessage"] = "Subscribe newsletter successfully";
 
-        ViewBag.NewsLetterStatus = 1;
+        TempData["NewsLetterStatus"] = 1;
       }
       else
       {
-        ViewBag.NewsLetterMessage = "Subscribe newsletter failed";
+        TempData["NewsLetterMessage"] = "Subscribe newsletter failed";
 
-        ViewBag.NewsLetterStatus = 0;
+        TempData["NewsLetterStatus"]  = 0;
       }
     }
     catch (Exception er)
     {
       this._logger.LogError("Newsletter Exception:" + er.Message);
     }  
-   return View("~/Views/ClientSide/HomePage/HomePage.cshtml");
+   return RedirectToAction("HomePage", "HomePage");
   }
 
 [Route("/firebase_token")]

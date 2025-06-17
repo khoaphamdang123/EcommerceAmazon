@@ -62,14 +62,13 @@ public class NewsLetterController : BaseAdminController
             if (created_res == 0)
             {
                 ViewBag.Status = 0;
-                ViewBag.Created_Page = "Cập nhật nội dung newsletter thất bại";
+                ViewBag.Update_NewsLetter = "Cập nhật nội dung newsletter thất bại";
             }
-
             else
             {
                 ViewBag.Status = 1;
 
-                ViewBag.Created_Page = "Cập nhat nội dung newsletter thành công";
+                ViewBag.Update_NewsLetter = "Cập nhật nội dung newsletter thành công";
             }
 
         }
@@ -104,7 +103,7 @@ public class NewsLetterController : BaseAdminController
                     {
                         continue;
                     }
-                    
+
                     var render_view = new RazorViewRenderer();
 
                     string mail_path = "MailTemplate/newsletter.cshtml";

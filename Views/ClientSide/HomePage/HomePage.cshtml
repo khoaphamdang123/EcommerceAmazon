@@ -19,13 +19,13 @@
     
     var slider_content=ViewBag.slider_content as string;
 
-    var news_letter_message =ViewBag.NewsLetterMessage as string;
+    var news_letter_message =TempData["NewsLetterMessage"] as string;
 
-    int news_letter_status =-1;
+    int news_letter_status =-2;
 
-    if(ViewBag.NewsLetterStatus!=null)
+    if(TempData["NewsLetterStatus"]!=null)
     {
-        news_letter_status=Convert.ToInt32(ViewBag.NewsLetterStatus);
+        news_letter_status=Convert.ToInt32(TempData["NewsLetterStatus"]);
     }
         
     string user_id=this.ViewContext.HttpContext.Session.GetString("UserName");
@@ -1154,6 +1154,16 @@ function isValidEmail(email)
        toast_message.innerHTML=newsletter_mess;
        var toastEl = document.querySelector('.toast');
        toastEl.classList.add('bg-danger');
+       var toast = new bootstrap.Toast(toastEl);
+       toast.show();
+     }
+
+     else if(newsletter_status==-1)
+     {
+       toast_header.innerHTML="Newsletter Subscription";
+       toast_message.innerHTML=newsletter_mess;
+       var toastEl = document.querySelector('.toast');
+       toastEl.classList.add('bg-warning');
        var toast = new bootstrap.Toast(toastEl);
        toast.show();
      }

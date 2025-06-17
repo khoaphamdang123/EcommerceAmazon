@@ -57,3 +57,7 @@ See CompilationErrors for detailed information
 2025-06-17 16:40:43.822 +07:00 [INF] Send confirm newsletter successfully
 2025-06-17 16:43:37.747 +07:00 [INF] Send confirm newsletter successfully
 2025-06-17 18:21:16.934 +07:00 [INF] Running in Login Action
+2025-06-17 20:17:39.467 +07:00 [INF] Send confirm newsletter successfully
+2025-06-17 20:19:41.001 +07:00 [INF] Send confirm newsletter successfully
+2025-06-17 20:24:41.063 +07:00 [INF] Send confirm newsletter successfully
+2025-06-17 20:28:27.226 +07:00 [INF] Send confirm newsletter successfully
