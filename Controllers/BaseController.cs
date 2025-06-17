@@ -31,13 +31,9 @@ public class BaseController : Controller
         
         var staticFiles = await this._staticFile.getAllStaticFile();
     
-      if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("Logo")))
-        {
-            var logo = await this._banner.findBannerByName("logo");
+        var logo = await this._banner.findBannerByName("logo");
 
-            Environment.SetEnvironmentVariable("Logo", logo.ToList()[0].Image);
-
-        }
+        Environment.SetEnvironmentVariable("Logo", logo.ToList()[0].Image);
         
         ViewBag.Categories = categories;
         

@@ -237,17 +237,14 @@
   <script>
 
 document.addEventListener("DOMContentLoaded",()=>{
- 
-  
- var category_checkboxes = document.querySelectorAll("#chekCate1");
 
-  
+    
+ var category_checkboxes = document.querySelectorAll("#chekCate1");
 
 
   category_checkboxes.forEach(checkbox=>{
     checkbox.addEventListener("click",()=>{
-
-
+      
         var from_price=document.getElementById("from-price").value;
         
         var to_price=document.getElementById("to-price").value;
@@ -255,6 +252,7 @@ document.addEventListener("DOMContentLoaded",()=>{
         if(from_price=="" && to_price=="")
         {
           from_price=0;
+          
           to_price=10000000;
         }
         else if(from_price=="")
@@ -267,8 +265,6 @@ document.addEventListener("DOMContentLoaded",()=>{
         }
 
         var price_value=from_price+"-"+to_price;
-
-
 
         var list_checked_category=[];
 
@@ -317,6 +313,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     if(from_price=="" && to_price=="")
         {
           from_price=0;
+          
           to_price=10000000;
         }
         else if(from_price=="")
@@ -410,6 +407,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
         var checked_color_value=list_checked_color.join(",");
 
+
           $.ajax({
                     url: '@Url.Action("FilterProducts", "Products")',
                     type: 'GET',
@@ -426,7 +424,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     });
 
      });
-     });
-    
+   
+   
 
  </script>

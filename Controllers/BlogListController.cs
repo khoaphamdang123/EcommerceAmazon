@@ -183,5 +183,4 @@ public async Task<IActionResult> deleteBlog(int id)
         return RedirectToAction("BlogList","BlogList");
 }
 
-
 }

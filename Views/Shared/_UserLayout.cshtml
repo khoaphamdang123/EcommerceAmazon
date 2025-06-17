@@ -16,9 +16,8 @@
         
         string logo_path="";
 
-       string logo_path_temp="7e6df1cf-4caa-48a1-b115-66c650c5e069_channels4_profile.jpg";
-    
-        
+       string logo_path_temp="7e6df1cf-4caa-48a1-b115-66c650c5e069_channels4_profile.jpg";       
+      
       if(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("Logo")))
       {
       string logo=Environment.GetEnvironmentVariable("Logo");
@@ -32,6 +31,10 @@
        else
        {
     logo_path="http://tshirtatlowprices.com/"+logo_extension;
+       }
+       if(logo.Contains("https"))
+       {
+        logo_path=logo;                        
        }
        
     @* logo_path=logo_extension; *@
@@ -115,6 +118,7 @@
         else if(info.Contains("facebook"))
         {
           facebook=info.Split('~')[1].Trim();
+   Environment.SetEnvironmentVariable("FACEBOOK",facebook);
         }
         else if(info.Contains("zalo"))
         {
@@ -123,10 +127,16 @@
         else if(info.Contains("youtube"))
         {
           youtube=info.Split('~')[1].Trim();
+          
+          Environment.SetEnvironmentVariable("YOUTUBE",youtube);
+
         }
         else if(info.Contains("instagram"))
         {
           instagram=info.Split('~')[1].Trim();
+
+           Environment.SetEnvironmentVariable("INSTAGRAM",instagram);
+
         }
         else if(info.Contains("qr_code"))
         {
@@ -362,7 +372,7 @@
                 </div>
                 <div class="col-12 col-xl-4 d-none d-xl-block">
                   <div class="pramotion-banner1">
-                    <img src="assets/images/menu-img.webp" class="img-fluid" alt="" />
+                    <img src="@logo_path" class="img-fluid" alt="" />
                   </div>
                 </div>
               </div>
@@ -372,18 +382,18 @@
             <a class="nav-link" href="@Url.Action("Cart","Cart")">Cart</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="@Url.Action("Products","Products")" data-bs-toggle="dropdown">
+            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown">
               Shop
             </a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="@Url.Action("Products","Products")">Product List</a></li>
             </ul>
           </li>
-          <li class="nav-item">
+          @* <li class="nav-item">
             <a class="nav-link" href="contact-us.html">Contact</a>
-          </li>
+          </li> *@
             <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("Blog","Blog")">Blog</a>
+            <a class="nav-link" href="@Url.Action("Blog","Blog")">Blog</a>            
           </li>
         </ul>
       </div>
@@ -545,7 +555,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-3">
-                    <h3>SHOP BY TYPE</h3>
+                  <h3  style="font-weight: bold!important;">SHOP BY TYPE</h3>
+                  <hr class="footer-hr">
                   <ul class="widget-link list-unstyled">
               @foreach(var cat in categories)
               {
@@ -554,8 +565,9 @@
              </ul>
                 </div>
                 <div class="col-md-3">
-                    <h3>CUSTOMER SERVICES</h3>
-                    <ul>
+                    <h3 style="font-weight: bold!important;">CUSTOMER SERVICES</h3>
+                    <hr class="footer-hr">
+                    <ul class="footer-link">
                       @foreach(var file in staticFiles)
                       {
                        if(file.Section=="Customer_Service")
@@ -566,8 +578,9 @@
                     </ul>
                 </div>
                 <div class="col-md-3">
-                    <h3>WHY BUY FROM US</h3>
-                    <ul>
+                    <h3 style="font-weight:bold!important;">WHY BUY FROM US</h3>
+                    <hr class="footer-hr">
+                    <ul class="footer-link">
                       
                       
                       @foreach(var file in staticFiles)
@@ -580,13 +593,14 @@
                     </ul>
                 </div>
                 <div class="col-md-3">
-                    <h3>GET IN TOUCH</h3>
+                    <h3  style="font-weight: bold!important;">GET IN TOUCH</h3>
+                     <hr class="footer-hr">
                     <img src="@logo_path" class="logo">
-                    <ul>
-                    <li>Design and sell custom merchandise online</li>
-                        <li>Email: @email</li>
-                        <li>Company:@company_name_value</li>
-                        <li>Address:@(string.IsNullOrEmpty(address1)?address2:address1)</li>
+                    <ul  class="footer-link">
+                    <li class="fw-bold" style="color: #212529 !important; font-size:18px!important;">Design and sell custom merchandise online</li>
+                        <li style="color: #212529 !important; font-size:18px !important"><span class="fw-bold">Email</span>: @email</li>
+                        <li style="color: #212529 !important; font-size:18px !important"><span class="fw-bold">Company</span>:@company_name_value</li>
+                        <li style="color: #212529 !important; font-size:18px !important"><span class="fw-bold">Address</span>:@(string.IsNullOrEmpty(address1)?address2:address1)</li>
                         @* <li>Boulder, CO 80302, US</li> *@
                       @foreach(var file in staticFiles)
                       {
@@ -597,9 +611,9 @@
                       }
                     </ul>
                 <div class="social-icons">
-                <a href="@facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                <a href="@instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-                <a href="@youtube" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a class="facebook-icon" href="@facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="@instagram" class="instagram-icon" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="@youtube" class="youtube-icon" target="_blank"><i class="fab fa-youtube"></i></a>
             </div>
                 </div>
             </div>
@@ -1137,7 +1151,8 @@ function checkout()
 
   $(document).ready(function()
   {
-
+     
+  
     checkout();
     @* let cart_count=sessionStorage.getItem('count-cart');
 
@@ -1174,12 +1189,8 @@ function checkout()
   const bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);    
   bsOffcanvas.show();      
     });
-
-  
   });
-
-
-
+  
 </script>
 
 

@@ -86,7 +86,7 @@ public async Task<IActionResult> BlogDetail(int id)
 
     int nxt_index=id;
 
-       Console.WriteLine("ID HERE:"+nxt_index);
+    Console.WriteLine("ID HERE:"+nxt_index);
 
 
    

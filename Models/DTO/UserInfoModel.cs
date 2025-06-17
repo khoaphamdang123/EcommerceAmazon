@@ -37,6 +37,10 @@ public class UserInfo
    public string Telegram{get;set;}
    
    public string GoogleKey{ get; set; }
+
+   public string ConfirmNewsLetterUrl{ get; set;}
+
+   public string ContentNewsLetter{ get; set; }
    
    public IFormFile Avatar { get; set; }
     

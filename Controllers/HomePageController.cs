@@ -2,8 +2,9 @@
 using Ecommerce_Product.Repository;
 using Ecommerce_Product.Support_Serive;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.JSInterop.Implementation;
 using Newtonsoft.Json;
+using Ecommerce_Product.Models;
+using Ecommerce_Product.Service;
 namespace Ecommerce_Product.Controllers;
 public class HomePageController:BaseController
 {
@@ -11,25 +12,28 @@ public class HomePageController:BaseController
  private readonly IBannerListRepository _banner;
  private readonly IProductRepository _product;
 
+private readonly IUserListRepository _user;
+
+
  private readonly ICategoryListRepository _category;
 
  private readonly ISettingRepository _setting;
 
  private readonly IBlogRepository _blog;
+
  private readonly ILogger<HomePageController> _logger;
  
-
  private readonly Support_Serive.Service _sp_services;
 
  private readonly FirebaseService _firebase_service;
+
+  private readonly SmtpService _smtpService;
+
  
  private readonly IStaticFilesRepository _staticFile;
  
 
-
- 
-
-public HomePageController(IBannerListRepository banner, IProductRepository product, Support_Serive.Service sp_service, ISettingRepository setting, ICategoryListRepository category, IBlogRepository blog, IUserListRepository user,IStaticFilesRepository staticFile,FirebaseService firebase_service, ILogger<HomePageController> logger) : base(category, user,staticFile,banner)
+public HomePageController(IBannerListRepository banner, IProductRepository product, Support_Serive.Service sp_service,Support_Serive.SmtpService smtpService, ISettingRepository setting, ICategoryListRepository category, IBlogRepository blog, IUserListRepository user,IStaticFilesRepository staticFile,FirebaseService firebase_service, ILogger<HomePageController> logger) : base(category, user,staticFile,banner)
   {
     this._banner = banner;
     this._product = product;
@@ -39,6 +43,8 @@ public HomePageController(IBannerListRepository banner, IProductRepository produ
     this._logger = logger;
     this._firebase_service = firebase_service;
     this._sp_services = sp_service;
+    this._smtpService = smtpService;
+    this._user = user;
   }
 
 [HttpGet]
@@ -148,39 +154,138 @@ public async Task<JsonResult> VariantProduct(int id)
   return Json(new{status=0,message="Get list of variant failed"});
 }
 
-[Route("product_detail/{id}")]
+  [Route("product_detail/{id}")]
 
-[HttpGet]
+  [HttpGet]
 
-public async Task<JsonResult> productDetailInfo(int id)
-{
-  try
+  public async Task<JsonResult> productDetailInfo(int id)
   {
-    Console.WriteLine("Get product detail id is:"+id);
+    try
+    {
+      Console.WriteLine("Get product detail id is:" + id);
 
-    var product = await this._product.findProductById(id);
+      var product = await this._product.findProductById(id);
 
-    if(product!=null)
-{
-var settings = new JsonSerializerSettings
-{
-    PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-    Formatting = Formatting.Indented
-};
-    var product_json=JsonConvert.SerializeObject(product,settings);
-    
-    Console.WriteLine("Product json is:"+product_json);
-    
-    return Json(new {status=1,message="Get product detail success",product=JsonConvert.SerializeObject(product,settings)});      
+      if (product != null)
+      {
+        var settings = new JsonSerializerSettings
+        {
+          PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+          Formatting = Formatting.Indented
+        };
+        var product_json = JsonConvert.SerializeObject(product, settings);
+
+        Console.WriteLine("Product json is:" + product_json);
+
+        return Json(new { status = 1, message = "Get product detail success", product = JsonConvert.SerializeObject(product, settings) });
+      }
     }
+    catch (Exception er)
+    {
+      this._logger.LogError("Get Product detail exception:" + er.Message);
+      Console.WriteLine("Product detail exception:" + er.Message);
+    }
+    return Json(new { status = 0, message = "Get product detail fail" });
   }
-  catch(Exception er)
+
+
+  [Route("/confirm_email")]
+  [HttpGet]
+
+  public async Task<JsonResult> ConfirmEmail(string email)
   {
-    this._logger.LogError("Get Product detail exception:"+er.Message);
-    Console.WriteLine("Product detail exception:"+er.Message);
+    try
+    {
+      Console.WriteLine("Email for confirm here is:" + email);
+
+      if (string.IsNullOrEmpty(email))
+      {
+        return Json(new { status = 0, message = "Email is empty" });
+      }
+
+
+      string confirm_newsletter_url = Url.Action("Newsletter", "HomePage",new { email = email }, Request.Scheme);
+
+      UserInfo receipt = new UserInfo { UserName = email, Email = email ,ConfirmNewsLetterUrl=confirm_newsletter_url};
+
+      var render_view = new RazorViewRenderer();
+
+      string mail_path = "MailTemplate/newsletter.cshtml";
+
+      string render_string = await render_view.RenderViewToStringAsync(mail_path, receipt);
+
+      Console.WriteLine("Render string here is:" + render_string);   
+
+      bool is_sent = await this._smtpService.sendEmailGeneral(4, render_string,email);
+
+      if (is_sent)
+      {
+        this._logger.LogInformation("Send confirm newsletter successfully");
+
+        Console.WriteLine("Send confirm newsletter successfully");
+      }
+      else
+      {
+        this._logger.LogInformation("Send confirm newsletter failed");
+
+        Console.WriteLine("Send confirm newsletter failed");
+
+
+        return Json(new { status = 0, message = "Send confirm newsletter failed" });
+
+      }
+
+    }
+    catch (Exception er)
+    {
+      this._logger.LogError("Confirm Email Exception:" + er.Message);
+
+      Console.WriteLine("Confirm Email Exception:" + er.Message);
+
+      return Json(new { status = 0, message = "Exception send newsletter:" + er.Message });
+
+    }
+    return Json(new { status = 1, message = "Send confirm newsletter successfully" });
   }
-  return Json(new {status=0,message="Get product detail fail"});
-}
+
+
+  [Route("/newsletter/{email}")]
+  [HttpGet]
+  public async Task<IActionResult> Newsletter(string email)
+  {
+    try
+    {
+      Console.WriteLine("Email for newsletter is:" + email);
+
+      if (string.IsNullOrEmpty(email))
+      {
+        return View("~/Views/ClientSide/HomePage/HomePage.cshtml");
+      }
+      string role = "Anonymous";
+
+      var new_user = new Register { UserName = email, Email = email, Password = "123456", Address2 = email, PhoneNumber = "0123456789" };
+
+      var create_user = await this._user.createUser(new_user, role);
+
+      if (create_user == 1)
+      {
+        ViewBag.NewsLetterMessage = "Subscribe newsletter successfully";
+
+        ViewBag.NewsLetterStatus = 1;
+      }
+      else
+      {
+        ViewBag.NewsLetterMessage = "Subscribe newsletter failed";
+
+        ViewBag.NewsLetterStatus = 0;
+      }
+    }
+    catch (Exception er)
+    {
+      this._logger.LogError("Newsletter Exception:" + er.Message);
+    }  
+   return View("~/Views/ClientSide/HomePage/HomePage.cshtml");
+  }
 
 [Route("/firebase_token")]
 [HttpPost]

@@ -1505,26 +1505,26 @@ if(img_files!=null)
   string file_name=Guid.NewGuid().ToString()+extension;
   
   string file_path = Path.Combine(upload_path,file_name);
+    
    
-   if(i==0)
-   {
+   if (i == 0)
+          {
+            front_avatar = file_path;
 
-   front_avatar=file_path;
+            if (!string.IsNullOrEmpty(product_ob.Frontavatar))
+            {
+              temp_front_avatar = product_ob.Frontavatar;
+            }
+          }
+          else
+          {
+            back_avatar = file_path;
 
-   if(!string.IsNullOrEmpty(product_ob.Frontavatar))
-   {
-    temp_front_avatar=product_ob.Frontavatar;
-   }
-   }
-   else
-   {
-    back_avatar=file_path;
-
-    if(!string.IsNullOrEmpty(product_ob.Backavatar))
-    {
-      temp_back_avatar=product_ob.Backavatar;         
-    }
-   }
+            if (!string.IsNullOrEmpty(product_ob.Backavatar))
+            {
+              temp_back_avatar = product_ob.Backavatar;
+            }
+          }
  
    using(var fileStream=new FileStream(file_path,FileMode.Create))
    {

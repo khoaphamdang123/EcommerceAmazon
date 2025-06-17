@@ -10,7 +10,6 @@ namespace Ecommerce_Product.Controllers;
 public class OrderListController : BaseAdminController
 {
     private readonly ILogger<OrderListController> _logger;
-
     // private readonly ICategoryRepository _categoryList;
 
     // public CategoryListController(ILogger<CategoryListController> logger,ICategoryRepository categoryList)
@@ -18,10 +17,7 @@ public class OrderListController : BaseAdminController
     //     _logger = logger;
     //    this._categoryList=categoryList; 
     // }
-
    private readonly IOrderRepository _order;
-
-
    
    public OrderListController(IOrderRepository order,IBannerListRepository banner,ILogger<OrderListController> logger):base(banner)
    {
@@ -48,21 +44,20 @@ if(string.IsNullOrEmpty(id_user))
             int completed_count=this._order.countOrderStatus("Finished");
             int cancelled_count=this._order.countOrderStatus("Cancelled");
             int refund_count=this._order.countOrderStatus("Refund");
-
-
+            
             ViewBag.processing_count=processing_count; 
             ViewBag.completed_count=completed_count;
             ViewBag.cancelled_count=cancelled_count;
             ViewBag.refund_count=refund_count;
     try
-    {  
-        var order=await this._order.pagingOrderList(50,1);
-        return View(order);
-        
-    }
-    catch(Exception er)
     {
-        this._logger.LogTrace("Get Static File List Exception:"+er.Message);
+      var order = await this._order.pagingOrderList(50, 1);
+
+      return View(order);      
+    }
+    catch (Exception er)
+    {
+      this._logger.LogTrace("Get Static File List Exception:" + er.Message);
     }
     return View();
   }

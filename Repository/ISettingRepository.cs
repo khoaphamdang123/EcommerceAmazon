@@ -19,5 +19,7 @@ public interface ISettingRepository
 
    public Task<int> updateFirebaseSetting(FirebaseSettingModel setting);
 
+  public Task<int> updateNewsLetterSetting(string content);
+
    public Task saveChanges();
 }

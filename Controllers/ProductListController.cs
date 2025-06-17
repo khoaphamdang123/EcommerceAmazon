@@ -44,10 +44,10 @@ public class ProductListController : BaseAdminController
 
   string id_user=this.HttpContext.Session.GetString("AdminId");
 
-if(string.IsNullOrEmpty(id_user))
-{
-  return RedirectToAction("Index","LoginAdmin");
-}
+    if (string.IsNullOrEmpty(id_user))
+    {
+      return RedirectToAction("Index", "LoginAdmin");
+    }
           string select_size="7";
           ViewBag.select_size=select_size;
           List<string> options=new List<string>(){"50","100","150","200"};

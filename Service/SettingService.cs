@@ -47,35 +47,67 @@ public async Task<IEnumerable<Setting>> getAllSetting()
 }
 
 
-public async Task<int> updateFirebaseSetting(FirebaseSettingModel setting)
-{
-  int update_res=0;
-
-  try
-  { 
-    Console.WriteLine("In firebase update");
-    var setting_obj=await this._context.Settings.FirstOrDefaultAsync(s=>s.Settingname=="Firebase");
-    if(setting_obj!=null)
-    {    Console.WriteLine("firebase update not null here");
-
-      string updatetime=DateTime.UtcNow.ToString("MM/dd/yyyy hh:mm:ss");
-      setting_obj.Updateddate=updatetime;
-      setting_obj.Status=setting.Status;
-      setting_obj.Firebase_Mess=setting.Firebase_Mess;
-      this._context.Settings.Update(setting_obj);
-      await this.saveChanges();
-      update_res=1;
-    }
-  }
-  catch(Exception e)
+  public async Task<int> updateNewsLetterSetting(string content)
   {
-    update_res=0;
-    Console.WriteLine("Update Firebase Setting Exception:"+e.Message);
+    int update_res = 0;
+
+    try
+    {
+      Console.WriteLine("In newsletter update");
+      var setting_obj = await this._context.Settings.FirstOrDefaultAsync(s => s.Settingname == "newsletter");
+      if (setting_obj != null)
+      {
+        Console.WriteLine("newsletter update not null here");
+
+        string updatetime = DateTime.UtcNow.ToString("MM/dd/yyyy hh:mm:ss");
+        setting_obj.Updateddate = updatetime;
+        setting_obj.Firebase_Mess = content;
+        this._context.Settings.Update(setting_obj);
+        await this.saveChanges();
+        update_res = 1;
+      }
+    }
+    catch (Exception e)
+    {
+      update_res = 0;
+      
+      Console.WriteLine("Update Newsletter Setting Exception:" + e.Message);
+    }
+
+    return update_res;
   }
 
-  return update_res;
 
-}
+  public async Task<int> updateFirebaseSetting(FirebaseSettingModel setting)
+  {
+    int update_res = 0;
+
+    try
+    {
+      Console.WriteLine("In firebase update");
+      var setting_obj = await this._context.Settings.FirstOrDefaultAsync(s => s.Settingname == "Firebase");
+      if (setting_obj != null)
+      {
+        Console.WriteLine("firebase update not null here");
+
+        string updatetime = DateTime.UtcNow.ToString("MM/dd/yyyy hh:mm:ss");
+        setting_obj.Updateddate = updatetime;
+        setting_obj.Status = setting.Status;
+        setting_obj.Firebase_Mess = setting.Firebase_Mess;
+        this._context.Settings.Update(setting_obj);
+        await this.saveChanges();
+        update_res = 1;
+      }
+    }
+    catch (Exception e)
+    {
+      update_res = 0;
+      Console.WriteLine("Update Firebase Setting Exception:" + e.Message);
+    }
+
+    return update_res;
+
+  }
 
 
 public async Task<int> updateSetting(SettingModel setting)

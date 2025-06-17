@@ -23,8 +23,7 @@ public class ManualController:BaseController
 
  private readonly IStaticFilesRepository _staticFile;
  
-
-public ManualController(IBannerListRepository banner, IManualRepository manual, IVideoRepository video, IStaticFilesRepository staticFile, Support_Serive.Service sp_service, ISettingRepository setting, ICategoryListRepository category, IUserListRepository user, ILogger<ManualController> logger) : base(category, user, staticFile,banner)
+public ManualController(IBannerListRepository banner, IManualRepository manual, IVideoRepository video, IStaticFilesRepository staticFile, Support_Serive.Service sp_service, ISettingRepository setting, ICategoryListRepository category, IUserListRepository user, ILogger<ManualController> logger) : base(category, user, staticFile, banner)
     {
         this._banner = banner;
         this._manual = manual;
@@ -35,26 +34,26 @@ public ManualController(IBannerListRepository banner, IManualRepository manual, 
         this._sp_services = sp_service;
     }
 
-// public IActionResult HomePage()
-// {
-//   return View();
-// }
+    // public IActionResult HomePage()
+    // {
+    //   return View();
+    // }
 
 
 
-[HttpGet]
-[Route("manual/{id}")]
-public async Task<IActionResult> Manual(int id)
-{   
-Console.WriteLine("Did come to manual");
+    [HttpGet]
+    [Route("manual/{id}")]
+    public async Task<IActionResult> Manual(int id)
+    {
+        Console.WriteLine("Did come to manual");
 
-var manuals= await this._manual.findManualByProductId(id);
+        var manuals = await this._manual.findManualByProductId(id);
 
-var videos = await this._video.findVideoByProductId(id);
+        var videos = await this._video.findVideoByProductId(id);
 
-ViewBag.videos=videos;
+        ViewBag.videos = videos;
 
-return View("~/Views/ClientSide/Manual/Manual.cshtml",manuals);
-}
+        return View("~/Views/ClientSide/Manual/Manual.cshtml", manuals);
+    }
 
 }

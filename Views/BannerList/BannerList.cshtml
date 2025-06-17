@@ -157,8 +157,16 @@
                             <td class="text-center">
                            <div class="avatar d-flex justify-content-center align-items-center">
                              @if(!string.IsNullOrEmpty(file.Image))
-                             {                          
+                             {                 
+                            if(file.Image.Contains("wwwroot"))
+                            {         
                             <img src="~/@file.Image.Substring(file.Image.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="image" class="avatar-img rounded">
+                            }
+                            else
+                            {
+                 <img src="@file.Image" alt="image" class="avatar-img rounded">
+
+                            }
                              }
                            </div>
                             </td>

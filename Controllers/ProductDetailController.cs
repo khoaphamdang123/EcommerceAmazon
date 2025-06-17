@@ -195,6 +195,7 @@ public async Task<JsonResult> addProductReviews(string product_id,string user_id
 
     this._logger.LogError("Add Product Review Exception:"+er.Message);
   }
+  
   if(add_reviews_res==1)
   {
     return Json(new{status=1,message=$"Thêm đánh giá cho sản phẩm mã {product_id} thành công"});

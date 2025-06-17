@@ -1,0 +1,155 @@
+@using Ecommerce_Product.Models;
+@model UserInfo
+@{
+        string logo_path="";
+
+       string logo_path_temp="7e6df1cf-4caa-48a1-b115-66c650c5e069_channels4_profile.jpg";
+    
+        
+      if(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("Logo")))
+      {
+      string logo=Environment.GetEnvironmentVariable("Logo");
+      
+      string logo_extension=logo.Substring(logo.IndexOf("wwwroot")+("wwwroot".Length+1));
+      
+      if(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")=="Development")
+       {
+        logo_path="http://localhost:5160/"+logo_extension;
+       }
+       else
+       {
+    logo_path="http://tshirtatlowprices.com/"+logo_extension;
+       }
+       if(logo.Contains("https"))
+       {
+        logo_path=logo;                        
+       }
+    }
+    string youtube=Environment.GetEnvironmentVariable("YOUTUBE");
+    string facebook = Environment.GetEnvironmentVariable("FACEBOOK");
+    string instagram = Environment.GetEnvironmentVariable("INSTAGRAM");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Our Newsletter</title>
+    <!-- Bootstrap 5 CSS (CDN for email compatibility) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* Inline styles for email client compatibility */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 650px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #007bff, #00d4ff);
+        padding: 30px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin: 0;
+            font-weight: 600;
+        }
+        .content {
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .content p {
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background-color 0.3s ease;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .footer {
+            background-color: #f1f3f5;
+            padding: 20px;
+            font-size: 12px;
+            color: #6c757d;
+            text-align: center;
+        }
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .social-icons img {
+            width: 24px;
+            height: 24px;
+            margin: 0 10px;
+        }
+        /* Ensure images are responsive */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        @@media(max-width: 600px) {
+            .email-container {
+                width: 100% !important;
+                border-radius: 0;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .btn-custom {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container mx-auto my-4">
+        <div class="header">
+            <img src="@logo_path" alt="Company Logo" class="mb-3">
+            <h1>Welcome to Our Newsletter!</h1>
+        </div>
+        <div class="content">
+            <p class="lead">Dear @Model.UserName,</p>
+            <p>We're excited to welcome you to our newsletter community! By subscribing, you'll receive the latest updates, exclusive offers, and curated content tailored just for you.</p>
+            <a href="" class="btn btn-custom">Confirm Your Subscription</a>
+            <p class="mt-4">Didn't sign up? No worries, you won't hear from us again unless you confirm above.</p>
+            <div class="social-icons mt-4">
+                   <a class="facebook-icon" href="@facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="@instagram" class="instagram-icon" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="@youtube"   class="youtube-icon" target="_blank"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+        <div class="footer">
+            <p>© @DateTime.Now.Year TshirtAtLowPrices. All rights reserved.</p>
+            @* <p>Prefer not to receive these emails? <a href="">Unsubscribe here</a>.</p> *@
+            <p><a href="http://tshirtatlowprices.com">Visit our website</a> | <a href="http://tshirtatlowprices.com/privacy">Privacy Policy</a></p>
+        </div>
+    </div>
+</body>
+</html>

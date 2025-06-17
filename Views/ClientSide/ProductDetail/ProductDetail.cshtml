@@ -109,13 +109,10 @@
                         </div>
                         <div class="toast-body" id="toast-message">                        
                         </div>
-        </div>
+                  </div>
  
-
 <div class="page-content">
- 
-   <!--end breadcrumb-->
-     <div class="border-bottom" style="margin-top: 60px;">
+  <div class="border-bottom" style="margin-top: 60px;">
     <div class="container">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb mb-0"> 
@@ -134,17 +131,17 @@
           <div class="col-12 col-xl-7">
             <div class="product-images">
                 <div class="product-zoom-images">
-           
-              
             <div class="row row-cols-2 g-3">
-                  @if(!string.IsNullOrEmpty(Model.Backavatar))
-                {
-                     <div class="col">
-      @if(Model.Backavatar.Contains("http") || Model.Backavatar.Contains("https"))
-                {      <div class="img-thumb-container overflow-hidden position-relative" data-fancybox="gallery" data-src="@Model.Backavatar">
-
+          @if(!string.IsNullOrEmpty(Model.Backavatar))
+        {
+            <div class="col">
+         @if(Model.Backavatar.Contains("http") || Model.Backavatar.Contains("https"))
+                {      
+                  <div class="img-thumb-container overflow-hidden position-relative" data-fancybox="gallery" data-src="@Model.Backavatar">
+                        
                         <img src="@Model.Backavatar" class="img-fluid" alt="">
-                        </div>
+                        
+                  </div>
                  }
                  else
                  {

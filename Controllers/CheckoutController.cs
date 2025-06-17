@@ -663,9 +663,9 @@ public class CheckoutController : BaseController
 
           string render_string=await render_view.RenderViewToStringAsync(mail_path,receipt);
 
-          bool is_sent=await this._smtpService.sendEmailGeneral(2,render_string);
+          bool is_sent=await this._smtpService.sendEmailGeneral(2,render_string,email);
 
-          if(is_sent)
+        if(is_sent)
          {
           this._logger.LogInformation("Send order checkout successfully");
          }

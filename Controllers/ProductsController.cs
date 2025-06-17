@@ -266,7 +266,7 @@ public async Task<IActionResult> ProminentProducts()
 
     return View("~/Views/ClientSide/Products/Products.cshtml");   
 }
-
+[HttpGet]
 [Route("collections")]
 public async Task<IActionResult> Products()
 {   
@@ -322,7 +322,8 @@ public async Task<IActionResult> Products()
     foreach(var item in categories)
     {
         int count=await this._product.countProductByCategory(item.Id);
-        count_product_by_cats.Add(item.CategoryName,count);
+
+       count_product_by_cats.Add(item.CategoryName,count);
     }
 
     ViewBag.category_dict=count_product_by_cats;

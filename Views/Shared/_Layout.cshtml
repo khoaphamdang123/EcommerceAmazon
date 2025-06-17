@@ -357,6 +357,12 @@
                 </li>
               </ul>
             </li>    
+            <li class="menu-item  @(view_controller=="NewsLetter"?"active":"")">
+              <a href="@Url.Action("NewsLetter","NewsLetter")" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-news"></i>
+                <div data-i18n="Analytics">NewsLetter</div>
+              </a>
+            </li>
               <li class="menu-item @(view_controller=="BannerList"?"active open":"")">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-images"></i>
@@ -614,11 +620,13 @@
 <script>
 
   document.addEventListener("DOMContentLoaded", function() {
-        const theme=localStorage.getItem("THEME");
+    
+    const theme=localStorage.getItem("THEME");
         
-        document.documentElement.setAttribute('data-bs-theme', theme);
+    document.documentElement.setAttribute('data-bs-theme', theme);
       
-      const dark_button=document.querySelector("[data-bs-theme-value='dark']");
+    const dark_button=document.querySelector("[data-bs-theme-value='dark']");
+    
     const light_button=document.querySelector("[data-bs-theme-value='light']");
 
     if(theme==='dark')
@@ -652,7 +660,6 @@
      light_button.classList.add('active');
      dark_button.setAttribute('aria-pressed', 'false');
      dark_button.classList.remove('active');
-     
      localStorage.setItem("THEME",'light');
 
     });

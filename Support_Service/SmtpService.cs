@@ -142,18 +142,23 @@ if(receiver=="")
 
 string subject="";
 
-if(type==1)
-{
-  subject="Thông báo người dùng đổi mật khẩu";
-}
-else if(type==2)
-{
-  subject="Order Successfully";
-}
-else if(type==3)
-{
-  subject="Đăng ký tài khoản";
-}
+      if (type == 1)
+      {
+        subject = "Thông báo người dùng đổi mật khẩu";
+      }
+      else if (type == 2)
+      {
+        subject = "Order Successfully";
+      }
+      else if (type == 3)
+      {
+        subject = "Đăng ký tài khoản";
+      }
+      else if (type == 4)
+      {
+        subject = "Subscribe Newsletter";
+     }
+         
 
    emailMessage.From.Add(new MailboxAddress(this._smtpClient.SenderName,this._smtpClient.SenderEmail));
 

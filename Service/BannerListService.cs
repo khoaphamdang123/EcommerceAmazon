@@ -64,8 +64,8 @@ public class BannerListService : IBannerListRepository
 
   public async Task<int> addBanner(BannerModel banner)
   {
-
     int created_res = 0;
+
     try
     {
       var check_banner_exist = await this.findBannerById(banner.Id);
@@ -103,7 +103,7 @@ public class BannerListService : IBannerListRepository
       }
       else
       {
-        Console.WriteLine("banner is null");
+        avatar_url = "https://cdn-icons-png.flaticon.com/128/16955/16955062.png";
       }
       Console.WriteLine(avatar_url);
       var banner_ob = new Banner { Bannername = banner.BannerName, Image = avatar_url };

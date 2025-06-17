@@ -17,11 +17,7 @@ public class SettingListController : BaseAdminController
 {
     private readonly ILogger<SettingListController> _logger;    
 
-
-
-   private readonly ISettingRepository _setting;
-
-
+    private readonly ISettingRepository _setting;
    
    public SettingListController(ISettingRepository setting,IBannerListRepository banner,ILogger<SettingListController> logger):base(banner)
    {
