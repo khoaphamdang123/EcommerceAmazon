@@ -12,7 +12,7 @@ public class RazorViewRenderer
     {
      string basePath = Directory.GetCurrentDirectory();
      
-     string viewsPath = Path.Combine(basePath, "Views");
+     string viewsPath = Path.Combine(basePath, "MailTemplate");
 
      Console.WriteLine("View Path:"+viewsPath); 
 
