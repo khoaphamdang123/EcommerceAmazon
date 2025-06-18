@@ -61,3 +61,13 @@ See CompilationErrors for detailed information
 2025-06-17 20:19:41.001 +07:00 [INF] Send confirm newsletter successfully
 2025-06-17 20:24:41.063 +07:00 [INF] Send confirm newsletter successfully
 2025-06-17 20:28:27.226 +07:00 [INF] Send confirm newsletter successfully
+2025-06-17 20:52:54.288 +07:00 [INF] Update Banner Id:36
+2025-06-17 20:52:54.310 +07:00 [INF] Update Banner Name:logo
+2025-06-17 20:52:54.311 +07:00 [INF] Upload Path Banner:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner
+2025-06-17 20:52:54.311 +07:00 [INF] Upload Banner:come to here
+2025-06-17 20:52:54.311 +07:00 [INF] Banner is not null
+2025-06-17 20:52:54.311 +07:00 [INF] File path here is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\48e841bb-9b92-4fd7-9f98-84623c324f17_5d3e82ac-ca87-48b8-82db-1fc7b332a796_il_fullxfull.5166878621_by3d.jpg
+2025-06-17 20:52:54.319 +07:00 [INF] Current Avatart URL is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\48e841bb-9b92-4fd7-9f98-84623c324f17_5d3e82ac-ca87-48b8-82db-1fc7b332a796_il_fullxfull.5166878621_by3d.jpg
+2025-06-17 20:52:54.319 +07:00 [INF] Current Image is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\c625655f-bb06-4187-86f2-6e2e98193b6b_z6690673838187_f9896ca10f16df1d7830609ac0cf8fa7.jpg
+2025-06-17 20:52:54.385 +07:00 [INF] Banner updated success
+2025-06-17 20:52:54.386 +07:00 [INF]  Updated Banner Successfully

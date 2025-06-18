@@ -1,0 +1,61 @@
+2025-06-18 11:44:12.753 +07:00 [INF] Running in Login Action
+2025-06-18 11:44:39.436 +07:00 [INF] Update Banner Id:36
+2025-06-18 11:44:39.437 +07:00 [INF] Update Banner Name:logo
+2025-06-18 11:44:39.437 +07:00 [INF] Upload Path Banner:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner
+2025-06-18 11:44:39.437 +07:00 [INF] Upload Banner:come to here
+2025-06-18 11:44:39.437 +07:00 [INF] Banner is not null
+2025-06-18 11:44:39.437 +07:00 [INF] File path here is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\a459e742-2f69-4ffa-8ac5-eda83da2f038_logo-talp.png
+2025-06-18 11:44:39.441 +07:00 [INF] Current Avatart URL is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\a459e742-2f69-4ffa-8ac5-eda83da2f038_logo-talp.png
+2025-06-18 11:44:39.442 +07:00 [INF] Current Image is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\48e841bb-9b92-4fd7-9f98-84623c324f17_5d3e82ac-ca87-48b8-82db-1fc7b332a796_il_fullxfull.5166878621_by3d.jpg
+2025-06-18 11:44:39.465 +07:00 [INF] Banner updated success
+2025-06-18 11:44:39.465 +07:00 [INF] admin123 Updated Banner Successfully
+2025-06-18 11:48:43.398 +07:00 [INF] Update Banner Id:36
+2025-06-18 11:48:43.398 +07:00 [INF] Update Banner Name:logo
+2025-06-18 11:48:43.398 +07:00 [INF] Upload Path Banner:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner
+2025-06-18 11:48:43.398 +07:00 [INF] Upload Banner:come to here
+2025-06-18 11:48:43.398 +07:00 [INF] Banner is not null
+2025-06-18 11:48:43.398 +07:00 [INF] File path here is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\9db3413d-8551-4ea6-a56e-bc43424cc797_logo-talp.png
+2025-06-18 11:48:43.403 +07:00 [INF] Current Avatart URL is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\9db3413d-8551-4ea6-a56e-bc43424cc797_logo-talp.png
+2025-06-18 11:48:43.403 +07:00 [INF] Current Image is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\a459e742-2f69-4ffa-8ac5-eda83da2f038_logo-talp.png
+2025-06-18 11:48:43.411 +07:00 [INF] Banner updated success
+2025-06-18 11:48:43.412 +07:00 [INF] admin123 Updated Banner Successfully
+2025-06-18 11:48:52.297 +07:00 [INF] Update Banner Id:36
+2025-06-18 11:48:52.297 +07:00 [INF] Update Banner Name:logo
+2025-06-18 11:48:52.297 +07:00 [INF] Upload Path Banner:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner
+2025-06-18 11:48:52.297 +07:00 [INF] Upload Banner:come to here
+2025-06-18 11:48:52.297 +07:00 [INF] Banner is not null
+2025-06-18 11:48:52.298 +07:00 [INF] File path here is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\11e744f6-60c7-4f67-a578-7084f02fa4a9_logo-talp.png
+2025-06-18 11:48:52.302 +07:00 [INF] Current Avatart URL is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\11e744f6-60c7-4f67-a578-7084f02fa4a9_logo-talp.png
+2025-06-18 11:48:52.302 +07:00 [INF] Current Image is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\9db3413d-8551-4ea6-a56e-bc43424cc797_logo-talp.png
+2025-06-18 11:48:52.601 +07:00 [INF] Banner updated success
+2025-06-18 11:48:52.601 +07:00 [INF] admin123 Updated Banner Successfully
+2025-06-18 11:49:13.388 +07:00 [INF] Update Banner Id:36
+2025-06-18 11:49:13.388 +07:00 [INF] Update Banner Name:logo
+2025-06-18 11:49:13.388 +07:00 [INF] Upload Path Banner:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner
+2025-06-18 11:49:13.389 +07:00 [INF] Upload Banner:come to here
+2025-06-18 11:49:13.389 +07:00 [INF] Banner is not null
+2025-06-18 11:49:13.389 +07:00 [INF] File path here is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\7017e940-8cef-4266-b52d-1cddbc52b2b2_logo-talp.png
+2025-06-18 11:49:13.390 +07:00 [INF] Current Avatart URL is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\7017e940-8cef-4266-b52d-1cddbc52b2b2_logo-talp.png
+2025-06-18 11:49:13.390 +07:00 [INF] Current Image is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\11e744f6-60c7-4f67-a578-7084f02fa4a9_logo-talp.png
+2025-06-18 11:49:13.393 +07:00 [INF] Banner updated success
+2025-06-18 11:49:13.393 +07:00 [INF] admin123 Updated Banner Successfully
+2025-06-18 11:49:13.490 +07:00 [INF] Update Banner Id:36
+2025-06-18 11:49:13.490 +07:00 [INF] Update Banner Name:logo
+2025-06-18 11:49:13.490 +07:00 [INF] Upload Path Banner:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner
+2025-06-18 11:49:13.490 +07:00 [INF] Upload Banner:come to here
+2025-06-18 11:49:13.490 +07:00 [INF] Banner is not null
+2025-06-18 11:49:13.490 +07:00 [INF] File path here is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\00cb0735-fcc7-47e6-85ad-f8787d984f23_logo-talp.png
+2025-06-18 11:49:13.491 +07:00 [INF] Current Avatart URL is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\00cb0735-fcc7-47e6-85ad-f8787d984f23_logo-talp.png
+2025-06-18 11:49:13.492 +07:00 [INF] Current Image is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\7017e940-8cef-4266-b52d-1cddbc52b2b2_logo-talp.png
+2025-06-18 11:49:13.495 +07:00 [INF] Banner updated success
+2025-06-18 11:49:13.495 +07:00 [INF] admin123 Updated Banner Successfully
+2025-06-18 11:52:52.514 +07:00 [INF] Update Banner Id:36
+2025-06-18 11:52:52.514 +07:00 [INF] Update Banner Name:logo
+2025-06-18 11:52:52.514 +07:00 [INF] Upload Path Banner:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner
+2025-06-18 11:52:52.514 +07:00 [INF] Upload Banner:come to here
+2025-06-18 11:52:52.514 +07:00 [INF] Banner is not null
+2025-06-18 11:52:52.514 +07:00 [INF] File path here is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\19a2ab60-6338-4db1-801d-df10cccc611f_logo-talp.png
+2025-06-18 11:52:52.515 +07:00 [INF] Current Avatart URL is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\19a2ab60-6338-4db1-801d-df10cccc611f_logo-talp.png
+2025-06-18 11:52:52.515 +07:00 [INF] Current Image is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\00cb0735-fcc7-47e6-85ad-f8787d984f23_logo-talp.png
+2025-06-18 11:52:52.517 +07:00 [INF] Banner updated success
+2025-06-18 11:52:52.518 +07:00 [INF] admin123 Updated Banner Successfully
