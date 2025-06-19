@@ -231,7 +231,6 @@ public async Task<JsonResult> VariantProduct(int id)
         Console.WriteLine("Send confirm newsletter failed");
 
         return Json(new { status = 0, message = "Send confirm newsletter failed" });
-
       }
 
     }
@@ -287,7 +286,7 @@ public async Task<JsonResult> VariantProduct(int id)
       {
         TempData["NewsLetterMessage"] = "Subscribe newsletter failed";
 
-        TempData["NewsLetterStatus"]  = 0;
+        TempData["NewsLetterStatus"] = 0;        
       }
     }
     catch (Exception er)
@@ -297,24 +296,26 @@ public async Task<JsonResult> VariantProduct(int id)
    return RedirectToAction("HomePage", "HomePage");
   }
 
-[Route("/firebase_token")]
-[HttpPost]
-public async Task<JsonResult> FirebaseToken(string token)
-{  
-  Console.WriteLine("Token firebase is:"+token);
-   var settings = await this._setting.getSettingObjByName("Firebase");
-   if(settings!=null)
-   {
-    var setting_status = settings.Status;
-    
-    if(setting_status==1)
+  [Route("/firebase_token")]
+  [HttpPost]
+  public async Task<JsonResult> FirebaseToken(string token)
+  {
+    Console.WriteLine("Token firebase is:" + token);
+    var settings = await this._setting.getSettingObjByName("Firebase");
+    if (settings != null)
     {
-      var firebase_message = settings.Firebase_Mess;
-      await this._firebase_service.sendFirebaseMessage(token,"Notification",firebase_message);
-      return Json(new {status=1,message="Send Firebase Message Success."}); 
+      var setting_status = settings.Status;
+
+      if (setting_status == 1)
+      {
+        var firebase_message = settings.Firebase_Mess;
+        await this._firebase_service.sendFirebaseMessage(token, "Notification", firebase_message);
+        return Json(new { status = 1, message = "Send Firebase Message Success." });
+      }
+
     }
+    return Json(new { status = 0, message = "Firebase message not active" });
+
     
-   }  
-   return Json(new {status=0,message="Firebase message not active"});
 }
 }

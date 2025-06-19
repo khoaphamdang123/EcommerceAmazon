@@ -31,14 +31,16 @@ public class CategoryListController : BaseAdminController
           FilterCategory cat_filter=new FilterCategory("","","");
           ViewBag.filter_obj=cat_filter;
     try
-    {    Console.WriteLine("used to stay here");  
-        var cats=await this._category.pagingCategory(7,1);
-    
-          return View(cats);
-    }
-    catch(Exception er)
     {
-        this._logger.LogTrace("Get Category List Exception:"+er.Message);
+      Console.WriteLine("used to stay here");
+      var cats = await this._category.pagingCategory(7, 1);
+
+      return View(cats);
+          
+    }
+    catch (Exception er)
+    {
+      this._logger.LogTrace("Get Category List Exception:" + er.Message);
     }
     return View();
   }

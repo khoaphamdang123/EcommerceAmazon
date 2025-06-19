@@ -59,3 +59,5 @@
 2025-06-18 11:52:52.515 +07:00 [INF] Current Image is:C:\Users\QuanDEV\Ecommerce_Amazon\wwwroot\UploadImageBanner\00cb0735-fcc7-47e6-85ad-f8787d984f23_logo-talp.png
 2025-06-18 11:52:52.517 +07:00 [INF] Banner updated success
 2025-06-18 11:52:52.518 +07:00 [INF] admin123 Updated Banner Successfully
+2025-06-18 17:32:00.057 +07:00 [INF] Running in Login Action
+2025-06-18 17:32:09.828 +07:00 [INF] Running in Login Action

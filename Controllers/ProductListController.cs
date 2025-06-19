@@ -126,49 +126,49 @@ public class ProductListController : BaseAdminController
    public async Task<IActionResult> ProductList(FilterProduct products)
    {
     try
-    {   
-    string startdate=products.StartDate;
-
-    string enddate = products.EndDate;
-
- if(!string.IsNullOrEmpty(startdate))
- {
-   string[] reformatted=startdate.Trim().Split('-');
-
-   startdate=reformatted[1]+"/"+reformatted[2]+"/"+reformatted[0];   
- }
-    if(!string.IsNullOrEmpty(enddate))
-{ 
-   string[] reformatted=enddate.Trim().Split('-');
-
-   enddate=reformatted[1]+"/"+reformatted[2]+"/"+reformatted[0];
- }      
-          string select_size="50"; 
-          ViewBag.select_size=select_size;
-          List<string> options=new List<string>(){"50","100","150","200"};          
-          ViewBag.options=options;
-
-        var cats=await this._category.getAllCategory();
-        
-        var brands=await this._category.getAllBrandList();
-        
-        ViewBag.CatList=cats;
-        
-        ViewBag.BrandList = brands;
-        
-        ViewBag.StatusList = new List<string>{"Hết hàng","Còn hàng"};
-        
-        var product_list=await this._product.filterProduct(products);
-        
-        var product_paging=PageList<Product>.CreateItem(product_list.AsQueryable(),1,7);
-        
-        ViewBag.filter_obj=products;  
-    
-        return View("~/Views/ProductList/ProductList.cshtml",product_paging);        
-    }
-    catch(Exception er)
     {
-    this._logger.LogTrace("Filter Product List Exception:"+er.Message); 
+      string startdate = products.StartDate;
+
+      string enddate = products.EndDate;
+
+      if (!string.IsNullOrEmpty(startdate))
+      {
+        string[] reformatted = startdate.Trim().Split('-');
+
+        startdate = reformatted[1] + "/" + reformatted[2] + "/" + reformatted[0];
+      }
+      if (!string.IsNullOrEmpty(enddate))
+      {
+        string[] reformatted = enddate.Trim().Split('-');
+
+        enddate = reformatted[1] + "/" + reformatted[2] + "/" + reformatted[0];
+      }
+      string select_size = "50";
+      ViewBag.select_size = select_size;
+      List<string> options = new List<string>() { "50", "100", "150", "200" };
+      ViewBag.options = options;
+
+      var cats = await this._category.getAllCategory();
+
+      var brands = await this._category.getAllBrandList();
+
+      ViewBag.CatList = cats;
+
+      ViewBag.BrandList = brands;
+
+      ViewBag.StatusList = new List<string> { "Hết hàng", "Còn hàng" };
+
+      var product_list = await this._product.filterProduct(products);
+
+      var product_paging = PageList<Product>.CreateItem(product_list.AsQueryable(), 1, 7);
+
+      ViewBag.filter_obj = products;
+    
+      return View("~/Views/ProductList/ProductList.cshtml", product_paging);            
+    }
+    catch (Exception er)
+    {
+      this._logger.LogTrace("Filter Product List Exception:" + er.Message);
     }
     return View();    
    }
@@ -185,6 +185,7 @@ public class ProductListController : BaseAdminController
       if(res==0)
       {
         TempData["Status_Delete"]=0;
+
         TempData["Message_Delete"]=$"Xóa sản phẩm mã {id} thất bại";
       }
       else{

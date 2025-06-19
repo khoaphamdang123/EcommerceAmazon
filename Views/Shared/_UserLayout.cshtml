@@ -560,7 +560,7 @@
                   <ul class="widget-link list-unstyled">
               @foreach(var cat in categories)
               {
-               <li><a href="@Url.Action("ProductsByCategory","Product",new {category_name=cat.CategoryName})">@cat.CategoryName</a></li>
+               <li><a href="@Url.Action("ProductsByCategory","Products",new {category_name=cat.CategoryName})">@cat.CategoryName</a></li>
               }
              </ul>
                 </div>
@@ -610,7 +610,7 @@
                         }
                       }
                     </ul>
-                <div class="social-icons">
+              <div class="social-icons">
                 <a class="facebook-icon" href="@facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
                 <a href="@instagram" class="instagram-icon" target="_blank"><i class="fab fa-instagram"></i></a>
                 <a href="@youtube" class="youtube-icon" target="_blank"><i class="fab fa-youtube"></i></a>

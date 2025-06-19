@@ -22,9 +22,10 @@
        Console.WriteLine("Current logo admin path is:"+logo_path);
        }
         ChangePassword change_pass= null;
+
        if(User.Identity.IsAuthenticated)
        {
-        id_user=this.ViewContext.HttpContext.Session.GetString("AdminId");
+        id_user=this.ViewContext.HttpContext.Session.GetString("AdminId");        
         Console.WriteLine("Id user is:"+id_user);
         username=this.ViewContext.HttpContext.Session.GetString("Username");
         email=this.ViewContext.HttpContext.Session.GetString("Email");
@@ -319,7 +320,6 @@
                 </li>
               </ul>
             </li> 
-
             <li class="menu-item @(view_controller=="PaymentList"?"active open":"")">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-money"></i>
@@ -338,7 +338,6 @@
                 </li>
               </ul>
             </li>    
-
              <li class="menu-item @(view_controller=="BlogList"?"active open":"")">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-news"></i>
