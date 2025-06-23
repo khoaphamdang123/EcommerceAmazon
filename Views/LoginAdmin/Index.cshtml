@@ -301,7 +301,7 @@
                     value="@(!string.IsNullOrEmpty(password)?password:"")"
 
                     />
-                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                    <span class="input-group-text cursor-pointer" id="togglePassword" style="cursor: pointer:  !important;"><i class="bx bx-hide"></i></span>
                   </div>
                 <span asp-validation-for="Password" id="password-error" class="text-danger"></span>
                 </div>
@@ -345,6 +345,31 @@
       </div>
     </div>
    <script>
+  const togglePassword = document.getElementById('togglePassword');
+
+
+
+  const passwordInput = document.getElementById('password');
+  if(passwordInput==null)
+  {
+    alert("null");
+    }
+  const icon = togglePassword.querySelector('i');
+
+  if(icon==null)
+  {
+    alert("icon null");
+  } 
+
+  togglePassword.addEventListener('click', () => {
+    alert("toggle password clicked");
+ const isPassword = passwordInput.type === 'password';
+    passwordInput.type = isPassword ? 'text' : 'password';
+    icon.classList.toggle('bx-hide', !isPassword);
+    icon.classList.toggle('bx-show', isPassword);
+  });
+
+
     const moveCursorToEnd=()=>{
       var input_username = document.getElementById("username");
       input_username.focus();

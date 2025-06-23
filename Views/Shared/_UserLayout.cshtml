@@ -557,10 +557,11 @@
                 <div class="col-md-3">
                   <h3  style="font-weight: bold!important;">SHOP BY TYPE</h3>
                   <hr class="footer-hr">
-                  <ul class="widget-link list-unstyled">
+              <ul class="widget-link list-unstyled">
               @foreach(var cat in categories)
               {
-               <li><a href="@Url.Action("ProductsByCategory","Products",new {category_name=cat.CategoryName})">@cat.CategoryName</a></li>
+               <li><a href="@Url.Action("ProductsByCategory","Products",new{category_name=cat.CategoryName})">@cat.CategoryName</a></li>
+               
               }
              </ul>
                 </div>
@@ -571,8 +572,8 @@
                       @foreach(var file in staticFiles)
                       {
                        if(file.Section=="Customer_Service")
-                       {
-                        <li><a href="@Url.Action("StaticPage","StaticPage",new{page_name=file.Filename})">@file.Filename</a></li>
+                        {
+                        <li><a href="@Url.Action("StaticPage","StaticPage",new{page_name=file.Filename})">@file.Filename</a></li>                        
                         }
                       }
                     </ul>
@@ -581,8 +582,6 @@
                     <h3 style="font-weight:bold!important;">WHY BUY FROM US</h3>
                     <hr class="footer-hr">
                     <ul class="footer-link">
-                      
-                      
                       @foreach(var file in staticFiles)
                       {                        
                        if(file.Section=="Why_Buy_From_Us")
@@ -593,7 +592,7 @@
                     </ul>
                 </div>
                 <div class="col-md-3">
-                    <h3  style="font-weight: bold!important;">GET IN TOUCH</h3>
+                    <h3 style="font-weight: bold!important;">GET IN TOUCH</h3>
                      <hr class="footer-hr">
                     <img src="@logo_path" width="200px" height="auto" class="logo">
                     <ul  class="footer-link">
@@ -605,7 +604,7 @@
                       @foreach(var file in staticFiles)
                       {
                        if(file.Section=="Get_In_Touch")
-                       {
+                        {
                         <li><a href="@Url.Action("StaticPage","StaticPage",new{page_name=file.Filename})">@file.Filename</a></li>
                         }
                       }
@@ -772,7 +771,7 @@
           </div>
           <div class="">
             <h6 class="mb-0 fw-light mb-1">Product Name</h6>
-            <p class="mb-0"><strong>1 X $59.00</strong>
+            <p class="mb-0"><strong>1 X $59.00</strong>                      
             </p>
           </div>
           <div class="ms-auto fs-5">

@@ -831,33 +831,33 @@ public async Task<bool> checkProductExist(string product_name)
 public async Task<int> addNewProductByLink(string link,string link_background,int category)
 { 
   int created_res=0;
-  try
-  {
+    try
+    {
 
-   using(HttpClient client = new HttpClient())
-   {
-    string api_url=Environment.GetEnvironmentVariable("SCRAPER_URL");
+      using (HttpClient client = new HttpClient())
+      {
+        string api_url = Environment.GetEnvironmentVariable("SCRAPER_URL");
 
-    string api_key=Environment.GetEnvironmentVariable("SCRAPER_API_KEY");
+        string api_key = Environment.GetEnvironmentVariable("SCRAPER_API_KEY");
 
-    string asin= this._sp_services.extractASIN(link);
+        string asin = this._sp_services.extractASIN(link);
 
-    Console.WriteLine("API_URL:"+api_url);
+        Console.WriteLine("API_URL:" + api_url);
 
-    Console.WriteLine("API_KEY:"+api_key);
+        Console.WriteLine("API_KEY:" + api_key);
 
-    Console.WriteLine("ASIN:"+asin);
+        Console.WriteLine("ASIN:" + asin);
 
 
-    if(!string.IsNullOrEmpty(asin))
-    {  
+        if (!string.IsNullOrEmpty(asin))
+        {
 
-    string request_url=$"{api_url}?api_key={api_key}&asin={asin}&country=us&tld=com";
-    Console.WriteLine("Request_url:"+request_url);
-    DateTime startTime = DateTime.Now;
-    var response = await client.GetAsync(request_url);
-    
-    if (response.IsSuccessStatusCode)
+          string request_url = $"{api_url}?api_key={api_key}&asin={asin}&country=us&tld=com";
+          Console.WriteLine("Request_url:" + request_url);
+          DateTime startTime = DateTime.Now;
+          var response = await client.GetAsync(request_url);
+
+          if (response.IsSuccessStatusCode)
           {
             DateTime endTime = DateTime.Now;
 
@@ -896,9 +896,31 @@ public async Task<int> addNewProductByLink(string link,string link_background,in
 
               string date_first_available = product_data.Product_Information.Date_First_Available;
 
+              Console.WriteLine("Product Name:" + product_name);
+
+              Console.WriteLine("Product Price:" + product_price);
+              Console.WriteLine("Full Description:" + full_description);
+              Console.WriteLine("Small Description:" + small_description);
+              Console.WriteLine("Front Avatar:" + front_avatar);
+              Console.WriteLine("Back Avatar:" + back_avatar);
+              Console.WriteLine("Manufacturer:" + manufacturer);
+              Console.WriteLine("Package Dimensions:" + package_dimensions);
+              Console.WriteLine("Model:" + model);
+              Console.WriteLine("Date First Available:" + date_first_available);
+
               List<string> sizes = new List<string>();
 
-              var size_list = product_data.Customization_Options.Size;
+              var size_list = product_data.Customization_Options?.Size;
+
+              if (size_list == null || size_list.Count == 0)
+              {
+                size_list = new List<Size_Value>
+                {  new Size_Value { Value = "S" },
+                  new Size_Value { Value = "M" },
+                  new Size_Value { Value = "L" },
+                  new Size_Value { Value = "XL" }
+                };
+              }
 
               foreach (var size in size_list)
               {
@@ -920,6 +942,8 @@ public async Task<int> addNewProductByLink(string link,string link_background,in
                 }
               }
 
+              Console.WriteLine("Color did here");
+
               List<Variant> variant = new List<Variant>();
 
               var existingColors = await _context.Colors
@@ -932,6 +956,9 @@ public async Task<int> addNewProductByLink(string link,string link_background,in
               var newColors = new List<Models.Color>();
               var newSizes = new List<Models.Size>();
               var variants = new List<Variant>();
+
+              Console.WriteLine("Prepare to for loop");
+
 
               foreach (var size in sizes)
               {
@@ -955,17 +982,17 @@ public async Task<int> addNewProductByLink(string link,string link_background,in
                     existingSizes[size] = sizeObj;
                   }
 
-                  var variant_obj = new Variant
-                  {
-                    Colorid = colorObj?.Id,
-                    Sizeid = sizeObj?.Id,
-                    Price = string.IsNullOrEmpty(product_price) ? "" : product_price
-                  };
+                  // var variant_obj = new Variant
+                  // {
+                  //   Colorid = colorObj?.Id,
+                  //   Sizeid = sizeObj?.Id,
+                  //   Price = string.IsNullOrEmpty(product_price) ? "" : product_price
+                  // };
 
-                  if (colorObj != null || sizeObj != null)
-                  {
-                    variants.Add(variant_obj);
-                  }
+                  // if (colorObj != null || sizeObj != null)
+                  // {
+                  //   variants.Add(variant_obj);
+                  // }
                 }
               }
 
@@ -980,7 +1007,34 @@ public async Task<int> addNewProductByLink(string link,string link_background,in
 
               await _context.SaveChangesAsync();
 
+
+            foreach (var size in sizes)
+            {
+                if (string.IsNullOrEmpty(size)) continue;
+
+                foreach (var color in colors)
+                {
+                    if (string.IsNullOrEmpty(color)) continue;
+
+                    var colorObj = existingColors[color];
+
+                    var sizeObj = existingSizes[size];
+
+                    var variant_obj = new Variant
+                    {
+                        Colorid = colorObj.Id,
+                        Sizeid = sizeObj.Id,
+                        Price = string.IsNullOrEmpty(product_price) ? "" : product_price
+                    };
+
+                    variants.Add(variant_obj);
+                }
+            }
+
+
               variant.AddRange(variants);
+
+              Console.WriteLine("Did done variant");
 
               List<ProductImage> product_images = new List<ProductImage>();
 
@@ -996,13 +1050,15 @@ public async Task<int> addNewProductByLink(string link,string link_background,in
 
               var latest_sort_id = await this._context.Products.MaxAsync(c => c.SortId) ?? 0;
 
-              var new_sort_id = latest_sort_id + 1;              
+              var new_sort_id = latest_sort_id + 1;
 
               var product = new Product { ProductName = product_name, CategoryId = category, Price = product_price, Quantity = 100, Status = "Còn hàng", Description = full_description, Frontavatar = front_avatar, Backavatar = back_avatar, SortId = new_sort_id, SortProminentId = new_sort_id, Small_Description = small_description, Model = model, Manufacturer = manufacturer, Asin = asin, Package_Dimensions = package_dimensions, Date_First_Available = date_first_available, CreatedDate = created_date, UpdatedDate = updated_date, ProductImages = product_images, Variants = variant };
 
               await this._context.Products.AddAsync(product);
 
               await this.saveChanges();
+
+              Console.WriteLine("Product created successfully with ID:");
 
               created_res = 1;
             }
@@ -1011,12 +1067,14 @@ public async Task<int> addNewProductByLink(string link,string link_background,in
           {
             Console.WriteLine("Request API Failed:" + response.StatusCode);
           }
-}
-  }
-}
-  catch(Exception er)
-  {
-    Console.WriteLine("Add New Product By Link Exception:"+er.Message);
+        }
+      }
+    }
+    catch (Exception er)
+    {
+      Console.WriteLine("Add New Product By Link Exception:" + er.Message);
+        Console.WriteLine("Add New Product By Link Exception:"+er.InnerException?.Message);
+
   }
   return created_res;
 }
