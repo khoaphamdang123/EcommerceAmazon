@@ -263,23 +263,111 @@
                         </div>
                     </div>
                 </div>
-                <h5 class="card-header">Danh sách sản phẩm</h5>
+           <div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0 ms-2">Danh sách sản phẩm</h5>
+ <div class="dropdown">
+    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="columnToggleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+      Chọn cột ẩn hiện
+    </button>
+    <ul class="dropdown-menu p-5" aria-labelledby="columnToggleDropdown">
+      <li>
+        <div class="form-check px-3">
+          <input class="form-check-input column-toggle" type="checkbox" value="stt" checked>
+          <label class="form-check-label">STT</label>
+        </div>
+      </li>
+        <li>
+        <div class="form-check px-3">
+          <input class="form-check-input column-toggle" type="checkbox" value="no" checked>
+          <label class="form-check-label">No</label>
+        </div>
+      </li>
+        <li>
+        <div class="form-check px-3">
+          <input class="form-check-input column-toggle" type="checkbox" value="name" checked>
+          <label class="form-check-label">Tên sản phẩm</label>
+        </div>
+      </li>
+      <li>
+        <div class="form-check px-3">
+          <input class="form-check-input column-toggle" type="checkbox" value="price" checked>
+          <label class="form-check-label">Giá sản phẩm</label>
+        </div>
+      </li>
+
+        <li>
+        <div class="form-check px-3">
+          <input class="form-check-input column-toggle" type="checkbox" value="category" checked>
+          <label class="form-check-label">Loại sản phẩm</label>
+        </div>
+      </li>
+        <li>
+        <div class="form-check px-3">
+          <input class="form-check-input column-toggle" type="checkbox" value="status" checked>
+          <label class="form-check-label">Trạng thái</label>
+        </div>
+      </li>
+        <li>
+        <div class="form-check px-3">
+          <input class="form-check-input column-toggle" type="checkbox" value="dimension" checked>
+          <label class="form-check-label">Số liệu kích thước sản phẩm</label>
+        </div>
+      </li>
+
+        <li>
+        <div class="form-check px-3">
+          <input class="form-check-input column-toggle" type="checkbox" value="manufacturer" checked>
+          <label class="form-check-label">Nhà sản xuất</label>
+        </div>
+      </li>
+
+        <li>
+        <div class="form-check px-3">
+          <input class="form-check-input column-toggle" type="checkbox" value="model" checked>
+          <label class="form-check-label">Mẫu sản phẩm</label>
+        </div>
+      </li>
+
+           <li>
+        <div class="form-check px-3">
+          <input class="form-check-input column-toggle" type="checkbox" value="createdate" checked>
+          <label class="form-check-label">Ngày tạo</label>
+        </div>
+      </li>
+
+           <li>
+        <div class="form-check px-3">
+          <input class="form-check-input column-toggle" type="checkbox" value="updatedate" checked>
+          <label class="form-check-label">Ngày cập nhật</label>
+        </div>
+      </li>
+
+      <li>
+        <div class="form-check px-3">
+          <input class="form-check-input column-toggle" type="checkbox" value="action" checked>
+          <label class="form-check-label">Thao tác</label>
+        </div>
+      </li>
+      <!-- Add more checkboxes as needed -->
+    </ul>
+  </div>
+</div>
                 <div class="table-responsive text-nowrap border-bottom">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th class="text-center">STT</th>
-                            <th class="text-center">No</th>
-                            <th class="text-center">Tên sản phẩm</th>
-                            <th class="text-center">Loại sản phẩm</th>
-                            <th class="text-center">Giá sản phẩm</th>
-                            <th class="text-center">Trạng thái</th>
-                            <th class="text-center">Nhà sản xuất</th>
-                            <th class="text-center">Số liệu kích thước sản phẩm</th>
-                            <th class="text-center">Mẫu sản phẩm</th>
-                            <th class="text-center">Ngày tạo</th>
-                            <th class="text-center">Ngày cập nhật</th>
-                           <th class="text-center">Thao tác</th>
+                            <th class="text-center col-stt">STT</th>
+                            <th class="text-center col-no">No</th>
+                            <th class="text-center col-name">Tên sản phẩm</th>
+                            <th class="text-center col-category">Loại sản phẩm</th>
+                            <th class="text-center col-price">Giá sản phẩm</th>
+                            <th class="text-center col-status">Trạng thái</th>
+                            <th class="text-center col-manufacturer">Nhà sản xuất</th>
+                            <th class="text-center col-dimension">Số liệu kích thước sản phẩm</th>
+                            <th class="text-center col-model">Mẫu sản phẩm</th>
+                            <th class="text-center col-createdate">Ngày tạo</th>
+                            <th class="text-center col-updatedate">Ngày cập nhật</th>
+                           <th class="text-center col-action">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0"  id="tableBody">
@@ -304,9 +392,9 @@
                             }
                         }
                          <tr>
-                            <td class="text-center">@current_total_item</td>
-                            <td class="text-center">@product.Id</td>
-                            <td class="text-center">
+                            <td class="text-center col-stt">@current_total_item</td>
+                            <td class="text-center col-no">@product.Id</td>
+                            <td class="text-center col-name">
                              <div class="d-flex">
                              @if(!string.IsNullOrEmpty(product.Frontavatar))
                            {
@@ -341,20 +429,20 @@
                               <strong>@product.ProductName</strong>
                              </div>
                               </td>
-                            <td class="text-center">
+                            <td class="text-center col-category">
                              @if(product?.Category!=null)
                              {
                               @product.Category.CategoryName
                               }
                               </td>
-                            <td class="text-center">@product.Price</td>
-                            <td class="text-center"><span class="badge px-2 @curr_status_class">@product.Status</span></td>
-                            <td class="text-center">@product.Manufacturer</td>
-                            <td class="text-center">@product.Package_Dimensions</td>
-                            <td class="text-center">@product.Model</td>                            
-                            <td class="text-center">@product.CreatedDate</td>
-                            <td class="text-center">@product.UpdatedDate</td>                            
-                            <td class="text-center">
+                            <td class="text-center col-price">@product.Price</td>
+                            <td class="text-center col-status"><span class="badge px-2 @curr_status_class">@product.Status</span></td>
+                            <td class="text-center col-manufacturer">@product.Manufacturer</td>
+                            <td class="text-center col-dimension">@product.Package_Dimensions</td>
+                            <td class="text-center col-model">@product.Model</td>                            
+                            <td class="text-center col-createdate">@product.CreatedDate</td>
+                            <td class="text-center col-updatedate">@product.UpdatedDate</td>                            
+                            <td class="text-center col-action">
                             <div class="d-flex justify-content-center">
                               <a data-bs-toggle="modal" data-bs-target="#modalLong" class="btn btn-icon delete-record icon-style-delete mr-2" id="delete-record-btn" data-category="@product.Id" title="Xóa sản phẩm">
                               <i class="bx bx-trash bx-md"></i>
@@ -416,6 +504,11 @@
                          </tr>
                     }
                     </tbody>
+                    <tfoot>
+    <tr id="no-data-row" class="d-none">
+      <td colspan="12" class="text-center fw-bold text-muted">Không có dữ liệu để hiện thị</td>
+    </tr>
+  </tfoot>
                 </table>
                 </div>
     <div class="pagination-container mt-4">
@@ -547,6 +640,62 @@
     const product_toggle = document.querySelectorAll("#product-toggle");
 
     const toggles=document.querySelectorAll("#toggle-icon");
+
+    const columns_toggle=document.querySelectorAll(".column-toggle");
+
+    const noDataRow = document.getElementById('no-data-row');
+    
+
+    columns_toggle.forEach(column=>{
+      const checkbox=`.col-${column.value}`;
+      const isVisible=localStorage.getItem(column.value) === 'true';
+      column.checked = isVisible;
+      document.querySelectorAll(checkbox).forEach(cell=>{
+        if(isVisible)
+        {
+          cell.classList.remove('d-none');
+        }
+        else
+        {
+          cell.classList.add('d-none');
+        }
+      });
+    });
+
+ function updateNoDataRowVisibility() {
+    var visible_row=0;
+
+    columns_toggle.forEach((column)=>
+    {
+    const checkbox=`.col-${column.value}`;
+    const isVisible=column.checked;
+    localStorage.setItem(column.value, isVisible);
+    document.querySelectorAll(checkbox).forEach(cell=>{
+      if(isVisible)
+      {
+        cell.classList.remove('d-none');
+      }
+      else
+      {
+        cell.classList.add('d-none');
+      }
+    });
+    if(isVisible)
+    {
+      visible_row+=1;
+    }
+
+    noDataRow.classList.toggle('d-none', visible_row > 0);
+    });
+  }
+
+  columns_toggle.forEach((column)=>
+    {
+      column.addEventListener('change',updateNoDataRowVisibility);
+    });
+
+    updateNoDataRowVisibility();
+
 
     product_toggle.forEach((product,idx)=>{
 
