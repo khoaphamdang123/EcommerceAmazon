@@ -451,20 +451,24 @@ a {
 }
 
 .size-chart div button {
-    width: 55px;
-    height: 55px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    border: 1px solid #dee2e6;
-    border-radius: 50%;
-    color: #222121;
-    font-weight: 600;
-    background-color: #ffffff;
-    transition: 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+  width: 55px;
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 9px;
+  padding: 4px;
+  line-height: 1.1;
+  border: 1px solid #dee2e6;
+  border-radius: 50%;
+  color: #222121;
+  font-weight: 600;
+  background-color: #ffffff;
+  transition: 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+  white-space: normal;
+  word-break: break-word;
 }
-
 .size-chart div button:hover, .size-chart div button:focus {
     color: #ffffff;
     border: 1px solid #212529;

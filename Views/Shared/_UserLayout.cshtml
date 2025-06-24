@@ -548,20 +548,18 @@
 					</a>
 				</li> *@
 		</main>
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
        <section class="footer-section footer_style bg-section-2 section-padding">
         <div class="container">
             <div class="row">
                 <div class="col-md-3">
                   <h3  style="font-weight: bold!important;">SHOP BY TYPE</h3>
                   <hr class="footer-hr">
-              <ul class="widget-link list-unstyled">
+              <ul class="footer-link">
+
               @foreach(var cat in categories)
               {
                <li><a href="@Url.Action("ProductsByCategory","Products",new{category_name=cat.CategoryName})">@cat.CategoryName</a></li>
-               
               }
              </ul>
                 </div>
@@ -571,10 +569,12 @@
                     <ul class="footer-link">
                       @foreach(var file in staticFiles)
                       {
+
                        if(file.Section=="Customer_Service")
                         {
-                        <li><a href="@Url.Action("StaticPage","StaticPage",new{page_name=file.Filename})">@file.Filename</a></li>                        
+                        <li><a href="@Url.Action("StaticPage","StaticPage",new{page_name=file.Filename})">@file.Filename</a></li>                                                
                         }
+                        
                       }
                     </ul>
                 </div>

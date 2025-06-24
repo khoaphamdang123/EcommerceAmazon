@@ -23,6 +23,14 @@
 
     int news_letter_status =-2;
 
+    int new_arrivel_count=0;
+
+    int trending_count=0;
+
+    int best_sellar_count=0;
+    
+    int show_product_len=5;
+
     if(TempData["NewsLetterStatus"]!=null)
     {
         news_letter_status=Convert.ToInt32(TempData["NewsLetterStatus"]);
@@ -66,14 +74,13 @@
         <div class="carousel-indicators">
           <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
             aria-current="true"></button>
+
         @for(int i=1;i<banners.Count;i++)
-        {
+          {
           <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="@i"></button>
-          @* <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"></button>
-          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3"></button>
-          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="4"></button> *@
           }
         </div>
+
         <div class="carousel-inner">
         @for(int i=0;i<banners.Count;i++)
         {   
@@ -571,6 +578,7 @@
         <div class="tab-content tabular-product">
           <div class="tab-pane fade show active" id="new-arrival">
             <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 row-cols-xxl-5 g-4">
+            
             @foreach(var product in products)
             {
             string regex_product=Regex.Replace(product.ProductName, @"[^\w\d+,]", "-");
@@ -579,7 +587,7 @@
             {
                 continue;                                
             }
-              <div class="col">
+              <div class="col product-arrival-item" style="@((new_arrivel_count>show_product_len-1)?"display:none;":"")">
                 <div class="card">
                   <div class="position-relative overflow-hidden">
                     <div
@@ -596,7 +604,8 @@
               else
               {
                 <img src="~/@product.Backavatar.Substring(product.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" class="card-img-top" alt="..." >
-            }                    </a>
+               }                    
+               </a>
                   </div>
                   <div class="card-body">
                     <div class="product-info text-center">
@@ -609,8 +618,13 @@
                   </div>
                 </div>
               </div>
+              new_arrivel_count+=1;
               }
+            
             </div>
+          <div class="text-center mt-4">
+    <button id="viewMoreArrivalBtn" class="btn custom-view-more">View More</button>
+</div>
           </div>
           <div class="tab-pane fade" id="trending-product">
             <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 row-cols-xxl-5 g-4">
@@ -622,7 +636,7 @@
             {
                 continue;
             }
-              <div class="col">
+              <div class="col product-trending-item" style="@((trending_count>show_product_len-1)?"display:none;":"")">
                 <div class="card">
                   <div class="position-relative overflow-hidden">
                     <div
@@ -632,7 +646,7 @@
                       <a href="javascript:;"  class="quick-view-link" title="Add Cart" data-product-id="@product.Id"  data-bs-toggle="modal" data-bs-target="#QuickViewModal-@product.Id"><i
                           class="bi bi-zoom-in"></i></a>
                     </div>
-                    <a href="product-details.html">
+                    <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
    @if(product.Backavatar.Contains("https") || product.Backavatar.Contains("http"))
               {
                 <img src="@product.Backavatar" class="card-img-top" alt="...">
@@ -657,8 +671,12 @@
                   </div>
                 </div>
               </div>
+              trending_count+=1;
              }
             </div>
+                 <div class="text-center mt-4">
+    <button id="viewMoreTrendingBtn" class="btn custom-view-more">View More</button>
+</div>
           </div>
         
            <div class="tab-pane fade" id="best-sellar">
@@ -673,7 +691,7 @@
                 continue;                                
             }
 
-              <div class="col">
+              <div class="col product-bestsellar-item" style="@((best_sellar_count>show_product_len-1)?"display:none":"")">
                 <div class="card">
                   <div class="position-relative overflow-hidden">
                     <div
@@ -711,8 +729,13 @@
                   </div>
                 </div>
               </div>
+            best_sellar_count+=1;
              }
+
             </div>
+                   <div class="text-center mt-4">
+    <button id="viewMoreBestSellarBtn" class="btn custom-view-more">View More</button>
+</div>
           </div>
         </div>
       </div>
@@ -1105,6 +1128,8 @@
 
   <script>
    
+ 
+
 function checkout()
 {
 const checkoutButton = document.getElementById("checkout");
@@ -1125,6 +1150,85 @@ function isValidEmail(email)
   }
    document.addEventListener("DOMContentLoaded", function () 
    {
+
+     const viewMoreArrivalBtn = document.getElementById("viewMoreArrivalBtn");
+  
+  const viewMoreTrendingBtn = document.getElementById("viewMoreTrendingBtn");
+  
+  const viewMoreBestSellarBtn = document.getElementById("viewMoreBestSellarBtn");
+
+  var arrivalProduct=@show_product_len;
+  var trendingProduct=@show_product_len;
+  var bestSellarProduct=@show_product_len;
+  var inscreaseProduct = @show_product_len;
+
+  var productArrivalList=document.querySelectorAll(".product-arrival-item");
+
+  var productTrendingList=document.querySelectorAll(".product-trending-item");
+
+  var productBestSellarList=document.querySelectorAll(".product-bestsellar-item");
+
+  var arrival_len=productArrivalList.length;
+
+  var trending_len=productTrendingList.length;
+
+  var best_sellar_len=productBestSellarList.length;
+
+  if(arrival_len<=@show_product_len)
+  {
+    viewMoreArrivalBtn.style.display="none";
+  }
+  if(trending_len<=@show_product_len)
+  {
+    viewMoreTrendingBtn.style.display="none";
+  }
+  if(best_sellar_len<=@show_product_len)
+  {
+    viewMoreBestSellarBtn.style.display="none";
+  }
+
+
+  viewMoreArrivalBtn.addEventListener('click',()=>{
+    productArrivalList.forEach((product,index)=>{
+      if(index>=arrivalProduct && index<(arrivalProduct+inscreaseProduct))
+      {
+        product.style.display="block";
+      }
+    });
+    arrivalProduct+=inscreaseProduct;
+    if(arrivalProduct>=arrival_len)
+    {
+      viewMoreArrivalBtn.style.display="none";
+    }
+  });
+
+  viewMoreTrendingBtn.addEventListener('click',()=>{
+    productTrendingList.forEach((product,index)=>{
+      if(index>=trendingProduct && index<(trendingProduct+inscreaseProduct))
+      {
+        product.style.display="block";
+      }
+    });
+    trendingProduct+=inscreaseProduct;
+    if(trendingProduct>=trending_len)
+    {
+      viewMoreTrendingBtn.style.display="none";
+    }
+  });
+
+  viewMoreBestSellarBtn.addEventListener('click',()=>{
+    productBestSellarList.forEach((product,index)=>{
+      if(index>=bestSellarProduct && index<(bestSellarProduct+inscreaseProduct))
+      {
+        product.style.display="block";
+      }
+    });
+    bestSellarProduct+=inscreaseProduct;
+    if(bestSellarProduct>=best_sellar_len)
+    {
+      viewMoreBestSellarBtn.style.display="none";
+    }
+  });
      var boxes = document.querySelectorAll(".color-box");
 
      var sizes = document.querySelectorAll(".color-size");
