@@ -29,7 +29,9 @@
 
     int best_sellar_count=0;
     
-    int show_product_len=5;
+    int show_product_len=Convert.ToInt32(Environment.GetEnvironmentVariable("SHOW_PRODUCT_LEN"));
+
+    Console.WriteLine("PRODUCT LEN HERE IS:"+Environment.GetEnvironmentVariable("SHOW_PRODUCT_LEN"));
 
     if(TempData["NewsLetterStatus"]!=null)
     {

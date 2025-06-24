@@ -1316,13 +1316,14 @@ h6 {
   cursor: not-allowed;
 }
 
-.custom-view-more {
-        background-color: transparent; 
-        border: 2px solid #000000; 
-        color: #000000;
-        border-radius: 20px;
-        padding: 5px 20px; 
-        font-size: 16px; 
+.custom-view-more 
+{
+  background-color: transparent; 
+  border: 2px solid #000000; 
+  color: #000000;
+  border-radius: 20px;
+  padding: 5px 20px; 
+  font-size: 16px; 
     }
 
     .custom-view-more:hover {
