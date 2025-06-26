@@ -322,8 +322,8 @@
     if(update_item)
     {
         update_item.forEach((item)=>{
-          item.addEventListener('click',(e)=>{
-         e.preventDefault();  
+        item.addEventListener('click',(e)=>{
+        e.preventDefault();  
         var url="@Url.Action("updateCart","Cart")";
         var quantity_values=document.querySelectorAll("#new-quantity-item");
         var formData = new FormData();

@@ -270,7 +270,6 @@
                       }
                     </div>
                   </div>
-                    
                   <div class="size-chart mt-4">
                     <h6 class="fw-bold mb-3">Select Size</h6>
                     <div class="d-flex align-items-center gap-2 flex-wrap">
@@ -278,7 +277,7 @@
                     {
                   if(size.Size==null)
                     {
-                        continue;
+                        continue;                                                
                     }
                      <div class="">
                        <button type="button" class="size-box" data-size-name="@size.Size?.Sizename" data-size-id="@size.Size?.Id">@size.Size?.Sizename</button>
@@ -301,7 +300,7 @@
                     }
                    </div>
                   </div>
-               <div class="cart-buttons mt-3">
+<div class="cart-buttons mt-3">
   <div class="buttons d-flex flex-column flex-lg-row gap-3 mt-4 align-items-center">
     <div class="input-group w-auto">
       <button class="btn btn-outline-dark btn-ecomm" type="button" id="decrease-num" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">-</button>
@@ -319,7 +318,7 @@
                     <h6 class="fw-bold mb-3">Status</h6>
                     <p class="mb-3 badge px-2 @current_status">@(Model.Status=="Còn hàng"?"In stock":"Out of stock")</p>
                     <h6 class="fw-bold mb-3">Product Details</h6>
-                     <p class="mb-1">@(Html.Raw(Model.Description))</p>
+                    <p class="mb-1">@(Html.Raw(Model.Description))</p>
                      @* <p class="mb-1">All the Lorem Ipsum generators on the Internet tend to repeat</p>
                      <p class="mb-1">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece</p>
                      <p class="mb-1">The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested.</p> *@
@@ -488,7 +487,7 @@
     <div class="container">
       <div class="separator pb-3">
         <div class="line"></div>
-        <h3 class="mb-0 h3 fw-bold">Similar Products</h3>
+        <h3 class="mb-0 h3 fw-bold">Similar Products</h3>                
         <div class="line"></div>
       </div>
       <div class="similar-products">
@@ -501,31 +500,30 @@
          {
             break;            
          }
-        
+
         if(product.ProductName==Model.ProductName)
         {
-            continue;            
-        }       
+            continue;
+        }    
 
-        string regex_product=Regex.Replace(product.ProductName, @"[^\w\d+,]", "-");
-        
+        string regex_product=Regex.Replace(product.ProductName, @"[^\w\d+,]", "-");        
+
         <div class="col">
             <a href="@Url.Action("ProductDetail","ProductDetail",new{product_name=regex_product})">
             <div class="card rounded-0">
             @if(product.Backavatar.Contains("http") || product.Backavatar.Contains("https"))
                 {       
                <img src="@product.Backavatar" class="card-img-top rounded-0" alt="">
-                 }
-                 else
-                 {
-              <img src="~/@Model.Backavatar.Substring(Model.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="" class="card-img-top rounded-0">
-                 }
+                }
+                else
+                {
+            <img src="~/@Model.Backavatar.Substring(Model.Backavatar.IndexOf("wwwroot")+("wwwroot".Length+1))" alt="" class="card-img-top rounded-0">
+                }
             
               <div class="card-body border-top">
                 <h5 class="mb-0 fw-bold product-short-title">@product.ProductName</h5>
                 <div class="product-price d-flex align-items-center gap-3 mt-2">
-                  <div class="h6 fw-bold">$@product.Price</div>
-               
+                  <div class="h6 fw-bold">$@product.Price</div>                  
                 </div>
               </div>
             </div>
@@ -733,13 +731,13 @@ if(checkoutButton)
         product_price.textContent=product_price.textContent.replace('.',',');
       });
 
-    var list_variant=[];
+     var list_variant=[];
      
      boxes.forEach(box => {
       box.addEventListener('click', () => {
         boxes.forEach(b => b.classList.remove('clicked'));
         box.classList.add('clicked');
-        var color_id=box.getAttribute("data-color-id");
+        var color_id=box.getAttribute("data-color-id");        
         @* for(let i =0;i<list_variant.length;i++)
         {
           let current_variant = list_variant[i];
@@ -834,6 +832,7 @@ var variant_url='@Url.Action("VariantProduct","HomePage",new{id="__product_id__"
      var product_price = document.getElementById(`product-detail-price-${product_id}`).innerHTML;
      var size_value='';
      var color_value ='';
+     var quantity = document.querySelector("#quantity-value").value; 
 
      boxes.forEach(box=>{
        if(box.classList.contains("clicked"))
@@ -852,7 +851,7 @@ var variant_url='@Url.Action("VariantProduct","HomePage",new{id="__product_id__"
 
      if(color_value=='' || size_value=='')
      {
-       document.getElementById("toast-title").innerHTML="Add To Cart";
+               document.getElementById("toast-title").innerHTML="Add To Cart";
                 
                 document.getElementById("toast-message").innerHTML="Please select color and size";
                 
@@ -863,6 +862,7 @@ var variant_url='@Url.Action("VariantProduct","HomePage",new{id="__product_id__"
                 var toast = new bootstrap.Toast(toastEl);
                 
                 toast.show();
+
           return;
      }
      
@@ -878,7 +878,7 @@ var variant_url='@Url.Action("VariantProduct","HomePage",new{id="__product_id__"
 
      formData.append("size",size_value);
 
-     formData.append("quantity",1);
+     formData.append("quantity",quantity);
 
       $.ajax({
             url:"@Url.Action("addItemToCart","Cart")",
@@ -890,12 +890,12 @@ var variant_url='@Url.Action("VariantProduct","HomePage",new{id="__product_id__"
             {   
                 const status=response.status;
                 const message = response.message;
-                const data=response.data;
+                const data=response.data;                
             if(data!="")
              {  
                 $("#count-cart").text(data.length);
 
-                sessionStorage.setItem("count-cart",data.length);
+                sessionStorage.setItem("count-cart",data.length);                
                
                 var section_url="@Url.Action("SubCartPartialView","Cart")";
                    $.ajax({
